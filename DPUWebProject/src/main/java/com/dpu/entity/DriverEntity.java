@@ -22,8 +22,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 /**
+ * @author sumit
  *
- * @author gagandeep.rana
  */
 
 @Entity

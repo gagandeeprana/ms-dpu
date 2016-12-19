@@ -28,7 +28,7 @@ public class CompanyController {
 	public Object getAll() {
 		String json = null;
 		try {
-			List<Company> lstCompanies = companyService.getAll("");
+			List<Company> lstCompanies = companyService.getAll();
 			json = mapper.writeValueAsString(lstCompanies);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -40,7 +40,14 @@ public class CompanyController {
 	public Object add(@RequestBody Company company) {
 		String json = null;
 		try {
-			boolean result = companyService.add(company);
+			String result = null;
+			
+			Company response = companyService.add(company);
+			if(response != null) {
+				result = "Company added successfully";
+			} else {
+				result = "Unable to add Company";
+			}
 			json = mapper.writeValueAsString(result);
 		} catch (Exception e) {	
 			System.out.println(e);
@@ -53,8 +60,19 @@ public class CompanyController {
 
 		String json = null;
 		try {
-			boolean result = companyService.delete(id);
-			json = mapper.writeValueAsString(result);
+			
+			Company company = companyService.get(id);
+			boolean result = false;
+			String response = null;
+			if(company != null) {
+				result = companyService.delete(company);
+			}
+			if(result) {
+				response = "Company updated successfully";
+			} else {
+				response = "Unable to update Company";
+			}
+			json = mapper.writeValueAsString(response);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -65,8 +83,14 @@ public class CompanyController {
 	public Object update(@PathVariable("id") int id, @RequestBody Company company) {
 		
 		String json = null;
+		String result = null;
 		try {
-			boolean result = companyService.update(id, company);
+			Company response = companyService.update(company);
+			if(response != null) {
+				result = "Company added successfully";
+			} else {
+				result = "Unable to add Company";
+			}
 			json = mapper.writeValueAsString(result);
 		} catch (Exception e) {	
 			System.out.println(e);

@@ -29,7 +29,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
 @Table(name = "driver")
-public class DriverEntity implements Serializable {
+public class Driver implements Serializable {
 
 	/**
 	 * 

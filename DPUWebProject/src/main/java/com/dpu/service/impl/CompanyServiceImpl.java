@@ -16,27 +16,34 @@ public class CompanyServiceImpl implements CompanyService{
 	CompanyDao companyDao;
 	
 	@Override
-	public boolean add(Company company) {
-		return companyDao.add(company);
+	public Company add(Company company) {
+		return companyDao.save(company);
 	}
 
 	@Override
-	public boolean update(int id, Company company) {
-		return companyDao.update(id, company);
+	public Company update(Company company) {
+		return companyDao.update(company);
 	}
 
 	@Override
-	public boolean delete(int id) {
-		return companyDao.delete(id);
+	public boolean delete(Company company) {
+		boolean result = false;
+		try {
+			companyDao.delete(company);
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
 	}
 
 	@Override
-	public List<Company> getAll(String name) {
-		return companyDao.getAll(name);
+	public List<Company> getAll() {
+		return companyDao.findAll();
 	}
 
 	@Override
 	public Company get(int id) {
-		return companyDao.get(id);
+		return companyDao.findById(id);
 	}
 }

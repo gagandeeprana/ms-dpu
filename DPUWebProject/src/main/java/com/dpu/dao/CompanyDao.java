@@ -1,12 +1,10 @@
 package com.dpu.dao;
 
-import java.util.List;
-
 import com.dpu.entity.Company;
 
-public interface CompanyDao {
+public interface CompanyDao extends GenericDao<Company>{
 
-	boolean add(Company company);
+	/*boolean add(Company company);
 	
 	boolean update(int id, Company company);
 	
@@ -14,6 +12,6 @@ public interface CompanyDao {
 	
 	List<Company> getAll(String name);
 	
-	Company get(int id);
+	Company get(int id);*/
 	
 }

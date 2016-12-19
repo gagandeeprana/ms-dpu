@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.controller.DriverController;
 import com.dpu.dao.DriverDao;
-import com.dpu.entity.DriverEntity;
+import com.dpu.entity.Driver;
 import com.dpu.service.DriverService;
 
 
@@ -25,11 +25,13 @@ public class DriverServiceImpl implements DriverService {
 	@Autowired
 	DriverDao driverDao;
 
-	Logger logger = Logger.getLogger(DriverController.class);
+	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
 	@Override
-	public boolean addDriver(DriverEntity driver) {
+	public boolean addDriver(Driver driver) {
+		
 		logger.info("[addDriver]:Service:  Enter");
+		
 		boolean returnValue = false;
 		try {
 			driverDao.save(driver);
@@ -44,14 +46,14 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public boolean updateDriver(String driverCode, DriverEntity driver) {
+	public boolean updateDriver(String driverCode, Driver driver) {
 		logger.info("[updateDriver] : Srvice: Enter");
 		Criterion getDriverByDriverCode = Restrictions.eq("driverCode",
 				driverCode);
-		List<DriverEntity> listofDriver = driverDao.find(getDriverByDriverCode);
+		List<Driver> listofDriver = driverDao.find(getDriverByDriverCode);
 
 		if (listofDriver != null) {
-			DriverEntity driverEntity = listofDriver.get(0);
+			Driver driverEntity = listofDriver.get(0);
 
 			driverEntity.setFirstName(driver.getFirstName());
 			driverEntity.setLastName(driver.getLastName());
@@ -71,11 +73,11 @@ public class DriverServiceImpl implements DriverService {
 		try {
 			Criterion deleteDriverCriteria = Restrictions.eq("driverCode",
 					driverCode);
-			List<DriverEntity> driverEntity = driverDao
+			List<Driver> driverEntity = driverDao
 					.find(deleteDriverCriteria);
 
 			if (driverEntity != null) {
-				DriverEntity driver = driverEntity.get(0);
+				Driver driver = driverEntity.get(0);
 				driverDao.delete(driver);
 				logger.info("[deleteDriver] :Driver Deleted Successfully. : ");
 				return true;
@@ -89,8 +91,8 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public List<DriverEntity> getAllDriver() {
-		List<DriverEntity> listOfDriver = null;
+	public List<Driver> getAllDriver() {
+		List<Driver> listOfDriver = null;
 		try {
 			logger.info("[getAllDrivers]:  Service : Enter");
 
@@ -106,16 +108,16 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public DriverEntity getDriverByDriverCode(String driverCode) {
+	public Driver getDriverByDriverCode(String driverCode) {
 
 		logger.info("[getDriverByDriverCode]:  Service : Enter");
 		Criterion getDriverByDriverCodecriteria = Restrictions.eqOrIsNull(
 				"driverCode", driverCode);
-		List<DriverEntity> listOfDriver = driverDao
+		List<Driver> listOfDriver = driverDao
 				.find(getDriverByDriverCodecriteria);
 
 		if (listOfDriver != null) {
-			DriverEntity driver = listOfDriver.get(0);
+			Driver driver = listOfDriver.get(0);
 			logger.info("[getDriverByDriverCode]:  Driver details got succesfully. ");
 			return driver;
 		}

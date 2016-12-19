@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.entity.DriverEntity;
+import com.dpu.entity.Driver;
 import com.dpu.service.DriverService;
 
 
@@ -20,7 +20,6 @@ import com.dpu.service.DriverService;
  * @author sumit
  *
  */
-
 @RestController
 @RequestMapping(value = "driver")
 public class DriverController {
@@ -38,9 +37,7 @@ public class DriverController {
 		logger.info("[getAllDrivers]:Controller:  Enter");
 		String json = null;
 		try {
-			List<DriverEntity> listOfDriver = driverService.getAllDriver();
-			logger.info("[getAllDrivers]:Controller:  listOfDriver : "
-					+ listOfDriver);
+			List<Driver> listOfDriver = driverService.getAllDriver();
 			json = mapper.writeValueAsString(listOfDriver);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers]:Controller " + e);
@@ -51,7 +48,7 @@ public class DriverController {
 
 	// Add new Driver
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object addDriver(@RequestBody DriverEntity driver) {
+	public Object addDriver(@RequestBody Driver driver) {
 		logger.info("[addDriver]:Controller:  Enter");
 		String json = null;
 		try {
@@ -81,10 +78,9 @@ public class DriverController {
 
 	// Update Driver
 	@RequestMapping(value = "/{driverCode}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object updateDriver(@PathVariable("driverCode") String driverCode,
-			@RequestBody DriverEntity driver) {
+	public Object updateDriver(@PathVariable("driverCode") String driverCode, @RequestBody Driver driver) {
 
-		logger.info("[YashRaj]:Enter Controller: driverCode : "+ driverCode);
+		logger.info("[updateDriver]:Enter Controller: driverCode : "+ driverCode);
 		String json = null;
 		try {
 			boolean result = driverService.updateDriver(driverCode, driver);
@@ -97,13 +93,11 @@ public class DriverController {
 
 	// get Driver by Id
 	@RequestMapping(value = "/{driverCode}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getDriverByDriverCode(
-			@PathVariable("driverCode") String driverCode) {
+	public Object getDriverByDriverCode(@PathVariable("driverCode") String driverCode) {
 		logger.info("[getDriverByDriverCode] : Controller : Enter");
 		String json = null;
 		try {
-			DriverEntity driver = driverService
-					.getDriverByDriverCode(driverCode);
+			Driver driver = driverService.getDriverByDriverCode(driverCode);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(driver);
 		} catch (Exception e) {

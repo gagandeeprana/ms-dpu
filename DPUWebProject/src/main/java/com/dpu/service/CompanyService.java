@@ -6,13 +6,13 @@ import com.dpu.entity.Company;
 
 public interface CompanyService {
 
-	boolean add(Company company);
+	Company add(Company company);
 	
-	boolean update(int id, Company company);
+	Company update(Company company);
 	
-	boolean delete(int id);
+	boolean delete(Company company);
 	
-	List<Company> getAll(String name);
+	List<Company> getAll();
 	
 	Company get(int id);
 	

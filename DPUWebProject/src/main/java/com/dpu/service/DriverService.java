@@ -2,7 +2,7 @@ package com.dpu.service;
 
 import java.util.List;
 
-import com.dpu.entity.DriverEntity;
+import com.dpu.entity.Driver;
 
 /**
  * @author sumit
@@ -11,15 +11,15 @@ import com.dpu.entity.DriverEntity;
 
 public interface DriverService {
 
-	boolean addDriver(DriverEntity driver);
+	boolean addDriver(Driver driver);
 	
-	boolean updateDriver(String driverCode, DriverEntity driver);
+	boolean updateDriver(String driverCode, Driver driver);
 	
 	boolean deleteDriver(String driverCode);
 	
-	List<DriverEntity> getAllDriver();
+	List<Driver> getAllDriver();
 	
-	DriverEntity getDriverByDriverCode(String driverCode);
+	Driver getDriverByDriverCode(String driverCode);
 	
 }
 

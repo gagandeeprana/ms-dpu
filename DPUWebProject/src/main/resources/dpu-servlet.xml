@@ -32,7 +32,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.dpu.entity.Company</value>
-				<value>com.dpu.entity.DriverEntity</value>
+				<value>com.dpu.entity.Driver</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

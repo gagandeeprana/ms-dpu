@@ -1,7 +1,9 @@
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,28 +16,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
+import com.dpu.entity.CompanyAdditionalContacts;
+import com.dpu.entity.CompanyBillingLocation;
+import com.dpu.model.BillingLocation;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.service.CompanyService;
+import com.dpu.service.CompanyAdditionalContactsService;
+import com.dpu.service.CompanyBillingLocationService;
 import com.dpu.util.MessageProperties;
 
 
 @RestController
-@RequestMapping(value = "company")
-public class CompanyController extends MessageProperties {
+@RequestMapping(value = "company/{companyid}/additionalcontacts")
+public class CompanyAdditionalContactsController extends MessageProperties {
 
 	@Autowired
-	CompanyService companyService;
+	CompanyAdditionalContactsService companyAdditionalContactsService;
 	
 	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getAll() {
+	public Object getAll(@PathVariable("companyid") int companyId) {
 		String json = null;
 		try {
-			List<Company> lstCompanies = companyService.getAll();
-			json = mapper.writeValueAsString(lstCompanies);
+			List<CompanyAdditionalContacts> lstCompanyBillingLocations = companyAdditionalContactsService.getAll(companyId);
+			List<BillingLocation> lstBillingLocations = new ArrayList<BillingLocation>();
+			for(CompanyBillingLocation cbl : lstCompanyBillingLocations) {
+				BillingLocation location = new BillingLocation();
+				BeanUtils.copyProperties(location, cbl);
+				lstBillingLocations.add(location);
+			}
+			json = mapper.writeValueAsString(lstBillingLocations);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -43,10 +54,10 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Company company) {
+	public Object add(@RequestBody CompanyBillingLocation companyBillingLocation) {
 		Object obj = null;
 		try {
-			Company response = companyService.add(company);
+			CompanyBillingLocation response = companyAdditionalContactsService.add(companyBillingLocation);
 			if(response != null) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyAddedCode), companyAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
@@ -66,9 +77,9 @@ public class CompanyController extends MessageProperties {
 
 		try {
 			
-			Company company = companyService.get(id);
-			if(company != null) {
-				result = companyService.delete(company);
+			CompanyBillingLocation companyBillingLocation = companyAdditionalContactsService.get(id);
+			if(companyBillingLocation != null) {
+				result = companyBillingLocationService.delete(companyBillingLocation);
 			}
 			if(result) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyDeletedCode), companyDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
@@ -82,12 +93,12 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id, @RequestBody Company company) {
+	public Object update(@PathVariable("id") int id, @RequestBody CompanyBillingLocation companyBillingLocation) {
 		
 		Object obj = null;
 		try {
-			company.setCompanyId(id);
-			Company response = companyService.update(company);
+			companyBillingLocation.setBillingLocationId(id);
+			CompanyBillingLocation response = companyAdditionalContactsService.update(companyBillingLocation);
 			if(response != null) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyUpdateCode), companyUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
@@ -103,9 +114,9 @@ public class CompanyController extends MessageProperties {
 	public Object get(@PathVariable("id") int id) {
 		String json = new String();
 		try {
-			Company company= companyService.get(id);
-			if(company != null) {
-				json = mapper.writeValueAsString(company);
+			CompanyBillingLocation companyBillingLocation = companyAdditionalContactsService.get(id);
+			if(companyBillingLocation != null) {
+				json = mapper.writeValueAsString(companyBillingLocation);
 			}
 		} catch (Exception e) {
 			System.out.println(e);

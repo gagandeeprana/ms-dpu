@@ -14,13 +14,13 @@ import com.dpu.entity.Shipper;
  */
 public interface ShipperService {
 
-	boolean add(Shipper company);
+	Shipper add(Shipper shipper);
 
-	boolean update(int id, Shipper shipper);
+	Shipper update(Shipper shipper);
 
-	boolean delete(int id);
+	boolean delete(Shipper shipper);
 
-	List<Shipper> getAll(String name);
+	List<Shipper> getAll();
 
 	Shipper get(int id);
 }

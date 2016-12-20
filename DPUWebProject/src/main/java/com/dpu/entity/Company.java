@@ -1,9 +1,14 @@
 package com.dpu.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -75,6 +80,28 @@ public class Company {
 	
 	@Column(name = "after_hours")
 	private String afterHours;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    private Set<CompanyBillingLocation> billingLocations = new HashSet<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    private Set<CompanyAdditionalContacts> additionalContacts = new HashSet<>();
+	
+	public Set<CompanyAdditionalContacts> getAdditionalContacts() {
+		return additionalContacts;
+	}
+
+	public void setAdditionalContacts(Set<CompanyAdditionalContacts> additionalContacts) {
+		this.additionalContacts = additionalContacts;
+	}
+
+	public Set<CompanyBillingLocation> getBillingLocations() {
+		return billingLocations;
+	}
+
+	public void setBillingLocations(Set<CompanyBillingLocation> billingLocations) {
+		this.billingLocations = billingLocations;
+	}
 
 	public int getCompanyId() {
 		return companyId;

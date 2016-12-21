@@ -19,7 +19,7 @@
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		
+
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="${db.url}" />
 		<property name="username" value="${db.username}" />
@@ -33,6 +33,10 @@
 			<list>
 				<value>com.dpu.entity.Company</value>
 				<value>com.dpu.entity.Driver</value>
+				<value>com.dpu.entity.CompanyAdditionalContacts</value>
+				<value>com.dpu.entity.CompanyBillingLocation</value>
+				<value>com.dpu.entity.Terminal</value>
+				<value>com.dpu.entity.Shipper</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -65,6 +69,7 @@
 		</property>
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-	
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 </beans>

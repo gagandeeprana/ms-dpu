@@ -32,10 +32,12 @@ public class CompanyController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		String json = null;
+		String json = new String();
 		try {
 			List<Company> lstCompanies = companyService.getAll();
-			json = mapper.writeValueAsString(lstCompanies);
+			if(lstCompanies != null) {
+				json = mapper.writeValueAsString(lstCompanies);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

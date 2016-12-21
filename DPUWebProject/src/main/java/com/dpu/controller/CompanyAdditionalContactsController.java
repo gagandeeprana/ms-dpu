@@ -17,12 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.CompanyAdditionalContacts;
-import com.dpu.entity.CompanyBillingLocation;
-import com.dpu.model.BillingLocation;
+import com.dpu.model.AdditionalContacts;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CompanyAdditionalContactsService;
-import com.dpu.service.CompanyBillingLocationService;
 import com.dpu.util.MessageProperties;
 
 
@@ -39,14 +37,14 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	public Object getAll(@PathVariable("companyid") int companyId) {
 		String json = null;
 		try {
-			List<CompanyAdditionalContacts> lstCompanyBillingLocations = companyAdditionalContactsService.getAll(companyId);
-			List<BillingLocation> lstBillingLocations = new ArrayList<BillingLocation>();
-			for(CompanyBillingLocation cbl : lstCompanyBillingLocations) {
-				BillingLocation location = new BillingLocation();
-				BeanUtils.copyProperties(location, cbl);
-				lstBillingLocations.add(location);
+			List<CompanyAdditionalContacts> lstCompanyAdditionalContacts = companyAdditionalContactsService.getAll(companyId);
+			List<AdditionalContacts> lstAdditionalContacts = new ArrayList<AdditionalContacts>();
+			for(CompanyAdditionalContacts cac : lstCompanyAdditionalContacts) {
+				AdditionalContacts contact = new AdditionalContacts();
+				BeanUtils.copyProperties(contact, cac);
+				lstAdditionalContacts.add(contact);
 			}
-			json = mapper.writeValueAsString(lstBillingLocations);
+			json = mapper.writeValueAsString(lstAdditionalContacts);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -54,10 +52,10 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody CompanyBillingLocation companyBillingLocation) {
+	public Object add(@RequestBody CompanyAdditionalContacts companyAdditionalContacts) {
 		Object obj = null;
 		try {
-			CompanyBillingLocation response = companyAdditionalContactsService.add(companyBillingLocation);
+			CompanyAdditionalContacts response = companyAdditionalContactsService.add(companyAdditionalContacts);
 			if(response != null) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyAddedCode), companyAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
@@ -77,9 +75,9 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 
 		try {
 			
-			CompanyBillingLocation companyBillingLocation = companyAdditionalContactsService.get(id);
-			if(companyBillingLocation != null) {
-				result = companyBillingLocationService.delete(companyBillingLocation);
+			CompanyAdditionalContacts companyAdditionalContacts = companyAdditionalContactsService.get(id);
+			if(companyAdditionalContacts != null) {
+				result = companyAdditionalContactsService.delete(companyAdditionalContacts);
 			}
 			if(result) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyDeletedCode), companyDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
@@ -93,12 +91,12 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id, @RequestBody CompanyBillingLocation companyBillingLocation) {
+	public Object update(@PathVariable("id") int id, @RequestBody CompanyAdditionalContacts companyAdditionalContacts) {
 		
 		Object obj = null;
 		try {
-			companyBillingLocation.setBillingLocationId(id);
-			CompanyBillingLocation response = companyAdditionalContactsService.update(companyBillingLocation);
+			companyAdditionalContacts.setAdditionalContactId(id);
+			CompanyAdditionalContacts response = companyAdditionalContactsService.update(companyAdditionalContacts);
 			if(response != null) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyUpdateCode), companyUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
@@ -114,9 +112,9 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	public Object get(@PathVariable("id") int id) {
 		String json = new String();
 		try {
-			CompanyBillingLocation companyBillingLocation = companyAdditionalContactsService.get(id);
-			if(companyBillingLocation != null) {
-				json = mapper.writeValueAsString(companyBillingLocation);
+			CompanyAdditionalContacts companyAdditionalContacts = companyAdditionalContactsService.get(id);
+			if(companyAdditionalContacts != null) {
+				json = mapper.writeValueAsString(companyAdditionalContacts);
 			}
 		} catch (Exception e) {
 			System.out.println(e);

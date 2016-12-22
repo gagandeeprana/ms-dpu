@@ -7,15 +7,26 @@ import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
 import com.dpu.entity.Shipper;
+=======
+import com.dpu.constants.Iconstants;
+import com.dpu.entity.Company;
+import com.dpu.entity.Shipper;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
+>>>>>>> de6418cedfbb2568fd8039714237f2a13a3f6e2c
 import com.dpu.service.ShipperService;
+import com.dpu.util.MessageProperties;
 
 /**
  * @author jagvir
@@ -23,7 +34,7 @@ import com.dpu.service.ShipperService;
  */
 @RestController
 @RequestMapping(value = "shipper")
-public class ShipperController {
+public class ShipperController extends MessageProperties{
 
 	@Autowired
 	ShipperService shipperService;
@@ -35,7 +46,11 @@ public class ShipperController {
 		String json = null;
 		try {
 
+<<<<<<< HEAD
 			List<Shipper> lstShippers = shipperService.getAll("");
+=======
+			List<Shipper> lstShippers = shipperService.getAll();
+>>>>>>> de6418cedfbb2568fd8039714237f2a13a3f6e2c
 			json = mapper.writeValueAsString(lstShippers);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -45,50 +60,69 @@ public class ShipperController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Shipper shipper) {
-		String json = null;
+		Object obj = null;
 		try {
-			boolean result = shipperService.add(shipper);
-			json = mapper.writeValueAsString(result);
+			Shipper response = shipperService.add(shipper);
+			if(response != null) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperAddedCode), shipperAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToAddCode), shipperUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return json;
+		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
+		
+		Object obj = null;
+		boolean result = false;
 
-		String json = null;
 		try {
-			boolean result = shipperService.delete(id);
-			json = mapper.writeValueAsString(result);
+			
+			Shipper shipper = shipperService.get(id);
+			if(shipper != null) {
+				result = shipperService.delete(shipper);
+			}
+			if(result) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperDeletedCode), shipperDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToDeleteCode), shipperUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return json;
+		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
-			@RequestBody Shipper shipper) {
+	public Object update(@PathVariable("id") int id, @RequestBody Shipper shipper) {
 
-		String json = null;
+		Object obj = null;
 		try {
-			boolean result = shipperService.update(id, shipper);
-			json = mapper.writeValueAsString(result);
-		} catch (Exception e) {
+			shipper.setShipperId(id);
+			Shipper response = shipperService.update(shipper);
+			if(response != null) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperUpdateCode), shipperUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToUpdateCode), shipperUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {	
 			System.out.println(e);
 		}
-		return json;
+		return obj;
 	}
 
 	@RequestMapping(value = "/{shipperId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("shipperId") int id) {
-		String json = null;
+		String json = new String();
 		try {
 			Shipper shipper = shipperService.get(id);
-			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(shipper);
+			if(shipper != null) {
+				json = mapper.writeValueAsString(shipper);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.entity.Company;
 import com.dpu.entity.Shipper;
-import com.dpu.service.CompanyService;
 import com.dpu.service.ShipperService;
 
 /**
@@ -36,7 +34,7 @@ public class ShipperController {
 	public Object getAll() {
 		String json = null;
 		try {
-			
+
 			List<Shipper> lstShippers = shipperService.getAll("");
 			json = mapper.writeValueAsString(lstShippers);
 		} catch (Exception e) {

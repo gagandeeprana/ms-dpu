@@ -23,28 +23,35 @@ public class ShipperServiceImpl implements ShipperService {
 	ShipperDao shipperDao;
 
 	@Override
-	public boolean add(Shipper shipper) {
-		return shipperDao.add(shipper);
+	public Shipper add(Shipper shipper) {
+		return shipperDao.save(shipper);
 	}
 
 	@Override
-	public boolean update(int id, Shipper shipper) {
-		return shipperDao.update(id, shipper);
+	public Shipper update(Shipper shipper) {
+		return shipperDao.update(shipper);
 	}
 
 	@Override
-	public boolean delete(int id) {
-		return shipperDao.delete(id);
+	public boolean delete(Shipper shipper) {
+		boolean result = false;
+		try {
+			shipperDao.delete(shipper);
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
 	}
 
 	@Override
-	public List<Shipper> getAll(String name) {
-		return shipperDao.getAll(name);
+	public List<Shipper> getAll() {
+		return shipperDao.findAll();
 	}
 
 	@Override
 	public Shipper get(int id) {
-		return shipperDao.get(id);
+		return shipperDao.findById(id);
 	}
 
 }

@@ -35,9 +35,9 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			t = (T) session.save(entity);
-
+			session.save(entity);
 			tx.commit();
+			return entity;
 		} catch (Exception e) {
 			tx.rollback();
 			logger.error("[save]" + e);

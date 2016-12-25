@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.entity.Division;
-import com.dpu.entity.Shipper;
 import com.dpu.service.DivisionService;
 
 /**
@@ -23,7 +22,7 @@ import com.dpu.service.DivisionService;
  *
  */
 @RestController
-@RequestMapping(value = "shipper")
+@RequestMapping(value = "division")
 public class DivisionController {
 
 	@Autowired

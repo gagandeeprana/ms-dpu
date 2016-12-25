@@ -6,16 +6,18 @@ package com.dpu.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.dpu.dao.DivisionDao;
-import com.dpu.dao.ShipperDao;
 import com.dpu.entity.Division;
+import com.dpu.service.DivisionService;
 
 /**
  * @author jagvir
  *
  */
-public class DivisionServiceImpl implements DivisionDao {
+@Component
+public class DivisionServiceImpl implements DivisionService {
 
 	@Autowired
 	DivisionDao divisionDao;

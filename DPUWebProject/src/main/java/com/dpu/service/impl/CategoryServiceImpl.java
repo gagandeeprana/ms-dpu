@@ -6,9 +6,9 @@ package com.dpu.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CategoryDao;
-import com.dpu.dao.CompanyDao;
 import com.dpu.entity.Category;
 import com.dpu.service.CategoryService;
 
@@ -16,6 +16,7 @@ import com.dpu.service.CategoryService;
  * @author jagvir
  *
  */
+@Component
 public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired

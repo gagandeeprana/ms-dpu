@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
@@ -22,6 +23,7 @@ import com.dpu.entity.Category;
  * @author jagvir
  *
  */
+@Repository
 public class CategoryDaoImpl implements CategoryDao {
 
 	Logger logger = Logger.getLogger(CategoryDaoImpl.class);

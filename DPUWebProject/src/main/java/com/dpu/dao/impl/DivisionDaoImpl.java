@@ -14,15 +14,16 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
-import com.dpu.entity.Shipper;
 
 /**
  * @author jagvir
  *
  */
+@Repository
 public class DivisionDaoImpl implements DivisionDao{
 
 	Logger logger = Logger.getLogger(DivisionDaoImpl.class);

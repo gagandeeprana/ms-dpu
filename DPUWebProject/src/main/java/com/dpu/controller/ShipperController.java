@@ -16,15 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< HEAD
-import com.dpu.entity.Shipper;
-=======
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
 import com.dpu.entity.Shipper;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
->>>>>>> de6418cedfbb2568fd8039714237f2a13a3f6e2c
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
 
@@ -46,11 +41,7 @@ public class ShipperController extends MessageProperties{
 		String json = null;
 		try {
 
-<<<<<<< HEAD
-			List<Shipper> lstShippers = shipperService.getAll("");
-=======
 			List<Shipper> lstShippers = shipperService.getAll();
->>>>>>> de6418cedfbb2568fd8039714237f2a13a3f6e2c
 			json = mapper.writeValueAsString(lstShippers);
 		} catch (Exception e) {
 			System.out.println(e);

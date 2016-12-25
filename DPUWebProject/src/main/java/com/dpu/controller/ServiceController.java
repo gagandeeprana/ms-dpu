@@ -3,10 +3,8 @@
  */
 package com.dpu.controller;
 
-import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,11 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.dao.impl.GenericDaoImpl;
-import com.dpu.entity.Division;
+import com.dpu.entity.Service;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.service.DivisionService;
+import com.dpu.service.ServiceService;
 import com.dpu.util.MessageProperties;
 
 /**
@@ -31,21 +28,19 @@ import com.dpu.util.MessageProperties;
  *
  */
 @RestController
-@RequestMapping(value = "division")
-public class DivisionController extends MessageProperties {
-
+@RequestMapping(value = "service")
+public class ServiceController extends MessageProperties {
 	@Autowired
-	DivisionService divisionService;
-	Logger logger = Logger.getLogger(DivisionController.class);
+	ServiceService serviceService;
+
 	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 		String json = null;
 		try {
-
-			List<Division> lstDivisions = divisionService.getAll();
-			json = mapper.writeValueAsString(lstDivisions);
+			List<Service> lstServices = serviceService.getAll();
+			json = mapper.writeValueAsString(lstServices);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -53,26 +48,22 @@ public class DivisionController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Division division) {
-		logger.info("DivisionController: add");
-
+	public Object add(@RequestBody Service service) {
 		Object obj = null;
 		try {
-			division.setCreatedOn(new Date());
-			Division result = divisionService.add(division);
+			Service result = serviceService.add(service);
 			if (result != null) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(divisionAddedCode),
-						divisionAddedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+						Integer.parseInt(serviceAddedCode),
+						serviceAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(divisionAddedCode),
-						divisionAddedMessage, Iconstants.ERROR), HttpStatus.OK);
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(serviceUnableToAddCode),
+						serviceUnableToAddMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.error("DivisionController: add "+e);
 		}
 		return obj;
 	}
@@ -82,61 +73,59 @@ public class DivisionController extends MessageProperties {
 		Object obj = null;
 		boolean result = false;
 		try {
-			Division division = divisionService.get(id);
-			if (division != null) {
-				result = divisionService.delete(division);
+			Service service = serviceService.get(id);
+			if (service != null) {
+				result = serviceService.delete(service);
 			}
 			if (result) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(divisionDeletedCode),
-						divisionDeletedMessage, Iconstants.SUCCESS),
+						Integer.parseInt(serviceDeletedCode),
+						serviceDeletedMessage, Iconstants.SUCCESS),
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(divisionUnableToDeleteCode),
-						divisionUnableToDeleteMessage, Iconstants.ERROR),
+						Integer.parseInt(serviceUnableToDeleteCode),
+						serviceUnableToDeleteMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.info("DivisionController: delete "+e);
 		}
 		return obj;
+
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
-			@RequestBody Division division) {
+			@RequestBody Service service) {
 		Object obj = null;
 		try {
-			division.setDivisionId(id);
-			Division response = divisionService.update(id, division);
+			service.setServiceId(id);
+			Service response = serviceService.update(id, service);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(divisionUpdateCode),
-						divisionUpdateMessage, Iconstants.SUCCESS),
+						Integer.parseInt(serviceUpdateCode),
+						serviceUpdateMessage, Iconstants.SUCCESS),
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(divisionUnableToUpdateCode),
-						divisionUnableToUpdateMessage, Iconstants.ERROR),
+						Integer.parseInt(serviceUnableToUpdateCode),
+						serviceUnableToUpdateMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.info("DivisionController: update "+e);
 		}
 		return obj;
 	}
 
-	@RequestMapping(value = "/{divisionId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("divisionId") int id) {
+	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object get(@PathVariable("categoryId") int id) {
 		String json = null;
-		try
-		{
-			Division division = divisionService.get(id);
+		try {
+			Service service = serviceService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(division);
+			json = mapper.writeValueAsString(service);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

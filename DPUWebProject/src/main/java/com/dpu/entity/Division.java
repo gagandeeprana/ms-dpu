@@ -3,6 +3,8 @@
  */
 package com.dpu.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
  */
 
 @Entity
-@Table(name = "divisionmaster")
+@Table(name = "division")
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class Division {
 
@@ -33,7 +35,7 @@ public class Division {
 	@Column(name = "division_name")
 	private String divisionName;
 
-	@Column(name = "fedral")
+	@Column(name = "federal")
 	private String fedral;
 
 	@Column(name = "provincial")
@@ -45,11 +47,33 @@ public class Division {
 	@Column(name = "carrier_code")
 	private int carrierCode;
 
-	@Column(name = "contract_prefix")
+	@Column(name = "contact_prefix")
 	private String contractPrefix;
+
+	public Date getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public int getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
+	}
 
 	@Column(name = "invoice_prefix")
 	private String invoicePrefix;
+	
+	@Column(name = "created_on")
+	private Date createdOn;
+
+	@Column(name = "created_by")
+	private int createdBy;
 
 	public int getDivisionId() {
 		return divisionId;

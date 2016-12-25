@@ -23,33 +23,35 @@ public class DivisionServiceImpl implements DivisionService {
 	DivisionDao divisionDao;
 
 	@Override
-	public boolean add(Division division) {
-		// TODO Auto-generated method stub
-		return divisionDao.add(division);
+	public Division add(Division division) {
+		return divisionDao.save(division);
 	}
 
 	@Override
-	public boolean update(int id, Division division) {
-		// TODO Auto-generated method stub
-		return divisionDao.update(id, division);
+	public Division update(int id, Division division) {
+		return divisionDao.update(division);
 	}
 
 	@Override
-	public boolean delete(int id) {
-		// TODO Auto-generated method stub
-		return divisionDao.delete(id);
+	public boolean delete(Division division) {
+		boolean result = false;
+		try {
+			divisionDao.delete(division);
+			result = true;
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
 	}
 
 	@Override
-	public List<Division> getAll(String name) {
-		// TODO Auto-generated method stub
-		return divisionDao.getAll(name);
+	public List<Division> getAll() {
+		return divisionDao.findAll();
 	}
 
 	@Override
 	public Division get(int id) {
-		// TODO Auto-generated method stub
-		return divisionDao.get(id);
+		return divisionDao.findById(id);
 	}
 
 }

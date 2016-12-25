@@ -13,14 +13,13 @@ import com.dpu.entity.Division;
  */
 public interface DivisionService {
 
-	boolean add(Division division);
+	Division add(Division division);
 
-	boolean update(int id, Division division);
+	Division update(int id, Division division);
 
-	boolean delete(int id);
+	boolean delete(Division division);
 
-	List<Division> getAll(String name);
+	List<Division> getAll();
 
 	Division get(int id);
-
 }

@@ -27,17 +27,20 @@ public class Category {
 	@GeneratedValue
 	private int categoryId;
 
-	@Column(name = "type")
-	private String type;
+	@Column(name = "type_id")
+	private int typeId;
 
-	@Column(name = "category")
-	private String category;
+	@Column(name = "name")
+	private String name;
 
 	@Column(name = "status")
-	private String status;
+	private int status;
 
-	@Column(name = "highlight")
-	private String highlight;
+	@Column(name = "created_on")
+	private String createdOn;
+
+	@Column(name = "created_by")
+	private String createdBy;
 
 	public int getCategoryId() {
 		return categoryId;
@@ -47,36 +50,44 @@ public class Category {
 		this.categoryId = categoryId;
 	}
 
-	public String getType() {
-		return type;
+	public int getTypeId() {
+		return typeId;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTypeId(int typeId) {
+		this.typeId = typeId;
 	}
 
-	public String getCategory() {
-		return category;
+	public String getName() {
+		return name;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
-	public String getHighlight() {
-		return highlight;
+	public String getCreatedOn() {
+		return createdOn;
 	}
 
-	public void setHighlight(String highlight) {
-		this.highlight = highlight;
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 }

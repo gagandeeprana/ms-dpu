@@ -12,15 +12,14 @@ import com.dpu.entity.Category;
  *
  */
 public interface CategoryService {
-	boolean add(Category category);
+	Category add(Category category);
 
-	boolean update(int id, Category category);
+	Category update(int id, Category category);
 
-	boolean delete(int id);
+	boolean delete(Category category);
 
-	List<Category> getAll(String name);
+	List<Category> getAll();
 
 	Category get(int id);
-
 
 }

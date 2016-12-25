@@ -115,6 +115,7 @@ public class TrailerController extends MessageProperties {
 			trailerrequest.setTrailerId(id);
 			Trailer tr=setTrailerValue(trailerrequest);
 			
+			
 			Trailer response = trailerService.update(tr);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
@@ -149,8 +150,55 @@ public class TrailerController extends MessageProperties {
 	
 	private Trailer setTrailerValue(TrailerRequest trailerrequest){
 		Trailer trailer =new Trailer();
+		 trailer  = trailerService.get(trailerrequest.getTrailerId());
+		if(trailerrequest.getTrailerId()!= null){
+			trailer.setTrailerId(trailerrequest.getTrailerId());
+		}
 		if(trailerrequest.getClassId()!= null){
 			trailer.setClassId(trailerrequest.getClassId());
 		}
+		if(trailerrequest.getEquipmentId()!= null){
+			trailer.setEquipmentId(trailerrequest.getEquipmentId());
+		}
+		if(trailerrequest.getLength()!= null){
+			trailer.setLength(trailerrequest.getLength());
+		}
+		if(trailerrequest.getVIN()!= null){
+			trailer.setVIN(trailerrequest.getVIN());
+		}
+		if(trailerrequest.getMake()!= null){
+			trailer.setMake(trailerrequest.getMake());
+		}
+		if(trailerrequest.getModel()!= null){
+			trailer.setModel(trailerrequest.getModel());
+		}
+		if(trailerrequest.getYear()!= null){
+			trailer.setYear(trailerrequest.getYear());
+		}
+		if(trailerrequest.getPlateNo()!= null){
+			trailer.setPlateNo(trailerrequest.getPlateNo());
+		}
+		if(trailerrequest.getJurisdiction()!= null){
+			trailer.setJurisdiction(trailerrequest.getJurisdiction());
+		}
+		if(trailerrequest.getTareWeight()!= null){
+			trailer.setTareWeight(trailerrequest.getTareWeight());
+		}
+		if(trailerrequest.getRgw()!= null){
+			trailer.setRgw(trailerrequest.getRgw());
+		}
+		if(trailerrequest.getCurrentOdometer()!= null){
+			trailer.setCurrentOdometer(trailerrequest.getCurrentOdometer());
+		}
+		if(trailerrequest.getReadingTakenDate()!= null){
+			trailer.setReadingTakenDate(trailerrequest.getReadingTakenDate());
+		}
+		if(trailerrequest.getCreatedBy()!= null){
+			trailer.setCreatedBy(trailerrequest.getCreatedBy());
+		}
+		if(trailerrequest.getCreatedOn()!= null){
+			trailer.setCreatedOn(trailerrequest.getCreatedOn());
+		}
+		return trailer;
 	}
 }

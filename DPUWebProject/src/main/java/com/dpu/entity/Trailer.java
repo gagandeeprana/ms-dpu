@@ -19,16 +19,16 @@ public class Trailer {
 	@Id
 	@Column(name = "trailer_id")
 	@GeneratedValue
-	private int trailerId;
+	private Integer trailerId;
 	
 	@Column(name = "class_id")
 	private Integer classId;
 	
 	@Column(name = "equipment_id")
-	private int equipmentId;
+	private Integer equipmentId;
 	
 	@Column(name = "length")
-	private int length;
+	private Integer length;
 	
 	@Column(name = "VIN")
 	private String VIN;
@@ -40,7 +40,7 @@ public class Trailer {
 	private String model;
 	
 	@Column(name = "year")
-	private int year;
+	private Integer year;
 	
 	@Column(name = "plate_no")
 	private String plateNo;
@@ -61,40 +61,40 @@ public class Trailer {
 	private Date readingTakenDate;
 	
 	@Column(name = "created_by")
-	private int createdBy;
+	private Integer createdBy;
 	
 	@Column(name = "created_on")
 	private Date createdOn;
 
-	public int getTrailerId() {
+	public Integer getTrailerId() {
 		return trailerId;
 	}
 
-	public void setTrailerId(int trailerId) {
+	public void setTrailerId(Integer trailerId) {
 		this.trailerId = trailerId;
 	}
 
-	public int getClassId() {
+	public Integer getClassId() {
 		return classId;
 	}
 
-	public void setClassId(int classId) {
+	public void setClassId(Integer classId) {
 		this.classId = classId;
 	}
 
-	public int getEquipmentId() {
+	public Integer getEquipmentId() {
 		return equipmentId;
 	}
 
-	public void setEquipmentId(int equipmentId) {
+	public void setEquipmentId(Integer equipmentId) {
 		this.equipmentId = equipmentId;
 	}
 
-	public int getLength() {
+	public Integer getLength() {
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(Integer length) {
 		this.length = length;
 	}
 
@@ -122,11 +122,11 @@ public class Trailer {
 		this.model = model;
 	}
 
-	public int getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 
@@ -178,11 +178,11 @@ public class Trailer {
 		this.readingTakenDate = readingTakenDate;
 	}
 
-	public int getCreatedBy() {
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 

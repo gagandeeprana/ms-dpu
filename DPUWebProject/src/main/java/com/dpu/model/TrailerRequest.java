@@ -4,16 +4,16 @@ import java.util.Date;
 
 public class TrailerRequest {
 	
-	private int trailerId;
+	private Integer trailerId;
 	
 
-	private int classId;
+	private Integer classId;
 	
 
-	private int equipmentId;
+	private Integer equipmentId;
 	
 
-	private int length;
+	private Integer length;
 	
 	
 	private String VIN;
@@ -25,7 +25,7 @@ public class TrailerRequest {
 	private String model;
 	
 
-	private int year;
+	private Integer year;
 	
 
 	private String plateNo;
@@ -46,40 +46,40 @@ public class TrailerRequest {
 	private Date readingTakenDate;
 	
 
-	private int createdBy;
+	private Integer createdBy;
 	
 
 	private Date createdOn;
 
-	public int getTrailerId() {
+	public Integer getTrailerId() {
 		return trailerId;
 	}
 
-	public void setTrailerId(int trailerId) {
+	public void setTrailerId(Integer trailerId) {
 		this.trailerId = trailerId;
 	}
 
-	public int getClassId() {
+	public Integer getClassId() {
 		return classId;
 	}
 
-	public void setClassId(int classId) {
+	public void setClassId(Integer classId) {
 		this.classId = classId;
 	}
 
-	public int getEquipmentId() {
+	public Integer getEquipmentId() {
 		return equipmentId;
 	}
 
-	public void setEquipmentId(int equipmentId) {
+	public void setEquipmentId(Integer equipmentId) {
 		this.equipmentId = equipmentId;
 	}
 
-	public int getLength() {
+	public Integer getLength() {
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(Integer length) {
 		this.length = length;
 	}
 
@@ -107,11 +107,11 @@ public class TrailerRequest {
 		this.model = model;
 	}
 
-	public int getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 
@@ -163,11 +163,11 @@ public class TrailerRequest {
 		this.readingTakenDate = readingTakenDate;
 	}
 
-	public int getCreatedBy() {
+	public Integer getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
 

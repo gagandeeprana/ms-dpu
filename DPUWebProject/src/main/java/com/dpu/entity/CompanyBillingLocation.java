@@ -76,7 +76,7 @@ public class CompanyBillingLocation {
     @Column(name = "tollfree")
     private String tollfree;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 

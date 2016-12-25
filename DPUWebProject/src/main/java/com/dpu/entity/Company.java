@@ -81,10 +81,10 @@ public class Company {
 	@Column(name = "after_hours")
 	private String afterHours;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private Set<CompanyBillingLocation> billingLocations = new HashSet<>();
     
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private Set<CompanyAdditionalContacts> additionalContacts = new HashSet<>();
 	
 	public Set<CompanyAdditionalContacts> getAdditionalContacts() {

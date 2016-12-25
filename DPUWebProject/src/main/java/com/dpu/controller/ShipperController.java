@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Shipper;
 import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
-import com.dpu.model.Success;
 
 /**
  * @author jagvir

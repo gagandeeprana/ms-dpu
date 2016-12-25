@@ -6,7 +6,6 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Category;
-import com.dpu.entity.Division;
 
 /**
  * @author jagvir

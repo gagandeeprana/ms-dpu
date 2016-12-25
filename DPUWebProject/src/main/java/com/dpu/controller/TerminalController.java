@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Shipper;
 import com.dpu.entity.Terminal;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;

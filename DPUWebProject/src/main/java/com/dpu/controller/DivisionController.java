@@ -22,7 +22,7 @@ import com.dpu.service.DivisionService;
  *
  */
 @RestController
-@RequestMapping(value = "shipper")
+@RequestMapping(value = "division")
 public class DivisionController {
 
 	@Autowired

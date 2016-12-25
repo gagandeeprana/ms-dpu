@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.entity.Category;
-import com.dpu.entity.Company;
 import com.dpu.service.CategoryService;
 
 /**

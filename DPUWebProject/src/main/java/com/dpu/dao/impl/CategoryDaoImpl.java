@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
@@ -22,6 +23,7 @@ import com.dpu.entity.Category;
  * @author jagvir
  *
  */
+@Repository
 public class CategoryDaoImpl implements CategoryDao {
 
 	Logger logger = Logger.getLogger(CategoryDaoImpl.class);
@@ -122,12 +124,18 @@ public class CategoryDaoImpl implements CategoryDao {
 		List<Category> lstCategories = new ArrayList<Category>();
 		try {
 			session = sessionFactory.openSession();
+			if (session.isOpen()) {
+
+				System.out.println("1111111111111::");
+			}
 			Criteria criteria = session.createCriteria(Category.class);
 			if (!"".equals(name)) {
 				criteria.add(Restrictions
 						.like("name", name, MatchMode.ANYWHERE));
 			}
+			System.out.println("22222222222");
 			lstCategories = (List<Category>) criteria.list();
+			System.out.println("22222222222   " + lstCategories);
 		} catch (Exception e) {
 			logger.error("CategoryDaoImpl: Inside getAll: Exception is: "
 					+ e.getMessage());

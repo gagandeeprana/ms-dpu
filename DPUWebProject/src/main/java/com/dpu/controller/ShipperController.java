@@ -16,17 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< HEAD
-import com.dpu.entity.Shipper;
-=======
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
 import com.dpu.entity.Shipper;
 import com.dpu.model.Failed;
-import com.dpu.model.Success;
->>>>>>> de6418cedfbb2568fd8039714237f2a13a3f6e2c
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
+import com.dpu.model.Success;
 
 /**
  * @author jagvir
@@ -34,7 +29,7 @@ import com.dpu.util.MessageProperties;
  */
 @RestController
 @RequestMapping(value = "shipper")
-public class ShipperController extends MessageProperties{
+public class ShipperController extends MessageProperties {
 
 	@Autowired
 	ShipperService shipperService;
@@ -45,12 +40,7 @@ public class ShipperController extends MessageProperties{
 	public Object getAll() {
 		String json = null;
 		try {
-
-<<<<<<< HEAD
-			List<Shipper> lstShippers = shipperService.getAll("");
-=======
 			List<Shipper> lstShippers = shipperService.getAll();
->>>>>>> de6418cedfbb2568fd8039714237f2a13a3f6e2c
 			json = mapper.writeValueAsString(lstShippers);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -63,10 +53,15 @@ public class ShipperController extends MessageProperties{
 		Object obj = null;
 		try {
 			Shipper response = shipperService.add(shipper);
-			if(response != null) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperAddedCode), shipperAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			if (response != null) {
+				obj = new ResponseEntity<Object>(new Success(
+						Integer.parseInt(shipperAddedCode),
+						shipperAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToAddCode), shipperUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(shipperUnableToAddCode),
+						shipperUnableToAddMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -76,20 +71,26 @@ public class ShipperController extends MessageProperties{
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-		
+
 		Object obj = null;
 		boolean result = false;
 
 		try {
-			
+
 			Shipper shipper = shipperService.get(id);
-			if(shipper != null) {
+			if (shipper != null) {
 				result = shipperService.delete(shipper);
 			}
-			if(result) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperDeletedCode), shipperDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			if (result) {
+				obj = new ResponseEntity<Object>(new Success(
+						Integer.parseInt(shipperDeletedCode),
+						shipperDeletedMessage, Iconstants.SUCCESS),
+						HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToDeleteCode), shipperUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(shipperUnableToDeleteCode),
+						shipperUnableToDeleteMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -98,18 +99,25 @@ public class ShipperController extends MessageProperties{
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id, @RequestBody Shipper shipper) {
+	public Object update(@PathVariable("id") int id,
+			@RequestBody Shipper shipper) {
 
 		Object obj = null;
 		try {
 			shipper.setShipperId(id);
 			Shipper response = shipperService.update(shipper);
-			if(response != null) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperUpdateCode), shipperUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			if (response != null) {
+				obj = new ResponseEntity<Object>(new Success(
+						Integer.parseInt(shipperUpdateCode),
+						shipperUpdateMessage, Iconstants.SUCCESS),
+						HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToUpdateCode), shipperUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(shipperUnableToUpdateCode),
+						shipperUnableToUpdateMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
-		} catch (Exception e) {	
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return obj;
@@ -120,7 +128,7 @@ public class ShipperController extends MessageProperties{
 		String json = new String();
 		try {
 			Shipper shipper = shipperService.get(id);
-			if(shipper != null) {
+			if (shipper != null) {
 				json = mapper.writeValueAsString(shipper);
 			}
 		} catch (Exception e) {

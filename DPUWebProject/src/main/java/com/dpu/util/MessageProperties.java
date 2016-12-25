@@ -84,6 +84,7 @@ public class MessageProperties {
 	@Value("${shipper_unable_to_update_message}")
 	public String shipperUnableToUpdateMessage;
 
+<<<<<<< HEAD
 	/**
 	 * Category Module Messages
 	 */
@@ -204,4 +205,43 @@ public class MessageProperties {
 	@Value("${service_unable_to_update_message}")
 	public String serviceUnableToUpdateMessage;
 
+=======
+	//Trailer Module Messages
+	
+	@Value("${trailer_added_code}")
+	public String trailerAddedCode;
+	
+	@Value("${trailer_added_message}")
+	public String trailerAddedMessage;
+	
+	@Value("${trailer_unable_to_add_code}")
+	public String trailerUnableToAddCode;
+	
+	@Value("${trailer_unable_to_add_message}")
+	public String trailerUnableToAddMessage;
+	
+	@Value("${trailer_deleted_code}")
+	public String trailerDeletedCode;
+	
+	@Value("${trailer_deleted_message}")
+	public String trailerDeletedMessage;
+	
+	@Value("${trailer_unable_to_delete_code}")
+	public String trailerUnableToDeleteCode;
+	
+	@Value("${trailer_unable_to_delete_message}")
+	public String trailerUnableToDeleteMessage;
+	
+	@Value("${trailer_updated_code}")
+	public String trailerUpdateCode;
+	
+	@Value("${trailer_updated_message}")
+	public String trailerUpdateMessage;
+	
+	@Value("${trailer_unable_to_update_code}")
+	public String trailerUnableToUpdateCode;
+	
+	@Value("${trailer_unable_to_update_message}")
+	public String trailerUnableToUpdateMessage;
+>>>>>>> 783a68ae5ff7629fbaf51766cbc1ac9afaf2aefd
 }

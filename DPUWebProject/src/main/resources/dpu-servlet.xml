@@ -40,6 +40,7 @@
 				<value>com.dpu.entity.CompanyBillingLocation</value>
 				<value>com.dpu.entity.Terminal</value>
 				<value>com.dpu.entity.Shipper</value>
+				<value>com.dpu.entity.Trailer</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

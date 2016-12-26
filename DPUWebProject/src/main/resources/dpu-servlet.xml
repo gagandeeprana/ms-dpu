@@ -41,6 +41,7 @@
 				<value>com.dpu.entity.Terminal</value>
 				<value>com.dpu.entity.Shipper</value>
 				<value>com.dpu.entity.Trailer</value>
+				<value>com.dpu.entity.Truck</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

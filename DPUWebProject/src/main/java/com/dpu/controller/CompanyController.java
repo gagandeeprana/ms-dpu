@@ -1,7 +1,9 @@
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Company;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.CompanyService;
 import com.dpu.util.MessageProperties;
-import com.dpu.model.Success;
 
 @RestController
 @RequestMapping(value = "company")
@@ -33,9 +36,18 @@ public class CompanyController extends MessageProperties {
 	public Object getAll() {
 		String json = new String();
 		try {
+			
 			List<Company> lstCompanies = companyService.getAll();
 			if (lstCompanies != null) {
-				json = mapper.writeValueAsString(lstCompanies);
+				List<CompanyResponse> responses = new ArrayList<CompanyResponse>();
+				for(Company company : lstCompanies) {
+					CompanyResponse response = new CompanyResponse();
+					BeanUtils.copyProperties(response, company);
+					responses.add(response);
+				}
+				if(responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -124,7 +136,12 @@ public class CompanyController extends MessageProperties {
 		try {
 			Company company = companyService.get(id);
 			if (company != null) {
-				json = mapper.writeValueAsString(company);
+				CompanyResponse response = new CompanyResponse();
+				BeanUtils.copyProperties(response, company);
+				
+				if(response != null) {
+					json = mapper.writeValueAsString(response);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);

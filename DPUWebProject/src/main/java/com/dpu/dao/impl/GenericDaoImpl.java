@@ -243,6 +243,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 			t = (T) session.save(entity);
 
 			tx.commit();
+			return entity;
 		} catch (Exception e) {
 			tx.rollback();
 			logger.error("[save]" + e);
@@ -252,7 +253,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 			}
 		}
 
-		return t;
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")

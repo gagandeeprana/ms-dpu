@@ -102,7 +102,7 @@ public class DivisionController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.info("DivisionController: delete " + e);
+			logger.error("DivisionController: delete " + e);
 		}
 		return obj;
 	}
@@ -127,7 +127,7 @@ public class DivisionController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.info("DivisionController: update " + e);
+			logger.error("DivisionController: update " + e);
 		}
 		return obj;
 	}

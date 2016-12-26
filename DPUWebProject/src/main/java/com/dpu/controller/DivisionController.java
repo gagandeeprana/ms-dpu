@@ -3,6 +3,9 @@
  */
 package com.dpu.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.dao.impl.GenericDaoImpl;
 import com.dpu.entity.Division;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -55,10 +57,10 @@ public class DivisionController extends MessageProperties {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Division division) {
 		logger.info("DivisionController: add");
-
+		Calendar cal = Calendar.getInstance();
 		Object obj = null;
 		try {
-			division.setCreatedOn(new Date());
+			division.setCreatedOn(cal.getTime());
 			Division result = divisionService.add(division);
 			if (result != null) {
 				obj = new ResponseEntity<Object>(new Success(
@@ -67,12 +69,13 @@ public class DivisionController extends MessageProperties {
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(divisionAddedCode),
-						divisionAddedMessage, Iconstants.ERROR), HttpStatus.OK);
+						Integer.parseInt(divisionUnableToAddCode),
+						divisionUnableToAddMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.error("DivisionController: add "+e);
+			logger.error("DivisionController: add " + e);
 		}
 		return obj;
 	}
@@ -99,7 +102,7 @@ public class DivisionController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.info("DivisionController: delete "+e);
+			logger.info("DivisionController: delete " + e);
 		}
 		return obj;
 	}
@@ -124,7 +127,7 @@ public class DivisionController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			logger.info("DivisionController: update "+e);
+			logger.info("DivisionController: update " + e);
 		}
 		return obj;
 	}
@@ -132,8 +135,7 @@ public class DivisionController extends MessageProperties {
 	@RequestMapping(value = "/{divisionId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("divisionId") int id) {
 		String json = null;
-		try
-		{
+		try {
 			Division division = divisionService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(division);

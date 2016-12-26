@@ -45,26 +45,11 @@ public class Division {
 	private String SCAC;
 
 	@Column(name = "carrier_code")
-	private int carrierCode;
+	private String carrierCode;
 
 	@Column(name = "contact_prefix")
 	private String contractPrefix;
 
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public int getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
 
 	@Column(name = "invoice_prefix")
 	private String invoicePrefix;
@@ -123,11 +108,11 @@ public class Division {
 		SCAC = sCAC;
 	}
 
-	public int getCarrierCode() {
+	public String getCarrierCode() {
 		return carrierCode;
 	}
 
-	public void setCarrierCode(int carrierCode) {
+	public void setCarrierCode(String carrierCode) {
 		this.carrierCode = carrierCode;
 	}
 
@@ -145,6 +130,22 @@ public class Division {
 
 	public void setInvoicePrefix(String invoicePrefix) {
 		this.invoicePrefix = invoicePrefix;
+	}
+
+	public Date getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public int getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
 	}
 
 

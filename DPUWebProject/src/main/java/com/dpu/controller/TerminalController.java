@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,44 @@ import com.dpu.util.MessageProperties;
  */
 @RestController
 @RequestMapping(value = "terminal")
-public class TerminalController extends MessageProperties{
+public class TerminalController {
 
+	@Value("${terminal_added_code}")
+	public String terminalAddedCode;
+
+	@Value("${terminal_added_message}")
+	public String terminalAddedMessage;
+
+	@Value("${terminal_unable_to_add_code}")
+	public String terminalUnableToAddCode;
+
+	@Value("${terminal_unable_to_add_message}")
+	public String terminalUnableToAddMessage;
+
+	@Value("${terminal_deleted_code}")
+	public String terminalDeletedCode;
+
+	@Value("${terminal_deleted_message}")
+	public String terminalDeletedMessage;
+
+	@Value("${terminal_unable_to_delete_code}")
+	public String terminalUnableToDeleteCode;
+
+	@Value("${terminal_unable_to_delete_message}")
+	public String terminalUnableToDeleteMessage;
+
+	@Value("${terminal_updated_code}")
+	public String terminalUpdateCode;
+
+	@Value("${terminal_updated_message}")
+	public String terminalUpdateMessage;
+
+	@Value("${terminal_unable_to_update_code}")
+	public String terminalUnableToUpdateCode;
+
+	@Value("${terminal_unable_to_update_message}")
+	public String terminalUnableToUpdateMessage;
+	
 	@Autowired
 	TerminalService terminalService;
 
@@ -55,9 +92,9 @@ public class TerminalController extends MessageProperties{
 		try {
 			Terminal response = terminalService.add(terminal);
 			if(response != null) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperAddedCode), shipperAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(terminalAddedCode), terminalAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToAddCode), shipperUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(terminalUnableToAddCode), terminalUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -78,9 +115,9 @@ public class TerminalController extends MessageProperties{
 				result = terminalService.delete(terminal);
 			}
 			if(result) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperDeletedCode), shipperDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(terminalDeletedCode), terminalDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToDeleteCode), shipperUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(terminalUnableToDeleteCode), terminalUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -96,9 +133,9 @@ public class TerminalController extends MessageProperties{
 			terminal.setTerminalId(id);
 			Terminal response = terminalService.update(terminal);
 			if(response != null) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(shipperUpdateCode), shipperUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(terminalUpdateCode), terminalUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(shipperUnableToUpdateCode), shipperUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(terminalUnableToUpdateCode), terminalUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {	
 			System.out.println(e);

@@ -1,107 +1,71 @@
-package com.dpu.entity;
+package com.dpu.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@Entity
-@Table(name = "companymaster")
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class Company {
+public class CompanyResponse {
 
-	@Id
-	@Column(name = "company_id")
-	@GeneratedValue
+	@JsonProperty(value = "company_id")
 	private int companyId;
 	
-	@Column(name = "name")
+	@JsonProperty(value = "name")
 	private String name;
 	
-	@Column(name = "address")
+	@JsonProperty(value = "address")
 	private String address;
 	
-	@Column(name = "unit_no")
+	@JsonProperty(value = "unit_no")
 	private String unitNo;
 	
-	@Column(name = "city")
+	@JsonProperty(value = "city")
 	private String city;
 	
-	@Column(name = "province_state")
+	@JsonProperty(value = "province_state")
 	private String provinceState;
 	
-	@Column(name = "zip")
+	@JsonProperty(value = "zip")
 	private String zip;
 	
-	@Column(name = "email")
+	@JsonProperty(value = "email")
 	private String email;
 	
-	@Column(name = "website")
+	@JsonProperty(value = "website")
 	private String website;
 	
-	@Column(name = "contact")
+	@JsonProperty(value = "contact")
 	private String contact;
 	
-	@Column(name = "position")
+	@JsonProperty(value = "position")
 	private String position;
 	
-	@Column(name = "phone")
+	@JsonProperty(value = "phone")
 	private String phone;
 	
-	@Column(name = "ext")
+	@JsonProperty(value = "ext")
 	private String ext;
 	
-	@Column(name = "fax")
+	@JsonProperty(value = "fax")
 	private String fax;
 	
-	@Column(name = "company_prefix")
+	@JsonProperty(value = "company_prefix")
 	private String companyPrefix;
 	
-	@Column(name = "tollfree")
+	@JsonProperty(value = "tollfree")
 	private String tollfree;
 	
-	@Column(name = "cellular")
+	@JsonProperty(value = "cellular")
 	private String cellular;
 	
-	@Column(name = "pager")
+	@JsonProperty(value = "pager")
 	private String pager;
 	
-	@Column(name = "customer_notes")
+	@JsonProperty(value = "customer_notes")
 	private String customerNotes;
 	
-	@Column(name = "after_hours")
+	@JsonProperty(value = "after_hours")
 	private String afterHours;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-    private Set<CompanyBillingLocation> billingLocations = new HashSet<>();
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-    private Set<CompanyAdditionalContacts> additionalContacts = new HashSet<>();
-	
-	public Set<CompanyAdditionalContacts> getAdditionalContacts() {
-		return additionalContacts;
-	}
-
-	public void setAdditionalContacts(Set<CompanyAdditionalContacts> additionalContacts) {
-		this.additionalContacts = additionalContacts;
-	}
-
-	public Set<CompanyBillingLocation> getBillingLocations() {
-		return billingLocations;
-	}
-
-	public void setBillingLocations(Set<CompanyBillingLocation> billingLocations) {
-		this.billingLocations = billingLocations;
-	}
 
 	public int getCompanyId() {
 		return companyId;
@@ -263,4 +227,6 @@ public class Company {
 		this.afterHours = afterHours;
 	}
 	
+	
+
 }

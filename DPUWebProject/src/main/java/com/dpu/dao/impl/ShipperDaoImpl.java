@@ -4,24 +4,9 @@
 
 package com.dpu.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
-import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
-import com.dpu.entity.Company;
 import com.dpu.entity.Shipper;
 
 /**

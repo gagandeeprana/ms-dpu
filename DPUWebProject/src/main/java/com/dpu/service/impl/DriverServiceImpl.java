@@ -8,11 +8,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dpu.controller.DriverController;
 import com.dpu.dao.DriverDao;
 import com.dpu.entity.Driver;
 import com.dpu.service.DriverService;
-
 
 /**
  * @author sumit
@@ -29,14 +27,20 @@ public class DriverServiceImpl implements DriverService {
 
 	@Override
 	public boolean addDriver(Driver driver) {
-		
+
 		logger.info("[addDriver]:Service:  Enter");
-		
+
 		boolean returnValue = false;
 		try {
-			driverDao.save(driver);
-			returnValue = true;
-			return returnValue;
+				boolean isDriverExist = isDriverExist(driver.getDriverCode());
+				if(!isDriverExist){
+					driverDao.save(driver);
+					returnValue = true;
+					return returnValue;
+				}else{
+					return returnValue;
+				}
+			 
 		} catch (Exception e) {
 			return returnValue;
 		} finally {
@@ -73,8 +77,7 @@ public class DriverServiceImpl implements DriverService {
 		try {
 			Criterion deleteDriverCriteria = Restrictions.eq("driverCode",
 					driverCode);
-			List<Driver> driverEntity = driverDao
-					.find(deleteDriverCriteria);
+			List<Driver> driverEntity = driverDao.find(deleteDriverCriteria);
 
 			if (driverEntity != null) {
 				Driver driver = driverEntity.get(0);
@@ -122,6 +125,22 @@ public class DriverServiceImpl implements DriverService {
 			return driver;
 		}
 		return null;
+	}
+	
+	public boolean isDriverExist(String driverCode){
+		boolean isDriverExist = false;
+		
+		Criterion driverCriteria = Restrictions.eqOrIsNull("driverCode", driverCode);
+		List<Driver> drivers = driverDao.find(driverCriteria);
+		
+		if(drivers.size() == 0){
+			 
+			return isDriverExist;
+		}
+		
+		isDriverExist = true;
+		return isDriverExist;
+		
 	}
 
 }

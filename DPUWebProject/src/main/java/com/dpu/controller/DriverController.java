@@ -5,15 +5,22 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dpu.common.CommonProperties;
+import com.dpu.constants.Iconstants;
 import com.dpu.entity.Driver;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.DriverService;
+import com.dpu.util.MessageProperties;
 
 
 /**
@@ -22,7 +29,7 @@ import com.dpu.service.DriverService;
  */
 @RestController
 @RequestMapping(value = "driver")
-public class DriverController {
+public class DriverController extends MessageProperties  {
 
 	Logger logger = Logger.getLogger(DriverController.class);
 
@@ -48,17 +55,24 @@ public class DriverController {
 
 	// Add new Driver
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object addDriver(@RequestBody Driver driver) {
+	public ResponseEntity<Object> addDriver(@RequestBody Driver driver) {
+		
 		logger.info("[addDriver]:Controller:  Enter");
-		String json = null;
+		ResponseEntity<Object> obj =  null;
+		  
 		try {
 			boolean result = driverService.addDriver(driver);
-			json = mapper.writeValueAsString(result);
+			if(result){
+				 obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_added_code), CommonProperties.Driver_added_message, Iconstants.SUCCESS), HttpStatus.OK);
+			}else{
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_add_code), CommonProperties.Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			logger.error("[addDriver]:" + e);
+			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_add_code), CommonProperties.Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		logger.info("[addDriver]:Controller:  Exit");
-		return json;
+		return obj;
 	}
 
 	// delete Driver
@@ -66,14 +80,19 @@ public class DriverController {
 	public Object deleteDriver(@PathVariable("driverCode") String driverCode) {
 		logger.info("[deleteDriver] : controller : Enter : driverCode "
 				+ driverCode);
-		String json = null;
+		Object  obj = null;
 		try {
 			boolean result = driverService.deleteDriver(driverCode);
-			json = mapper.writeValueAsString(result);
+			if(result) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_deleted_code), CommonProperties.Driver_deleted_message, Iconstants.SUCCESS), HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_delete_code), CommonProperties.Driver_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			logger.error("[deleteDriver] : controller : Exception" + e);
+			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_delete_code), CommonProperties.Driver_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		return json;
+		return obj;
 	}
 
 	// Update Driver
@@ -81,14 +100,20 @@ public class DriverController {
 	public Object updateDriver(@PathVariable("driverCode") String driverCode, @RequestBody Driver driver) {
 
 		logger.info("[updateDriver]:Enter Controller: driverCode : "+ driverCode);
-		String json = null;
+		Object obj = null;
 		try {
 			boolean result = driverService.updateDriver(driverCode, driver);
-			json = mapper.writeValueAsString(result);
+
+			if(result) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_updated_code), CommonProperties.Driver_updated_message, Iconstants.SUCCESS), HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_update_code), CommonProperties.Driver_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			logger.error("[updateDriver]: Exception "+e);
+			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_update_code), CommonProperties.Driver_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		return json;
+		return obj;
 	}
 
 	// get Driver by Id

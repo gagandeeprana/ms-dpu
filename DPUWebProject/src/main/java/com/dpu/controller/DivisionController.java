@@ -1,9 +1,15 @@
+/**
+ * 
+ */
 package com.dpu.controller;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,39 +22,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
-import com.dpu.model.CompanyResponse;
+import com.dpu.entity.Division;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.service.CompanyService;
+import com.dpu.service.DivisionService;
 import com.dpu.util.MessageProperties;
 
+/**
+ * @author jagvir
+ *
+ */
 @RestController
-@RequestMapping(value = "company")
-public class CompanyController extends MessageProperties {
+@RequestMapping(value = "division")
+public class DivisionController extends MessageProperties {
 
 	@Autowired
-	CompanyService companyService;
-
+	DivisionService divisionService;
+	Logger logger = Logger.getLogger(DivisionController.class);
 	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		String json = new String();
+		String json = null;
 		try {
-			
-			List<Company> lstCompanies = companyService.getAll();
-			if (lstCompanies != null) {
-				List<CompanyResponse> responses = new ArrayList<CompanyResponse>();
-				for(Company company : lstCompanies) {
-					CompanyResponse response = new CompanyResponse();
-					BeanUtils.copyProperties(response, company);
-					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
-			}
+
+			List<Division> lstDivisions = divisionService.getAll();
+			json = mapper.writeValueAsString(lstDivisions);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -56,96 +55,94 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Company company) {
+	public Object add(@RequestBody Division division) {
+		logger.info("DivisionController: add");
+		Calendar cal = Calendar.getInstance();
 		Object obj = null;
 		try {
-			Company response = companyService.add(company);
-			if (response != null) {
+			division.setCreatedOn(cal.getTime());
+			Division result = divisionService.add(division);
+			if (result != null) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyAddedCode),
-						companyAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+						Integer.parseInt(divisionAddedCode),
+						divisionAddedMessage, Iconstants.SUCCESS),
+						HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToAddCode),
-						companyUnableToAddMessage, Iconstants.ERROR),
+				obj = new ResponseEntity<Object>(new Success(
+						Integer.parseInt(divisionUnableToAddCode),
+						divisionUnableToAddMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
+			logger.error("DivisionController: add " + e);
 		}
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-
 		Object obj = null;
 		boolean result = false;
-
 		try {
-
-			Company company = companyService.get(id);
-			if (company != null) {
-				result = companyService.delete(company);
+			Division division = divisionService.get(id);
+			if (division != null) {
+				result = divisionService.delete(division);
 			}
 			if (result) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyDeletedCode),
-						companyDeletedMessage, Iconstants.SUCCESS),
+						Integer.parseInt(divisionDeletedCode),
+						divisionDeletedMessage, Iconstants.SUCCESS),
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToDeleteCode),
-						companyUnableToDeleteMessage, Iconstants.ERROR),
+						Integer.parseInt(divisionUnableToDeleteCode),
+						divisionUnableToDeleteMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
+			logger.error("DivisionController: delete " + e);
 		}
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
-			@RequestBody Company company) {
-
+			@RequestBody Division division) {
 		Object obj = null;
 		try {
-			company.setCompanyId(id);
-			Company response = companyService.update(company);
+			division.setDivisionId(id);
+			Division response = divisionService.update(id, division);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyUpdateCode),
-						companyUpdateMessage, Iconstants.SUCCESS),
+						Integer.parseInt(divisionUpdateCode),
+						divisionUpdateMessage, Iconstants.SUCCESS),
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToUpdateCode),
-						companyUnableToUpdateMessage, Iconstants.ERROR),
+						Integer.parseInt(divisionUnableToUpdateCode),
+						divisionUnableToUpdateMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
+			logger.error("DivisionController: update " + e);
 		}
 		return obj;
 	}
 
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("id") int id) {
-		String json = new String();
+	@RequestMapping(value = "/{divisionId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object get(@PathVariable("divisionId") int id) {
+		String json = null;
 		try {
-			Company company = companyService.get(id);
-			if (company != null) {
-				CompanyResponse response = new CompanyResponse();
-				BeanUtils.copyProperties(response, company);
-				
-				if(response != null) {
-					json = mapper.writeValueAsString(response);
-				}
-			}
+			Division division = divisionService.get(id);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(division);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return json;
 	}
+
 }

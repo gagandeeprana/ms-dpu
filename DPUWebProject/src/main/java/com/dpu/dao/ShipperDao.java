@@ -1,7 +1,5 @@
 package com.dpu.dao;
 
-import java.util.List;
-
 import com.dpu.entity.Shipper;
 
 public interface ShipperDao extends GenericDao<Shipper>{

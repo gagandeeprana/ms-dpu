@@ -1,9 +1,10 @@
+/**
+ * 
+ */
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,39 +17,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
-import com.dpu.model.CompanyResponse;
+import com.dpu.entity.Service;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.service.CompanyService;
+import com.dpu.service.ServiceService;
 import com.dpu.util.MessageProperties;
 
+/**
+ * @author jagvir
+ *
+ */
 @RestController
-@RequestMapping(value = "company")
-public class CompanyController extends MessageProperties {
-
+@RequestMapping(value = "service")
+public class ServiceController extends MessageProperties {
 	@Autowired
-	CompanyService companyService;
+	ServiceService serviceService;
 
 	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		String json = new String();
+		String json = null;
 		try {
-			
-			List<Company> lstCompanies = companyService.getAll();
-			if (lstCompanies != null) {
-				List<CompanyResponse> responses = new ArrayList<CompanyResponse>();
-				for(Company company : lstCompanies) {
-					CompanyResponse response = new CompanyResponse();
-					BeanUtils.copyProperties(response, company);
-					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
-			}
+			List<Service> lstServices = serviceService.getAll();
+			json = mapper.writeValueAsString(lstServices);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -56,18 +48,18 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Company company) {
+	public Object add(@RequestBody Service service) {
 		Object obj = null;
 		try {
-			Company response = companyService.add(company);
-			if (response != null) {
+			Service result = serviceService.add(service);
+			if (result != null) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyAddedCode),
-						companyAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+						Integer.parseInt(serviceAddedCode),
+						serviceAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToAddCode),
-						companyUnableToAddMessage, Iconstants.ERROR),
+						Integer.parseInt(serviceUnableToAddCode),
+						serviceUnableToAddMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
@@ -78,50 +70,47 @@ public class CompanyController extends MessageProperties {
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-
 		Object obj = null;
 		boolean result = false;
-
 		try {
-
-			Company company = companyService.get(id);
-			if (company != null) {
-				result = companyService.delete(company);
+			Service service = serviceService.get(id);
+			if (service != null) {
+				result = serviceService.delete(service);
 			}
 			if (result) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyDeletedCode),
-						companyDeletedMessage, Iconstants.SUCCESS),
+						Integer.parseInt(serviceDeletedCode),
+						serviceDeletedMessage, Iconstants.SUCCESS),
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToDeleteCode),
-						companyUnableToDeleteMessage, Iconstants.ERROR),
+						Integer.parseInt(serviceUnableToDeleteCode),
+						serviceUnableToDeleteMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return obj;
+
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
-			@RequestBody Company company) {
-
+			@RequestBody Service service) {
 		Object obj = null;
 		try {
-			company.setCompanyId(id);
-			Company response = companyService.update(company);
+			service.setServiceId(id);
+			Service response = serviceService.update(id, service);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyUpdateCode),
-						companyUpdateMessage, Iconstants.SUCCESS),
+						Integer.parseInt(serviceUpdateCode),
+						serviceUpdateMessage, Iconstants.SUCCESS),
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToUpdateCode),
-						companyUnableToUpdateMessage, Iconstants.ERROR),
+						Integer.parseInt(serviceUnableToUpdateCode),
+						serviceUnableToUpdateMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
@@ -130,22 +119,17 @@ public class CompanyController extends MessageProperties {
 		return obj;
 	}
 
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("id") int id) {
-		String json = new String();
+	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object get(@PathVariable("categoryId") int id) {
+		String json = null;
 		try {
-			Company company = companyService.get(id);
-			if (company != null) {
-				CompanyResponse response = new CompanyResponse();
-				BeanUtils.copyProperties(response, company);
-				
-				if(response != null) {
-					json = mapper.writeValueAsString(response);
-				}
-			}
+			Service service = serviceService.get(id);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(service);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return json;
 	}
+
 }

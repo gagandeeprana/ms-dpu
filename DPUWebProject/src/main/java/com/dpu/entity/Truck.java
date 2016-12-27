@@ -1,6 +1,7 @@
 package com.dpu.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
-@Table(name = "powerunitmaster")
+@Table(name = "truck")
 public class Truck implements Serializable {
 
 	/**
@@ -23,9 +24,12 @@ public class Truck implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="unit_no")
+	@Column(name="truck_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int unit_no;
+	private Long truck_id;
+	
+	@Column(name="unit_no")
+	private Integer unit_no;
 	
 	@Column(name = "status")
 	private String status;
@@ -34,7 +38,7 @@ public class Truck implements Serializable {
 	private String truck_class;
 	
 	@Column(name = "owner_id")
-	private int owner_id;
+	private Integer owner_id;
 	
 	@Column(name = "VIN")
 	private String VIN;
@@ -46,7 +50,7 @@ public class Truck implements Serializable {
 	private String model;
 	
 	@Column(name = "truck_year")
-	private int truck_year;
+	private Integer truck_year;
 	
 	@Column(name = "plate_no")
 	private String plate_no;
@@ -55,30 +59,44 @@ public class Truck implements Serializable {
 	private String jurisdiction;
 	
 	@Column(name = "tare_weight")
-	private int tare_weight;
+	private Integer tare_weight;
 	
 	@Column(name = "rgw")
 	private String rgw;
 	
-	@Column(name = "tracking_id")
-	private int tracking_id;
-	
+	 
 	@Column(name = "current_odometer")
 	private String current_odometer;
 	
 	@Column(name = "equipment_type")
 	private String equipment_type;
 	
-	@Column(name = "terminal_id")
-	private int terminal_id;
-
+	@Column(name = "created_by")
+	private String created_by;
+	
+	@Column(name = "created_on")
+	private Date created_on;
+	
+	@Column(name = "modified_by")
+	private String modified_by;
+	
+	@Column(name = "modified_on")
+	private Date modified_on;
 	 
+	 
+	public Long getTruck_id() {
+		return truck_id;
+	}
 
-	public int getUnit_no() {
+	public void setTruck_id(Long truck_id) {
+		this.truck_id = truck_id;
+	}
+
+	public Integer getUnit_no() {
 		return unit_no;
 	}
 
-	public void setUnit_no(int unit_no) {
+	public void setUnit_no(Integer unit_no) {
 		this.unit_no = unit_no;
 	}
 
@@ -98,11 +116,11 @@ public class Truck implements Serializable {
 		this.truck_class = truck_class;
 	}
 
-	public int getOwner_id() {
+	public Integer getOwner_id() {
 		return owner_id;
 	}
 
-	public void setOwner_id(int owner_id) {
+	public void setOwner_id(Integer owner_id) {
 		this.owner_id = owner_id;
 	}
 
@@ -130,11 +148,11 @@ public class Truck implements Serializable {
 		this.model = model;
 	}
 
-	public int getTruck_year() {
+	public Integer getTruck_year() {
 		return truck_year;
 	}
 
-	public void setTruck_year(int truck_year) {
+	public void setTruck_year(Integer truck_year) {
 		this.truck_year = truck_year;
 	}
 
@@ -154,11 +172,11 @@ public class Truck implements Serializable {
 		this.jurisdiction = jurisdiction;
 	}
 
-	public int getTare_weight() {
+	public Integer getTare_weight() {
 		return tare_weight;
 	}
 
-	public void setTare_weight(int tare_weight) {
+	public void setTare_weight(Integer tare_weight) {
 		this.tare_weight = tare_weight;
 	}
 
@@ -170,13 +188,7 @@ public class Truck implements Serializable {
 		this.rgw = rgw;
 	}
 
-	public int getTracking_id() {
-		return tracking_id;
-	}
-
-	public void setTracking_id(int tracking_id) {
-		this.tracking_id = tracking_id;
-	}
+	 
 
 	public String getCurrent_odometer() {
 		return current_odometer;
@@ -194,16 +206,40 @@ public class Truck implements Serializable {
 		this.equipment_type = equipment_type;
 	}
 
-	public int getTerminal_id() {
-		return terminal_id;
+	public String getCreated_by() {
+		return created_by;
 	}
 
-	public void setTerminal_id(int terminal_id) {
-		this.terminal_id = terminal_id;
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
 	}
 
- 
-	
-	
+	public Date getCreated_on() {
+		return created_on;
+	}
 
+	public void setCreated_on(Date created_on) {
+		this.created_on = created_on;
+	}
+
+	public String getModified_by() {
+		return modified_by;
+	}
+
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
+	}
+
+	public Date getModified_on() {
+		return modified_on;
+	}
+
+	public void setModified_on(Date modified_on) {
+		this.modified_on = modified_on;
+	}
+
+	 
+	 
+
+	 
 }

@@ -1,5 +1,6 @@
 package com.dpu.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,8 +27,15 @@ public class TruckServiceImpl implements TruckService {
 		
 		boolean returnValue = false;
 		try {
-			 		 
-			truckDao.save(truck);
+			
+			truck.setCreated_by("sumit");	
+			truck.setCreated_on(new Date());
+			
+			truck.setModified_by("sumit");
+			truck.setModified_on(new Date());
+			
+			Truck truckR = truckDao.save(truck);
+			System.out.println("[addTruck]truck Id :" + truckR.getTruck_id());
 			returnValue = true;
 			return returnValue;
 					 
@@ -49,11 +57,60 @@ public class TruckServiceImpl implements TruckService {
 		if (listofDriver != null) {
 			Truck updateTruck = listofDriver.get(0);
 
-			updateTruck.setMake(truck.getTruck_class());
-			updateTruck.setModel(truck.getStatus());
+			//updateTruck.setMake(truck.getTruck_class());
+			//updateTruck.setModel(truck.getStatus());
+			if(truck.getCurrent_odometer() != null){
+				updateTruck.setCurrent_odometer(truck.getCurrent_odometer());
+			}
+			if(truck.getEquipment_type() != null){
+				updateTruck.setEquipment_type(truck.getEquipment_type());
+			}
+			if(truck.getJurisdiction() != null){
+				updateTruck.setJurisdiction(truck.getJurisdiction());
+			}
+			if(truck.getMake() != null){
+				updateTruck.setMake(truck.getMake());
+			}
+			if(truck.getModel() != null){
+				updateTruck.setModel(truck.getModel());
+			}
+			if(truck.getOwner_id() != null){
+				updateTruck.setOwner_id(truck.getOwner_id());
+			}
+			if(truck.getPlate_no() != null){
+				updateTruck.setPlate_no(truck.getPlate_no());
+			}
+			if(truck.getRgw() != null){
+				updateTruck.setRgw(truck.getRgw());
+			}
+			if(truck.getStatus() != null){
+				updateTruck.setStatus(truck.getStatus());
+			}
+			if(truck.getTare_weight() != null){
+				updateTruck.setTare_weight(truck.getTare_weight());
+			}
+			 
+			if(truck.getTruck_class() != null){
+				updateTruck.setTruck_class(truck.getTruck_class());
+			}
+			if(truck.getTruck_year() != null){
+				updateTruck.setTruck_year(truck.getTruck_year());
+			}
+			if(truck.getUnit_no() != null){
+				updateTruck.setUnit_no(truck.getUnit_no());
+			}
+			if(truck.getVIN() != null){
+				updateTruck.setVIN(truck.getVIN());
+			}
+			
+			 
+			
+			truck.setModified_by("sumit");
+			truck.setModified_on(new Date());
 
 			// update Driver
 			truckDao.update(truck);
+			System.out.println("[updateDriver]: Truck updated Successfully.");
 			logger.info("[updateDriver]: Truck updated Successfully.");
 			return true;
 		}
@@ -119,5 +176,9 @@ public class TruckServiceImpl implements TruckService {
 		return null;
 	}
 	 
+	public boolean isTruckExist(){
+		boolean isExist = false;
+		return isExist;
+	}
 
 }

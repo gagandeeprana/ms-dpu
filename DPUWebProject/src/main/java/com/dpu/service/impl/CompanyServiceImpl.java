@@ -30,6 +30,7 @@ public class CompanyServiceImpl implements CompanyService{
 		boolean result = false;
 		try {
 			companyDao.delete(company);
+			
 			result = true;
 		} catch (Exception e) {
 			result = false;

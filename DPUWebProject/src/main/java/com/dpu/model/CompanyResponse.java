@@ -1,14 +1,18 @@
 package com.dpu.model;
 
+import java.io.Serializable;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class CompanyResponse {
+public class CompanyResponse implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@JsonProperty(value = "company_id")
-	private int companyId;
+	private Integer companyId;
 	
 	@JsonProperty(value = "name")
 	private String name;
@@ -67,11 +71,11 @@ public class CompanyResponse {
 	@JsonProperty(value = "after_hours")
 	private String afterHours;
 
-	public int getCompanyId() {
+	public Integer getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(Integer companyId) {
 		this.companyId = companyId;
 	}
 

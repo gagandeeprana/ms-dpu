@@ -56,9 +56,12 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Company company) {
+	public Object add(@RequestBody CompanyResponse companyResponse) {
 		Object obj = null;
 		try {
+			System.out.println(companyResponse + "         " + new ObjectMapper().writeValueAsString(companyResponse));
+			Company company = setCompanyValues(companyResponse);
+			System.out.println(new ObjectMapper().writeValueAsString(company));
 			Company response = companyService.add(company);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
@@ -74,6 +77,29 @@ public class CompanyController extends MessageProperties {
 			System.out.println(e);
 		}
 		return obj;
+	}
+
+	private Company setCompanyValues(CompanyResponse companyResponse) {
+		Company company = new Company();
+		company.setName(companyResponse.getName());
+		company.setContact(companyResponse.getContact());
+		company.setAddress(companyResponse.getAddress());
+		company.setPosition(companyResponse.getPosition());
+		company.setUnitNo(companyResponse.getUnitNo());
+		company.setPhone(companyResponse.getPhone());
+		company.setExt(companyResponse.getExt());
+		company.setCity(companyResponse.getCity());
+		company.setFax(companyResponse.getFax());
+		company.setCompanyPrefix(companyResponse.getCompanyPrefix());
+		company.setProvinceState(companyResponse.getProvinceState());
+		company.setZip(companyResponse.getZip());
+		company.setAfterHours(companyResponse.getAfterHours());
+		company.setEmail(companyResponse.getEmail());
+		company.setTollfree(companyResponse.getTollfree());
+		company.setWebsite(companyResponse.getWebsite());
+		company.setCellular(companyResponse.getCellular());
+		company.setPager(companyResponse.getPager());
+		return company;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)

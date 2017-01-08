@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -25,12 +26,15 @@ public class Equipment {
 	@Id
 	@Column(name = "equipment_id")
 	@GeneratedValue
+	@JsonProperty(value = "equipment_id")
 	private int equipmentId;
 
 	@Column(name = "equipment_name")
+	@JsonProperty(value = "equipment_name")
 	private String equipmentName;
 
 	@Column(name = "description")
+	@JsonProperty(value = "description")
 	private String description;
 
 	public int getEquipmentId() {
@@ -56,5 +60,4 @@ public class Equipment {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 }

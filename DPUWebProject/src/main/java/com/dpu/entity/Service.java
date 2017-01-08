@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -25,19 +26,21 @@ public class Service {
 	@Id
 	@Column(name = "service_id")
 	@GeneratedValue
+	@JsonProperty(value = "service_id")
 	private int serviceId;
 
 	@Column(name = "service_name")
+	@JsonProperty(value = "service_name")
 	private String serviceName;
 
 	@Column(name = "service_response")
+	@JsonProperty(value = "service_response")
 	private int serviceResponse;
 
 	@Column(name = "status")
+	@JsonProperty(value = "status")
 	private int status;
 
-	
-	
 	public int getServiceId() {
 		return serviceId;
 	}

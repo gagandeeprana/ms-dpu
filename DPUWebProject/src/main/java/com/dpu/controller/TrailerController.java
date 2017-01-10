@@ -25,13 +25,15 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "trailer")
 public class TrailerController extends MessageProperties {
+	
+	Logger logger = Logger.getLogger(TrailerController.class);
 
 	@Autowired
 	TrailerService trailerService;
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	Logger logger = Logger.getLogger(TrailerController.class);
+	
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {

@@ -5,6 +5,7 @@ package com.dpu.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "shipper")
 public class ShipperController extends MessageProperties {
+	
+	Logger logger = Logger.getLogger(EquipmentController.class);
 
 	@Autowired
 	ShipperService shipperService;

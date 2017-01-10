@@ -22,7 +22,89 @@ public class Truck implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private String usage;
 	
+	private String owner;
+	
+	private String division;
+	
+	@Column(name = "oo_name")
+	private String oOName;
+	
+	private String terminal;
+	
+	private String category;
+
+	@Column(name = "truck_type")
+	private String truckType;
+	
+	private String finance;
+	
+	public String getUsage() {
+		return usage;
+	}
+
+	public void setUsage(String usage) {
+		this.usage = usage;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getoOName() {
+		return oOName;
+	}
+
+	public void setoOName(String oOName) {
+		this.oOName = oOName;
+	}
+
+	public String getTerminal() {
+		return terminal;
+	}
+
+	public void setTerminal(String terminal) {
+		this.terminal = terminal;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getTruckType() {
+		return truckType;
+	}
+
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
+
+	public String getFinance() {
+		return finance;
+	}
+
+	public void setFinance(String finance) {
+		this.finance = finance;
+	}
+
 	@Id
 	@Column(name="truck_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)

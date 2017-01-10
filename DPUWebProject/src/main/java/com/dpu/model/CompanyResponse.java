@@ -11,64 +11,64 @@ public class CompanyResponse implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@JsonProperty(value = "company_id")
+	//@JsonProperty(value = "company_id")
 	private Integer companyId;
 	
-	@JsonProperty(value = "name")
+	//@JsonProperty(value = "name")
 	private String name;
 	
-	@JsonProperty(value = "address")
+	//@JsonProperty(value = "address")
 	private String address;
 	
-	@JsonProperty(value = "unit_no")
+	//@JsonProperty(value = "unit_no")
 	private String unitNo;
 	
-	@JsonProperty(value = "city")
+	//@JsonProperty(value = "city")
 	private String city;
 	
-	@JsonProperty(value = "province_state")
+	//@JsonProperty(value = "province_state")
 	private String provinceState;
 	
-	@JsonProperty(value = "zip")
+	//@JsonProperty(value = "zip")
 	private String zip;
 	
-	@JsonProperty(value = "email")
+	//@JsonProperty(value = "email")
 	private String email;
 	
-	@JsonProperty(value = "website")
+	//@JsonProperty(value = "website")
 	private String website;
 	
-	@JsonProperty(value = "contact")
+	//@JsonProperty(value = "contact")
 	private String contact;
 	
-	@JsonProperty(value = "position")
+	//@JsonProperty(value = "position")
 	private String position;
 	
-	@JsonProperty(value = "phone")
+	//@JsonProperty(value = "phone")
 	private String phone;
 	
-	@JsonProperty(value = "ext")
+	//@JsonProperty(value = "ext")
 	private String ext;
 	
-	@JsonProperty(value = "fax")
+	//@JsonProperty(value = "fax")
 	private String fax;
 	
-	@JsonProperty(value = "company_prefix")
+	//@JsonProperty(value = "company_prefix")
 	private String companyPrefix;
 	
-	@JsonProperty(value = "tollfree")
+	//@JsonProperty(value = "tollfree")
 	private String tollfree;
 	
-	@JsonProperty(value = "cellular")
+	//@JsonProperty(value = "cellular")
 	private String cellular;
 	
-	@JsonProperty(value = "pager")
+	//@JsonProperty(value = "pager")
 	private String pager;
 	
-	@JsonProperty(value = "customer_notes")
+	//@JsonProperty(value = "customer_notes")
 	private String customerNotes;
 	
-	@JsonProperty(value = "after_hours")
+	//@JsonProperty(value = "after_hours")
 	private String afterHours;
 
 	public Integer getCompanyId() {

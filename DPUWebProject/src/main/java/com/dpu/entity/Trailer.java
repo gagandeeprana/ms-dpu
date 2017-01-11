@@ -1,14 +1,11 @@
 package com.dpu.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -20,9 +17,127 @@ public class Trailer {
 	@Id
 	@Column(name = "trailer_id")
 	@GeneratedValue
-	//@JsonProperty(value = "trailer_id")
 	private Integer trailerId;
 	
+	@Column(name = "unit_no")
+	private Integer unitNo;
+	
+	@Column(name = "trailer_usage")
+	private String usage;
+	
+	@Column(name = "owner")
+	private String owner;
+	
+	@Column(name = "division")
+	private String division;
+	
+	@Column(name = "oo_name")
+	private String oOName;
+	
+	@Column(name = "terminal")
+	private String terminal;
+	
+	@Column(name = "category")
+	private String category;
+	
+	@Column(name = "trailer_type")
+	private String trailerType;
+	
+	@Column(name = "status")
+	private String status;
+	
+	@Column(name = "finance")
+	private String finance;
+
+	public Integer getTrailerId() {
+		return trailerId;
+	}
+
+	public void setTrailerId(Integer trailerId) {
+		this.trailerId = trailerId;
+	}
+
+	public Integer getUnitNo() {
+		return unitNo;
+	}
+
+	public void setUnitNo(Integer unitNo) {
+		this.unitNo = unitNo;
+	}
+
+	public String getUsage() {
+		return usage;
+	}
+
+	public void setUsage(String usage) {
+		this.usage = usage;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getoOName() {
+		return oOName;
+	}
+
+	public void setoOName(String oOName) {
+		this.oOName = oOName;
+	}
+
+	public String getTerminal() {
+		return terminal;
+	}
+
+	public void setTerminal(String terminal) {
+		this.terminal = terminal;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getTrailerType() {
+		return trailerType;
+	}
+
+	public void setTrailerType(String trailerType) {
+		this.trailerType = trailerType;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getFinance() {
+		return finance;
+	}
+
+	public void setFinance(String finance) {
+		this.finance = finance;
+	}
+	
+	/*
 	@Column(name = "class_id")
 	//@JsonProperty(value = "class_id")
 	private Integer classId;
@@ -209,6 +324,6 @@ public class Trailer {
 
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
-	}
+	}*/
 
 }

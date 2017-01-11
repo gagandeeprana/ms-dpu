@@ -29,7 +29,7 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "company/{companyid}/billinglocations")
 public class CompanyBillingLocationController extends MessageProperties {
 
-	Logger logger = Logger.getLogger(DriverController.class);
+	Logger logger = Logger.getLogger(CompanyBillingLocationController.class);
 	
 	@Autowired
 	CompanyBillingLocationService companyBillingLocationService;

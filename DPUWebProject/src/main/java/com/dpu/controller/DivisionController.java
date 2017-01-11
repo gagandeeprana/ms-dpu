@@ -45,6 +45,7 @@ public class DivisionController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll] : Enter ");
 		String json = null;
 		try {
 
@@ -53,6 +54,7 @@ public class DivisionController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll] : Exit ");
 		return json;
 	}
 
@@ -79,11 +81,13 @@ public class DivisionController extends MessageProperties {
 			System.out.println(e);
 			logger.error("DivisionController: add " + e);
 		}
+		logger.info("[getAll] : Exit ");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
+		logger.info("[delete] : Enter  : Id : "+id);
 		Object obj = null;
 		boolean result = false;
 		try {
@@ -106,12 +110,14 @@ public class DivisionController extends MessageProperties {
 			System.out.println(e);
 			logger.error("DivisionController: delete " + e);
 		}
+		logger.info("[delete] : Exit  ");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Division division) {
+		logger.info("[update] : Enter");
 		Object obj = null;
 		try {
 			division.setDivisionId(id);
@@ -131,11 +137,13 @@ public class DivisionController extends MessageProperties {
 			System.out.println(e);
 			logger.error("DivisionController: update " + e);
 		}
+		logger.info("[update] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{divisionId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("divisionId") int id) {
+		logger.info("[get] : Enter : ID : "+id);
 		String json = null;
 		try {
 			Division division = divisionService.get(id);
@@ -144,6 +152,7 @@ public class DivisionController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get] : Exit  ");
 		return json;
 	}
 

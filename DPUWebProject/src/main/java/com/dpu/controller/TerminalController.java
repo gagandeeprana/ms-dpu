@@ -5,6 +5,7 @@ package com.dpu.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,8 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "terminal")
 public class TerminalController {
+	
+	Logger logger = Logger.getLogger(EquipmentController.class);
 
 	@Value("${terminal_added_code}")
 	public String terminalAddedCode;

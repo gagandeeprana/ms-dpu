@@ -5,6 +5,7 @@ package com.dpu.controller;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,8 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "category")
 public class CategoryController extends MessageProperties {
 
+	Logger logger = Logger.getLogger(CategoryController.class);
+	
 	@Autowired
 	CategoryService categoryService;
 
@@ -40,6 +43,7 @@ public class CategoryController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll]: Enter");
 		String json = null;
 		try {
 			List<Category> lstCategories = categoryService.getAll();
@@ -47,11 +51,13 @@ public class CategoryController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll]: Exit: json :" + json);
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Category category) {
+		logger.info("[add]: Enter");
 		Object obj = null;
 		try {
 			Category result = categoryService.add(category);
@@ -63,11 +69,13 @@ public class CategoryController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[add]: Exit : obj : "+ obj);
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
+		logger.info("[delete]: Enter : ID : "+ id);
 		Object obj = null;
 		boolean result = false;
 		try {
@@ -83,6 +91,7 @@ public class CategoryController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[delete]: Exit ");
 		return obj;
 
 	}
@@ -90,6 +99,7 @@ public class CategoryController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Category category) {
+		logger.info("[update]: Enter: Id:  " +id);
 		Object obj = null;
 		try {
 			category.setCategoryId(id);
@@ -102,11 +112,13 @@ public class CategoryController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[update]: Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("categoryId") int id) {
+		logger.info("[get]: Enter: Id:  " +id);
 		String json = null;
 		try {
 			Category category = categoryService.get(id);
@@ -115,6 +127,7 @@ public class CategoryController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get]: Exit: ");
 		return json;
 	}
 

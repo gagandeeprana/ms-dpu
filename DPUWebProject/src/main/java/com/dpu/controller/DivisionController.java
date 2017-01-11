@@ -36,9 +36,11 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "division")
 public class DivisionController extends MessageProperties {
 
+	Logger logger = Logger.getLogger(DivisionController.class);
+	
 	@Autowired
 	DivisionService divisionService;
-	Logger logger = Logger.getLogger(DivisionController.class);
+	
 	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

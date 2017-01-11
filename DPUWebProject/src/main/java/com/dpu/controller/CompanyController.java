@@ -61,7 +61,6 @@ public class CompanyController extends MessageProperties {
 		try {
 			System.out.println(companyResponse + "         " + new ObjectMapper().writeValueAsString(companyResponse));
 			Company company = setCompanyValues(companyResponse);
-			System.out.println(new ObjectMapper().writeValueAsString(company));
 			Company response = companyService.add(company);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(

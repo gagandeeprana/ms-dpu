@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,8 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "company")
 public class CompanyController extends MessageProperties {
 
+	Logger logger = Logger.getLogger(DriverController.class);
+	
 	@Autowired
 	CompanyService companyService;
 
@@ -59,9 +62,8 @@ public class CompanyController extends MessageProperties {
 	public Object add(@RequestBody CompanyResponse companyResponse) {
 		Object obj = null;
 		try {
-			System.out.println(companyResponse + "         " + new ObjectMapper().writeValueAsString(companyResponse));
+			System.out.println(new ObjectMapper().writeValueAsString(companyResponse));
 			Company company = setCompanyValues(companyResponse);
-			System.out.println(new ObjectMapper().writeValueAsString(company));
 			Company response = companyService.add(company);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(

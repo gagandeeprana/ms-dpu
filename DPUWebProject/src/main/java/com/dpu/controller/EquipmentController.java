@@ -31,12 +31,15 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "equipment")
 public class EquipmentController extends MessageProperties {
+	
+	Logger logger = Logger.getLogger(EquipmentController.class);
+	
 	@Autowired
 	EquipmentService equipmentService;
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	Logger logger = Logger.getLogger(EquipmentController.class);
+
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {

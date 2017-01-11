@@ -7,34 +7,34 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class AdditionalContacts {
 
-	@JsonProperty(value = "add_contact_id")
+	@JsonProperty("add_contact_id")
 	private int additionalContactId;
 
-	@JsonProperty(value = "customer_name")
+	@JsonProperty("customer_name")
 	private String customerName;
 
-	@JsonProperty(value = "position")
+	@JsonProperty("position")
 	private String position;
 
-	@JsonProperty(value = "phone")
+	@JsonProperty("phone")
 	private String phone;
 
-	@JsonProperty(value = "ext")
+	@JsonProperty("ext")
 	private String ext;
 
-	@JsonProperty(value = "fax")
+	@JsonProperty("fax")
 	private String fax;
 
-	@JsonProperty(value = "additional_contact_prefix")
+	@JsonProperty("additional_contact_prefix")
 	private String prefix;
 
-	@JsonProperty(value = "cellular")
+	@JsonProperty("cellular")
 	private String cellular;
 
-	@JsonProperty(value = "status")
+	@JsonProperty("status")
 	private int status;
 
-	@JsonProperty(value = "email")
+	@JsonProperty("email")
 	private String email;
 
 }

@@ -14,73 +14,73 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
-@Table(name = "trailermaster")
+@Table(name = "newtrailermaster")
 public class Trailer {
 
 	@Id
 	@Column(name = "trailer_id")
 	@GeneratedValue
-	@JsonProperty(value = "trailer_id")
+	//@JsonProperty(value = "trailer_id")
 	private Integer trailerId;
 	
 	@Column(name = "class_id")
-	@JsonProperty(value = "class_id")
+	//@JsonProperty(value = "class_id")
 	private Integer classId;
 	
 	@Column(name = "equipment_id")
-	@JsonProperty(value = "equipment_id")
+	//@JsonProperty(value = "equipment_id")
 	private Integer equipmentId;
 	
 	@Column(name = "length")
-	@JsonProperty(value = "length")
+	//@JsonProperty(value = "length")
 	private Integer length;
 	
 	@Column(name = "VIN")
-	@JsonProperty(value = "vin")
+	//@JsonProperty(value = "vin")
 	private String VIN;
 	
 	@Column(name = "make")
-	@JsonProperty(value = "make")
+	//@JsonProperty(value = "make")
 	private String make;
 	
 	@Column(name = "model")
-	@JsonProperty(value = "model")
+	//@JsonProperty(value = "model")
 	private String model;
 	
 	@Column(name = "year")
-	@JsonProperty(value = "year")
+	//@JsonProperty(value = "year")
 	private Integer year;
 	
 	@Column(name = "plate_no")
-	@JsonProperty(value = "plate_no")
+	//@JsonProperty(value = "plate_no")
 	private String plateNo;
 	
 	@Column(name = "jurisdiction")
-	@JsonProperty(value = "jurisdiction")
+	//@JsonProperty(value = "jurisdiction")
 	private String jurisdiction;
 	
 	@Column(name = "tare_weight")
-	@JsonProperty(value = "tare_weight")
+	//@JsonProperty(value = "tare_weight")
 	private String tareWeight;
 	
 	@Column(name = "rgw")
-	@JsonProperty(value = "rgw")
+	//@JsonProperty(value = "rgw")
 	private String rgw;
 	
 	@Column(name = "current_odometer")
-	@JsonProperty(value = "current_odometer")
+	//@JsonProperty(value = "current_odometer")
 	private String currentOdometer;
 	
 	@Column(name = "reading_taken_date")
-	@JsonProperty(value = "reading_taken_date")
+	//@JsonProperty(value = "reading_taken_date")
 	private Date readingTakenDate;
 	
 	@Column(name = "created_by")
-	@JsonProperty(value = "created_by")
+	//@JsonProperty(value = "created_by")
 	private Integer createdBy;
 	
 	@Column(name = "created_on")
-	@JsonProperty(value = "created_on")
+	//@JsonProperty(value = "created_on")
 	private Date createdOn;
 
 	public Integer getTrailerId() {

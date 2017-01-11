@@ -1,52 +1,35 @@
-package com.dpu.entity;
+package com.dpu.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@Entity
-@Table(name = "newtruckmaster")
-public class Truck implements Serializable {
+@JsonSerialize(include = Inclusion.NON_NULL)
+public class TruckResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="truck_id")
-	@GeneratedValue
 	private Long truckId;
 
-	@Column(name = "truck_usage")
 	private String usage;
 	
-	@Column(name = "owner")
 	private String owner;
 	
-	@Column(name = "division")
 	private String division;
 	
-	@Column(name = "oo_name")
 	private String oOName;
 	
-	@Column(name = "terminal")
 	private String terminal;
 	
-	@Column(name = "category")
 	private String category;
 
-	@Column(name = "truck_type")
 	private String truckType;
 	
-	@Column(name = "finance")
 	private String finance;
-	
-	@Column(name="unit_no")
+
 	private Integer unitNo;
 	
-	@Column(name = "status")
 	private String status;
 	
 	public String getUsage() {
@@ -337,6 +320,4 @@ public class Truck implements Serializable {
 	public void setModifiedOn(Date modifiedOn) {
 		this.modifiedOn = modifiedOn;
 	}*/
-	
-	
 }

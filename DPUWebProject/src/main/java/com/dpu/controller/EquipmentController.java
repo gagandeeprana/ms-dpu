@@ -43,6 +43,7 @@ public class EquipmentController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll] :Enter");
 		String json = null;
 		try {
 			List<Equipment> lstEquipments = equipmentService.getAll();
@@ -52,11 +53,13 @@ public class EquipmentController extends MessageProperties {
 			logger.error(e);
 			logger.error("EquipmentController : getAll " + e);
 		}
+		logger.info("[getAll] :Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Equipment equipment) {
+		logger.info("[getAll] :Enter");
 		Object obj = null;
 		try {
 			Equipment result = equipmentService.add(equipment);
@@ -75,11 +78,13 @@ public class EquipmentController extends MessageProperties {
 			System.out.println(e);
 			logger.error("EquipmentController : add: " + e);
 		}
+		logger.info("[getAll] :Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
+		logger.info("[delete] :Enter : Id : "+id);
 		Object obj = null;
 		boolean result = false;
 		try {
@@ -102,6 +107,7 @@ public class EquipmentController extends MessageProperties {
 			System.out.println(e);
 			logger.error("EquipmentController : delete " + e);
 		}
+		logger.info("[delete] :Exit ");
 		return obj;
 
 	}
@@ -109,6 +115,7 @@ public class EquipmentController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Equipment equipment) {
+		logger.info("[update] :Enter :ID:  "+id );
 		Object obj = null;
 		try {
 			equipment.setEquipmentId(id);
@@ -128,11 +135,13 @@ public class EquipmentController extends MessageProperties {
 			System.out.println(e);
 			logger.error("EquipmentController : update " + e);
 		}
+		logger.info("[update] :Exit   " );
 		return obj;
 	}
 
 	@RequestMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("equipmentId") int id) {
+		logger.info("[get] :Enter :Id:   "+id );
 		String json = null;
 		try {
 			Equipment equipment = equipmentService.get(id);
@@ -142,6 +151,7 @@ public class EquipmentController extends MessageProperties {
 			System.out.println(e);
 			logger.error("EquipmentController : get " + e);
 		}
+		logger.info("[get] :Exit    " );
 		return json;
 	}
 

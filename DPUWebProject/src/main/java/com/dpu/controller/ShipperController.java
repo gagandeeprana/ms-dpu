@@ -32,7 +32,7 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "shipper")
 public class ShipperController extends MessageProperties {
 	
-	Logger logger = Logger.getLogger(EquipmentController.class);
+	Logger logger = Logger.getLogger(ShipperController.class);
 
 	@Autowired
 	ShipperService shipperService;
@@ -41,6 +41,7 @@ public class ShipperController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
 			List<Shipper> lstShippers = shipperService.getAll();
@@ -48,11 +49,13 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll] : Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Shipper shipper) {
+		logger.info("[add] : Enter");
 		Object obj = null;
 		try {
 			Shipper response = shipperService.add(shipper);
@@ -69,12 +72,13 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[add] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-
+		logger.info("[delete] : Enter : Id: "+id);
 		Object obj = null;
 		boolean result = false;
 
@@ -98,13 +102,14 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[delete] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Shipper shipper) {
-
+		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
 			shipper.setShipperId(id);
@@ -123,11 +128,13 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[update] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{shipperId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("shipperId") int id) {
+		logger.info("[get ] : Enter: Id : "+id);
 		String json = new String();
 		try {
 			Shipper shipper = shipperService.get(id);
@@ -137,6 +144,7 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get] : Exit");
 		return json;
 	}
 

@@ -32,7 +32,7 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "service")
 public class ServiceController extends MessageProperties {
 	
-	Logger logger = Logger.getLogger(EquipmentController.class);
+	Logger logger = Logger.getLogger(ServiceController.class);
 	
 	@Autowired
 	ServiceService serviceService;
@@ -41,6 +41,7 @@ public class ServiceController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
 			List<Service> lstServices = serviceService.getAll();
@@ -48,11 +49,13 @@ public class ServiceController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll] : Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Service service) {
+		logger.info("[add] : Enter");
 		Object obj = null;
 		try {
 			Service result = serviceService.add(service);
@@ -69,11 +72,13 @@ public class ServiceController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[add] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
+		logger.info("[delete] : Enter : Id : "+id);
 		Object obj = null;
 		boolean result = false;
 		try {
@@ -95,6 +100,7 @@ public class ServiceController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[delete] : Exit:   ");
 		return obj;
 
 	}
@@ -102,6 +108,7 @@ public class ServiceController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Service service) {
+		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
 			service.setServiceId(id);
@@ -120,11 +127,13 @@ public class ServiceController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[update] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("categoryId") int id) {
+		logger.info("[get] : Enter : Id : "+id);
 		String json = null;
 		try {
 			Service service = serviceService.get(id);
@@ -133,6 +142,7 @@ public class ServiceController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get] : Exit " );
 		return json;
 	}
 

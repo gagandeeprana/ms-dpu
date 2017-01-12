@@ -1,6 +1,5 @@
 package com.dpu.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,8 @@ public class TrailerServiceImpl implements TrailerService{
 	
 	@Override
 	public Trailer add(Trailer trailer) {
-		trailer.setReadingTakenDate(new Date());
-		trailer.setCreatedOn(new Date());
+//		trailer.setReadingTakenDate(new Date());
+//		trailer.setCreatedOn(new Date());
 		return trailerdao.save(trailer);
 	}
 

@@ -33,7 +33,7 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "terminal")
 public class TerminalController {
 	
-	Logger logger = Logger.getLogger(EquipmentController.class);
+	Logger logger = Logger.getLogger(TerminalController.class);
 
 	@Value("${terminal_added_code}")
 	public String terminalAddedCode;
@@ -78,6 +78,8 @@ public class TerminalController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		
+		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
 
@@ -86,11 +88,13 @@ public class TerminalController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll] : Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Terminal terminal) {
+		logger.info("[add] : Enter");
 		Object obj = null;
 		try {
 			Terminal response = terminalService.add(terminal);
@@ -102,12 +106,13 @@ public class TerminalController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[add] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-		
+		logger.info("[delete] : Enter : Id : "+id);
 		Object obj = null;
 		boolean result = false;
 
@@ -125,12 +130,13 @@ public class TerminalController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[delete] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{terminalid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("terminalid") int id, @RequestBody Terminal terminal) {
-
+		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
 			terminal.setTerminalId(id);
@@ -143,11 +149,13 @@ public class TerminalController {
 		} catch (Exception e) {	
 			System.out.println(e);
 		}
+		logger.info("[update] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{terminalId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("terminalId") int id) {
+		logger.info("[get] : Enter");
 		String json = new String();
 		try {
 			Terminal terminal = terminalService.get(id);
@@ -157,6 +165,7 @@ public class TerminalController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get] : Exit");
 		return json;
 	}
 

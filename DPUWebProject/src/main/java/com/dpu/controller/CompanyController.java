@@ -28,7 +28,7 @@ import com.dpu.util.MessageProperties;
 @RequestMapping(value = "company")
 public class CompanyController extends MessageProperties {
 
-	Logger logger = Logger.getLogger(DriverController.class);
+	Logger logger = Logger.getLogger(CompanyController.class);
 	
 	@Autowired
 	CompanyService companyService;
@@ -37,6 +37,7 @@ public class CompanyController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll] : Enter");
 		String json = new String();
 		try {
 			
@@ -55,11 +56,13 @@ public class CompanyController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll] : Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody CompanyResponse companyResponse) {
+		logger.info("[add] : Enter");
 		Object obj = null;
 		try {
 			System.out.println(new ObjectMapper().writeValueAsString(companyResponse));
@@ -78,10 +81,12 @@ public class CompanyController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[add] : Exit");
 		return obj;
 	}
 
 	private Company setCompanyValues(CompanyResponse companyResponse) {
+		logger.info("[setCompanyValues] : Enter");
 		Company company = new Company();
 		company.setName(companyResponse.getName());
 		company.setContact(companyResponse.getContact());
@@ -101,12 +106,13 @@ public class CompanyController extends MessageProperties {
 		company.setWebsite(companyResponse.getWebsite());
 		company.setCellular(companyResponse.getCellular());
 		company.setPager(companyResponse.getPager());
+		logger.info("[setCompanyValues] : Exit");
 		return company;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-
+		logger.info("[delete] : Enter : ID : "+id);
 		Object obj = null;
 		boolean result = false;
 
@@ -130,13 +136,14 @@ public class CompanyController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[delete] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Company company) {
-
+		logger.info("[update] : Enter : ID : "+id);
 		Object obj = null;
 		try {
 			company.setCompanyId(id);
@@ -155,11 +162,14 @@ public class CompanyController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[update] : Exit : ID : ");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("id") int id) {
+		
+		logger.info("[get] : Enter : ID : "+id);
 		String json = new String();
 		try {
 			Company company = companyService.get(id);
@@ -174,6 +184,7 @@ public class CompanyController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get] : Exit ");
 		return json;
 	}
 }

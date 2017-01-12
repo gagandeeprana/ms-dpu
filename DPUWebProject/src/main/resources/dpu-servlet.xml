@@ -43,12 +43,8 @@
 				<value>com.dpu.entity.Truck</value>
 				<value>com.dpu.entity.Trailer</value>
 				<value>com.dpu.entity.Terminal</value>
-
-
-
-
-			</list>
-		</property>
+		   </list>
+  		</property>
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>

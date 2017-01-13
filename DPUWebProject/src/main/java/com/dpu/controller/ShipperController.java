@@ -3,8 +3,10 @@
  */
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Shipper;
+import com.dpu.entity.Trailer;
 import com.dpu.model.Failed;
+import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
+import com.dpu.model.TrailerRequest;
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
 
@@ -45,7 +50,17 @@ public class ShipperController extends MessageProperties {
 		String json = null;
 		try {
 			List<Shipper> lstShippers = shipperService.getAll();
-			json = mapper.writeValueAsString(lstShippers);
+			if (lstShippers != null && lstShippers.size() > 0) {
+				List<ShipperResponse> responses = new ArrayList<ShipperResponse>();
+				for(Shipper shipper : lstShippers) {
+					ShipperResponse response = new ShipperResponse();
+					BeanUtils.copyProperties(response, shipper);
+					responses.add(response);
+				}
+				if(responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

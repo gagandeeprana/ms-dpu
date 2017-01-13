@@ -1,119 +1,78 @@
-/**
- * 
- */
-package com.dpu.entity;
+package com.dpu.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-/**
- * @author jagvir
- *
- */
-@Entity
-@Table(name = "shippermaster")
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class Shipper {
+public class ShipperResponse {
 
-	@Id
-	@Column(name = "shipper_id")
-	@JsonProperty(value = "shipper_id")
-	@GeneratedValue
+	//@JsonProperty(value = "shipper_id")
 	private int shipperId;
 
-	@Column(name = "company")
-	@JsonProperty(value = "company")
+	//@JsonProperty(value = "company")
 	private String company;
 
-	@Column(name = "Address")
-	@JsonProperty(value = "address")
+	//@JsonProperty(value = "address")
 	private String address;
 
-	@Column(name = "unit")
-	@JsonProperty(value = "unit")
+	//@JsonProperty(value = "unit")
 	private String unit;
 
-	@Column(name = "city")
-	@JsonProperty(value = "city")
+	//@JsonProperty(value = "city")
 	private String city;
 
-	@Column(name = "prov_state")
-	@JsonProperty(value = "province_state")
+	//@JsonProperty(value = "province_state")
 	private String provinceState;
 
-	@Column(name = "postal_zip")
-	@JsonProperty(value = "postal_zip")
+	//@JsonProperty(value = "postal_zip")
 	private String postalZip;
 
-	@Column(name = "status")
-	@JsonProperty(value = "status")
+	//@JsonProperty(value = "status")
 	private String status;
 
-	@Column(name = "zone")
-	@JsonProperty(value = "zone")
+	//@JsonProperty(value = "zone")
 	private String zone;
 
-	@Column(name = "lead_time")
-	@JsonProperty(value = "lead_time")
+	//@JsonProperty(value = "lead_time")
 	private String leadTime;
 
-	@Column(name = "time_zone")
-	@JsonProperty(value = "time_zone")
+	//@JsonProperty(value = "time_zone")
 	private String timeZone;
 
-	@Column(name = "contact")
-	@JsonProperty(value = "contact")
+	//@JsonProperty(value = "contact")
 	private String contact;
 
-	@Column(name = "position")
-	@JsonProperty(value = "position")
+	//@JsonProperty(value = "position")
 	private String position;
 
-	@Column(name = "phone")
-	@JsonProperty(value = "phone")
+	//@JsonProperty(value = "phone")
 	private String phone;
 
-	@Column(name = "ext")
-	@JsonProperty(value = "ext")
+	//@JsonProperty(value = "ext")
 	private String ext;
 
-	@Column(name = "fax")
-	@JsonProperty(value = "fax")
+	//@JsonProperty(value = "fax")
 	private String fax;
 
-	@Column(name = "prefix")
-	@JsonProperty(value = "prefix")
+	//@JsonProperty(value = "prefix")
 	private String prefix;
 
-	@Column(name = "toll_free")
-	@JsonProperty(value = "toll_free")
+	//@JsonProperty(value = "toll_free")
 	private String tollFree;
 
-	@Column(name = "plant")
-	@JsonProperty(value = "plant")
+	//@JsonProperty(value = "plant")
 	private String plant;
 
-	@Column(name = "email")
-	@JsonProperty(value = "email")
+	//@JsonProperty(value = "email")
 	private String email;
 
-	@Column(name = "importer")
-	@JsonProperty(value = "importer")
+	//@JsonProperty(value = "importer")
 	private String importer;
 
-	@Column(name = "internam_notes")
-	@JsonProperty(value = "internal_notes")
+	//@JsonProperty(value = "internal_notes")
 	private String internalNotes;
 
-	@Column(name = "standard_notes")
-	@JsonProperty(value = "standard_notes")
+	//@JsonProperty(value = "standard_notes")
 	private String standardNotes;
 
 	public int getShipperId() {
@@ -299,10 +258,4 @@ public class Shipper {
 	public void setStandardNotes(String standardNotes) {
 		this.standardNotes = standardNotes;
 	}
-
-	// private String ReportName;
-	// private String Report;
-	// private String directions;
-	// private String dateStamp;
-
 }

@@ -48,18 +48,16 @@ public class TrailerController extends MessageProperties {
 			List<Trailer> lstTrailers = trailerService.getAll();
 			logger.info("Inside getAll(): TrailerController: List Size: " + lstTrailers.size());
 
-			if (lstTrailers != null) {
-				json = mapper.writeValueAsString(lstTrailers);
-			}
-			
-			List<TrailerRequest> responses = new ArrayList<TrailerRequest>();
-			for(Trailer trailer : lstTrailers) {
-				TrailerRequest response = new TrailerRequest();
-				BeanUtils.copyProperties(response, trailer);
-				responses.add(response);
-			}
-			if(responses != null && !responses.isEmpty()) {
-				json = mapper.writeValueAsString(responses);
+			if (lstTrailers != null && lstTrailers.size() > 0) {
+				List<TrailerRequest> responses = new ArrayList<TrailerRequest>();
+				for(Trailer trailer : lstTrailers) {
+					TrailerRequest response = new TrailerRequest();
+					BeanUtils.copyProperties(response, trailer);
+					responses.add(response);
+				}
+				if(responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Inside getAll(): TrailerController: Exception is: " + e.getMessage());
@@ -155,7 +153,12 @@ public class TrailerController extends MessageProperties {
 		try {
 			Trailer trailer = trailerService.get(id);
 			if (trailer != null) {
-				json = mapper.writeValueAsString(trailer);
+				TrailerRequest response = new TrailerRequest();
+				BeanUtils.copyProperties(response, trailer);
+				
+				if(response != null) {
+					json = mapper.writeValueAsString(response);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -165,6 +168,7 @@ public class TrailerController extends MessageProperties {
 	
 	private Trailer setTrailerValues(TrailerRequest trailerRequest){
 		Trailer trailer = new Trailer();
+		trailer.setTrailerId(trailerRequest.getTrailerId());
 		trailer.setUnitNo(trailerRequest.getUnitNo());
 		trailer.setUsage(trailerRequest.getUsage());
 		trailer.setOwner(trailerRequest.getOwner());

@@ -49,7 +49,6 @@ public class CategoryController extends MessageProperties {
 		String json = null;
 		try {
 			List<Category> lstCategories = categoryService.getAll();
-			json = mapper.writeValueAsString(lstCategories);
 			List<CategoryReq> responses = new ArrayList<CategoryReq>();
 			for (Category category : lstCategories) {
 				CategoryReq response = new CategoryReq();

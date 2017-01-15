@@ -1,13 +1,4 @@
-/**
- * 
- */
-package com.dpu.entity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+package com.dpu.model;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -17,42 +8,24 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
  *
  */
 
-@Entity
-@Table(name = "service")
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class Service {
+public class DPUService {
 	
-	@Id
-	@Column(name = "service_id")
-	@GeneratedValue
 	//@JsonProperty(value = "service_id")
 	private int serviceId;
 
-	@Column(name = "service_name")
 	//@JsonProperty(value = "service_name")
 	private String serviceName;
-	
-	@Column(name = "association_with")
-	private String associationWith;
-	
-	@Column(name = "text_field")
-	private String textField;
 
-	@Column(name = "service_response")
 	//@JsonProperty(value = "service_response")
 	private int serviceResponse;
 
-	@Column(name = "status")
 	//@JsonProperty(value = "status")
 	private int status;
-
-	public String getAssociationWith() {
-		return associationWith;
-	}
-
-	public void setAssociationWith(String associationWith) {
-		this.associationWith = associationWith;
-	}
+	
+	private String textField;
+	
+	private String associationWith;
 
 	public String getTextField() {
 		return textField;
@@ -60,6 +33,14 @@ public class Service {
 
 	public void setTextField(String textField) {
 		this.textField = textField;
+	}
+
+	public String getAssociationWith() {
+		return associationWith;
+	}
+
+	public void setAssociationWith(String associationWith) {
+		this.associationWith = associationWith;
 	}
 
 	public int getServiceId() {
@@ -93,5 +74,4 @@ public class Service {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-
 }

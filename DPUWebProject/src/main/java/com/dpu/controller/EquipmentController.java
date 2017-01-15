@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Category;
 import com.dpu.entity.Equipment;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.EquipmentReq;
@@ -44,23 +43,22 @@ public class EquipmentController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-
-
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllEquipment() {
 		logger.info("[getAll]: Enter");
 		String json = null;
 		try {
 			List<Equipment> lstequipments = equipmentService.getAll();
-			json = mapper.writeValueAsString(lstequipments);
-			List<EquipmentReq> responses = new ArrayList<EquipmentReq>();
-			for (Equipment equipment : lstequipments) {
-				EquipmentReq response = new EquipmentReq();
-				BeanUtils.copyProperties(response, equipment);
-				responses.add(response);
-			}
-			if (responses != null && !responses.isEmpty()) {
-				json = mapper.writeValueAsString(responses);
+			if(lstequipments != null) {
+				List<EquipmentReq> responses = new ArrayList<EquipmentReq>();
+				for (Equipment equipment : lstequipments) {
+					EquipmentReq response = new EquipmentReq();
+					BeanUtils.copyProperties(response, equipment);
+					responses.add(response);
+				}
+				if (responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);

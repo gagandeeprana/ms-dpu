@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Category;
 import com.dpu.entity.Driver;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -50,16 +48,19 @@ public class DriverController extends MessageProperties  {
 		String json = null;
 		try {
 			List<Driver> lstdrivers = driverService.getAllDriver();
-			json = mapper.writeValueAsString(lstdrivers);
-			List<DriverReq> responses = new ArrayList<DriverReq>();
-			for (Driver driver : lstdrivers) {
-				DriverReq response = new DriverReq();
-				BeanUtils.copyProperties(response, driver);
-				responses.add(response);
+
+			if(lstdrivers != null) {
+				List<DriverReq> responses = new ArrayList<DriverReq>();
+				for (Driver driver : lstdrivers) {
+					DriverReq response = new DriverReq();
+					BeanUtils.copyProperties(response, driver);
+					responses.add(response);
+				}
+				if (responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
 			}
-			if (responses != null && !responses.isEmpty()) {
-				json = mapper.writeValueAsString(responses);
-			}
+			System.out.println(json);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers]:Controller " + e);
 		}

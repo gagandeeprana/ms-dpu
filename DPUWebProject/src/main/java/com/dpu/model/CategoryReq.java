@@ -28,12 +28,22 @@ public class CategoryReq {
 
 	//@JsonProperty(value = "status")
 	private int status;
+	
+	private String highlight;
 
 	//@JsonProperty(value = "created_on")
 	private String createdOn;
 
 	//@JsonProperty(value = "created_by")
 	private String createdBy;
+
+	public String getHighlight() {
+		return highlight;
+	}
+
+	public void setHighlight(String highlight) {
+		this.highlight = highlight;
+	}
 
 	public int getCategoryId() {
 		return categoryId;

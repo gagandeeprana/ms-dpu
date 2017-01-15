@@ -21,11 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Shipper;
-import com.dpu.entity.Trailer;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
-import com.dpu.model.TrailerRequest;
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
 
@@ -154,7 +153,12 @@ public class ShipperController extends MessageProperties {
 		try {
 			Shipper shipper = shipperService.get(id);
 			if (shipper != null) {
-				json = mapper.writeValueAsString(shipper);
+				ShipperResponse response = new ShipperResponse();
+				BeanUtils.copyProperties(response, shipper);
+				
+				if(response != null) {
+					json = mapper.writeValueAsString(response);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);

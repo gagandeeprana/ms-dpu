@@ -155,10 +155,10 @@ public class TrailerController extends MessageProperties {
 			if (trailer != null) {
 				TrailerRequest response = new TrailerRequest();
 				BeanUtils.copyProperties(response, trailer);
-				
 				if(response != null) {
 					json = mapper.writeValueAsString(response);
 				}
+				System.out.println(json);
 			}
 		} catch (Exception e) {
 			System.out.println(e);

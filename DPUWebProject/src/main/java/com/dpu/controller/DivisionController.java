@@ -183,7 +183,13 @@ public class DivisionController extends MessageProperties {
 		try {
 			Division division = divisionService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(division);
+			
+			DivisionReq response = new DivisionReq();
+			BeanUtils.copyProperties(response, division);
+			
+			if (response != null) {
+				json = mapper.writeValueAsString(division);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

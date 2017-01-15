@@ -13,7 +13,7 @@ import com.dpu.entity.Division;
  */
 public interface DivisionService {
 
-	Division add(Division division);
+	boolean add(Division division);
 
 	Division update(int id, Division division);
 

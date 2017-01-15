@@ -13,7 +13,7 @@ import com.dpu.entity.Equipment;
  */
 public interface EquipmentService {
 
-	Equipment add(Equipment equipment);
+	boolean add(Equipment equipment);
 
 	Equipment update(int id, Equipment equipment);
 

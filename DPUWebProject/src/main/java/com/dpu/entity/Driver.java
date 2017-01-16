@@ -59,13 +59,13 @@ public class Driver implements Serializable {
 	@Column(name = "city")
 	private String city;
 
-	@Column(name = "pvs")
+	@Column(name = "province")
 	private String pvs;
 
 	@Column(name = "postal_code")
 	private String postalCode;
 
-	@Column(name = "e_mail")
+	@Column(name = "email")
 	private String email;
 
 	@Column(name = "home")
@@ -83,20 +83,20 @@ public class Driver implements Serializable {
 	@Column(name = "division")
 	private String division;
 
-	@Column(name = "terminal")
-	private String terminalId;
+	@Column(name = "terminal_id")
+	private Integer terminalId;
 
-	@Column(name = "category")
-	private String catogoryId;
+	@Column(name = "category_id")
+	private Integer catogoryId;
 
-	@Column(name = "role")
-	private String roleId;
+	@Column(name = "role_id")
+	private Integer roleId;
 
-	@Column(name = "status")
-	private String statusId;
+	@Column(name = "status_id")
+	private Integer statusId;
 
-	@Column(name = "classId")
-	private String classId;
+	@Column(name = "driver_class_id")
+	private Integer driverClassId;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -225,46 +225,6 @@ public class Driver implements Serializable {
 		this.division = division;
 	}
 
-	public String getTerminalId() {
-		return terminalId;
-	}
-
-	public void setTerminalId(String terminalId) {
-		this.terminalId = terminalId;
-	}
-
-	public String getCatogoryId() {
-		return catogoryId;
-	}
-
-	public void setCatogoryId(String catogoryId) {
-		this.catogoryId = catogoryId;
-	}
-
-	public String getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-
-	public String getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(String statusId) {
-		this.statusId = statusId;
-	}
-
-	public String getClassId() {
-		return classId;
-	}
-
-	public void setClassId(String classId) {
-		this.classId = classId;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -280,10 +240,45 @@ public class Driver implements Serializable {
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
-	
-	
-	
 
-	 
+	public Integer getTerminalId() {
+		return terminalId;
+	}
 
+	public void setTerminalId(Integer terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public Integer getCatogoryId() {
+		return catogoryId;
+	}
+
+	public void setCatogoryId(Integer catogoryId) {
+		this.catogoryId = catogoryId;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
+
+	public Integer getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
+	}
+
+	public Integer getDriverClassId() {
+		return driverClassId;
+	}
+
+	public void setDriverClassId(Integer driverClassId) {
+		this.driverClassId = driverClassId;
+	}
+	
 }

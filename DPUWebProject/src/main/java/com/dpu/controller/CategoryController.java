@@ -99,7 +99,7 @@ public class CategoryController extends MessageProperties {
 		category.setName(categoryReq.getName());
 		category.setStatus(categoryReq.getStatus());
 		category.setTypeId(categoryReq.getTypeId());
-
+		category.setHighlight(categoryReq.getHighlight());
 		return category;
 	}
 
@@ -164,7 +164,7 @@ public class CategoryController extends MessageProperties {
 			BeanUtils.copyProperties(response, category);
 
 			if (response != null) {
-				json = mapper.writeValueAsString(category);
+				json = mapper.writeValueAsString(response);
 			}
 		} catch (Exception e) {
 			logger.error("[getCategoryById]:" + e);

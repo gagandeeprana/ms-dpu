@@ -1,6 +1,7 @@
 package com.dpu.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -70,12 +71,14 @@ public class DriverController extends MessageProperties  {
 
 	// Add new Driver
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<Object> addDriver(@RequestBody Driver driver) {
+	public ResponseEntity<Object> addDriver(@RequestBody DriverReq driverReq) {
 		
 		logger.info("[addDriver]:Controller:  Enter");
 		ResponseEntity<Object> obj =  null;
 		  
 		try {
+			System.out.println(new ObjectMapper().writeValueAsString(driverReq));
+			Driver driver = setDriverValues(driverReq);
 			boolean result = driverService.addDriver(driver);
 			if(result){
 				 obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_added_code), CommonProperties.Driver_added_message, Iconstants.SUCCESS), HttpStatus.OK);
@@ -90,14 +93,37 @@ public class DriverController extends MessageProperties  {
 		return obj;
 	}
 
+	private Driver setDriverValues(DriverReq driverReq) {
+		Driver driver = new Driver();
+		driver.setDriverCode(driverReq.getDriverCode());
+		driver.setFirstName(driverReq.getFirstName());
+		driver.setLastName(driverReq.getLastName());
+		driver.setAddress(driverReq.getAddress());
+		driver.setUnit(driverReq.getUnit());
+		driver.setCity(driverReq.getCity());
+		driver.setPostalCode(driverReq.getPostalCode());
+		driver.setEmail(driverReq.getEmail());
+		driver.setHome(driverReq.getHome());
+		driver.setFaxNo(driverReq.getFaxNo());
+		driver.setCellular(driverReq.getCellular());
+		driver.setPager(driverReq.getPager());
+		driver.setDivision(driverReq.getDivision());
+		driver.setTerminalId(driverReq.getTerminalId());
+		driver.setCatogoryId(driverReq.getCatogoryId());
+		driver.setRoleId(driverReq.getRoleId());
+		driver.setStatusId(driverReq.getStatusId());
+		driver.setDriverClassId(driverReq.getDriverClassId());
+		driver.setCreatedOn(new Date());
+		return driver;
+	}
+
 	// delete Driver
-	@RequestMapping(value = "/{driverCode}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object deleteDriver(@PathVariable("driverCode") String driverCode) {
-		logger.info("[deleteDriver] : controller : Enter : driverCode "
-				+ driverCode);
+	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteDriver(@PathVariable("driverId") Integer driverId) {
+		logger.info("[deleteDriver] : controller : Enter : driverCode " + driverId);
 		Object  obj = null;
 		try {
-			boolean result = driverService.deleteDriver(driverCode);
+			boolean result = driverService.deleteDriver(driverId);
 			if(result) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_deleted_code), CommonProperties.Driver_deleted_message, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
@@ -132,12 +158,12 @@ public class DriverController extends MessageProperties  {
 	}
 
 	// get Driver by Id
-	@RequestMapping(value = "/{driverCode}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getDriverByDriverCode(@PathVariable("driverCode") String driverCode) {
+	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getDriverByDriverCode(@PathVariable("driverId") Integer driverId) {
 		logger.info("[getDriverByDriverCode] : Controller : Enter");
 		String json = null;
 		try {
-			Driver driver = driverService.getDriverByDriverCode(driverCode);
+			Driver driver = driverService.getDriverByDriverCode(driverId);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(driver);
 		} catch (Exception e) {

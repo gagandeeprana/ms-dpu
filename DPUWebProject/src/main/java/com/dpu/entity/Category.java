@@ -25,29 +25,40 @@ public class Category {
 
 	@Id
 	@Column(name = "category_id")
-	@JsonProperty(value = "category_id")
+	//@JsonProperty(value = "category_id")
 	@GeneratedValue
 	private int categoryId;
 
 	@Column(name = "type_id")
-	@JsonProperty(value = "type_id")
+	//@JsonProperty(value = "type_id")
 	private int typeId;
 
 	@Column(name = "name")
-	@JsonProperty(value = "name")
+	//@JsonProperty(value = "name")
 	private String name;
 
 	@Column(name = "status")
-	@JsonProperty(value = "status")
+	//@JsonProperty(value = "status")
 	private int status;
 
 	@Column(name = "created_on")
-	@JsonProperty(value = "created_on")
+	//@JsonProperty(value = "created_on")
 	private String createdOn;
 
 	@Column(name = "created_by")
-	@JsonProperty(value = "created_by")
+	//@JsonProperty(value = "created_by")
 	private String createdBy;
+	
+	@Column(name = "highlight")
+	private String highlight;
+	
+	public String getHighlight() {
+		return highlight;
+	}
+
+	public void setHighlight(String highlight) {
+		this.highlight = highlight;
+	}
 
 	public int getCategoryId() {
 		return categoryId;

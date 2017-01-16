@@ -72,11 +72,10 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public boolean deleteDriver(String driverCode) {
-		logger.info("[deleteDriver] :driverCode : " + driverCode);
+	public boolean deleteDriver(Integer driverId) {
+		logger.info("[deleteDriver] :driverCode : " + driverId);
 		try {
-			Criterion deleteDriverCriteria = Restrictions.eq("driverCode",
-					driverCode);
+			Criterion deleteDriverCriteria = Restrictions.eq("driverId", driverId);
 			List<Driver> driverEntity = driverDao.find(deleteDriverCriteria);
 
 			if (driverEntity != null) {
@@ -111,11 +110,11 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public Driver getDriverByDriverCode(String driverCode) {
+	public Driver getDriverByDriverCode(Integer driverId) {
 
 		logger.info("[getDriverByDriverCode]:  Service : Enter");
 		Criterion getDriverByDriverCodecriteria = Restrictions.eqOrIsNull(
-				"driverCode", driverCode);
+				"driverId", driverId);
 		List<Driver> listOfDriver = driverDao
 				.find(getDriverByDriverCodecriteria);
 

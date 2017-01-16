@@ -1,33 +1,17 @@
 package com.dpu.model;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.io.Serializable;
 import java.util.Date;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-/**
- * @author sumit
- *
- */
-
-@JsonIgnoreProperties(ignoreUnknown = true) 
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class DriverReq implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class DriverReq implements Serializable{
 
 	 
+	private static final long serialVersionUID = 1L;
+
 	private int driverId;
 
 	private String driverCode;
@@ -39,38 +23,78 @@ public class DriverReq implements Serializable {
 	private String address;
 
 	private String unit;
-
+	 
 	private String city;
-
+ 
 	private String pvs;
-
+	 
 	private String postalCode;
 
 	private String email;
 
 	private String home;
-
+	 
 	private String faxNo;
 
 	private String cellular;
-
+	 
 	private String pager;
-
+	 
 	private String division;
 
-	private String terminalId;
+	private Integer terminalId;
 
-	private String catogoryId;
-
-	private String roleId;
-
-	private String statusId;
-
-	private String classId;
-
+	private Integer catogoryId;
+	 
+	private Integer roleId;
+	 
+	private Integer statusId;
+	 
+	private Integer driverClassId;
+ 
 	private String createdBy;
-
+	 
 	private Date createdOn;
+	
+	public Integer getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(Integer terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public Integer getCatogoryId() {
+		return catogoryId;
+	}
+
+	public void setCatogoryId(Integer catogoryId) {
+		this.catogoryId = catogoryId;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
+
+	public Integer getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
+	}
+
+	public Integer getDriverClassId() {
+		return driverClassId;
+	}
+
+	public void setDriverClassId(Integer driverClassId) {
+		this.driverClassId = driverClassId;
+	}
 
 	public int getDriverId() {
 		return driverId;
@@ -192,46 +216,6 @@ public class DriverReq implements Serializable {
 		this.division = division;
 	}
 
-	public String getTerminalId() {
-		return terminalId;
-	}
-
-	public void setTerminalId(String terminalId) {
-		this.terminalId = terminalId;
-	}
-
-	public String getCatogoryId() {
-		return catogoryId;
-	}
-
-	public void setCatogoryId(String catogoryId) {
-		this.catogoryId = catogoryId;
-	}
-
-	public String getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-
-	public String getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(String statusId) {
-		this.statusId = statusId;
-	}
-
-	public String getClassId() {
-		return classId;
-	}
-
-	public void setClassId(String classId) {
-		this.classId = classId;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -249,9 +233,4 @@ public class DriverReq implements Serializable {
 	}
 	
 	
-	
-
-	 
-
 }
-

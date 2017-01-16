@@ -1,7 +1,9 @@
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,15 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "trailer")
 public class TrailerController extends MessageProperties {
+	
+	Logger logger = Logger.getLogger(TrailerController.class);
 
 	@Autowired
 	TrailerService trailerService;
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	Logger logger = Logger.getLogger(TrailerController.class);
+	
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
@@ -44,8 +48,16 @@ public class TrailerController extends MessageProperties {
 			List<Trailer> lstTrailers = trailerService.getAll();
 			logger.info("Inside getAll(): TrailerController: List Size: " + lstTrailers.size());
 
-			if (lstTrailers != null) {
-				json = mapper.writeValueAsString(lstTrailers);
+			if (lstTrailers != null && lstTrailers.size() > 0) {
+				List<TrailerRequest> responses = new ArrayList<TrailerRequest>();
+				for(Trailer trailer : lstTrailers) {
+					TrailerRequest response = new TrailerRequest();
+					BeanUtils.copyProperties(response, trailer);
+					responses.add(response);
+				}
+				if(responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Inside getAll(): TrailerController: Exception is: " + e.getMessage());
@@ -56,9 +68,11 @@ public class TrailerController extends MessageProperties {
 	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Trailer trailer) {
+	public Object add(@RequestBody TrailerRequest trailerRequest) {
 		Object obj = null;
 		try {
+			
+			Trailer trailer = setTrailerValues(trailerRequest);
 			Trailer response = trailerService.add(trailer);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
@@ -111,9 +125,8 @@ public class TrailerController extends MessageProperties {
 
 		Object obj = null;
 		try {
-			//trailer.setTrailerId(id);
 			trailerrequest.setTrailerId(id);
-			Trailer tr=setTrailerValue(trailerrequest);
+			Trailer tr = setTrailerValues(trailerrequest);
 			
 			
 			Trailer response = trailerService.update(tr);
@@ -140,7 +153,12 @@ public class TrailerController extends MessageProperties {
 		try {
 			Trailer trailer = trailerService.get(id);
 			if (trailer != null) {
-				json = mapper.writeValueAsString(trailer);
+				TrailerRequest response = new TrailerRequest();
+				BeanUtils.copyProperties(response, trailer);
+				if(response != null) {
+					json = mapper.writeValueAsString(response);
+				}
+				System.out.println(json);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -148,63 +166,20 @@ public class TrailerController extends MessageProperties {
 		return json;
 	}
 	
-	private Trailer setTrailerValue(TrailerRequest trailerrequest){
-		Trailer trailer =new Trailer();
-		 trailer  = trailerService.get(trailerrequest.getTrailerId());
-		if(trailerrequest.getTrailerId()!= null){
-			trailer.setTrailerId(trailerrequest.getTrailerId());
-		}
-//		if(trailerrequest.getClassId()!= null){
-//			trailer.setClassId(trailerrequest.getClassId());
-//		}
-//		if(trailerrequest.getEquipmentId()!= null){
-//			trailer.setEquipmentId(trailerrequest.getEquipmentId());
-//		}
-		if(trailerrequest.getLength()!= null){
-			trailer.setLength(trailerrequest.getLength());
-		}
-		if(trailerrequest.getVIN()!= null){
-			trailer.setVIN(trailerrequest.getVIN());
-		}
-		if(trailerrequest.getMake()!= null){
-			trailer.setMake(trailerrequest.getMake());
-		}
-		if(trailerrequest.getModel()!= null){
-			trailer.setModel(trailerrequest.getModel());
-		}
-		if(trailerrequest.getYear()!= null){
-			trailer.setYear(trailerrequest.getYear());
-		}
-		if(trailerrequest.getPlateNo()!= null){
-			trailer.setPlateNo(trailerrequest.getPlateNo());
-		}
-		if(trailerrequest.getJurisdiction()!= null){
-			trailer.setJurisdiction(trailerrequest.getJurisdiction());
-		}
-		if(trailerrequest.getTareWeight()!= null){
-			trailer.setTareWeight(trailerrequest.getTareWeight());
-		}
-		if(trailerrequest.getRgw()!= null){
-			trailer.setRgw(trailerrequest.getRgw());
-		}
-		if(trailerrequest.getCurrentOdometer()!= null){
-			trailer.setCurrentOdometer(trailerrequest.getCurrentOdometer());
-		}
-		if(trailerrequest.getReadingTakenDate()!= null){
-			trailer.setReadingTakenDate(trailerrequest.getReadingTakenDate());
-		}
-		if(trailerrequest.getCreatedBy()!= null){
-			trailer.setCreatedBy(trailerrequest.getCreatedBy());
-		}
-		if(trailerrequest.getCreatedOn()!= null){
-			trailer.setCreatedOn(trailerrequest.getCreatedOn());
-		}
-		if(trailerrequest.getModifiedBy()!= null){
-			trailer.setModifiedBy(trailerrequest.getModifiedBy());
-		}
-		if(trailerrequest.getModifiedOn()!= null){
-			trailer.setModifiedOn(trailerrequest.getModifiedOn());
-		}
+	private Trailer setTrailerValues(TrailerRequest trailerRequest){
+		Trailer trailer = new Trailer();
+		trailer.setTrailerId(trailerRequest.getTrailerId());
+		trailer.setUnitNo(trailerRequest.getUnitNo());
+		trailer.setUsage(trailerRequest.getUsage());
+		trailer.setOwner(trailerRequest.getOwner());
+		trailer.setDivision(trailerRequest.getDivision());
+		trailer.setoOName(trailerRequest.getoOName());
+		trailer.setTerminal(trailerRequest.getTerminal());
+		trailer.setCategory(trailerRequest.getCategory());
+		trailer.setTrailerType(trailerRequest.getTrailerType());
+		trailer.setStatus(trailerRequest.getStatus());
+		trailer.setFinance(trailerRequest.getFinance());
+		
 		return trailer;
 	}
 }

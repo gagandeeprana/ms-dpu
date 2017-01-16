@@ -1,203 +1,114 @@
 package com.dpu.model;
 
-import java.util.Date;
-
 public class TrailerRequest {
-	
+
 	private Integer trailerId;
-	
 
-//	private Integer classId;
-//	
-//
-//	private Integer equipmentId;
-	
+	private Integer unitNo;
 
-	private Integer length;
-	
-	
-	private String VIN;
-	
+	private String usage;
 
-	private String make;
-	
+	private String owner;
 
-	private String model;
-	
+	private String division;
 
-	private Integer year;
-	
+	private String oOName;
 
-	private String plateNo;
-	
+	private String terminal;
 
-	private String jurisdiction;
-	
+	private String category;
 
-	private String tareWeight;
-	
+	private String trailerType;
 
-	private String rgw;
-	
-	
-	private String currentOdometer;
-	
+	private String status;
 
-	private Date readingTakenDate;
-	
-
-	private Integer createdBy;
-	
-
-	private Date createdOn;
-	
-
-	private Integer modifiedBy;
-	
-
-	private Date modifiedOn;
+	private String finance;
 
 	public Integer getTrailerId() {
 		return trailerId;
-	}
-
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedOn() {
-		return modifiedOn;
-	}
-
-	public void setModifiedOn(Date modifiedOn) {
-		this.modifiedOn = modifiedOn;
 	}
 
 	public void setTrailerId(Integer trailerId) {
 		this.trailerId = trailerId;
 	}
 
-//	public Integer getClassId() {
-//		return classId;
-//	}
-//
-//	public void setClassId(Integer classId) {
-//		this.classId = classId;
-//	}
-//
-//	public Integer getEquipmentId() {
-//		return equipmentId;
-//	}
-//
-//	public void setEquipmentId(Integer equipmentId) {
-//		this.equipmentId = equipmentId;
-//	}
-
-	public Integer getLength() {
-		return length;
+	public Integer getUnitNo() {
+		return unitNo;
 	}
 
-	public void setLength(Integer length) {
-		this.length = length;
+	public void setUnitNo(Integer unitNo) {
+		this.unitNo = unitNo;
 	}
 
-	public String getVIN() {
-		return VIN;
+	public String getUsage() {
+		return usage;
 	}
 
-	public void setVIN(String vIN) {
-		VIN = vIN;
+	public void setUsage(String usage) {
+		this.usage = usage;
 	}
 
-	public String getMake() {
-		return make;
+	public String getOwner() {
+		return owner;
 	}
 
-	public void setMake(String make) {
-		this.make = make;
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
-	public String getModel() {
-		return model;
+	public String getDivision() {
+		return division;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setDivision(String division) {
+		this.division = division;
 	}
 
-	public Integer getYear() {
-		return year;
+	public String getoOName() {
+		return oOName;
 	}
 
-	public void setYear(Integer year) {
-		this.year = year;
+	public void setoOName(String oOName) {
+		this.oOName = oOName;
 	}
 
-	public String getPlateNo() {
-		return plateNo;
+	public String getTerminal() {
+		return terminal;
 	}
 
-	public void setPlateNo(String plateNo) {
-		this.plateNo = plateNo;
+	public void setTerminal(String terminal) {
+		this.terminal = terminal;
 	}
 
-	public String getJurisdiction() {
-		return jurisdiction;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setJurisdiction(String jurisdiction) {
-		this.jurisdiction = jurisdiction;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
-	public String getTareWeight() {
-		return tareWeight;
+	public String getTrailerType() {
+		return trailerType;
 	}
 
-	public void setTareWeight(String tareWeight) {
-		this.tareWeight = tareWeight;
+	public void setTrailerType(String trailerType) {
+		this.trailerType = trailerType;
 	}
 
-	public String getRgw() {
-		return rgw;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setRgw(String rgw) {
-		this.rgw = rgw;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public String getCurrentOdometer() {
-		return currentOdometer;
+	public String getFinance() {
+		return finance;
 	}
 
-	public void setCurrentOdometer(String currentOdometer) {
-		this.currentOdometer = currentOdometer;
-	}
-
-	public Date getReadingTakenDate() {
-		return readingTakenDate;
-	}
-
-	public void setReadingTakenDate(Date readingTakenDate) {
-		this.readingTakenDate = readingTakenDate;
-	}
-
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
+	public void setFinance(String finance) {
+		this.finance = finance;
 	}
 }

@@ -19,11 +19,14 @@ public class TrailerServiceImpl implements TrailerService{
 	public Trailer add(Trailer trailer) {
 		trailer.setReadingTakenDate(new Date());
 		trailer.setCreatedOn(new Date());
+		trailer.setModifiedOn(new Date());
 		return trailerdao.save(trailer);
 	}
 
 	@Override
 	public Trailer update(Trailer trailer) {
+		
+		trailer.setModifiedOn(new Date());
 		return trailerdao.update(trailer);
 	}
 

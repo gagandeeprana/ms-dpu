@@ -83,6 +83,30 @@ public class Trailer {
 	@JsonProperty(value = "created_on")
 	private Date createdOn;
 
+	@Column(name = "modified_by")
+	@JsonProperty(value = "modified_by")
+	private Integer modifiedBy;
+	
+	@Column(name = "modified_on")
+	@JsonProperty(value = "modified_on")
+	private Date modifiedOn;
+	
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Date modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
 	public Integer getTrailerId() {
 		return trailerId;
 	}
@@ -210,5 +234,6 @@ public class Trailer {
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
+
 
 }

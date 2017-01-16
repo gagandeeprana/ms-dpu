@@ -3,8 +3,10 @@
  */
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,14 +20,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
+import com.dpu.entity.Company;
 import com.dpu.entity.Terminal;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
+import com.dpu.model.TerminalResponse;
 import com.dpu.service.TerminalService;
 import com.dpu.util.MessageProperties;
 
 /**
- * @author gagan
+ * @author anuj
  *
  */
 @RestController
@@ -79,7 +84,18 @@ public class TerminalController {
 		try {
 
 			List<Terminal> lstTerminals = terminalService.getAll();
-			json = mapper.writeValueAsString(lstTerminals);
+			//json = mapper.writeValueAsString(lstTerminals);
+			if (lstTerminals != null) {
+				List<TerminalResponse> responses = new ArrayList<TerminalResponse>();
+				for(Terminal terminal : lstTerminals) {
+					TerminalResponse response = new TerminalResponse();
+					BeanUtils.copyProperties(response, response);
+					responses.add(response);
+				}
+				if(responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -87,20 +103,39 @@ public class TerminalController {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Terminal terminal) {
+	public Object add(@RequestBody TerminalResponse terminalResponse) {
 		Object obj = null;
 		try {
+						
+			System.out.println(terminalResponse + "         " + new ObjectMapper().writeValueAsString(terminalResponse));
+			Terminal terminal = setTerminalValues(terminalResponse);
+			System.out.println(new ObjectMapper().writeValueAsString(terminal));
 			Terminal response = terminalService.add(terminal);
-			if(response != null) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(terminalAddedCode), terminalAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			if (response != null) {
+				obj = new ResponseEntity<Object>(new Success(
+						Integer.parseInt(terminalAddedCode),
+						terminalAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(terminalUnableToAddCode), terminalUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(terminalUnableToAddCode),
+						terminalUnableToAddMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return obj;
 	}
+	
+	private Terminal setTerminalValues(TerminalResponse terminalResponse) {
+		Terminal terminal = new Terminal();
+		terminal.setTerminalName(terminalResponse.getTerminalName());
+		terminal.setLocation(terminalResponse.getLocation());
+		terminal.setFacility(terminalResponse.getFacility());
+		
+		return terminal;
+	}
+	
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
@@ -149,7 +184,12 @@ public class TerminalController {
 		try {
 			Terminal terminal = terminalService.get(id);
 			if(terminal != null) {
-				json = mapper.writeValueAsString(terminal);
+				TerminalResponse response = new TerminalResponse();
+				BeanUtils.copyProperties(response, response);
+			
+			if(response != null) {
+				json = mapper.writeValueAsString(response);
+			}
 			}
 		} catch (Exception e) {
 			System.out.println(e);

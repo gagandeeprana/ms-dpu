@@ -154,12 +154,12 @@ public class TrailerController extends MessageProperties {
 		if(trailerrequest.getTrailerId()!= null){
 			trailer.setTrailerId(trailerrequest.getTrailerId());
 		}
-		if(trailerrequest.getClassId()!= null){
-			trailer.setClassId(trailerrequest.getClassId());
-		}
-		if(trailerrequest.getEquipmentId()!= null){
-			trailer.setEquipmentId(trailerrequest.getEquipmentId());
-		}
+//		if(trailerrequest.getClassId()!= null){
+//			trailer.setClassId(trailerrequest.getClassId());
+//		}
+//		if(trailerrequest.getEquipmentId()!= null){
+//			trailer.setEquipmentId(trailerrequest.getEquipmentId());
+//		}
 		if(trailerrequest.getLength()!= null){
 			trailer.setLength(trailerrequest.getLength());
 		}
@@ -198,6 +198,12 @@ public class TrailerController extends MessageProperties {
 		}
 		if(trailerrequest.getCreatedOn()!= null){
 			trailer.setCreatedOn(trailerrequest.getCreatedOn());
+		}
+		if(trailerrequest.getModifiedBy()!= null){
+			trailer.setModifiedBy(trailerrequest.getModifiedBy());
+		}
+		if(trailerrequest.getModifiedOn()!= null){
+			trailer.setModifiedOn(trailerrequest.getModifiedOn());
 		}
 		return trailer;
 	}

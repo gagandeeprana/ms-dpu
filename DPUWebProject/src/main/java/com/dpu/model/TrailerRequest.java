@@ -7,10 +7,10 @@ public class TrailerRequest {
 	private Integer trailerId;
 	
 
-	private Integer classId;
-	
-
-	private Integer equipmentId;
+//	private Integer classId;
+//	
+//
+//	private Integer equipmentId;
 	
 
 	private Integer length;
@@ -50,30 +50,52 @@ public class TrailerRequest {
 	
 
 	private Date createdOn;
+	
+
+	private Integer modifiedBy;
+	
+
+	private Date modifiedOn;
 
 	public Integer getTrailerId() {
 		return trailerId;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Date modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 
 	public void setTrailerId(Integer trailerId) {
 		this.trailerId = trailerId;
 	}
 
-	public Integer getClassId() {
-		return classId;
-	}
-
-	public void setClassId(Integer classId) {
-		this.classId = classId;
-	}
-
-	public Integer getEquipmentId() {
-		return equipmentId;
-	}
-
-	public void setEquipmentId(Integer equipmentId) {
-		this.equipmentId = equipmentId;
-	}
+//	public Integer getClassId() {
+//		return classId;
+//	}
+//
+//	public void setClassId(Integer classId) {
+//		this.classId = classId;
+//	}
+//
+//	public Integer getEquipmentId() {
+//		return equipmentId;
+//	}
+//
+//	public void setEquipmentId(Integer equipmentId) {
+//		this.equipmentId = equipmentId;
+//	}
 
 	public Integer getLength() {
 		return length;

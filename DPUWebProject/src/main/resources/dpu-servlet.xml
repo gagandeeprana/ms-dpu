@@ -35,7 +35,14 @@
 				<value>com.dpu.entity.Driver</value>
 				<value>com.dpu.entity.Shipper</value>
 				<value>com.dpu.entity.CompanyBillingLocation</value>
-
+				<value>com.dpu.entity.CompanyAdditionalContacts</value>
+				<value>com.dpu.entity.Category</value>
+				<value>com.dpu.entity.Division</value>
+				<value>com.dpu.entity.Equipment</value>
+				<value>com.dpu.entity.Service</value>
+				<value>com.dpu.entity.Truck</value>
+				<value>com.dpu.entity.Trailer</value>
+				<value>com.dpu.entity.Terminal</value>
 
 			</list>
 		</property>

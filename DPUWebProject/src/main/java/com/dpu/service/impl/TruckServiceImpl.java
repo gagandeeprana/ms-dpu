@@ -28,18 +28,19 @@ public class TruckServiceImpl implements TruckService {
 		boolean returnValue = false;
 		try {
 			
-			truck.setCreated_by("sumit");	
-			truck.setCreated_on(new Date());
-			
-			truck.setModified_by("sumit");
-			truck.setModified_on(new Date());
+//			truck.setCreated("sumit");	
+//			truck.setCreatedOn(new Date());
+//			
+//			truck.setModifiedBy("sumit");
+//			truck.setModifiedOn(new Date());
 			
 			Truck truckR = truckDao.save(truck);
-			System.out.println("[addTruck]truck Id :" + truckR.getTruck_id());
+			System.out.println("[addTruck]truck Id :" + truckR.getTruckId());
 			returnValue = true;
 			return returnValue;
 					 
 		} catch (Exception e) {
+			System.out.println(e);
 			return returnValue;
 		} finally {
 			logger.info("[addDriver]:Service:  returnValue : " + returnValue);
@@ -48,9 +49,9 @@ public class TruckServiceImpl implements TruckService {
 	}
 
 	@Override
-	public boolean updateTruck(int id, Truck truck) {
+	public boolean updateTruck(Long id, Truck truck) {
 		logger.info("[updateTruck] : Srvice: Enter");
-		Criterion getDriverById = Restrictions.eq("unit_no",
+		Criterion getDriverById = Restrictions.eq("truckId",
 				id);
 		List<Truck> listofDriver = truckDao.find(getDriverById);
 
@@ -59,54 +60,54 @@ public class TruckServiceImpl implements TruckService {
 
 			//updateTruck.setMake(truck.getTruck_class());
 			//updateTruck.setModel(truck.getStatus());
-			if(truck.getCurrent_odometer() != null){
-				updateTruck.setCurrent_odometer(truck.getCurrent_odometer());
-			}
-			if(truck.getEquipment_type() != null){
-				updateTruck.setEquipment_type(truck.getEquipment_type());
-			}
-			if(truck.getJurisdiction() != null){
-				updateTruck.setJurisdiction(truck.getJurisdiction());
-			}
-			if(truck.getMake() != null){
-				updateTruck.setMake(truck.getMake());
-			}
-			if(truck.getModel() != null){
-				updateTruck.setModel(truck.getModel());
-			}
-			if(truck.getOwner_id() != null){
-				updateTruck.setOwner_id(truck.getOwner_id());
-			}
-			if(truck.getPlate_no() != null){
-				updateTruck.setPlate_no(truck.getPlate_no());
-			}
-			if(truck.getRgw() != null){
-				updateTruck.setRgw(truck.getRgw());
-			}
-			if(truck.getStatus() != null){
-				updateTruck.setStatus(truck.getStatus());
-			}
-			if(truck.getTare_weight() != null){
-				updateTruck.setTare_weight(truck.getTare_weight());
-			}
-			 
-			if(truck.getTruck_class() != null){
-				updateTruck.setTruck_class(truck.getTruck_class());
-			}
-			if(truck.getTruck_year() != null){
-				updateTruck.setTruck_year(truck.getTruck_year());
-			}
-			if(truck.getUnit_no() != null){
-				updateTruck.setUnit_no(truck.getUnit_no());
-			}
-			if(truck.getVIN() != null){
-				updateTruck.setVIN(truck.getVIN());
-			}
+//			if(truck.getCurrentOdometer() != null){
+//				updateTruck.setCurrentOdometer(truck.getCurrentOdometer());
+//			}
+//			if(truck.getEquipmentType() != null){
+//				updateTruck.setEquipmentType(truck.getEquipmentType());
+//			}
+//			if(truck.getJurisdiction() != null){
+//				updateTruck.setJurisdiction(truck.getJurisdiction());
+//			}
+//			if(truck.getMake() != null){
+//				updateTruck.setMake(truck.getMake());
+//			}
+//			if(truck.getModel() != null){
+//				updateTruck.setModel(truck.getModel());
+//			}
+//			if(truck.getOwnerId() != null){
+//				updateTruck.setOwnerId(truck.getOwnerId());
+//			}
+//			if(truck.getPlateNo() != null){
+//				updateTruck.setPlateNo(truck.getPlateNo());
+//			}
+//			if(truck.getRgw() != null){
+//				updateTruck.setRgw(truck.getRgw());
+//			}
+//			if(truck.getStatus() != null){
+//				updateTruck.setStatus(truck.getStatus());
+//			}
+//			if(truck.getTareWeight() != null){
+//				updateTruck.setTareWeight(truck.getTareWeight());
+//			}
+//			 
+//			if(truck.getTruckClass() != null){
+//				updateTruck.setTruckClass(truck.getTruckClass());
+//			}
+//			if(truck.getTruckYear() != null){
+//				updateTruck.setTruckYear(truck.getTruckYear());
+//			}
+//			if(truck.getUnitNo() != null){
+//				updateTruck.setUnitNo(truck.getUnitNo());
+//			}
+//			if(truck.getVin() != null){
+//				updateTruck.setVin(truck.getVin());
+//			}
 			
 			 
 			
-			truck.setModified_by("sumit");
-			truck.setModified_on(new Date());
+//			truck.setModifiedBy("sumit");
+//			truck.setModifiedOn(new Date());
 
 			// update Driver
 			truckDao.update(truck);
@@ -119,11 +120,11 @@ public class TruckServiceImpl implements TruckService {
 	}
 
 	@Override
-	public boolean deleteTruck(int id) {
+	public boolean deleteTruck(Long id) {
 		logger.info("[deleteTruck] :driverCode : " + id);
 		System.out.println("id: "+id);
 		try {
-			Criterion deleteTruckCriteria = Restrictions.eq("unit_no",
+			Criterion deleteTruckCriteria = Restrictions.eq("truckId",
 					id);
 			List<Truck> truck = truckDao
 					.find(deleteTruckCriteria);
@@ -160,11 +161,11 @@ public class TruckServiceImpl implements TruckService {
 	}
 
 	@Override
-	public Truck getTruckById(int id) {
+	public Truck getTruckById(Long id) {
 		logger.info("[getTruckById]:  Service : Enter");
 		System.out.println("Enter getById");
 		Criterion getTruckById= Restrictions.eqOrIsNull(
-				"unit_no", id);
+				"truckId", id);
 		List<Truck> listOfDriver = truckDao
 				.find(getTruckById);
 

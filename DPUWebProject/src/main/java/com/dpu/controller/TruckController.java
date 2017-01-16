@@ -1,7 +1,9 @@
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
+import com.dpu.entity.Company;
 import com.dpu.entity.Truck;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
+import com.dpu.model.TruckResponse;
 import com.dpu.service.TruckService;
 
 @RestController
@@ -40,6 +45,15 @@ public class TruckController {
 		try {
 			List<Truck> listOfDriver = truckService.getAllTruck();
 			json = mapper.writeValueAsString(listOfDriver);
+			List<TruckResponse> responses = new ArrayList<TruckResponse>();
+			for(Truck truck : listOfDriver) {
+				TruckResponse response = new TruckResponse();
+				BeanUtils.copyProperties(response, truck);
+				responses.add(response);
+			}
+			if(responses != null && !responses.isEmpty()) {
+				json = mapper.writeValueAsString(responses);
+			}
 		} catch (Exception e) {
 			logger.error("[getAllTrucks]:Controller " + e);
 		}
@@ -49,10 +63,13 @@ public class TruckController {
 
 	// Add new Truck
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object addTruck(@RequestBody Truck truck) {
+	public Object addTruck(@RequestBody TruckResponse truckResponse) {
 		logger.info("[addTruck]:Controller:  Enter");
 		Object obj = null;
 		try {
+			
+			System.out.println(new ObjectMapper().writeValueAsString(truckResponse));
+			Truck truck = setTruckValues(truckResponse);
 			boolean result = truckService.addTruck(truck);
 			 
 			if(result){
@@ -67,10 +84,25 @@ public class TruckController {
 		logger.info("[addTruck]:Controller:  Exit");
 		return obj;
 	}
+	
+	private Truck setTruckValues(TruckResponse truckResponse) {
+		Truck truck = new Truck();
+		truck.setUnitNo(truckResponse.getUnitNo());
+		truck.setOwner(truckResponse.getOwner());
+		truck.setoOName(truckResponse.getoOName());
+		truck.setCategory(truckResponse.getCategory());
+		truck.setStatus(truckResponse.getStatus());
+		truck.setUsage(truckResponse.getUsage());
+		truck.setDivision(truckResponse.getDivision());
+		truck.setTerminal(truckResponse.getTerminal());
+		truck.setTruckType(truckResponse.getTruckType());
+		truck.setFinance(truckResponse.getFinance());
+		return truck;
+	}
 
 	// delete Truck
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object deleteTruck(@PathVariable("id") int id) {
+	public Object deleteTruck(@PathVariable("id") Long id) {
 		logger.info("[deleteTruck] : controller : Enter : driverCode "
 				+ id);
 		Object  obj = null;
@@ -91,11 +123,12 @@ public class TruckController {
 
 	// Update Truck
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object updateTruck(@PathVariable("id") int id, @RequestBody Truck truck) {
+	public Object updateTruck(@PathVariable("id") Long id, @RequestBody Truck truck) {
 
 		logger.info("[updateTruck]:Enter Controller: driverCode : "+ id);
 		Object obj = null;
 		try {
+			truck.setTruckId(id);
 			boolean result = truckService.updateTruck(id, truck);
 			 
 			if(result) {
@@ -112,13 +145,18 @@ public class TruckController {
 
 	// get Truck by Id
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getTruckById(@PathVariable("id") int id) {
+	public Object getTruckById(@PathVariable("id") Long id) {
 		logger.info("[getTruckById] : Controller : Enter");
 		String json = null;
 		try {
 			Truck truck = truckService.getTruckById(id);
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(truck);
+			TruckResponse response = new TruckResponse();
+			BeanUtils.copyProperties(response, truck);
+			
+			if(response != null) {
+				json = mapper.writeValueAsString(response);
+			}
 		} catch (Exception e) {
 			logger.error("[getTruckById]:" + e);
 		}

@@ -15,11 +15,11 @@ public interface DriverService {
 	
 	boolean updateDriver(String driverCode, Driver driver);
 	
-	boolean deleteDriver(String driverCode);
-	
 	List<Driver> getAllDriver();
 	
-	Driver getDriverByDriverCode(String driverCode);
+	boolean deleteDriver(Integer driverId);
+
+	Driver getDriverByDriverCode(Integer driverId);
 	
 }
 

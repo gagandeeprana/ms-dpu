@@ -3,8 +3,11 @@
  */
 package com.dpu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Shipper;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
+import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
@@ -30,6 +35,8 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "shipper")
 public class ShipperController extends MessageProperties {
+	
+	Logger logger = Logger.getLogger(ShipperController.class);
 
 	@Autowired
 	ShipperService shipperService;
@@ -38,18 +45,31 @@ public class ShipperController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
 			List<Shipper> lstShippers = shipperService.getAll();
-			json = mapper.writeValueAsString(lstShippers);
+			if (lstShippers != null && lstShippers.size() > 0) {
+				List<ShipperResponse> responses = new ArrayList<ShipperResponse>();
+				for(Shipper shipper : lstShippers) {
+					ShipperResponse response = new ShipperResponse();
+					BeanUtils.copyProperties(response, shipper);
+					responses.add(response);
+				}
+				if(responses != null && !responses.isEmpty()) {
+					json = mapper.writeValueAsString(responses);
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[getAll] : Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody Shipper shipper) {
+		logger.info("[add] : Enter");
 		Object obj = null;
 		try {
 			Shipper response = shipperService.add(shipper);
@@ -66,12 +86,13 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[add] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") int id) {
-
+		logger.info("[delete] : Enter : Id: "+id);
 		Object obj = null;
 		boolean result = false;
 
@@ -95,13 +116,14 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[delete] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") int id,
 			@RequestBody Shipper shipper) {
-
+		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
 			shipper.setShipperId(id);
@@ -120,20 +142,28 @@ public class ShipperController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[update] : Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{shipperId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("shipperId") int id) {
+		logger.info("[get ] : Enter: Id : "+id);
 		String json = new String();
 		try {
 			Shipper shipper = shipperService.get(id);
 			if (shipper != null) {
-				json = mapper.writeValueAsString(shipper);
+				ShipperResponse response = new ShipperResponse();
+				BeanUtils.copyProperties(response, shipper);
+				
+				if(response != null) {
+					json = mapper.writeValueAsString(response);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		logger.info("[get] : Exit");
 		return json;
 	}
 

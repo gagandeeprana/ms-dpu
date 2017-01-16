@@ -12,7 +12,7 @@ import com.dpu.entity.Category;
  *
  */
 public interface CategoryService {
-	Category add(Category category);
+	boolean addCategory(Category category);
 
 	Category update(int id, Category category);
 

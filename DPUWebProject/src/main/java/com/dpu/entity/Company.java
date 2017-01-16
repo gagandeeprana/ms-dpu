@@ -16,7 +16,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @Table(name = "companymaster")
-@JsonSerialize(include = Inclusion.NON_NULL)
 public class Company {
 
 	@Id

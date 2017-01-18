@@ -3,6 +3,7 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Company;
+import com.dpu.model.CompanyResponse;
 
 public interface CompanyService {
 
@@ -12,8 +13,8 @@ public interface CompanyService {
 	
 	boolean delete(Company company);
 	
-	List<Company> getAll();
+	List<CompanyResponse> getAll();
 	
-	Company get(int id);
+	CompanyResponse get(int id);
 	
 }

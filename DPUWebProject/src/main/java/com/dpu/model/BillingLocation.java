@@ -7,61 +7,61 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class BillingLocation {
 
-	@JsonProperty( "billing_location_id")
+	//@JsonProperty( "billing_location_id")
 	private int billingLocationId;
 
-	@JsonProperty( "name")
+	//@JsonProperty( "name")
 	private String name;
 
-	@JsonProperty( "address")
+	//@JsonProperty( "address")
 	private String address;
 
-	@JsonProperty( "unit_no")
+	//@JsonProperty( "unit_no")
 	private String unitNo;
 
-	@JsonProperty( "city")
+	//@JsonProperty( "city")
 	private String city;
 
-	@JsonProperty( "province_state")
+	//@JsonProperty( "province_state")
 	private String provinceState;
 
-	@JsonProperty( "zip")
+	//@JsonProperty( "zip")
 	private String zip;
 
-	@JsonProperty( "ar_cdn")
+	//@JsonProperty( "ar_cdn")
 	private String arCDN;
 
-	@JsonProperty( "ar_us")
+	//@JsonProperty( "ar_us")
 	private String arUS;
 
-	@JsonProperty( "status")
+	//@JsonProperty( "status")
 	private int status;
 
-	@JsonProperty( "contact")
+	//@JsonProperty( "contact")
 	private String contact;
 
-	@JsonProperty( "position")
+	//@JsonProperty( "position")
 	private String position;
 
-	@JsonProperty( "email")
+	//@JsonProperty( "email")
 	private String email;
 
-	@JsonProperty( "cellular")
+	//@JsonProperty( "cellular")
 	private String cellular;
 
-	@JsonProperty( "phone")
+	//@JsonProperty( "phone")
 	private String phone;
 
-	@JsonProperty( "ext")
+	//@JsonProperty( "ext")
 	private String ext;
 
-	@JsonProperty( "fax")
+	//@JsonProperty( "fax")
 	private String fax;
 
-	@JsonProperty( "billing_prefix")
+	//@JsonProperty( "billing_prefix")
 	private String prefix;
 
-	@JsonProperty( "tollfree")
+	//@JsonProperty( "tollfree")
 	private String tollfree;
 
 	public int getBillingLocationId() {

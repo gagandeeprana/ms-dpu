@@ -3,7 +3,6 @@ package com.dpu.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,8 @@ public class CompanyController extends MessageProperties {
 	
 	@Autowired
 	CompanyService companyService;
+	
+	
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -41,18 +42,12 @@ public class CompanyController extends MessageProperties {
 		String json = new String();
 		try {
 			
-			List<Company> lstCompanies = companyService.getAll();
-			if (lstCompanies != null) {
-				List<CompanyResponse> responses = new ArrayList<CompanyResponse>();
-				for(Company company : lstCompanies) {
-					CompanyResponse response = new CompanyResponse();
-					BeanUtils.copyProperties(response, company);
-					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+			List<CompanyResponse> companyResponses = companyService.getAll();
+			
+			if(companyResponses != null) {
+				json = mapper.writeValueAsString(companyResponses);
 			}
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -117,8 +112,9 @@ public class CompanyController extends MessageProperties {
 		boolean result = false;
 
 		try {
-
-			Company company = companyService.get(id);
+			
+			Company company = null;
+			//Company company = companyService.get(id);
 			if (company != null) {
 				result = companyService.delete(company);
 			}
@@ -172,14 +168,9 @@ public class CompanyController extends MessageProperties {
 		logger.info("[get] : Enter : ID : "+id);
 		String json = new String();
 		try {
-			Company company = companyService.get(id);
-			if (company != null) {
-				CompanyResponse response = new CompanyResponse();
-				BeanUtils.copyProperties(response, company);
-				
-				if(response != null) {
-					json = mapper.writeValueAsString(response);
-				}
+			CompanyResponse companyResponse = companyService.get(id);
+			if(companyResponse != null) {
+				json = mapper.writeValueAsString(companyResponse);
 			}
 		} catch (Exception e) {
 			System.out.println(e);

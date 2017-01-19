@@ -11,17 +11,37 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DPUService {
 	
+	public Long getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(Long serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setServiceResponse(Integer serviceResponse) {
+		this.serviceResponse = serviceResponse;
+	}
+
 	//@JsonProperty(value = "service_id")
-	private int serviceId;
+	private Long serviceId;
 
 	//@JsonProperty(value = "service_name")
 	private String serviceName;
 
 	//@JsonProperty(value = "service_response")
-	private int serviceResponse;
+	private Integer serviceResponse;
 
 	//@JsonProperty(value = "status")
-	private int status;
+	private String status;
 	
 	private String textField;
 	
@@ -43,14 +63,6 @@ public class DPUService {
 		this.associationWith = associationWith;
 	}
 
-	public int getServiceId() {
-		return serviceId;
-	}
-
-	public void setServiceId(int serviceId) {
-		this.serviceId = serviceId;
-	}
-
 	public String getServiceName() {
 		return serviceName;
 	}
@@ -59,19 +71,8 @@ public class DPUService {
 		this.serviceName = serviceName;
 	}
 
-	public int getServiceResponse() {
+	public Integer getServiceResponse() {
 		return serviceResponse;
 	}
 
-	public void setServiceResponse(int serviceResponse) {
-		this.serviceResponse = serviceResponse;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
 }

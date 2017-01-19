@@ -3,10 +3,13 @@
  */
 package com.dpu.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -26,7 +29,7 @@ public class Service {
 	@Column(name = "service_id")
 	@GeneratedValue
 	//@JsonProperty(value = "service_id")
-	private int serviceId;
+	private Long serviceId;
 
 	@Column(name = "service_name")
 	//@JsonProperty(value = "service_name")
@@ -40,11 +43,11 @@ public class Service {
 
 	@Column(name = "service_response")
 	//@JsonProperty(value = "service_response")
-	private int serviceResponse;
+	private Integer serviceResponse;
 
-	@Column(name = "status")
-	//@JsonProperty(value = "status")
-	private int status;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "status_id")
+	private Status status;
 
 	public String getAssociationWith() {
 		return associationWith;
@@ -62,12 +65,24 @@ public class Service {
 		this.textField = textField;
 	}
 
-	public int getServiceId() {
+	public Long getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(int serviceId) {
+	public void setServiceId(Long serviceId) {
 		this.serviceId = serviceId;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public void setServiceResponse(Integer serviceResponse) {
+		this.serviceResponse = serviceResponse;
 	}
 
 	public String getServiceName() {
@@ -84,14 +99,6 @@ public class Service {
 
 	public void setServiceResponse(int serviceResponse) {
 		this.serviceResponse = serviceResponse;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 }

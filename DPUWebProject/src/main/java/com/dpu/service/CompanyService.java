@@ -7,7 +7,7 @@ import com.dpu.model.CompanyResponse;
 
 public interface CompanyService {
 
-	Company add(Company company);
+	Company addCompanyData(CompanyResponse companyResponse);
 	
 	Company update(Company company);
 	

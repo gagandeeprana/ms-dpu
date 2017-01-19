@@ -75,6 +75,8 @@ public class CompanyResponse implements Serializable{
 
 	private List<BillingLocation> billingLocations;
 	
+	private List<AdditionalContacts> additionalContacts;
+	
 	public List<BillingLocation> getBillingLocations() {
 		return billingLocations;
 	}
@@ -241,6 +243,14 @@ public class CompanyResponse implements Serializable{
 
 	public void setAfterHours(String afterHours) {
 		this.afterHours = afterHours;
+	}
+
+	public List<AdditionalContacts> getAdditionalContacts() {
+		return additionalContacts;
+	}
+
+	public void setAdditionalContacts(List<AdditionalContacts> additionalContacts) {
+		this.additionalContacts = additionalContacts;
 	}
 	
 	

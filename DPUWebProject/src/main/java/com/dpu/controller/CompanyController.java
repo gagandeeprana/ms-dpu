@@ -1,6 +1,5 @@
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,9 +59,9 @@ public class CompanyController extends MessageProperties {
 		logger.info("[add] : Enter");
 		Object obj = null;
 		try {
-			System.out.println(new ObjectMapper().writeValueAsString(companyResponse));
-			Company company = setCompanyValues(companyResponse);
-			Company response = companyService.add(company);
+			//System.out.println(new ObjectMapper().writeValueAsString(companyResponse));
+			
+			Company response = companyService.addCompanyData(companyResponse);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
 						Integer.parseInt(companyAddedCode),
@@ -78,31 +77,6 @@ public class CompanyController extends MessageProperties {
 		}
 		logger.info("[add] : Exit");
 		return obj;
-	}
-
-	private Company setCompanyValues(CompanyResponse companyResponse) {
-		logger.info("[setCompanyValues] : Enter");
-		Company company = new Company();
-		company.setName(companyResponse.getName());
-		company.setContact(companyResponse.getContact());
-		company.setAddress(companyResponse.getAddress());
-		company.setPosition(companyResponse.getPosition());
-		company.setUnitNo(companyResponse.getUnitNo());
-		company.setPhone(companyResponse.getPhone());
-		company.setExt(companyResponse.getExt());
-		company.setCity(companyResponse.getCity());
-		company.setFax(companyResponse.getFax());
-		company.setCompanyPrefix(companyResponse.getCompanyPrefix());
-		company.setProvinceState(companyResponse.getProvinceState());
-		company.setZip(companyResponse.getZip());
-		company.setAfterHours(companyResponse.getAfterHours());
-		company.setEmail(companyResponse.getEmail());
-		company.setTollfree(companyResponse.getTollfree());
-		company.setWebsite(companyResponse.getWebsite());
-		company.setCellular(companyResponse.getCellular());
-		company.setPager(companyResponse.getPager());
-		logger.info("[setCompanyValues] : Exit");
-		return company;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)

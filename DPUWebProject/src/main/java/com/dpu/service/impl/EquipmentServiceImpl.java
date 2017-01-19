@@ -3,15 +3,18 @@
  */
 package com.dpu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.EquipmentDao;
-import com.dpu.entity.Category;
 import com.dpu.entity.Equipment;
+import com.dpu.model.EquipmentReq;
 import com.dpu.service.EquipmentService;
 
 /**
@@ -54,7 +57,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public Equipment update(int id, Equipment equipment) {
+	public Equipment update(Long id, Equipment equipment) {
 		return equipmentDao.update(equipment);
 	}
 
@@ -71,12 +74,29 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public List<Equipment> getAll() {
-		return equipmentDao.findAll();
+	public List<EquipmentReq> getAll(String equipmentName) {
+		List<Equipment> equipments = null;
+		List<EquipmentReq> equipmentResponse = new ArrayList<EquipmentReq>();
+		if(equipmentName != null && equipmentName.length() > 0) {
+			Criterion criterion = Restrictions.like("equipmentName", equipmentName);
+			equipments = equipmentDao.find(criterion);
+		} else {
+			equipments = equipmentDao.findAll();
+		}
+		if(equipments != null  && equipments.size() > 0) {
+			for(Equipment equipment : equipments) {
+				EquipmentReq equipmentReq = new EquipmentReq();
+				equipmentReq.setEquipmentName(equipment.getEquipmentName());
+				equipmentReq.setType(equipment.getType().getTypeName());
+				equipmentReq.setDescription(equipment.getDescription());
+				equipmentResponse.add(equipmentReq);
+			}
+		}
+		return equipmentResponse;
 	}
 
 	@Override
-	public Equipment get(int id) {
+	public Equipment get(Long id) {
 		return equipmentDao.findById(id);
 	}
 

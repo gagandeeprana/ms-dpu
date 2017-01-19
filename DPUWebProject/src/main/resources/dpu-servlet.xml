@@ -29,7 +29,8 @@
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="annotatedClasses">
+		<property name="packagesToScan" value="com.dpu.entity"></property>
+		<!-- <property name="annotatedClasses">
 			<list>
 				<value>com.dpu.entity.Company</value>
 				<value>com.dpu.entity.Driver</value>
@@ -45,7 +46,7 @@
 				<value>com.dpu.entity.Terminal</value>
 
 			</list>
-		</property>
+		</property> -->
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>

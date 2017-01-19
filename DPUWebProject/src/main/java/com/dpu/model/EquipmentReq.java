@@ -4,30 +4,35 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-/**
- * @author  
- *
- */
-
 @JsonIgnoreProperties(ignoreUnknown = true) 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class EquipmentReq {
 
 	 
 	//@JsonProperty(value = "equipment_id")
-	private int equipmentId;
+	private Long equipmentId;
 
 	//@JsonProperty(value = "equipment_name")
 	private String equipmentName;
 
 	//@JsonProperty(value = "description")
 	private String description;
+	
+	private String type;
 
-	public int getEquipmentId() {
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Long getEquipmentId() {
 		return equipmentId;
 	}
 
-	public void setEquipmentId(int equipmentId) {
+	public void setEquipmentId(Long equipmentId) {
 		this.equipmentId = equipmentId;
 	}
 

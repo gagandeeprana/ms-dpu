@@ -3,10 +3,8 @@
  */
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,43 +79,27 @@ public class EquipmentController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody EquipmentReq equipmentReq) {
-		logger.info("[add]: Enter");
+
+		logger.info("EquipmentController: add(): STARTS");
 		Object obj = null;
 		try {
 
-			System.out.println(new ObjectMapper().writeValueAsString(equipmentReq));
-			Equipment equipment = setCategoryValues(equipmentReq);
-			boolean result = equipmentService.add(equipment);
-			System.out.println("result value : " + result);
+			Equipment equipment = equipmentService.add(equipmentReq);
 			
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(equipmentAddedCode),
-						equipmentAddedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			if (equipment != null) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(equipmentAddedCode), equipmentAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(equipmentUnableToAddCode),
-						equipmentUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(equipmentUnableToAddCode),equipmentUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-			logger.error("EquipmentController : add: " + e);
+			logger.fatal("EquipmentController: add(): Exception: " + e.getMessage());
 		}
-		logger.info("[getAll] :Exit");
+
+		logger.info("EquipmentController: add(): ENDS");
+		
 		return obj;
 	}
 	
-	private Equipment setCategoryValues(EquipmentReq equipmentReq) {
-		Equipment equipment = new Equipment();
-		equipment.setEquipmentName(equipmentReq.getEquipmentName());
-		equipment.setDescription(equipmentReq.getDescription());
-		 
-
-		return equipment;
-	}
-
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] :Enter : Id : "+id);

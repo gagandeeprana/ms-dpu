@@ -19,6 +19,16 @@ public class EquipmentReq {
 	private String description;
 	
 	private String type;
+	
+	private Long typeId;
+	
+	public Long getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
+	}
 
 	public String getType() {
 		return type;

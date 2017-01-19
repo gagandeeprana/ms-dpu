@@ -14,8 +14,6 @@ import com.dpu.model.EquipmentReq;
  */
 public interface EquipmentService {
 
-	boolean add(Equipment equipment);
-
 	Equipment update(Long id, Equipment equipment);
 
 	boolean delete(Equipment equipment);
@@ -23,5 +21,7 @@ public interface EquipmentService {
 	Equipment get(Long id);
 
 	List<EquipmentReq> getAll(String equipmentName);
+
+	Equipment add(EquipmentReq equipmentReq);
 
 }

@@ -49,17 +49,17 @@ public class ServiceController extends MessageProperties {
 		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
-			List<Service> lstServices = serviceService.getAll();
+			List<DPUService> lstServices = serviceService.getAll();
 			if(lstServices != null) {
-				List<DPUService> responses = new ArrayList<DPUService>();
+				/*List<DPUService> responses = new ArrayList<DPUService>();
 				for(Service service : lstServices) {
 					DPUService response = new DPUService();
 					BeanUtils.copyProperties(response, service);
 					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+				}*/
+				/*if(responses != null && !responses.isEmpty()) {*/
+					json = mapper.writeValueAsString(lstServices);
+				/*}*/
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -98,7 +98,7 @@ public class ServiceController extends MessageProperties {
 		service.setServiceName(dpuService.getServiceName());
 		service.setTextField(dpuService.getTextField());
 		service.setAssociationWith(dpuService.getAssociationWith());
-		service.setStatus(dpuService.getStatus());
+		//service.setStatus(dpuService.getStatus());
 		return service;
 	}
 
@@ -137,7 +137,7 @@ public class ServiceController extends MessageProperties {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
-			service.setServiceId(id);
+			//service.setServiceId(id);
 			Service response = serviceService.update(id, service);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(

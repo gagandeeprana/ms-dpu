@@ -1,6 +1,7 @@
 package com.dpu.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -71,6 +72,18 @@ public class CompanyResponse implements Serializable{
 	
 	//@JsonProperty("after_hours")
 	private String afterHours;
+
+	private List<BillingLocation> billingLocations;
+	
+	private List<AdditionalContacts> additionalContacts;
+	
+	public List<BillingLocation> getBillingLocations() {
+		return billingLocations;
+	}
+
+	public void setBillingLocations(List<BillingLocation> billingLocations) {
+		this.billingLocations = billingLocations;
+	}
 
 	public Integer getCompanyId() {
 		return companyId;
@@ -230,6 +243,14 @@ public class CompanyResponse implements Serializable{
 
 	public void setAfterHours(String afterHours) {
 		this.afterHours = afterHours;
+	}
+
+	public List<AdditionalContacts> getAdditionalContacts() {
+		return additionalContacts;
+	}
+
+	public void setAdditionalContacts(List<AdditionalContacts> additionalContacts) {
+		this.additionalContacts = additionalContacts;
 	}
 	
 	

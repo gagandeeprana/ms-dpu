@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.dpu.entity.Category;
 import com.dpu.entity.Service;
+import com.dpu.model.DPUService;
 
 /**
  * @author jagvir
@@ -19,7 +20,7 @@ public interface ServiceService {
 
 	boolean delete(Service service);
 
-	List<Service> getAll();
+	List<DPUService> getAll();
 
 	Service get(int id);
 }

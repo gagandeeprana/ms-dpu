@@ -3,7 +3,6 @@
  */
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Equipment;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.EquipmentReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -43,22 +41,32 @@ public class EquipmentController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
+	/*@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAllEquipment(@PathVariable("equipmentname") String equipmentName) {
+		logger.info("[getAll]: Enter");
+		String json = new String();
+		try {
+			List<EquipmentReq> lstequipments = equipmentService.getAll(equipmentName);
+			if(lstequipments != null && lstequipments.size() > 0) {
+				json = mapper.writeValueAsString(lstequipments);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			logger.error(e);
+			logger.error("EquipmentController : getAll " + e);
+		}
+		logger.info("[getAll] :Exit");
+		return json;
+	}*/
+	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllEquipment() {
 		logger.info("[getAll]: Enter");
-		String json = null;
+		String json = new String();
 		try {
-			List<Equipment> lstequipments = equipmentService.getAll();
-			if(lstequipments != null) {
-				List<EquipmentReq> responses = new ArrayList<EquipmentReq>();
-				for (Equipment equipment : lstequipments) {
-					EquipmentReq response = new EquipmentReq();
-					BeanUtils.copyProperties(response, equipment);
-					responses.add(response);
-				}
-				if (responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+			List<EquipmentReq> lstequipments = equipmentService.getAll("");
+			if(lstequipments != null && lstequipments.size() > 0) {
+				json = mapper.writeValueAsString(lstequipments);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -69,47 +77,32 @@ public class EquipmentController extends MessageProperties {
 		return json;
 	}
 
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody EquipmentReq equipmentReq) {
-		logger.info("[add]: Enter");
+
+		logger.info("EquipmentController: add(): STARTS");
 		Object obj = null;
 		try {
 
-			System.out.println(new ObjectMapper().writeValueAsString(equipmentReq));
-			Equipment equipment = setCategoryValues(equipmentReq);
-			boolean result = equipmentService.add(equipment);
-			System.out.println("result value : " + result);
+			Equipment equipment = equipmentService.add(equipmentReq);
 			
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(equipmentAddedCode),
-						equipmentAddedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			if (equipment != null) {
+				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(equipmentAddedCode), equipmentAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(equipmentUnableToAddCode),
-						equipmentUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(equipmentUnableToAddCode),equipmentUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-			logger.error("EquipmentController : add: " + e);
+			logger.fatal("EquipmentController: add(): Exception: " + e.getMessage());
 		}
-		logger.info("[getAll] :Exit");
+
+		logger.info("EquipmentController: add(): ENDS");
+		
 		return obj;
 	}
 	
-	private Equipment setCategoryValues(EquipmentReq equipmentReq) {
-		Equipment equipment = new Equipment();
-		equipment.setEquipmentName(equipmentReq.getEquipmentName());
-		equipment.setDescription(equipmentReq.getDescription());
-		 
-
-		return equipment;
-	}
-
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	/*@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] :Enter : Id : "+id);
 		Object obj = null;
 		boolean result = false;
@@ -136,10 +129,10 @@ public class EquipmentController extends MessageProperties {
 		logger.info("[delete] :Exit ");
 		return obj;
 
-	}
+	}*/
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
+	public Object update(@PathVariable("id") Long id,
 			@RequestBody Equipment equipment) {
 		logger.info("[update] :Enter :ID:  "+id );
 		Object obj = null;
@@ -166,24 +159,25 @@ public class EquipmentController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("equipmentId") int id) {
-		logger.info("[get] :Enter :Id:   "+id );
-		String json = null;
+	public Object get(@PathVariable("equipmentId") Long id) {
+		
+		logger.info("EquipmentController: get(): STARTS");
+		
+		String json = new String();
 		try {
-			Equipment equipment = equipmentService.get(id);
-			ObjectMapper mapper = new ObjectMapper();
-			
-			CategoryReq response = new CategoryReq();
-			BeanUtils.copyProperties(response, equipment);
-
-			if (response != null) {
-				json = mapper.writeValueAsString(equipment);
+		
+			EquipmentReq equipmentReq = equipmentService.get(id);
+			if(equipmentReq != null) {
+				ObjectMapper mapper = new ObjectMapper();
+				json = mapper.writeValueAsString(equipmentReq);
+				System.out.println(json);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-			logger.error("EquipmentController : get " + e);
+			logger.info("EquipmentController: get(): Exception:  " + e.getMessage());
 		}
-		logger.info("[get] :Exit    " );
+		
+		logger.info("EquipmentController: get(): ENDS");
+		
 		return json;
 	}
 

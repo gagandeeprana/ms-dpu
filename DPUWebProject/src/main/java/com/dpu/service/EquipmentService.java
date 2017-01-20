@@ -18,7 +18,7 @@ public interface EquipmentService {
 
 	boolean delete(Equipment equipment);
 
-	Equipment get(Long id);
+	EquipmentReq get(Long id);
 
 	List<EquipmentReq> getAll(String equipmentName);
 

@@ -30,15 +30,16 @@ public class TypeServiceImpl implements TypeService {
 	TypeDao typeDao;
 
 	@Override
-	public List<TypeResponse> getAll(String typeName) {
+	public List<TypeResponse> getAll(Long typeValue) {
 		List<Type> types = null;
 		List<TypeResponse> response = new ArrayList<TypeResponse>();
-		if(typeName != null && typeName.length() > 0) {
-			Criterion criterion = Restrictions.like("typeName", typeName);
+		Criterion eqcriterion = Restrictions.eq("value", typeValue);
+		/*if(typeName != null && typeName.length() > 0) {
+			Criterion typecriterion = Restrictions.likeRestrictions.like("typeName", typeName);
 			types = typeDao.find(criterion);
-		} else {
-			types = typeDao.findAll();
-		}
+		} else {*/
+			types = typeDao.find(eqcriterion);
+		/*}*/
 		if(types != null  && types.size() > 0) {
 			for(Type type : types) {
 				TypeResponse typeResponse = new TypeResponse();

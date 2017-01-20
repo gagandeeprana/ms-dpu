@@ -1,8 +1,12 @@
 package com.dpu.model;
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Type;
 
 @JsonIgnoreProperties(ignoreUnknown = true) 
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -21,6 +25,8 @@ public class EquipmentReq {
 	private String type;
 	
 	private Long typeId;
+	
+	private List<Type> typeList;
 	
 	public Long getTypeId() {
 		return typeId;
@@ -60,6 +66,14 @@ public class EquipmentReq {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<Type> getTypeList() {
+		return typeList;
+	}
+
+	public void setTypeList(List<Type> typeList) {
+		this.typeList = typeList;
 	}
 }
 

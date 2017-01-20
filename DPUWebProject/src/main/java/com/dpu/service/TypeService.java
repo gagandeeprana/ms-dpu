@@ -6,6 +6,6 @@ import com.dpu.model.TypeResponse;
 
 public interface TypeService {
 
-	List<TypeResponse> getAll(String typeName);
+	List<TypeResponse> getAll(Long typeValue);
 	
 }

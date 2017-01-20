@@ -33,7 +33,7 @@ public class TypeController extends MessageProperties {
 		String json = new String();
 		try {
 			
-			List<TypeResponse> typeResponses = typeService.getAll("");
+			List<TypeResponse> typeResponses = typeService.getAll(1l);
 			
 			if(typeResponses != null) {
 				json = mapper.writeValueAsString(typeResponses);

@@ -5,6 +5,7 @@ package com.dpu.controller;
 
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,7 +158,7 @@ public class EquipmentController extends MessageProperties {
 		return obj;
 	}
 
-	/*@RequestMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("equipmentId") Long id) {
 		logger.info("[get] :Enter :Id:   "+id );
 		String json = new String();
@@ -180,6 +181,6 @@ public class EquipmentController extends MessageProperties {
 		}
 		logger.info("[get] :Exit    " );
 		return json;
-	}*/
+	}
 
 }

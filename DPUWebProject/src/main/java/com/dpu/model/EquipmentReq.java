@@ -26,7 +26,7 @@ public class EquipmentReq {
 	
 	private Long typeId;
 	
-	private List<Type> typeList;
+	private List<TypeResponse> typeList;
 	
 	public Long getTypeId() {
 		return typeId;
@@ -68,11 +68,11 @@ public class EquipmentReq {
 		this.description = description;
 	}
 
-	public List<Type> getTypeList() {
+	public List<TypeResponse> getTypeList() {
 		return typeList;
 	}
 
-	public void setTypeList(List<Type> typeList) {
+	public void setTypeList(List<TypeResponse> typeList) {
 		this.typeList = typeList;
 	}
 }

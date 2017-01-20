@@ -19,7 +19,9 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Equipment;
 import com.dpu.model.EquipmentReq;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.EquipmentService;
+import com.dpu.service.TypeService;
 
 /**
  * @author jagvir
@@ -35,6 +37,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 	
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	TypeService typeService;
 
 	@Override
 	public Equipment add(EquipmentReq equipmentReq) {
@@ -122,6 +127,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 			response.setTypeId(equipment.getType().getTypeId());
 			response.setEquipmentName(equipment.getEquipmentName());
 			response.setDescription(equipment.getDescription());
+			
+			List<TypeResponse> typeList = typeService.getAll(1l);
+			
+			if(typeList != null && !typeList.isEmpty()){
+				response.setTypeList(typeList);
+			}
+			
 		}
 		
 		return response;

@@ -46,6 +46,8 @@ public class DPUService {
 	private String textField;
 	
 	private String associationWith;
+	
+	private Long statusId;
 
 	public String getTextField() {
 		return textField;
@@ -73,6 +75,14 @@ public class DPUService {
 
 	public Integer getServiceResponse() {
 		return serviceResponse;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
 	}
 
 }

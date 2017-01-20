@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Equipment;
+import com.dpu.entity.Type;
 import com.dpu.model.EquipmentReq;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.EquipmentService;
@@ -77,19 +78,38 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 	
 	@Override
-	public Equipment update(Long id, Equipment equipment) {
-		return equipmentDao.update(equipment);
+	public List<EquipmentReq> update(Long id, EquipmentReq equipmentReq) {
+		
+		Equipment equipmentObj = equipmentDao.findById(id);
+		if(equipmentObj != null){
+			equipmentObj.setEquipmentName(equipmentReq.getEquipmentName());
+			equipmentObj.setDescription(equipmentReq.getDescription());
+			equipmentObj.setModifiedBy("gagan");
+			equipmentObj.setModifiedOn(new Date());
+			Type type = typeService.get(equipmentReq.getTypeId());
+			equipmentObj.setType(type);
+			equipmentDao.update(equipmentObj);
+			
+			return getAll("");
+		} else{
+			return null;
+		}
 	}
 
 	@Override
-	public boolean delete(Equipment equipment) {
+	public boolean delete(Long id) {
+		
 		boolean result = false;
-		try {
-			equipmentDao.delete(equipment);
-			result = true;
-		} catch (Exception e) {
-			result = false;
+		Equipment equipment = equipmentDao.findById(id);
+		if(equipment != null){
+			try {
+				equipmentDao.delete(equipment);
+				result = true;
+			} catch (Exception e) {
+				result = false;
+			}
 		}
+		
 		return result;
 	}
 

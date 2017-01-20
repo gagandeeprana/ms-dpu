@@ -101,16 +101,16 @@ public class EquipmentController extends MessageProperties {
 		return obj;
 	}
 	
-	/*@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] :Enter : Id : "+id);
 		Object obj = null;
 		boolean result = false;
 		try {
-			Equipment equipment = equipmentService.get(id);
-			if (equipment != null) {
-				result = equipmentService.delete(equipment);
-			}
+			/*Equipment equipment = null;//equipmentService.get(id);
+			if (equipment != null) {*/
+				result = equipmentService.delete(id);
+			/*}*/
 			if (result) {
 				obj = new ResponseEntity<Object>(new Success(
 						Integer.parseInt(equipmentDeletedCode),
@@ -129,33 +129,37 @@ public class EquipmentController extends MessageProperties {
 		logger.info("[delete] :Exit ");
 		return obj;
 
-	}*/
+	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id,
-			@RequestBody Equipment equipment) {
+			@RequestBody EquipmentReq equipmentReq) {
 		logger.info("[update] :Enter :ID:  "+id );
-		Object obj = null;
+		String json = null;
 		try {
-			equipment.setEquipmentId(id);
-			Equipment response = equipmentService.update(id, equipment);
+			equipmentReq.setEquipmentId(id);
+			List<EquipmentReq> response = equipmentService.update(id, equipmentReq);
 			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
+				if(response != null && response.size() > 0) {
+					json = mapper.writeValueAsString(response);
+				}
+			/*	obj = new ResponseEntity<Object>(new Success(
 						Integer.parseInt(equipmentUpdateCode),
 						equipmentUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
-			} else {
+						HttpStatus.OK);*/
+			}
+			/*else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(equipmentUnableToUpdateCode),
 						equipmentUnableToUpdateMessage, Iconstants.ERROR),
 						HttpStatus.BAD_REQUEST);
-			}
+			}*/
 		} catch (Exception e) {
 			System.out.println(e);
 			logger.error("EquipmentController : update " + e);
 		}
 		logger.info("[update] :Exit   " );
-		return obj;
+		return json;
 	}
 
 	@RequestMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

@@ -14,9 +14,9 @@ import com.dpu.model.EquipmentReq;
  */
 public interface EquipmentService {
 
-	Equipment update(Long id, Equipment equipment);
+	List<EquipmentReq> update(Long id, EquipmentReq equipmentReq);
 
-	boolean delete(Equipment equipment);
+	boolean delete(Long id);
 
 	EquipmentReq get(Long id);
 

@@ -51,5 +51,10 @@ public class TypeServiceImpl implements TypeService {
 		return response;
 	}
 
+	@Override
+	public Type get(Long typeId) {
+		return typeDao.findById(typeId);
+		
+	}
 
 }

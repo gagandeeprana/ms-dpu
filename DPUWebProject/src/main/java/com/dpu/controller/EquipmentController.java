@@ -41,7 +41,7 @@ public class EquipmentController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	@RequestMapping(value = "/{equipmentname}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	/*@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllEquipment(@PathVariable("equipmentname") String equipmentName) {
 		logger.info("[getAll]: Enter");
 		String json = new String();
@@ -57,7 +57,7 @@ public class EquipmentController extends MessageProperties {
 		}
 		logger.info("[getAll] :Exit");
 		return json;
-	}
+	}*/
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllEquipment() {
@@ -101,7 +101,7 @@ public class EquipmentController extends MessageProperties {
 		return obj;
 	}
 	
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	/*@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] :Enter : Id : "+id);
 		Object obj = null;
@@ -129,7 +129,7 @@ public class EquipmentController extends MessageProperties {
 		logger.info("[delete] :Exit ");
 		return obj;
 
-	}
+	}*/
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id,
@@ -160,26 +160,24 @@ public class EquipmentController extends MessageProperties {
 
 	@RequestMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("equipmentId") Long id) {
-		logger.info("[get] :Enter :Id:   "+id );
+		
+		logger.info("EquipmentController: get(): STARTS");
+		
 		String json = new String();
 		try {
-			Equipment equipment = equipmentService.get(id);
-
-			if(equipment != null) {
-				
+		
+			EquipmentReq equipmentReq = equipmentService.get(id);
+			if(equipmentReq != null) {
 				ObjectMapper mapper = new ObjectMapper();
-				EquipmentReq response = new EquipmentReq();
-				BeanUtils.copyProperties(response, equipment);
-	
-				if (response != null) {
-					json = mapper.writeValueAsString(equipment);
-				}
+				json = mapper.writeValueAsString(equipmentReq);
+				System.out.println(json);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-			logger.error("EquipmentController : get " + e);
+			logger.info("EquipmentController: get(): Exception:  " + e.getMessage());
 		}
-		logger.info("[get] :Exit    " );
+		
+		logger.info("EquipmentController: get(): ENDS");
+		
 		return json;
 	}
 

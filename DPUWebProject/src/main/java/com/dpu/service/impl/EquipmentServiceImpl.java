@@ -101,8 +101,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 		if(equipments != null  && equipments.size() > 0) {
 			for(Equipment equipment : equipments) {
 				EquipmentReq equipmentReq = new EquipmentReq();
+				equipmentReq.setEquipmentId(equipment.getEquipmentId());
 				equipmentReq.setEquipmentName(equipment.getEquipmentName());
 				equipmentReq.setType(equipment.getType().getTypeName());
+				equipmentReq.setTypeId(equipment.getType().getTypeId());
 				equipmentReq.setDescription(equipment.getDescription());
 				equipmentResponse.add(equipmentReq);
 			}
@@ -111,8 +113,18 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public Equipment get(Long id) {
-		return equipmentDao.findById(id);
+	public EquipmentReq get(Long id) {
+		Equipment equipment = equipmentDao.findById(id);
+		EquipmentReq response = null;
+		if(equipment != null) {
+			response = new EquipmentReq();
+			response.setEquipmentId(equipment.getEquipmentId());
+			response.setTypeId(equipment.getType().getTypeId());
+			response.setEquipmentName(equipment.getEquipmentName());
+			response.setDescription(equipment.getDescription());
+		}
+		
+		return response;
 	}
 
 }

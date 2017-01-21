@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -97,20 +98,19 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public boolean delete(Long id) {
+	public List<EquipmentReq> delete(Long id) {
 		
-		boolean result = false;
 		Equipment equipment = equipmentDao.findById(id);
 		if(equipment != null){
 			try {
 				equipmentDao.delete(equipment);
-				result = true;
+				return getAll("");
 			} catch (Exception e) {
-				result = false;
+				System.out.println(e.getMessage());
 			}
 		}
 		
-		return result;
+		return null;
 	}
 
 	@Override
@@ -118,8 +118,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<Equipment> equipments = null;
 		List<EquipmentReq> equipmentResponse = new ArrayList<EquipmentReq>();
 		if(equipmentName != null && equipmentName.length() > 0) {
-//			Criterion criterion = Restrictions.like("equipmentName", equipmentName);
-//			equipments = equipmentDao.find(criterion);
+			Criterion criterion = Restrictions.like("equipmentName", equipmentName, MatchMode.ANYWHERE);
+			equipments = equipmentDao.find(criterion);
 		} else {
 			equipments = equipmentDao.findAll();
 		}

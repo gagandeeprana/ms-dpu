@@ -41,7 +41,7 @@ public class EquipmentController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	/*@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllEquipment(@PathVariable("equipmentname") String equipmentName) {
 		logger.info("[getAll]: Enter");
 		String json = new String();
@@ -57,7 +57,7 @@ public class EquipmentController extends MessageProperties {
 		}
 		logger.info("[getAll] :Exit");
 		return json;
-	}*/
+	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllEquipment() {
@@ -105,17 +105,16 @@ public class EquipmentController extends MessageProperties {
 	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] :Enter : Id : "+id);
 		Object obj = null;
-		boolean result = false;
+		//boolean result = false;
 		try {
 			/*Equipment equipment = null;//equipmentService.get(id);
 			if (equipment != null) {*/
-				result = equipmentService.delete(id);
+			List<EquipmentReq> response = equipmentService.delete(id);
 			/*}*/
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(equipmentDeletedCode),
-						equipmentDeletedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			if (response != null) {
+				if(response != null && response.size() > 0) {
+					obj = mapper.writeValueAsString(response);
+				}
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(equipmentUnableToDeleteCode),

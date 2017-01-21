@@ -16,7 +16,7 @@ public interface EquipmentService {
 
 	List<EquipmentReq> update(Long id, EquipmentReq equipmentReq);
 
-	boolean delete(Long id);
+	List<EquipmentReq> delete(Long id);
 
 	EquipmentReq get(Long id);
 

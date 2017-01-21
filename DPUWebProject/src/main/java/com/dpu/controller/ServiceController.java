@@ -3,10 +3,8 @@
  */
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
 import com.dpu.entity.Service;
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -96,8 +92,8 @@ public class ServiceController extends MessageProperties {
 	private Service setServiceValues(DPUService dpuService) {
 		Service service  = new Service();
 		service.setServiceName(dpuService.getServiceName());
-		service.setTextField(dpuService.getTextField());
-		service.setAssociationWith(dpuService.getAssociationWith());
+		//service.setTextField(dpuService.getTextField());
+		//service.setAssociationWith(dpuService.getAssociationWith());
 		//service.setStatus(dpuService.getStatus());
 		return service;
 	}

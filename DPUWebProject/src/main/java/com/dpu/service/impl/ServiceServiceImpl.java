@@ -54,12 +54,11 @@ public class ServiceServiceImpl implements ServiceService {
 		if(serviceList != null && !serviceList.isEmpty()){
 			for (Service service : serviceList) {
 				DPUService serviceObj = new DPUService();
-				serviceObj.setAssociationWith(serviceObj.getAssociationWith());
+				serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
 				serviceObj.setServiceName(service.getServiceName());
 				serviceObj.setServiceId(service.getServiceId());
 				serviceObj.setStatus(service.getStatus().getStatus());
-				serviceObj.setTextField(service.getTextField());
-				
+				serviceObj.setTextField(service.getTextField().getTypeName());
 				servicesList.add(serviceObj);
 			}
 		}

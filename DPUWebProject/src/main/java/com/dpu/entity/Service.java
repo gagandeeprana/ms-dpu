@@ -3,7 +3,6 @@
  */
 package com.dpu.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,33 +34,37 @@ public class Service {
 	//@JsonProperty(value = "service_name")
 	private String serviceName;
 	
-	@Column(name = "association_with")
-	private String associationWith;
-	
-	@Column(name = "text_field")
-	private String textField;
-
 	@Column(name = "service_response")
 	//@JsonProperty(value = "service_response")
 	private Integer serviceResponse;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "status_id")
 	private Status status;
+	
+	@ManyToOne
+	//@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "association_with")
+	private Type associationWith;
+	
+	@ManyToOne
+	//@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "text_field")
+	private Type textField;
 
-	public String getAssociationWith() {
+	public Type getAssociationWith() {
 		return associationWith;
 	}
 
-	public void setAssociationWith(String associationWith) {
+	public void setAssociationWith(Type associationWith) {
 		this.associationWith = associationWith;
 	}
 
-	public String getTextField() {
+	public Type getTextField() {
 		return textField;
 	}
 
-	public void setTextField(String textField) {
+	public void setTextField(Type textField) {
 		this.textField = textField;
 	}
 

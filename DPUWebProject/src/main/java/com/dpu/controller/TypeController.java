@@ -15,7 +15,7 @@ import com.dpu.service.TypeService;
 import com.dpu.util.MessageProperties;
 
 @RestController
-@RequestMapping(value = "type")
+@RequestMapping(value = "masterData")
 public class TypeController extends MessageProperties {
 
 	Logger logger = Logger.getLogger(TypeController.class);
@@ -25,8 +25,8 @@ public class TypeController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getAll() {
+	@RequestMapping(value = "/type", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAllTypes() {
 		
 		logger.info("TypeController: getAll(): STARTS");
 		
@@ -46,4 +46,45 @@ public class TypeController extends MessageProperties {
 		return json;
 	}
 
+	@RequestMapping(value = "/textFields", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAllTextFields() {
+		
+		logger.info("TypeController: getAll(): STARTS");
+		
+		String json = new String();
+		try {
+			
+			List<TypeResponse> typeResponses = typeService.getAll(2l);
+			
+			if(typeResponses != null) {
+				json = mapper.writeValueAsString(typeResponses);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[getAll] : Exit");
+		return json;
+	}
+	
+	@RequestMapping(value = "/assosiationWith", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAllAssosiationWith() {
+		
+		logger.info("TypeController: getAll(): STARTS");
+		
+		String json = new String();
+		try {
+			
+			List<TypeResponse> typeResponses = typeService.getAll(3l);
+			
+			if(typeResponses != null) {
+				json = mapper.writeValueAsString(typeResponses);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[getAll] : Exit");
+		return json;
+	}
 }

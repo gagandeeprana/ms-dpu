@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
@@ -11,8 +9,12 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
+import com.dpu.entity.Status;
+import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
 import com.dpu.service.ServiceService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TypeService;
 
 /**
  * @author jagvir
@@ -23,11 +25,32 @@ public class ServiceServiceImpl implements ServiceService {
 	@Autowired
 	ServiceDao serviceDao;
 
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
+	
 	@Override
-	public Service add(Service service) {
-		return serviceDao.save(service);
+	public List<DPUService> add(DPUService dpuService) {
+		
+		Service service = setServiceValues(dpuService);
+		serviceDao.save(service);
+		
+		return getAll();
 	}
 
+	private Service setServiceValues(DPUService dpuService) {
+		Service service  = new Service();
+		service.setServiceName(dpuService.getServiceName());
+		Status status = statusService.get(dpuService.getStatusId());
+		Type textField = typeService.get(dpuService.getTextFieldId());
+		service.setTextField(textField);
+		Type associateWith = typeService.get(dpuService.getAssociationWithId());
+		service.setAssociationWith(associateWith);
+		service.setStatus(status);
+		return service;
+	}
 	@Override
 	public Service update(int id, Service service) {
 		return serviceDao.update(service);

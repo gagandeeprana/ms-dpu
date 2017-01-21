@@ -31,6 +31,22 @@ public class DPUService {
 		this.serviceResponse = serviceResponse;
 	}
 
+	public Long getTextFieldId() {
+		return textFieldId;
+	}
+
+	public void setTextFieldId(Long textFieldId) {
+		this.textFieldId = textFieldId;
+	}
+
+	public Long getAssociationWithId() {
+		return associationWithId;
+	}
+
+	public void setAssociationWithId(Long associationWithId) {
+		this.associationWithId = associationWithId;
+	}
+
 	//@JsonProperty(value = "service_id")
 	private Long serviceId;
 
@@ -48,6 +64,10 @@ public class DPUService {
 	private String associationWith;
 	
 	private Long statusId;
+	
+	private Long textFieldId;
+	
+	private Long associationWithId;
 
 	public String getTextField() {
 		return textField;

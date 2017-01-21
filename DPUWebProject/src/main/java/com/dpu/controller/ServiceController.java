@@ -70,12 +70,10 @@ public class ServiceController extends MessageProperties {
 		Object obj = null;
 		try {
 			
-			Service service = setServiceValues(dpuService);
-			Service result = serviceService.add(service);
+			//Service service = setServiceValues(dpuService);
+			List<DPUService> result = serviceService.add(dpuService);
 			if (result != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(serviceAddedCode),
-						serviceAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+				obj = mapper.writeValueAsString(result);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(serviceUnableToAddCode),
@@ -87,15 +85,6 @@ public class ServiceController extends MessageProperties {
 		}
 		logger.info("[add] : Exit");
 		return obj;
-	}
-
-	private Service setServiceValues(DPUService dpuService) {
-		Service service  = new Service();
-		service.setServiceName(dpuService.getServiceName());
-		//service.setTextField(dpuService.getTextField());
-		//service.setAssociationWith(dpuService.getAssociationWith());
-		//service.setStatus(dpuService.getStatus());
-		return service;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)

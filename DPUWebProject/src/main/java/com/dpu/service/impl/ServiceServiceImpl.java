@@ -114,7 +114,7 @@ public class ServiceServiceImpl implements ServiceService {
 			dpuService.setTextFieldId(service.getTextField().getTypeId());
 			dpuService.setStatusId(service.getStatus().getId());
 			dpuService.setAssociationWithId(service.getAssociationWith().getTypeId());
-			
+			dpuService.setServiceName(service.getServiceName());
 			List<Status> statusList = statusService.getAll();
 			dpuService.setStatusList(statusList);
 			

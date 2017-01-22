@@ -91,8 +91,28 @@ public class ServiceServiceImpl implements ServiceService {
 	}
 
 	@Override
-	public Service get(int id) {
-		return serviceDao.findById(id);
+	public DPUService get(Long id) {
+		
+		DPUService dpuService = new DPUService();
+		Service service = serviceDao.findById(id);
+		
+		if(service != null){
+			dpuService.setServiceId(service.getServiceId());
+			dpuService.setTextFieldId(service.getTextField().getTypeId());
+			dpuService.setStatusId(service.getStatus().getId());
+			dpuService.setAssociationWithId(service.getAssociationWith().getTypeId());
+			
+			List<Status> statusList = statusService.getAll();
+			dpuService.setStatusList(statusList);
+			
+			List<TypeResponse> textFieldList = typeService.getAll(2l);
+			dpuService.setTextFieldList(textFieldList);
+			
+			List<TypeResponse> associatedWithList = typeService.getAll(3l);
+			dpuService.setAssociatedWithList(associatedWithList);
+		}
+		
+		return dpuService;
 	}
 
 	@Override

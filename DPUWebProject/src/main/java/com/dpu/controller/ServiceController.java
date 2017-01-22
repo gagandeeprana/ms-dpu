@@ -93,7 +93,8 @@ public class ServiceController extends MessageProperties {
 		Object obj = null;
 		boolean result = false;
 		try {
-			Service service = serviceService.get(id);
+			Service service = null;
+			//serviceService.get(id);
 			if (service != null) {
 				result = serviceService.delete(service);
 			}
@@ -143,13 +144,14 @@ public class ServiceController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("categoryId") int id) {
+	public Object get(@PathVariable("categoryId") Long id) {
 		logger.info("[get] : Enter : Id : "+id);
 		String json = null;
 		try {
-			Service service = serviceService.get(id);
+			DPUService dpuService = serviceService.get(id);
+			//Service service = serviceService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(service);
+			json = mapper.writeValueAsString(dpuService);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

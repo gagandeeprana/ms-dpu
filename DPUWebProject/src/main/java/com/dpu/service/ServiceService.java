@@ -18,7 +18,7 @@ public interface ServiceService {
 
 	List<DPUService> getAll();
 
-	Service get(int id);
+	DPUService get(Long id);
 
 	DPUService getOpenAdd();
 }

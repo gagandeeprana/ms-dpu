@@ -22,6 +22,6 @@ public interface EquipmentService {
 
 	List<EquipmentReq> getAll(String equipmentName);
 
-	Equipment add(EquipmentReq equipmentReq);
+	List<EquipmentReq> add(EquipmentReq equipmentReq);
 
 }

@@ -44,20 +44,20 @@ public class EquipmentServiceImpl implements EquipmentService {
 	TypeService typeService;
 
 	@Override
-	public Equipment add(EquipmentReq equipmentReq) {
+	public List<EquipmentReq> add(EquipmentReq equipmentReq) {
 
 		logger.info("EquipmentServiceImpl: add():  STARTS");
 
 		Session session = null;
 		Transaction tx = null;
-		Equipment equipment = null;
+		List<EquipmentReq> equipmentList = null;
 		
 		try {
 			
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			equipment = equipmentDao.add(session, equipmentReq);
-
+			Equipment equipment = equipmentDao.add(session, equipmentReq);
+			equipmentList = getAll("");
 		} catch (Exception e) {
 			logger.fatal("EquipmentServiceImpl: add(): Exception: " + e.getMessage());
 			if(tx != null) {
@@ -75,7 +75,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		
 		logger.info("EquipmentServiceImpl: add():  ENDS");
 
-		return equipment;
+		return equipmentList;
 	}
 	
 	@Override

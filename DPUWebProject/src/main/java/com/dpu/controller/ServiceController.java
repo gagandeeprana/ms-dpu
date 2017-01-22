@@ -118,18 +118,15 @@ public class ServiceController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
-			@RequestBody Service service) {
+	public Object update(@PathVariable("id") Long id,
+			@RequestBody DPUService dpuService) {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
 			//service.setServiceId(id);
-			Service response = serviceService.update(id, service);
+			List<DPUService> response = serviceService.update(id, dpuService);
 			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(serviceUpdateCode),
-						serviceUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+				obj = response;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(serviceUnableToUpdateCode),

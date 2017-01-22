@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.ServiceDao;
+import com.dpu.entity.Equipment;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
@@ -52,9 +53,21 @@ public class ServiceServiceImpl implements ServiceService {
 		service.setStatus(status);
 		return service;
 	}
+	
 	@Override
-	public Service update(int id, Service service) {
-		return serviceDao.update(service);
+	public List<DPUService> update(Long id, DPUService dpuService) {
+		//Service service  = new Service();
+		Service service = serviceDao.findById(id);
+		//service.setServiceId(id);
+		service.setServiceName(dpuService.getServiceName());
+		Status status = statusService.get(dpuService.getStatusId());
+		Type textField = typeService.get(dpuService.getTextFieldId());
+		service.setTextField(textField);
+		Type associateWith = typeService.get(dpuService.getAssociationWithId());
+		service.setAssociationWith(associateWith);
+		service.setStatus(status);
+		serviceDao.update(service);
+		return getAll();
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
@@ -92,6 +93,23 @@ public class ServiceServiceImpl implements ServiceService {
 	@Override
 	public Service get(int id) {
 		return serviceDao.findById(id);
+	}
+
+	@Override
+	public DPUService getOpenAdd() {
+
+		DPUService service = new DPUService();
+		
+		List<Status> statusList = statusService.getAll();
+		service.setStatusList(statusList);
+		
+		List<TypeResponse> textFieldList = typeService.getAll(2l);
+		service.setTextFieldList(textFieldList);
+		
+		List<TypeResponse> associatedWithList = typeService.getAll(3l);
+		service.setAssociatedWithList(associatedWithList);
+		
+		return service;
 	}
 
 }

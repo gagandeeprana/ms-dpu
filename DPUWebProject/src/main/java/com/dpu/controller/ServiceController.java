@@ -156,5 +156,20 @@ public class ServiceController extends MessageProperties {
 		logger.info("[get] : Exit " );
 		return json;
 	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside ServiceController openAdd() Starts ");
+		String json = null;
+		try {
+			DPUService dpuService = serviceService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(dpuService);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside ServiceController openAdd() Ends ");
+		return json;
+	}
 
 }

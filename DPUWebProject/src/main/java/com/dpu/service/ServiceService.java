@@ -19,4 +19,6 @@ public interface ServiceService {
 	List<DPUService> getAll();
 
 	Service get(int id);
+
+	DPUService getOpenAdd();
 }

@@ -1,7 +1,11 @@
 package com.dpu.model;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Status;
 
 /**
  * @author jagvir
@@ -68,6 +72,36 @@ public class DPUService {
 	private Long textFieldId;
 	
 	private Long associationWithId;
+	
+	private List<Status> statusList;
+	
+	private List<TypeResponse> textFieldList;
+	
+	private List<TypeResponse> associatedWithList;
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	public List<TypeResponse> getTextFieldList() {
+		return textFieldList;
+	}
+
+	public void setTextFieldList(List<TypeResponse> textFieldList) {
+		this.textFieldList = textFieldList;
+	}
+
+	public List<TypeResponse> getAssociatedWithList() {
+		return associatedWithList;
+	}
+
+	public void setAssociatedWithList(List<TypeResponse> associatedWithList) {
+		this.associatedWithList = associatedWithList;
+	}
 
 	public String getTextField() {
 		return textField;

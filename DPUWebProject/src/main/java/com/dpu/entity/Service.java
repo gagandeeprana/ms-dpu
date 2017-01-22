@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -26,48 +28,64 @@ public class Service {
 	@Column(name = "service_id")
 	@GeneratedValue
 	//@JsonProperty(value = "service_id")
-	private int serviceId;
+	private Long serviceId;
 
 	@Column(name = "service_name")
 	//@JsonProperty(value = "service_name")
 	private String serviceName;
 	
-	@Column(name = "association_with")
-	private String associationWith;
-	
-	@Column(name = "text_field")
-	private String textField;
-
 	@Column(name = "service_response")
 	//@JsonProperty(value = "service_response")
-	private int serviceResponse;
+	private Integer serviceResponse;
 
-	@Column(name = "status")
-	//@JsonProperty(value = "status")
-	private int status;
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
+	
+	@ManyToOne
+	//@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "association_with")
+	private Type associationWith;
+	
+	@ManyToOne
+	//@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "text_field")
+	private Type textField;
 
-	public String getAssociationWith() {
+	public Type getAssociationWith() {
 		return associationWith;
 	}
 
-	public void setAssociationWith(String associationWith) {
+	public void setAssociationWith(Type associationWith) {
 		this.associationWith = associationWith;
 	}
 
-	public String getTextField() {
+	public Type getTextField() {
 		return textField;
 	}
 
-	public void setTextField(String textField) {
+	public void setTextField(Type textField) {
 		this.textField = textField;
 	}
 
-	public int getServiceId() {
+	public Long getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(int serviceId) {
+	public void setServiceId(Long serviceId) {
 		this.serviceId = serviceId;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public void setServiceResponse(Integer serviceResponse) {
+		this.serviceResponse = serviceResponse;
 	}
 
 	public String getServiceName() {
@@ -84,14 +102,6 @@ public class Service {
 
 	public void setServiceResponse(int serviceResponse) {
 		this.serviceResponse = serviceResponse;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 }

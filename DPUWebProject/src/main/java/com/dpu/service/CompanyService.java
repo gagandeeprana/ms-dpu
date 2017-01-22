@@ -3,17 +3,18 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Company;
+import com.dpu.model.CompanyResponse;
 
 public interface CompanyService {
 
-	Company add(Company company);
+	Company addCompanyData(CompanyResponse companyResponse);
 	
 	Company update(Company company);
 	
 	boolean delete(Company company);
 	
-	List<Company> getAll();
+	List<CompanyResponse> getAll();
 	
-	Company get(int id);
+	CompanyResponse get(int id);
 	
 }

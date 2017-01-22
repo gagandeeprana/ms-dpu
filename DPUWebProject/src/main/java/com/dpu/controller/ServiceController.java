@@ -3,10 +3,8 @@
  */
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
 import com.dpu.entity.Service;
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -49,17 +45,17 @@ public class ServiceController extends MessageProperties {
 		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
-			List<Service> lstServices = serviceService.getAll();
+			List<DPUService> lstServices = serviceService.getAll();
 			if(lstServices != null) {
-				List<DPUService> responses = new ArrayList<DPUService>();
+				/*List<DPUService> responses = new ArrayList<DPUService>();
 				for(Service service : lstServices) {
 					DPUService response = new DPUService();
 					BeanUtils.copyProperties(response, service);
 					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+				}*/
+				/*if(responses != null && !responses.isEmpty()) {*/
+					json = mapper.writeValueAsString(lstServices);
+				/*}*/
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -96,9 +92,9 @@ public class ServiceController extends MessageProperties {
 	private Service setServiceValues(DPUService dpuService) {
 		Service service  = new Service();
 		service.setServiceName(dpuService.getServiceName());
-		service.setTextField(dpuService.getTextField());
-		service.setAssociationWith(dpuService.getAssociationWith());
-		service.setStatus(dpuService.getStatus());
+		//service.setTextField(dpuService.getTextField());
+		//service.setAssociationWith(dpuService.getAssociationWith());
+		//service.setStatus(dpuService.getStatus());
 		return service;
 	}
 
@@ -137,7 +133,7 @@ public class ServiceController extends MessageProperties {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
-			service.setServiceId(id);
+			//service.setServiceId(id);
 			Service response = serviceService.update(id, service);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(

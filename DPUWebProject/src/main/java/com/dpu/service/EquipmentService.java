@@ -6,6 +6,7 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Equipment;
+import com.dpu.model.EquipmentReq;
 
 /**
  * @author jagvir
@@ -13,14 +14,14 @@ import com.dpu.entity.Equipment;
  */
 public interface EquipmentService {
 
-	boolean add(Equipment equipment);
+	List<EquipmentReq> update(Long id, EquipmentReq equipmentReq);
 
-	Equipment update(int id, Equipment equipment);
+	List<EquipmentReq> delete(Long id);
 
-	boolean delete(Equipment equipment);
+	EquipmentReq get(Long id);
 
-	List<Equipment> getAll();
+	List<EquipmentReq> getAll(String equipmentName);
 
-	Equipment get(int id);
+	Equipment add(EquipmentReq equipmentReq);
 
 }

@@ -3,16 +3,27 @@
  */
 package com.dpu.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.EquipmentDao;
-import com.dpu.entity.Category;
 import com.dpu.entity.Equipment;
+import com.dpu.entity.Type;
+import com.dpu.model.EquipmentReq;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.EquipmentService;
+import com.dpu.service.TypeService;
 
 /**
  * @author jagvir
@@ -25,59 +36,127 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Autowired
 	EquipmentDao equipmentDao;
+	
+	@Autowired
+	SessionFactory sessionFactory;
+	
+	@Autowired
+	TypeService typeService;
 
 	@Override
-	public boolean add(Equipment equipment) {
-		logger.info("[add]:Service:  Enter");
+	public Equipment add(EquipmentReq equipmentReq) {
 
-		boolean returnValue = false;
+		logger.info("EquipmentServiceImpl: add():  STARTS");
+
+		Session session = null;
+		Transaction tx = null;
+		Equipment equipment = null;
+		
 		try {
-
-			// truck.setCreated("sumit");
-			// truck.setCreatedOn(new Date());
-			//
-			// truck.setModifiedBy("sumit");
-			// truck.setModifiedOn(new Date());
-
-			Equipment equipmentt = equipmentDao.save(equipment);
-			System.out.println("[addCategory]category Id :" + equipmentt.getEquipmentId());
-			returnValue = true;
-			return returnValue;
+			
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			equipment = equipmentDao.add(session, equipmentReq);
 
 		} catch (Exception e) {
-			logger.info("[add]:Exception:    : ", e);
-			System.out.println(e);
-			return returnValue;
+			logger.fatal("EquipmentServiceImpl: add(): Exception: " + e.getMessage());
+			if(tx != null) {
+				tx.rollback();
+			}
 		} finally {
-			logger.info("[add]:Service:  returnValue : " + returnValue);
+			logger.info("EquipmentServiceImpl: add():  finally block");
+			if(tx != null) {
+				tx.commit();
+			}
+			if(session != null) {
+				session.close();
+			}
+		}
+		
+		logger.info("EquipmentServiceImpl: add():  ENDS");
+
+		return equipment;
+	}
+	
+	@Override
+	public List<EquipmentReq> update(Long id, EquipmentReq equipmentReq) {
+		
+		Equipment equipmentObj = equipmentDao.findById(id);
+		if(equipmentObj != null){
+			equipmentObj.setEquipmentName(equipmentReq.getEquipmentName());
+			equipmentObj.setDescription(equipmentReq.getDescription());
+			equipmentObj.setModifiedBy("gagan");
+			equipmentObj.setModifiedOn(new Date());
+			Type type = typeService.get(equipmentReq.getTypeId());
+			equipmentObj.setType(type);
+			equipmentDao.update(equipmentObj);
+			
+			return getAll("");
+		} else{
+			return null;
 		}
 	}
 
 	@Override
-	public Equipment update(int id, Equipment equipment) {
-		return equipmentDao.update(equipment);
-	}
-
-	@Override
-	public boolean delete(Equipment equipment) {
-		boolean result = false;
-		try {
-			equipmentDao.delete(equipment);
-			result = true;
-		} catch (Exception e) {
-			result = false;
+	public List<EquipmentReq> delete(Long id) {
+		
+		Equipment equipment = equipmentDao.findById(id);
+		if(equipment != null){
+			try {
+				equipmentDao.delete(equipment);
+				return getAll("");
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
-		return result;
+		
+		return null;
 	}
 
 	@Override
-	public List<Equipment> getAll() {
-		return equipmentDao.findAll();
+	public List<EquipmentReq> getAll(String equipmentName) {
+		List<Equipment> equipments = null;
+		List<EquipmentReq> equipmentResponse = new ArrayList<EquipmentReq>();
+		if(equipmentName != null && equipmentName.length() > 0) {
+			Criterion criterion = Restrictions.like("equipmentName", equipmentName, MatchMode.ANYWHERE);
+			equipments = equipmentDao.find(criterion);
+		} else {
+			equipments = equipmentDao.findAll();
+		}
+		if(equipments != null  && equipments.size() > 0) {
+			for(Equipment equipment : equipments) {
+				EquipmentReq equipmentReq = new EquipmentReq();
+				equipmentReq.setEquipmentId(equipment.getEquipmentId());
+				equipmentReq.setEquipmentName(equipment.getEquipmentName());
+				equipmentReq.setType(equipment.getType().getTypeName());
+				equipmentReq.setTypeId(equipment.getType().getTypeId());
+				equipmentReq.setDescription(equipment.getDescription());
+				equipmentResponse.add(equipmentReq);
+			}
+		}
+		return equipmentResponse;
 	}
 
 	@Override
-	public Equipment get(int id) {
-		return equipmentDao.findById(id);
+	public EquipmentReq get(Long id) {
+		Equipment equipment = equipmentDao.findById(id);
+		EquipmentReq response = null;
+		if(equipment != null) {
+			response = new EquipmentReq();
+			response.setEquipmentId(equipment.getEquipmentId());
+			response.setTypeId(equipment.getType().getTypeId());
+			response.setEquipmentName(equipment.getEquipmentName());
+			response.setDescription(equipment.getDescription());
+			
+			List<TypeResponse> typeList = typeService.getAll(1l);
+			
+			if(typeList != null && !typeList.isEmpty()){
+				response.setTypeList(typeList);
+			}
+			
+		}
+		
+		return response;
 	}
 
 }

@@ -3,15 +3,19 @@
  */
 package com.dpu.entity;
 
+import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * @author jagvir
@@ -20,28 +24,81 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @Table(name = "equipmentmaster")
-@JsonSerialize(include = Inclusion.NON_NULL)
 public class Equipment {
 
 	@Id
 	@Column(name = "equipment_id")
 	@GeneratedValue
-	@JsonProperty(value = "equipment_id")
-	private int equipmentId;
+	private Long equipmentId;
 
 	@Column(name = "equipment_name")
-	@JsonProperty(value = "equipment_name")
 	private String equipmentName;
 
 	@Column(name = "description")
-	@JsonProperty(value = "description")
 	private String description;
 
-	public int getEquipmentId() {
+	@Column(name = "created_by")
+	private String createdBy;
+	
+	@Column(name = "modified_by")
+	private String modifiedBy;
+	
+	@Column(name = "created_on")
+	private Date createdOn;
+	
+	@Column(name = "modified_on")
+	private Date modifiedOn;
+	
+	@ManyToOne
+	//@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "type_id")
+	private Type type;
+	
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public Date getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Date modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
+
+	public Long getEquipmentId() {
 		return equipmentId;
 	}
 
-	public void setEquipmentId(int equipmentId) {
+	public void setEquipmentId(Long equipmentId) {
 		this.equipmentId = equipmentId;
 	}
 

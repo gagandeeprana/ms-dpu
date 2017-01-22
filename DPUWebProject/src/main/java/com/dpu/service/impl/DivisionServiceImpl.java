@@ -21,7 +21,7 @@ import com.dpu.service.DivisionService;
  */
 @Component
 public class DivisionServiceImpl implements DivisionService {
-	
+
 	Logger logger = Logger.getLogger(DivisionServiceImpl.class);
 
 	@Autowired
@@ -42,7 +42,8 @@ public class DivisionServiceImpl implements DivisionService {
 
 			Division divisionn = divisionDao.save(division);
 			division.setCreatedOn(new Date());
-			System.out.println("[addCategory]category Id :" + divisionn.getDivisionId());
+			System.out.println("[addCategory]category Id :"
+					+ divisionn.getDivisionId());
 			returnValue = true;
 			return returnValue;
 
@@ -57,6 +58,7 @@ public class DivisionServiceImpl implements DivisionService {
 
 	@Override
 	public Division update(int id, Division division) {
+		division.setCreatedOn(new Date());
 		return divisionDao.update(division);
 	}
 

@@ -154,6 +154,7 @@ public class DivisionController extends MessageProperties {
 			@RequestBody Division division) {
 		logger.info("[update] : Enter");
 		Object obj = null;
+		System.out.println("scac:::"+division.getSCAC());
 		try {
 			division.setDivisionId(id);
 			Division response = divisionService.update(id, division);

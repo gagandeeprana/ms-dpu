@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.ServiceDao;
-import com.dpu.entity.Equipment;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
@@ -71,15 +70,19 @@ public class ServiceServiceImpl implements ServiceService {
 	}
 
 	@Override
-	public boolean delete(Service service) {
-		boolean result = false;
+	public List<DPUService> delete(Long id) {
+		List<DPUService> response = null;
+		
+		Service service = serviceDao.findById(id);
 		try {
-			serviceDao.delete(service);
-			result = true;
+			if(service != null){
+				serviceDao.delete(service);
+			}
+			response = getAll();
 		} catch (Exception e) {
-			result = false;
+			response = null;
 		}
-		return result;
+		return response;
 	}
 
 	@Override

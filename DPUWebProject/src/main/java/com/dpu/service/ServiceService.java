@@ -13,7 +13,7 @@ import com.dpu.model.DPUService;
 public interface ServiceService {
 	List<DPUService> add(DPUService dpuService);
 
-	boolean delete(Service service);
+	List<DPUService> delete(Long id);
 
 	List<DPUService> getAll();
 

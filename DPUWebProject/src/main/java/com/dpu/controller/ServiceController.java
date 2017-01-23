@@ -88,21 +88,17 @@ public class ServiceController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] : Enter : Id : "+id);
 		Object obj = null;
-		boolean result = false;
 		try {
-			Service service = null;
+			List<DPUService> response = null;
 			//serviceService.get(id);
-			if (service != null) {
-				result = serviceService.delete(service);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(serviceDeletedCode),
-						serviceDeletedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			/*if (service != null) {*/
+			response = serviceService.delete(id);
+		/*	}*/
+			if (response != null) {
+				obj = response;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(serviceUnableToDeleteCode),

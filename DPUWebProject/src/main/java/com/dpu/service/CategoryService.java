@@ -13,9 +13,9 @@ import com.dpu.model.CategoryReq;
  *
  */
 public interface CategoryService {
-	boolean addCategory(Category category);
+	List<CategoryReq> addCategory(CategoryReq categoryReq);
 
-	Category update(int id, Category category);
+	List<CategoryReq> update(Long id, CategoryReq categoryReq);
 
 	boolean delete(Category category);
 

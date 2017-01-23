@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Status;
+import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
@@ -38,35 +39,55 @@ public class CategoryServiceImpl implements CategoryService {
 	TypeService typeService;
 	
 	@Override
-	public boolean addCategory(Category category) {
+	public List<CategoryReq> addCategory(CategoryReq categoryReq) {
 		logger.info("[addCategory]:Service:  Enter");
 
-		boolean returnValue = false;
+		List<CategoryReq> returnList = new ArrayList<CategoryReq>();
 		try {
 
-			// truck.setCreated("sumit");
-			// truck.setCreatedOn(new Date());
-			//
-			// truck.setModifiedBy("sumit");
-			// truck.setModifiedOn(new Date());
-
-			Category categoryy = categoryDao.save(category);
-			System.out.println("[addCategory]category Id :" + categoryy.getCategoryId());
-			returnValue = true;
-			return returnValue;
+			Category category = setCategoryValues(categoryReq);
+			categoryDao.save(category);
+			returnList = getAll();
 
 		} catch (Exception e) {
 			logger.info("[addCategory]:Exception:    : ", e);
 			System.out.println(e);
-			return returnValue;
 		} finally {
-			logger.info("[addCategory]:Service:  returnValue : " + returnValue);
+			logger.info("[addCategory]:Service:  returnValue : ");
 		}
+		
+		return returnList;
 	}
 
+	private Category setCategoryValues(CategoryReq categoryReq) {
+		Category category = new Category();
+		category.setName(categoryReq.getName());
+		Status status = statusService.get(categoryReq.getStatusId());
+		Type highlight = typeService.get(categoryReq.getHighlightId());
+		category.setHighLight(highlight);
+		Type type = typeService.get(categoryReq.getTypeId());
+		category.setType(type);
+		category.setStatus(status);
+		return category;
+	}
+	
 	@Override
-	public Category update(int id, Category category) {
-		return categoryDao.update(category);
+	public List<CategoryReq> update(Long id, CategoryReq categoryReq) {
+		
+		Category category = categoryDao.findById(id);
+		category.setName(categoryReq.getName());
+		
+		Status status = statusService.get(categoryReq.getStatusId());
+		category.setStatus(status);
+		
+		Type highlight = typeService.get(categoryReq.getHighlightId());
+		category.setHighLight(highlight);
+		
+		Type type = typeService.get(categoryReq.getTypeId());
+		category.setType(type);
+		
+		categoryDao.update(category);
+		return getAll();
 	}
 
 	@Override

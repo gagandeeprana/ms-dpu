@@ -3,7 +3,6 @@ package com.dpu.controller;
 
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,24 +39,25 @@ public class CategoryController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
+	/**
+	 * this method is used to get all categories
+	 * @return List<Categories>
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+		
 		logger.info("Inside CategoryController getAll() Starts ");
 		String json = null;
+		
 		try {
 			List<CategoryReq> responses = categoryService.getAll();
-			//List<CategoryReq> responses = new ArrayList<CategoryReq>();
-			/*for (Category category : lstCategories) {
-				CategoryReq response = new CategoryReq();
-				BeanUtils.copyProperties(response, category);
-				responses.add(response);
-			}*/
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getAll()", e);
+			logger.error("Exception inside CategoryController getAll()"+e.getMessage());
 		}
 		logger.info("Inside CategoryController getAll() Ends, json :" + json);
 		return json;
@@ -66,19 +66,14 @@ public class CategoryController extends MessageProperties {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody CategoryReq categoryReq) {
 
-		logger.info("[add]: Enter");
+		logger.info("Inside CategoryController add() starts ");
 		Object obj = null;
 		try {
 
-			System.out.println(new ObjectMapper().writeValueAsString(categoryReq));
-			Category category = setCategoryValues(categoryReq);
-			boolean result = categoryService.addCategory(category);
-			System.out.println("result value : " + result);
+			List<CategoryReq> categoryList = categoryService.addCategory(categoryReq);
 
-			if (result) {
-				obj = new ResponseEntity<Object>(
-						new Success(Integer.parseInt(categoryAddedCode), categoryAddedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			if (categoryList != null) {
+				obj = categoryList;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToAddCode),
 						categoryUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
@@ -86,18 +81,10 @@ public class CategoryController extends MessageProperties {
 
 		} catch (Exception e) {
 			System.out.println(e);
+			logger.error("Exception inside CategoryController add() ");
 		}
 		logger.info("[add]: Exit : obj : " + obj);
 		return obj;
-	}
-
-	private Category setCategoryValues(CategoryReq categoryReq) {
-		Category category = new Category();
-		category.setName(categoryReq.getName());
-		//category.setStatus(categoryReq.getStatus());
-		//category.setTypeId(categoryReq.getTypeId());
-		//category.setHighlight(categoryReq.getHighlight());
-		return category;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
@@ -128,24 +115,22 @@ public class CategoryController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id, @RequestBody Category category) {
-		logger.info("[update]: Enter: Id:  " + id);
+	public Object update(@PathVariable("id") Long id, @RequestBody CategoryReq categoryReq) {
+		logger.info("Inside CategoryController update() Starts, id is :" + id);
 		Object obj = null;
 		try {
-			//category.setCategoryId(id);
-			Category response = categoryService.update(id, category);
+			List<CategoryReq> response = categoryService.update(id, categoryReq);
 			if (response != null) {
-				obj = new ResponseEntity<Object>(
-						new Success(Integer.parseInt(categoryUpdateCode), categoryUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+				obj = response;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToUpdateCode),
 						categoryUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside CategoryController update() :"+e.getMessage());
 		}
-		logger.info("[update]: Exit");
+		
+		logger.info("Inside CategoryController update() Starts, id is :" + id);
 		return obj;
 	}
 

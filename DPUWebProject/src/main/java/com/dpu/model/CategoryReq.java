@@ -3,10 +3,14 @@
  */
 package com.dpu.model;
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Status;
 
 /**
  * @author jagvir
@@ -18,48 +22,36 @@ public class CategoryReq {
 
  
 	//@JsonProperty(value = "category_id")
-	private int categoryId;
+	private Long categoryId;
 
 	//@JsonProperty(value = "type_id")
-	private int typeId;
+	private Long typeId;
+	
+	private String typeName;
 
 	//@JsonProperty(value = "name")
 	private String name;
 
 	//@JsonProperty(value = "status")
-	private int status;
+	private Long statusId;
 	
-	private String highlight;
+	private String statusName;
+	
+	private Long highlightId;
+	
+	private String highlightName;
 
 	//@JsonProperty(value = "created_on")
 	private String createdOn;
 
 	//@JsonProperty(value = "created_by")
 	private String createdBy;
-
-	public String getHighlight() {
-		return highlight;
-	}
-
-	public void setHighlight(String highlight) {
-		this.highlight = highlight;
-	}
-
-	public int getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public int getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
-	}
+	
+	private List<Status> statusList;
+	
+	private List<TypeResponse> typeList;
+	
+	private List<TypeResponse> highlightList;
 
 	public String getName() {
 		return name;
@@ -69,13 +61,6 @@ public class CategoryReq {
 		this.name = name;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
 
 	public String getCreatedOn() {
 		return createdOn;
@@ -91,6 +76,86 @@ public class CategoryReq {
 
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public Long getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Long getHighlightId() {
+		return highlightId;
+	}
+
+	public void setHighlightId(Long highlightId) {
+		this.highlightId = highlightId;
+	}
+
+	public String getHighlightName() {
+		return highlightName;
+	}
+
+	public void setHighlightName(String highlightName) {
+		this.highlightName = highlightName;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	public List<TypeResponse> getTypeList() {
+		return typeList;
+	}
+
+	public void setTypeList(List<TypeResponse> typeList) {
+		this.typeList = typeList;
+	}
+
+	public List<TypeResponse> getHighlightList() {
+		return highlightList;
+	}
+
+	public void setHighlightList(List<TypeResponse> highlightList) {
+		this.highlightList = highlightList;
 	}
 
 }

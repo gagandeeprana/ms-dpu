@@ -7,9 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -27,19 +28,15 @@ public class Category {
 	@Column(name = "category_id")
 	//@JsonProperty(value = "category_id")
 	@GeneratedValue
-	private int categoryId;
-
-	@Column(name = "type_id")
-	//@JsonProperty(value = "type_id")
-	private int typeId;
+	private Long categoryId;
 
 	@Column(name = "name")
 	//@JsonProperty(value = "name")
 	private String name;
 
-	@Column(name = "status")
-	//@JsonProperty(value = "status")
-	private int status;
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
 
 	@Column(name = "created_on")
 	//@JsonProperty(value = "created_on")
@@ -49,47 +46,20 @@ public class Category {
 	//@JsonProperty(value = "created_by")
 	private String createdBy;
 	
-	@Column(name = "highlight")
-	private String highlight;
+	@ManyToOne
+	@JoinColumn(name = "highlight_id")
+	private Type highLight;
 	
-	public String getHighlight() {
-		return highlight;
-	}
-
-	public void setHighlight(String highlight) {
-		this.highlight = highlight;
-	}
-
-	public int getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public int getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
-	}
-
+	@ManyToOne
+	@JoinColumn(name = "type_id")
+	private Type type;
+	
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	public String getCreatedOn() {
@@ -106,6 +76,38 @@ public class Category {
 
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Type getHighLight() {
+		return highLight;
+	}
+
+	public void setHighLight(Type highLight) {
+		this.highLight = highLight;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 
 }

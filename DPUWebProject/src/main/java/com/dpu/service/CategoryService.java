@@ -6,6 +6,7 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Category;
+import com.dpu.model.CategoryReq;
 
 /**
  * @author jagvir
@@ -18,8 +19,10 @@ public interface CategoryService {
 
 	boolean delete(Category category);
 
-	List<Category> getAll();
+	List<CategoryReq> getAll();
 
-	Category get(int id);
+	CategoryReq getOpenAdd();
+
+	CategoryReq get(Long id);
 
 }

@@ -164,5 +164,22 @@ public class ServiceController extends MessageProperties {
 		logger.info(" Inside ServiceController openAdd() Ends ");
 		return json;
 	}
+	
+	@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchService(@PathVariable("equipmentname") String serviceName) {
+		logger.info("Inside ServiceController searchService() Starts, serviceName :"+serviceName);
+		String json = new String();
+		try {
+			List<DPUService> serviceList = serviceService.getServiceByServiceName(serviceName);
+			if(serviceList != null && serviceList.size() > 0) {
+				json = mapper.writeValueAsString(serviceList);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Exception inside ServiceController searchService() is :" + e);
+		}
+		logger.info(" Inside ServiceController searchService() Starts, serviceName :"+serviceName);
+		return json;
+	}
 
 }

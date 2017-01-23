@@ -152,17 +152,17 @@ public class CategoryController extends MessageProperties {
 	// get Category by Id
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getCategoryById(@PathVariable("categoryId") Long id) {
-		logger.info("[getCategoryById]: Enter: Id:  " + id);
+		logger.info("Inside CategoryController getCategoryById() Starts, Id:" + id);
 		String json = null;
 		try {
 			CategoryReq categoryReq = categoryService.get(id);
-			ObjectMapper mapper = new ObjectMapper();
+			//ObjectMapper mapper = new ObjectMapper();
 
-			CategoryReq response = new CategoryReq();
+			//CategoryReq response = new CategoryReq();
 			//BeanUtils.copyProperties(response, category);
 
-			if (response != null) {
-				json = mapper.writeValueAsString(response);
+			if (categoryReq != null) {
+				json = mapper.writeValueAsString(categoryReq);
 			}
 		} catch (Exception e) {
 			logger.error("[getCategoryById]:" + e);

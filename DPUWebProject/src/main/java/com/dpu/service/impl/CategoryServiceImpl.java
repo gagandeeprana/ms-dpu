@@ -3,6 +3,7 @@
  */
 package com.dpu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -11,8 +12,12 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
-import com.dpu.entity.Truck;
+import com.dpu.entity.Status;
+import com.dpu.model.CategoryReq;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TypeService;
 
 /**
  * @author jagvir
@@ -26,6 +31,12 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	CategoryDao categoryDao;
 
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
+	
 	@Override
 	public boolean addCategory(Category category) {
 		logger.info("[addCategory]:Service:  Enter");
@@ -71,13 +82,68 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<Category> getAll() {
-		return categoryDao.findAll();
+	public List<CategoryReq> getAll() {
+
+		List<CategoryReq> categoriesList = new ArrayList<CategoryReq>();
+		List<Category> categories = categoryDao.findAll();
+		
+		if(categories != null && ! categories.isEmpty()){
+			for (Category category : categories) {
+				CategoryReq categoryReq = new CategoryReq();
+				categoryReq.setCategoryId(category.getCategoryId());
+				categoryReq.setName(category.getName());
+				categoryReq.setHighlightName(category.getHighLight().getTypeName());
+				categoryReq.setTypeName(category.getType().getTypeName());
+				categoryReq.setStatusName(category.getStatus().getStatus());
+				categoriesList.add(categoryReq);
+			}
+		}
+		
+		return categoriesList;
 	}
 
 	@Override
-	public Category get(int id) {
-		return categoryDao.findById(id);
+	public CategoryReq get(Long id) {
+		
+		Category category = categoryDao.findById(id);
+		CategoryReq categoryReq = new CategoryReq();
+		
+		if(category != null){
+			
+			categoryReq.setCategoryId(category.getCategoryId());
+			categoryReq.setName(category.getName());
+			categoryReq.setStatusId(category.getStatus().getId());
+			categoryReq.setTypeId(category.getType().getTypeId());
+			categoryReq.setHighlightId(category.getHighLight().getTypeId());
+			
+			List<Status> statusList = statusService.getAll();
+			categoryReq.setStatusList(statusList);
+			
+			List<TypeResponse> typeList = typeService.getAll(3l);
+			categoryReq.setTypeList(typeList);
+			
+			List<TypeResponse> highlightList = typeService.getAll(4l);
+			categoryReq.setHighlightList(highlightList);
+		}
+		
+		return categoryReq;
+	}
+
+	@Override
+	public CategoryReq getOpenAdd() {
+
+		CategoryReq categoryReq = new CategoryReq();
+		
+		List<Status> statusList = statusService.getAll();
+		categoryReq.setStatusList(statusList);
+		
+		List<TypeResponse> typeList = typeService.getAll(3l);
+		categoryReq.setTypeList(typeList);
+		
+		List<TypeResponse> highlightList = typeService.getAll(4l);
+		categoryReq.setHighlightList(highlightList);
+		
+		return categoryReq;
 	}
 
 }

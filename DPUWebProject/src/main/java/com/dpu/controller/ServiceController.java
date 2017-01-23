@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Service;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
-import com.dpu.model.Success;
 import com.dpu.service.ServiceService;
 import com.dpu.util.MessageProperties;
 

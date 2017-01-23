@@ -1,9 +1,6 @@
-/**
- * 
- */
+
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -45,24 +42,24 @@ public class CategoryController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		logger.info("[getAll]: Enter");
+		logger.info("Inside CategoryController getAll() Starts ");
 		String json = null;
 		try {
-			List<Category> lstCategories = categoryService.getAll();
-			List<CategoryReq> responses = new ArrayList<CategoryReq>();
-			for (Category category : lstCategories) {
+			List<CategoryReq> responses = categoryService.getAll();
+			//List<CategoryReq> responses = new ArrayList<CategoryReq>();
+			/*for (Category category : lstCategories) {
 				CategoryReq response = new CategoryReq();
 				BeanUtils.copyProperties(response, category);
 				responses.add(response);
-			}
+			}*/
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
 
 		} catch (Exception e) {
-			logger.error("[getAll]: Exception : ", e);
+			logger.error("Exception inside CategoryController getAll()", e);
 		}
-		logger.info("[getAll]: Exit: json :" + json);
+		logger.info("Inside CategoryController getAll() Ends, json :" + json);
 		return json;
 	}
 
@@ -97,9 +94,9 @@ public class CategoryController extends MessageProperties {
 	private Category setCategoryValues(CategoryReq categoryReq) {
 		Category category = new Category();
 		category.setName(categoryReq.getName());
-		category.setStatus(categoryReq.getStatus());
-		category.setTypeId(categoryReq.getTypeId());
-		category.setHighlight(categoryReq.getHighlight());
+		//category.setStatus(categoryReq.getStatus());
+		//category.setTypeId(categoryReq.getTypeId());
+		//category.setHighlight(categoryReq.getHighlight());
 		return category;
 	}
 
@@ -109,7 +106,8 @@ public class CategoryController extends MessageProperties {
 		Object obj = null;
 		boolean result = false;
 		try {
-			Category category = categoryService.get(id);
+			Category category = null;
+			//categoryService.get(id);
 			if (category != null) {
 				result = categoryService.delete(category);
 			}
@@ -134,7 +132,7 @@ public class CategoryController extends MessageProperties {
 		logger.info("[update]: Enter: Id:  " + id);
 		Object obj = null;
 		try {
-			category.setCategoryId(id);
+			//category.setCategoryId(id);
 			Category response = categoryService.update(id, category);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(
@@ -153,15 +151,15 @@ public class CategoryController extends MessageProperties {
 
 	// get Category by Id
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getCategoryById(@PathVariable("categoryId") int id) {
+	public Object getCategoryById(@PathVariable("categoryId") Long id) {
 		logger.info("[getCategoryById]: Enter: Id:  " + id);
 		String json = null;
 		try {
-			Category category = categoryService.get(id);
+			CategoryReq categoryReq = categoryService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
 
 			CategoryReq response = new CategoryReq();
-			BeanUtils.copyProperties(response, category);
+			//BeanUtils.copyProperties(response, category);
 
 			if (response != null) {
 				json = mapper.writeValueAsString(response);
@@ -174,4 +172,19 @@ public class CategoryController extends MessageProperties {
 		return json;
 	}
 
+
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside ServiceController openAdd() Starts ");
+		String json = null;
+		try {
+			CategoryReq CategoryReq = categoryService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(CategoryReq);
+		} catch (Exception e) {
+			logger.error(" Exception inside ServiceController openAdd() :"+e);
+		}
+		logger.info(" Inside ServiceController openAdd() Ends ");
+		return json;
+	}
 }

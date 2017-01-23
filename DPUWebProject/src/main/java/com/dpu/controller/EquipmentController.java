@@ -85,10 +85,13 @@ public class EquipmentController extends MessageProperties {
 		Object obj = null;
 		try {
 
-			Equipment equipment = equipmentService.add(equipmentReq);
+			List<EquipmentReq> equipmentList = equipmentService.add(equipmentReq);
 			
-			if (equipment != null) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(equipmentAddedCode), equipmentAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			if (equipmentList != null) {
+				if(equipmentList != null && equipmentList.size() > 0) {
+					obj = mapper.writeValueAsString(equipmentList);
+				}
+			//	obj = new ResponseEntity<Object>(new Success(Integer.parseInt(equipmentAddedCode), equipmentAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(equipmentUnableToAddCode),equipmentUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}

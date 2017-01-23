@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
@@ -11,8 +9,13 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
+import com.dpu.entity.Status;
+import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TypeService;
 
 /**
  * @author jagvir
@@ -23,26 +26,63 @@ public class ServiceServiceImpl implements ServiceService {
 	@Autowired
 	ServiceDao serviceDao;
 
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
+	
 	@Override
-	public Service add(Service service) {
-		return serviceDao.save(service);
+	public List<DPUService> add(DPUService dpuService) {
+		
+		Service service = setServiceValues(dpuService);
+		serviceDao.save(service);
+		
+		return getAll();
+	}
+
+	private Service setServiceValues(DPUService dpuService) {
+		Service service  = new Service();
+		service.setServiceName(dpuService.getServiceName());
+		Status status = statusService.get(dpuService.getStatusId());
+		Type textField = typeService.get(dpuService.getTextFieldId());
+		service.setTextField(textField);
+		Type associateWith = typeService.get(dpuService.getAssociationWithId());
+		service.setAssociationWith(associateWith);
+		service.setStatus(status);
+		return service;
+	}
+	
+	@Override
+	public List<DPUService> update(Long id, DPUService dpuService) {
+		//Service service  = new Service();
+		Service service = serviceDao.findById(id);
+		//service.setServiceId(id);
+		service.setServiceName(dpuService.getServiceName());
+		Status status = statusService.get(dpuService.getStatusId());
+		Type textField = typeService.get(dpuService.getTextFieldId());
+		service.setTextField(textField);
+		Type associateWith = typeService.get(dpuService.getAssociationWithId());
+		service.setAssociationWith(associateWith);
+		service.setStatus(status);
+		serviceDao.update(service);
+		return getAll();
 	}
 
 	@Override
-	public Service update(int id, Service service) {
-		return serviceDao.update(service);
-	}
-
-	@Override
-	public boolean delete(Service service) {
-		boolean result = false;
+	public List<DPUService> delete(Long id) {
+		List<DPUService> response = null;
+		
+		Service service = serviceDao.findById(id);
 		try {
-			serviceDao.delete(service);
-			result = true;
+			if(service != null){
+				serviceDao.delete(service);
+			}
+			response = getAll();
 		} catch (Exception e) {
-			result = false;
+			response = null;
 		}
-		return result;
+		return response;
 	}
 
 	@Override
@@ -67,8 +107,45 @@ public class ServiceServiceImpl implements ServiceService {
 	}
 
 	@Override
-	public Service get(int id) {
-		return serviceDao.findById(id);
+	public DPUService get(Long id) {
+		
+		DPUService dpuService = new DPUService();
+		Service service = serviceDao.findById(id);
+		
+		if(service != null){
+			dpuService.setServiceId(service.getServiceId());
+			dpuService.setTextFieldId(service.getTextField().getTypeId());
+			dpuService.setStatusId(service.getStatus().getId());
+			dpuService.setAssociationWithId(service.getAssociationWith().getTypeId());
+			dpuService.setServiceName(service.getServiceName());
+			List<Status> statusList = statusService.getAll();
+			dpuService.setStatusList(statusList);
+			
+			List<TypeResponse> textFieldList = typeService.getAll(2l);
+			dpuService.setTextFieldList(textFieldList);
+			
+			List<TypeResponse> associatedWithList = typeService.getAll(3l);
+			dpuService.setAssociatedWithList(associatedWithList);
+		}
+		
+		return dpuService;
+	}
+
+	@Override
+	public DPUService getOpenAdd() {
+
+		DPUService service = new DPUService();
+		
+		List<Status> statusList = statusService.getAll();
+		service.setStatusList(statusList);
+		
+		List<TypeResponse> textFieldList = typeService.getAll(2l);
+		service.setTextFieldList(textFieldList);
+		
+		List<TypeResponse> associatedWithList = typeService.getAll(3l);
+		service.setAssociatedWithList(associatedWithList);
+		
+		return service;
 	}
 
 }

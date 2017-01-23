@@ -70,12 +70,10 @@ public class ServiceController extends MessageProperties {
 		Object obj = null;
 		try {
 			
-			Service service = setServiceValues(dpuService);
-			Service result = serviceService.add(service);
+			//Service service = setServiceValues(dpuService);
+			List<DPUService> result = serviceService.add(dpuService);
 			if (result != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(serviceAddedCode),
-						serviceAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+				obj = mapper.writeValueAsString(result);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(serviceUnableToAddCode),
@@ -89,30 +87,18 @@ public class ServiceController extends MessageProperties {
 		return obj;
 	}
 
-	private Service setServiceValues(DPUService dpuService) {
-		Service service  = new Service();
-		service.setServiceName(dpuService.getServiceName());
-		//service.setTextField(dpuService.getTextField());
-		//service.setAssociationWith(dpuService.getAssociationWith());
-		//service.setStatus(dpuService.getStatus());
-		return service;
-	}
-
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] : Enter : Id : "+id);
 		Object obj = null;
-		boolean result = false;
 		try {
-			Service service = serviceService.get(id);
-			if (service != null) {
-				result = serviceService.delete(service);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(serviceDeletedCode),
-						serviceDeletedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			List<DPUService> response = null;
+			//serviceService.get(id);
+			/*if (service != null) {*/
+			response = serviceService.delete(id);
+		/*	}*/
+			if (response != null) {
+				obj = response;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(serviceUnableToDeleteCode),
@@ -128,18 +114,15 @@ public class ServiceController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
-			@RequestBody Service service) {
+	public Object update(@PathVariable("id") Long id,
+			@RequestBody DPUService dpuService) {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
 			//service.setServiceId(id);
-			Service response = serviceService.update(id, service);
+			List<DPUService> response = serviceService.update(id, dpuService);
 			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(serviceUpdateCode),
-						serviceUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+				obj = response;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(serviceUnableToUpdateCode),
@@ -154,17 +137,33 @@ public class ServiceController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("categoryId") int id) {
+	public Object get(@PathVariable("categoryId") Long id) {
 		logger.info("[get] : Enter : Id : "+id);
 		String json = null;
 		try {
-			Service service = serviceService.get(id);
+			DPUService dpuService = serviceService.get(id);
+			//Service service = serviceService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(service);
+			json = mapper.writeValueAsString(dpuService);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		logger.info("[get] : Exit " );
+		return json;
+	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside ServiceController openAdd() Starts ");
+		String json = null;
+		try {
+			DPUService dpuService = serviceService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(dpuService);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside ServiceController openAdd() Ends ");
 		return json;
 	}
 

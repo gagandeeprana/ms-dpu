@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -27,7 +29,7 @@ public class Division {
 	@Id
 	@Column(name = "division_id")
 	@GeneratedValue
-	private int divisionId;
+	private long divisionId;
 
 	@Column(name = "division_code")
 	private String divisionCode;
@@ -50,6 +52,9 @@ public class Division {
 	@Column(name = "contact_prefix")
 	private String contractPrefix;
 
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
 
 	@Column(name = "invoice_prefix")
 	private String invoicePrefix;
@@ -60,12 +65,22 @@ public class Division {
 	@Column(name = "created_by")
 	private int createdBy;
 
-	public int getDivisionId() {
+
+
+	public long getDivisionId() {
 		return divisionId;
 	}
 
-	public void setDivisionId(int divisionId) {
+	public void setDivisionId(long divisionId) {
 		this.divisionId = divisionId;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public String getDivisionCode() {

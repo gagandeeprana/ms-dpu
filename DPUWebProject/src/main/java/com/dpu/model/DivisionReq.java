@@ -1,7 +1,7 @@
 package com.dpu.model;
 
-
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -11,16 +11,18 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.dpu.entity.Status;
+
 /**
  * @author jagvir
  *
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true) 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DivisionReq {
 
-	private int divisionId;
+	private long divisionId;
 
 	private String divisionCode;
 
@@ -35,19 +37,52 @@ public class DivisionReq {
 	private String carrierCode;
 
 	private String contractPrefix;
-
-
-	private String invoicePrefix;
 	
+	private String status;
+	
+	private Long statusId;
+
+	private List<Status> statusList;
+	
+	private String invoicePrefix;
+
 	private Date createdOn;
 
 	private int createdBy;
+	
+	
 
-	public int getDivisionId() {
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	
+
+	public long getDivisionId() {
 		return divisionId;
 	}
 
-	public void setDivisionId(int divisionId) {
+	public void setDivisionId(long divisionId) {
 		this.divisionId = divisionId;
 	}
 
@@ -130,6 +165,5 @@ public class DivisionReq {
 	public void setCreatedBy(int createdBy) {
 		this.createdBy = createdBy;
 	}
-
 
 }

@@ -6,20 +6,22 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Division;
+import com.dpu.model.DivisionReq;
+import com.dpu.model.EquipmentReq;
 
 /**
  * @author jagvir
  *
  */
 public interface DivisionService {
+	
+	List<DivisionReq> update(Long id, DivisionReq divisionReq);
 
-	boolean add(Division division);
+	List<DivisionReq> delete(Long id);
 
-	Division update(int id, Division division);
+	DivisionReq get(Long id);
 
-	boolean delete(Division division);
+	List<DivisionReq> getAll(String divisionName);
 
-	List<Division> getAll();
-
-	Division get(int id);
+	List<DivisionReq> add(DivisionReq divisionReq);
 }

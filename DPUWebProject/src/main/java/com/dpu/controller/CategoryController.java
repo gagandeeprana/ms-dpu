@@ -88,20 +88,17 @@ public class CategoryController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long id) {
+		
 		logger.info("[delete]: Enter : ID : " + id);
 		Object obj = null;
-		boolean result = false;
+		
 		try {
-			Category category = null;
-			//categoryService.get(id);
-			if (category != null) {
-				result = categoryService.delete(category);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(
-						new Success(Integer.parseInt(categoryDeletedCode), categoryDeletedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			List<CategoryReq> categoryReq = null;
+			categoryReq = categoryService.delete(id);
+			
+			if (categoryReq != null && categoryReq.size() > 0) {
+				obj = categoryReq;
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToDeleteCode),
 						categoryUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);

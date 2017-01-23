@@ -91,15 +91,15 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public boolean delete(Category category) {
-		boolean result = false;
-		try {
+	public List<CategoryReq> delete(Long id) {
+		
+		Category category = categoryDao.findById(id);
+		List<CategoryReq> returnList = new ArrayList<CategoryReq>();
+		if(category != null){
 			categoryDao.delete(category);
-			result = true;
-		} catch (Exception e) {
-			result = false;
+			returnList = getAll();
 		}
-		return result;
+		return returnList;
 	}
 
 	@Override

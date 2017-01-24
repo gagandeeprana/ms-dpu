@@ -2,9 +2,13 @@ package com.dpu.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Status;
+import com.dpu.entity.Type;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DriverReq implements Serializable{
@@ -42,22 +46,76 @@ public class DriverReq implements Serializable{
 	 
 	private String divisionName;
 	private Long divisionId;
+	private List<DivisionReq> divisionList;
 
 	private String terminalName;
 	private Long terminalId;
+	private List<TerminalResponse> terminalList;
 
 	private String catogoryName;
 	private Long categoryId;
+	private List<CategoryReq> categoryList;
 	 
 	private String roleName;
 	private Long roleId;
+	private List<TypeResponse> roleList;
 	 
 	private String statusName;
 	private Long statusId;
+	private List<Status> statusList;
 	 
 	private String driverClassName;
 	private Long driverClassId;
+	private List<TypeResponse> driverClassList;
  
+	public List<DivisionReq> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<DivisionReq> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public List<TerminalResponse> getTerminalList() {
+		return terminalList;
+	}
+
+	public void setTerminalList(List<TerminalResponse> terminalList) {
+		this.terminalList = terminalList;
+	}
+
+	public List<CategoryReq> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CategoryReq> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	public List<TypeResponse> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<TypeResponse> roleList) {
+		this.roleList = roleList;
+	}
+
+	public List<TypeResponse> getDriverClassList() {
+		return driverClassList;
+	}
+
+	public void setDriverClassList(List<TypeResponse> driverClassList) {
+		this.driverClassList = driverClassList;
+	}
+
 	private String createdBy;
 	 
 	private Date createdOn;

@@ -12,8 +12,17 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.DriverDao;
 import com.dpu.entity.Driver;
+import com.dpu.entity.Status;
+import com.dpu.model.CategoryReq;
+import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
+import com.dpu.model.TypeResponse;
+import com.dpu.service.CategoryService;
+import com.dpu.service.DivisionService;
 import com.dpu.service.DriverService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TerminalService;
+import com.dpu.service.TypeService;
 
 /**
  * @author sumit
@@ -25,6 +34,21 @@ public class DriverServiceImpl implements DriverService {
 
 	@Autowired
 	DriverDao driverDao;
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
+	
+	@Autowired
+	CategoryService categoryService;
+	
+	@Autowired
+	DivisionService divisionService;
+	
+	@Autowired
+	TerminalService terminalService;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
@@ -164,6 +188,32 @@ public class DriverServiceImpl implements DriverService {
 		isDriverExist = true;
 		return isDriverExist;
 		
+	}
+
+	@Override
+	public DriverReq getOpenAdd() {
+		
+		DriverReq driver = new DriverReq();
+		
+		List<Status> statusList = statusService.getAll();
+		driver.setStatusList(statusList);
+		
+		List<TypeResponse> roleList = typeService.getAll(6l);
+		driver.setRoleList(roleList);
+		
+		List<TypeResponse> driverClassList = typeService.getAll(5l);
+		driver.setDriverClassList(driverClassList);
+		
+		List<CategoryReq> categoryList = categoryService.getAll();
+		driver.setCategoryList(categoryList);
+		
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		driver.setDivisionList(divisionList);
+		
+		//List<TerminalResponse> terminalList = terminalService.getAll();
+		
+		
+		return driver;
 	}
 
 }

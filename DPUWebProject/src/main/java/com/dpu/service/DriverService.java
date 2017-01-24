@@ -21,6 +21,8 @@ public interface DriverService {
 	boolean deleteDriver(Integer driverId);
 
 	Driver getDriverByDriverCode(Integer driverId);
+
+	DriverReq getOpenAdd();
 	
 }
 

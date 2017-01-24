@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Driver;
+import com.dpu.model.DPUService;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -159,6 +160,21 @@ public class DriverController extends MessageProperties  {
 		} catch (Exception e) {
 			logger.error("[getDriverByDriverCode]:" + e);
 		}
+		return json;
+	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside driverController openAdd() Starts ");
+		String json = null;
+		try {
+			DriverReq driverReq = driverService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(driverReq);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside driverController openAdd() Ends ");
 		return json;
 	}
 }

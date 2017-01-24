@@ -1,10 +1,8 @@
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,20 +46,12 @@ public class DriverController extends MessageProperties  {
 		logger.info("[getAllDrivers]: Enter");
 		String json = null;
 		try {
+			
 			List<DriverReq> lstdrivers = driverService.getAllDriver();
 
-			if(lstdrivers != null) {
-				/*List<DriverReq> responses = new ArrayList<DriverReq>();
-				for (Driver driver : lstdrivers) {
-					DriverReq response = new DriverReq();
-					BeanUtils.copyProperties(response, driver);
-					responses.add(response);
-				}*/
-				if (lstdrivers != null && !lstdrivers.isEmpty()) {
-					json = mapper.writeValueAsString(lstdrivers);
-				}
+			if (lstdrivers != null && !lstdrivers.isEmpty()) {
+				json = mapper.writeValueAsString(lstdrivers);
 			}
-			//System.out.println(json);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers]:Controller " + e);
 		}

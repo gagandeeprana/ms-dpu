@@ -12,7 +12,7 @@ public class DriverReq implements Serializable{
 	 
 	private static final long serialVersionUID = 1L;
 
-	private int driverId;
+	private Long driverId;
 
 	private String driverCode;
 
@@ -40,67 +40,33 @@ public class DriverReq implements Serializable{
 	 
 	private String pager;
 	 
-	private String division;
+	private String divisionName;
+	private Long divisionId;
 
-	private Integer terminalId;
+	private String terminalName;
+	private Long terminalId;
 
-	private Integer catogoryId;
+	private String catogoryName;
+	private Long categoryId;
 	 
-	private Integer roleId;
+	private String roleName;
+	private Long roleId;
 	 
-	private Integer statusId;
+	private String statusName;
+	private Long statusId;
 	 
-	private Integer driverClassId;
+	private String driverClassName;
+	private Long driverClassId;
  
 	private String createdBy;
 	 
 	private Date createdOn;
 	
-	public Integer getTerminalId() {
-		return terminalId;
-	}
-
-	public void setTerminalId(Integer terminalId) {
-		this.terminalId = terminalId;
-	}
-
-	public Integer getCatogoryId() {
-		return catogoryId;
-	}
-
-	public void setCatogoryId(Integer catogoryId) {
-		this.catogoryId = catogoryId;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
-	}
-
-	public Integer getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
-	}
-
-	public Integer getDriverClassId() {
-		return driverClassId;
-	}
-
-	public void setDriverClassId(Integer driverClassId) {
-		this.driverClassId = driverClassId;
-	}
-
-	public int getDriverId() {
+	public Long getDriverId() {
 		return driverId;
 	}
 
-	public void setDriverId(int driverId) {
+	public void setDriverId(Long driverId) {
 		this.driverId = driverId;
 	}
 
@@ -208,12 +174,100 @@ public class DriverReq implements Serializable{
 		this.pager = pager;
 	}
 
-	public String getDivision() {
-		return division;
+	public String getDivisionName() {
+		return divisionName;
 	}
 
-	public void setDivision(String division) {
-		this.division = division;
+	public void setDivisionName(String divisionName) {
+		this.divisionName = divisionName;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public String getTerminalName() {
+		return terminalName;
+	}
+
+	public void setTerminalName(String terminalName) {
+		this.terminalName = terminalName;
+	}
+
+	public Long getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(Long terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public String getCatogoryName() {
+		return catogoryName;
+	}
+
+	public void setCatogoryName(String catogoryName) {
+		this.catogoryName = catogoryName;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
+
+	public Long getDriverClassId() {
+		return driverClassId;
+	}
+
+	public void setDriverClassId(Long driverClassId) {
+		this.driverClassId = driverClassId;
 	}
 
 	public String getCreatedBy() {

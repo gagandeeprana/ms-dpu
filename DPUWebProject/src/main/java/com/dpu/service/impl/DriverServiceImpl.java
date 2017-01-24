@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -117,7 +118,15 @@ public class DriverServiceImpl implements DriverService {
 		List<DriverReq> drivers = new ArrayList<DriverReq>();
 		if(listOfDriver != null && !listOfDriver.isEmpty()){
 			for (Driver driver : listOfDriver) {
-				
+				DriverReq driverReq = new DriverReq();
+				BeanUtils.copyProperties(driver, driverReq);
+				driverReq.setCatogoryName(driver.getCategory().getName());
+				driverReq.setTerminalName(driver.getTerminal().getTerminalName());
+				driverReq.setStatusName(driver.getStatus().getStatus());
+				driverReq.setDivisionName(driver.getDivision().getDivisionName());
+				driverReq.setDriverClassName(driver.getDriverClass().getTypeName());
+				driverReq.setRoleName(driver.getRole().getTypeName());
+				drivers.add(driverReq);
 			}
 		}
 		

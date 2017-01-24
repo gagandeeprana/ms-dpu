@@ -24,4 +24,6 @@ public interface CategoryService {
 
 	CategoryReq get(Long id);
 
+	List<CategoryReq> getCategoryByCategoryName(String categoryName);
+
 }

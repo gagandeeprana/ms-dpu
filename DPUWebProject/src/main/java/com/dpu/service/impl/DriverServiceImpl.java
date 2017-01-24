@@ -1,5 +1,6 @@
 package com.dpu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.DriverDao;
 import com.dpu.entity.Driver;
+import com.dpu.model.DriverReq;
 import com.dpu.service.DriverService;
 
 /**
@@ -93,20 +95,33 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public List<Driver> getAllDriver() {
+	public List<DriverReq> getAllDriver() {
+		
 		List<Driver> listOfDriver = null;
+		List<DriverReq> drivers = null;
 		try {
 			logger.info("[getAllDrivers]:  Service : Enter");
 
 			listOfDriver = driverDao.findAll();
-			logger.info("[getAllDrivers]: Service: listOfDriver : "
-					+ listOfDriver);
-			return listOfDriver;
+			logger.info("[getAllDrivers]: Service: listOfDriver : "+ listOfDriver);
+			drivers = setDriverData(listOfDriver);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers ] Service: Exception :"
 					+ e.getMessage());
 		}
-		return listOfDriver;
+		return drivers;
+	}
+
+	private List<DriverReq> setDriverData(List<Driver> listOfDriver) {
+		
+		List<DriverReq> drivers = new ArrayList<DriverReq>();
+		if(listOfDriver != null && !listOfDriver.isEmpty()){
+			for (Driver driver : listOfDriver) {
+				
+			}
+		}
+		
+		return drivers;
 	}
 
 	@Override

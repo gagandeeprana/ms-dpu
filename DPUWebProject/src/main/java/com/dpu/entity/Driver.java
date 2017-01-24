@@ -14,32 +14,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-/**
- * @author sumit
- *
- */
 
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
 @Table(name = "driver")
 public class Driver implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "driver_id")
-	private int driverId;
+	private Long driverId;
 
 	@Column(unique = true, name = "driver_code")
 	private String driverCode;
@@ -80,38 +73,36 @@ public class Driver implements Serializable {
 	@Column(name = "pager")
 	private String pager;
 
-	@Column(name = "division")
-	private String division;
+	@ManyToOne
+	@JoinColumn(name = "division_id")
+	private Division division;
+	
+	@ManyToOne
+	@JoinColumn(name = "terminal_id")
+	private Terminal terminal;
 
-	@Column(name = "terminal_id")
-	private Integer terminalId;
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
+	
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Type role;
 
-	@Column(name = "category_id")
-	private Integer catogoryId;
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
 
-	@Column(name = "role_id")
-	private Integer roleId;
-
-	@Column(name = "status_id")
-	private Integer statusId;
-
-	@Column(name = "driver_class_id")
-	private Integer driverClassId;
+	@ManyToOne
+	@JoinColumn(name = "driver_class_id")
+	private Type driverClass;
 
 	@Column(name = "created_by")
 	private String createdBy;
 
 	@Column(name = "created_on")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn;
-
-	public int getDriverId() {
-		return driverId;
-	}
-
-	public void setDriverId(int driverId) {
-		this.driverId = driverId;
-	}
 
 	public String getDriverCode() {
 		return driverCode;
@@ -217,14 +208,6 @@ public class Driver implements Serializable {
 		this.pager = pager;
 	}
 
-	public String getDivision() {
-		return division;
-	}
-
-	public void setDivision(String division) {
-		this.division = division;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -241,44 +224,62 @@ public class Driver implements Serializable {
 		this.createdOn = createdOn;
 	}
 
-	public Integer getTerminalId() {
-		return terminalId;
+	public Long getDriverId() {
+		return driverId;
 	}
 
-	public void setTerminalId(Integer terminalId) {
-		this.terminalId = terminalId;
+	public void setDriverId(Long driverId) {
+		this.driverId = driverId;
 	}
 
-	public Integer getCatogoryId() {
-		return catogoryId;
+	public Division getDivision() {
+		return division;
 	}
 
-	public void setCatogoryId(Integer catogoryId) {
-		this.catogoryId = catogoryId;
+	public void setDivision(Division division) {
+		this.division = division;
 	}
 
-	public Integer getRoleId() {
-		return roleId;
+	public Terminal getTerminal() {
+		return terminal;
 	}
 
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+	public void setTerminal(Terminal terminal) {
+		this.terminal = terminal;
 	}
 
-	public Integer getStatusId() {
-		return statusId;
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public Integer getDriverClassId() {
-		return driverClassId;
+	public Type getRole() {
+		return role;
 	}
 
-	public void setDriverClassId(Integer driverClassId) {
-		this.driverClassId = driverClassId;
+	public void setRole(Type role) {
+		this.role = role;
 	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Type getDriverClass() {
+		return driverClass;
+	}
+
+	public void setDriverClass(Type driverClass) {
+		this.driverClass = driverClass;
+	}
+
+	
 	
 }

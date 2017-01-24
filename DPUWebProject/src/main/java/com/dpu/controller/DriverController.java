@@ -48,20 +48,20 @@ public class DriverController extends MessageProperties  {
 		logger.info("[getAllDrivers]: Enter");
 		String json = null;
 		try {
-			List<Driver> lstdrivers = driverService.getAllDriver();
+			List<DriverReq> lstdrivers = driverService.getAllDriver();
 
 			if(lstdrivers != null) {
-				List<DriverReq> responses = new ArrayList<DriverReq>();
+				/*List<DriverReq> responses = new ArrayList<DriverReq>();
 				for (Driver driver : lstdrivers) {
 					DriverReq response = new DriverReq();
 					BeanUtils.copyProperties(response, driver);
 					responses.add(response);
-				}
-				if (responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
+				}*/
+				if (lstdrivers != null && !lstdrivers.isEmpty()) {
+					json = mapper.writeValueAsString(lstdrivers);
 				}
 			}
-			System.out.println(json);
+			//System.out.println(json);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers]:Controller " + e);
 		}
@@ -107,12 +107,12 @@ public class DriverController extends MessageProperties  {
 		driver.setFaxNo(driverReq.getFaxNo());
 		driver.setCellular(driverReq.getCellular());
 		driver.setPager(driverReq.getPager());
-		driver.setDivision(driverReq.getDivision());
+	/*	driver.setDivision(driverReq.getDivision());
 		driver.setTerminalId(driverReq.getTerminalId());
 		driver.setCatogoryId(driverReq.getCatogoryId());
 		driver.setRoleId(driverReq.getRoleId());
 		driver.setStatusId(driverReq.getStatusId());
-		driver.setDriverClassId(driverReq.getDriverClassId());
+		driver.setDriverClassId(driverReq.getDriverClassId());*/
 		driver.setCreatedOn(new Date());
 		return driver;
 	}

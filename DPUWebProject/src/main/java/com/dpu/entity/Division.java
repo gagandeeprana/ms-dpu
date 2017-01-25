@@ -23,7 +23,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @Table(name = "division")
-@JsonSerialize(include = Inclusion.NON_NULL)
+//@JsonSerialize(include = Inclusion.NON_NULL)
 public class Division {
 
 	@Id
@@ -58,14 +58,35 @@ public class Division {
 
 	@Column(name = "invoice_prefix")
 	private String invoicePrefix;
-	
+
 	@Column(name = "created_on")
 	private Date createdOn;
 
 	@Column(name = "created_by")
-	private int createdBy;
+	private String createdBy;
 
+	@Column(name = "modified_by")
+	private String modifiedBy;
 
+	@Column(name = "modified_on")
+	private Date modifiedOn;
+
+	
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Date modifiedOn) {
+		this.modifiedOn = modifiedOn;
+	}
 
 	public long getDivisionId() {
 		return divisionId;
@@ -155,13 +176,12 @@ public class Division {
 		this.createdOn = createdOn;
 	}
 
-	public int getCreatedBy() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-
 
 }

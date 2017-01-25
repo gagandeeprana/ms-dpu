@@ -3,29 +3,75 @@
  */
 package com.dpu.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
-import com.dpu.entity.Category;
 import com.dpu.entity.Division;
+import com.dpu.entity.Status;
+import com.dpu.model.DivisionReq;
+import com.dpu.service.StatusService;
 
 /**
  * @author jagvir
  *
  */
 @Repository
-public class DivisionDaoImpl extends GenericDaoImpl<Division> implements DivisionDao{
+public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
+		DivisionDao {
+
+	@Autowired
+	StatusService statusService;
+
+	@Override
+	public Division add(Session session, DivisionReq divisionReq) {
+		logger.info("DivisionDaoImpl: add(): STARTS");
+		Division division = null;
+		try {
+
+			division = setDivisionValues(divisionReq);
+			Status status = (Status) session.get(Status.class,
+					divisionReq.getStatusId());
+			division.setStatus(status);
+
+			Long divisionId = (Long) session.save(division);
+			division.setDivisionId(divisionId);
+		} catch (Exception e) {
+			logger.fatal("DivisionDaoImpl: add(): Exception: " + e.getMessage());
+		}
+
+		logger.info("DivisionDaoImpl: add(): ENDS");
+
+		return division;
+
+	}
+
+	private Division setDivisionValues(DivisionReq divisionReq) {
+
+		logger.info("DivisionDaoImpl: setDivisionValues(): STARTS");
+
+		Division division = new Division();
+		division.setDivisionCode(divisionReq.getDivisionCode());
+		division.setDivisionName(divisionReq.getDivisionName());
+		division.setFedral(divisionReq.getFedral());
+		division.setProvincial(divisionReq.getProvincial());
+		division.setSCAC(divisionReq.getSCAC());
+		division.setCarrierCode(divisionReq.getCarrierCode());
+		division.setContractPrefix(divisionReq.getContractPrefix());
+		division.setInvoicePrefix(divisionReq.getInvoicePrefix());
+//		Status status = statusService.get(divisionReq.getStatusId());
+//		division.setStatus(status);
+		division.setCreatedBy("jagvir");
+		division.setCreatedOn(new Date());
+		division.setModifiedBy("jagvir");
+		division.setModifiedOn(new Date());
+
+		logger.info("DivisionDaoImpl: setDivisionValues(): ENDS");
+
+		return division;
+	}
 
 }

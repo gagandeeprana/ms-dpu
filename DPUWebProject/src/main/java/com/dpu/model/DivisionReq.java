@@ -3,10 +3,6 @@ package com.dpu.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -37,20 +33,37 @@ public class DivisionReq {
 	private String carrierCode;
 
 	private String contractPrefix;
-	
+
 	private String status;
-	
+
 	private Long statusId;
 
 	private List<Status> statusList;
-	
+
 	private String invoicePrefix;
 
-	private Date createdOn;
+//	private Date createdOn;
 
-	private int createdBy;
+	private String createdBy;
+
+	private String modifiedBy;
+
+//	private Date modifiedOn;
+
 	
 	
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
 	public String getStatus() {
 		return status;
@@ -75,8 +88,6 @@ public class DivisionReq {
 	public void setStatusList(List<Status> statusList) {
 		this.statusList = statusList;
 	}
-
-	
 
 	public long getDivisionId() {
 		return divisionId;
@@ -150,20 +161,20 @@ public class DivisionReq {
 		this.invoicePrefix = invoicePrefix;
 	}
 
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public int getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
-
+//	public Date getCreatedOn() {
+//		return createdOn;
+//	}
+//
+//	public void setCreatedOn(Date createdOn) {
+//		this.createdOn = createdOn;
+//	}
+//
+//	public Date getModifiedOn() {
+//		return modifiedOn;
+//	}
+//	
+//	public void setModifiedOn(Date modifiedOn) {
+//		this.modifiedOn = modifiedOn;
+//	}
+	
 }

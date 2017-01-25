@@ -4,9 +4,13 @@
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -15,8 +19,13 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
+import com.dpu.entity.Equipment;
+import com.dpu.entity.Status;
 import com.dpu.model.DivisionReq;
+import com.dpu.model.EquipmentReq;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.DivisionService;
+import com.dpu.service.StatusService;
 
 /**
  * @author jagvir
@@ -30,26 +39,87 @@ public class DivisionServiceImpl implements DivisionService {
 	@Autowired
 	DivisionDao divisionDao;
 
+	@Autowired
+	SessionFactory sessionFactory;
+
+	@Autowired
+	StatusService statusService;
+
 	@Override
 	public List<DivisionReq> update(Long id, DivisionReq divisionReq) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("[DivisionServiceImpl] [update] : Srvice: Enter");
+		Division division = divisionDao.findById(id);
+		if (division != null) {
+			logger.info("[DivisionServiceImpl] [update] : 1111111111111111111");
+			division.setDivisionCode(divisionReq.getDivisionCode());
+			division.setDivisionName(divisionReq.getDivisionName());
+			division.setFedral(divisionReq.getFedral());
+			division.setProvincial(divisionReq.getProvincial());
+			division.setSCAC(divisionReq.getSCAC());
+			division.setCarrierCode(divisionReq.getCarrierCode());
+			division.setContractPrefix(divisionReq.getContractPrefix());
+			division.setInvoicePrefix(divisionReq.getInvoicePrefix());
+			logger.info("[DivisionServiceImpl] [update] : 22222222222222");
+			Status status = statusService.get(divisionReq.getStatusId());
+			division.setStatus(status);
+			logger.info("[DivisionServiceImpl] [update] : 333333333");
+			division.setModifiedBy("jagvir");
+			division.setModifiedOn(new Date());
+			logger.info("[DivisionServiceImpl] [update] : 4444444444");
+			divisionDao.update(division);
+			logger.info("[DivisionServiceImpl] [update]: Division updated Successfully.");
+			return getAll("");
+		} else {
+			logger.info("[DivisionServiceImpl] [update] : 55555555");
+			return null;
+		}
 	}
 
 	@Override
 	public List<DivisionReq> delete(Long id) {
-		// TODO Auto-generated method stub
+		Division division = divisionDao.findById(id);
+		if (division != null) {
+			try {
+				divisionDao.delete(division);
+				return getAll("");
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
 		return null;
 	}
 
 	@Override
 	public DivisionReq get(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Division division = divisionDao.findById(id);
+		DivisionReq response = null;
+		if(division != null) {
+			response = new DivisionReq();
+			response.setDivisionCode(division.getDivisionCode());
+			response.setDivisionName(division.getDivisionName());
+			response.setFedral(division.getFedral());
+			response.setProvincial(division.getProvincial());
+			response.setSCAC(division.getSCAC());
+			response.setCarrierCode(division.getCarrierCode());
+			response.setContractPrefix(division.getContractPrefix());
+			response.setInvoicePrefix(division.getInvoicePrefix());
+			
+			List<Status> statusList = statusService.getAll();
+			
+			if(statusList != null && !statusList.isEmpty()){
+				response.setStatusList(statusList);
+			}
+			
+		}
+		
+		return response;
+
 	}
 
 	@Override
 	public List<DivisionReq> getAll(String divisionName) {
+		logger.info("[DivisionServiceImpl] [getAllDivisions] : Enter ");
 		List<Division> lstDivision = null;
 		List<DivisionReq> divisionResponse = new ArrayList<DivisionReq>();
 		if (divisionName != null && divisionName.length() > 0) {
@@ -57,9 +127,11 @@ public class DivisionServiceImpl implements DivisionService {
 					divisionName, MatchMode.ANYWHERE);
 			lstDivision = divisionDao.find(criterion);
 		} else {
+			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 			lstDivision = divisionDao.findAll();
 		}
 		if (lstDivision != null && lstDivision.size() > 0) {
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			for (Division division : lstDivision) {
 				DivisionReq divisionReq = new DivisionReq();
 				divisionReq.setDivisionCode(division.getDivisionCode());
@@ -76,8 +148,38 @@ public class DivisionServiceImpl implements DivisionService {
 
 	@Override
 	public List<DivisionReq> add(DivisionReq divisionReq) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("DivisionServiceImpl: add():  STARTS");
+
+		Session session = null;
+		Transaction tx = null;
+		List<DivisionReq> divisionList = null;
+
+		try {
+
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Division division = divisionDao.add(session, divisionReq);
+			divisionList = getAll("");
+		} catch (Exception e) {
+			logger.fatal("DivisionServiceImpl: add(): Exception: "
+					+ e.getMessage());
+			if (tx != null) {
+				tx.rollback();
+			}
+		} finally {
+			logger.info("DivisionServiceImpl: add():  finally block");
+			if (tx != null) {
+				tx.commit();
+			}
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("DivisionServiceImpl: add():  ENDS");
+
+		return divisionList;
+
 	}
 
 	// @Override

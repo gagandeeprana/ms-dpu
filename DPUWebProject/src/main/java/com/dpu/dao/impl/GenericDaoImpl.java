@@ -201,7 +201,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 	}
 
 }
-*/
+ */
 
 package com.dpu.dao.impl;
 
@@ -233,7 +233,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
 	Logger logger = Logger.getLogger(GenericDaoImpl.class);
 
-	@SuppressWarnings({ "unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public T save(T entity) {
 		T t = null;
 		Session session = sessionFactory.openSession();
@@ -258,6 +258,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
 	@SuppressWarnings("unchecked")
 	public T update(T entity) {
+		logger.info("[GenericDaoImpl] [update]");
 		T t = null;
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
@@ -267,7 +268,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
-			logger.error("[update]" + e);
+			logger.error("[GenericDaoImpl] [update]" + e);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -295,7 +296,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public T findById(Object id) {
-
+		logger.info("[GenericDaoImpl] [findById]  : Enter");
 		Session session = sessionFactory.openSession();
 		T t = null;
 		try {
@@ -315,11 +316,13 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 	}
 
 	public List<T> findAll() {
+		logger.info("[DivisionDaoImpl] [findAll] : Enter ");
 		return find(null);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<T> find(Criterion criterion) {
+		logger.info("[DivisionDaoImpl] [find] : Enter ");
 		Session session = null;
 		List<T> t = null;
 		Type type = getClass().getGenericSuperclass();
@@ -344,6 +347,8 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 				session.close();
 			}
 		}
+		// System.out.println("size::: "+t.size());
+		logger.info("[DivisionDaoImpl] [find] : Exit ");
 		return t;
 	}
 

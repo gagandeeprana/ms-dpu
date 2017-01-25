@@ -1,16 +1,28 @@
 package com.dpu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.DriverDao;
 import com.dpu.entity.Driver;
+import com.dpu.entity.Status;
+import com.dpu.model.CategoryReq;
+import com.dpu.model.DivisionReq;
+import com.dpu.model.DriverReq;
+import com.dpu.model.TypeResponse;
+import com.dpu.service.CategoryService;
+import com.dpu.service.DivisionService;
 import com.dpu.service.DriverService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TerminalService;
+import com.dpu.service.TypeService;
 
 /**
  * @author sumit
@@ -22,6 +34,21 @@ public class DriverServiceImpl implements DriverService {
 
 	@Autowired
 	DriverDao driverDao;
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
+	
+	@Autowired
+	CategoryService categoryService;
+	
+	@Autowired
+	DivisionService divisionService;
+	
+	@Autowired
+	TerminalService terminalService;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
@@ -93,20 +120,41 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public List<Driver> getAllDriver() {
+	public List<DriverReq> getAllDriver() {
+		
 		List<Driver> listOfDriver = null;
+		List<DriverReq> drivers = null;
 		try {
 			logger.info("[getAllDrivers]:  Service : Enter");
 
 			listOfDriver = driverDao.findAll();
-			logger.info("[getAllDrivers]: Service: listOfDriver : "
-					+ listOfDriver);
-			return listOfDriver;
+			logger.info("[getAllDrivers]: Service: listOfDriver : "+ listOfDriver);
+			drivers = setDriverData(listOfDriver);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers ] Service: Exception :"
 					+ e.getMessage());
 		}
-		return listOfDriver;
+		return drivers;
+	}
+
+	private List<DriverReq> setDriverData(List<Driver> listOfDriver) {
+		
+		List<DriverReq> drivers = new ArrayList<DriverReq>();
+		if(listOfDriver != null && !listOfDriver.isEmpty()){
+			for (Driver driver : listOfDriver) {
+				DriverReq driverReq = new DriverReq();
+				BeanUtils.copyProperties(driver, driverReq);
+				driverReq.setCatogoryName(driver.getCategory().getName());
+				driverReq.setTerminalName(driver.getTerminal().getTerminalName());
+				driverReq.setStatusName(driver.getStatus().getStatus());
+				driverReq.setDivisionName(driver.getDivision().getDivisionName());
+				driverReq.setDriverClassName(driver.getDriverClass().getTypeName());
+				driverReq.setRoleName(driver.getRole().getTypeName());
+				drivers.add(driverReq);
+			}
+		}
+		
+		return drivers;
 	}
 
 	@Override
@@ -140,6 +188,32 @@ public class DriverServiceImpl implements DriverService {
 		isDriverExist = true;
 		return isDriverExist;
 		
+	}
+
+	@Override
+	public DriverReq getOpenAdd() {
+		
+		DriverReq driver = new DriverReq();
+		
+		List<Status> statusList = statusService.getAll();
+		driver.setStatusList(statusList);
+		
+		List<TypeResponse> roleList = typeService.getAll(6l);
+		driver.setRoleList(roleList);
+		
+		List<TypeResponse> driverClassList = typeService.getAll(5l);
+		driver.setDriverClassList(driverClassList);
+		
+		List<CategoryReq> categoryList = categoryService.getAll();
+		driver.setCategoryList(categoryList);
+		
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		driver.setDivisionList(divisionList);
+		
+		//List<TerminalResponse> terminalList = terminalService.getAll();
+		
+		
+		return driver;
 	}
 
 }

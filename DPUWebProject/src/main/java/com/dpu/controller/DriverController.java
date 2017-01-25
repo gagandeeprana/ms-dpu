@@ -1,10 +1,8 @@
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Driver;
+import com.dpu.model.DPUService;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -48,20 +47,12 @@ public class DriverController extends MessageProperties  {
 		logger.info("[getAllDrivers]: Enter");
 		String json = null;
 		try {
-			List<Driver> lstdrivers = driverService.getAllDriver();
+			
+			List<DriverReq> lstdrivers = driverService.getAllDriver();
 
-			if(lstdrivers != null) {
-				List<DriverReq> responses = new ArrayList<DriverReq>();
-				for (Driver driver : lstdrivers) {
-					DriverReq response = new DriverReq();
-					BeanUtils.copyProperties(response, driver);
-					responses.add(response);
-				}
-				if (responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+			if (lstdrivers != null && !lstdrivers.isEmpty()) {
+				json = mapper.writeValueAsString(lstdrivers);
 			}
-			System.out.println(json);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers]:Controller " + e);
 		}
@@ -107,12 +98,12 @@ public class DriverController extends MessageProperties  {
 		driver.setFaxNo(driverReq.getFaxNo());
 		driver.setCellular(driverReq.getCellular());
 		driver.setPager(driverReq.getPager());
-		driver.setDivision(driverReq.getDivision());
+	/*	driver.setDivision(driverReq.getDivision());
 		driver.setTerminalId(driverReq.getTerminalId());
 		driver.setCatogoryId(driverReq.getCatogoryId());
 		driver.setRoleId(driverReq.getRoleId());
 		driver.setStatusId(driverReq.getStatusId());
-		driver.setDriverClassId(driverReq.getDriverClassId());
+		driver.setDriverClassId(driverReq.getDriverClassId());*/
 		driver.setCreatedOn(new Date());
 		return driver;
 	}
@@ -169,6 +160,21 @@ public class DriverController extends MessageProperties  {
 		} catch (Exception e) {
 			logger.error("[getDriverByDriverCode]:" + e);
 		}
+		return json;
+	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside driverController openAdd() Starts ");
+		String json = null;
+		try {
+			DriverReq driverReq = driverService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(driverReq);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside driverController openAdd() Ends ");
 		return json;
 	}
 }

@@ -4,6 +4,9 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -146,6 +149,31 @@ public class ServiceServiceImpl implements ServiceService {
 		service.setAssociatedWithList(associatedWithList);
 		
 		return service;
+	}
+
+	@Override
+	public List<DPUService> getServiceByServiceName(String serviceName) {
+		
+		List<Service> serviceList = null;
+		if(serviceName != null && serviceName.length() > 0) {
+			Criterion criterion = Restrictions.like("serviceName", serviceName, MatchMode.ANYWHERE);
+			serviceList = serviceDao.find(criterion);
+		}
+		List<DPUService> servicesList = new ArrayList<DPUService>();
+		
+		if(serviceList != null && !serviceList.isEmpty()){
+			for (Service service : serviceList) {
+				DPUService serviceObj = new DPUService();
+				serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
+				serviceObj.setServiceName(service.getServiceName());
+				serviceObj.setServiceId(service.getServiceId());
+				serviceObj.setStatus(service.getStatus().getStatus());
+				serviceObj.setTextField(service.getTextField().getTypeName());
+				servicesList.add(serviceObj);
+			}
+		}
+		
+		return servicesList;
 	}
 
 }

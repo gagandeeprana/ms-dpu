@@ -68,10 +68,9 @@ public class DriverController extends MessageProperties  {
 		ResponseEntity<Object> obj =  null;
 		  
 		try {
-			System.out.println(new ObjectMapper().writeValueAsString(driverReq));
-			Driver driver = setDriverValues(driverReq);
-			boolean result = driverService.addDriver(driver);
-			if(result){
+			//System.out.println(new ObjectMapper().writeValueAsString(driverReq));
+			Object result = driverService.addDriver(driverReq);
+			if(result != null){
 				 obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_added_code), CommonProperties.Driver_added_message, Iconstants.SUCCESS), HttpStatus.OK);
 			}else{
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_add_code), CommonProperties.Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
@@ -82,30 +81,6 @@ public class DriverController extends MessageProperties  {
 		}
 		logger.info("[addDriver]:Controller:  Exit");
 		return obj;
-	}
-
-	private Driver setDriverValues(DriverReq driverReq) {
-		Driver driver = new Driver();
-		driver.setDriverCode(driverReq.getDriverCode());
-		driver.setFirstName(driverReq.getFirstName());
-		driver.setLastName(driverReq.getLastName());
-		driver.setAddress(driverReq.getAddress());
-		driver.setUnit(driverReq.getUnit());
-		driver.setCity(driverReq.getCity());
-		driver.setPostalCode(driverReq.getPostalCode());
-		driver.setEmail(driverReq.getEmail());
-		driver.setHome(driverReq.getHome());
-		driver.setFaxNo(driverReq.getFaxNo());
-		driver.setCellular(driverReq.getCellular());
-		driver.setPager(driverReq.getPager());
-	/*	driver.setDivision(driverReq.getDivision());
-		driver.setTerminalId(driverReq.getTerminalId());
-		driver.setCatogoryId(driverReq.getCatogoryId());
-		driver.setRoleId(driverReq.getRoleId());
-		driver.setStatusId(driverReq.getStatusId());
-		driver.setDriverClassId(driverReq.getDriverClassId());*/
-		driver.setCreatedOn(new Date());
-		return driver;
 	}
 
 	// delete Driver

@@ -198,4 +198,10 @@ public class CategoryServiceImpl implements CategoryService {
 		return categories;
 	}
 
+	@Override
+	public Category getCategory(Long categoryId) {
+		Category category = categoryDao.findById(categoryId);
+		return category;
+	}
+
 }

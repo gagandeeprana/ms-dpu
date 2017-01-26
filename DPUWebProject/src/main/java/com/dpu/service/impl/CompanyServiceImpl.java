@@ -251,4 +251,22 @@ public class CompanyServiceImpl implements CompanyService{
 		response.setWebsite(companyObj.getWebsite());
 		
 	}
+
+	@Override
+	public List<CompanyResponse> getCompanyData() {
+		
+		List<Object[]> companyData = companyDao.getCompanyData();
+		List<CompanyResponse> returnRes = new ArrayList<CompanyResponse>();
+		
+		if(companyData != null && !companyData.isEmpty()){
+			for (Object[] row : companyData) {
+				CompanyResponse res = new CompanyResponse();
+				res.setCompanyId(Long.valueOf(String.valueOf(row[0])));
+				res.setName(String.valueOf(row[1]));
+				returnRes.add(res);
+			}
+		}
+		
+		return returnRes;
+	}
 }

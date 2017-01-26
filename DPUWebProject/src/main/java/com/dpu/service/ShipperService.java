@@ -6,6 +6,7 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Shipper;
+import com.dpu.model.ShipperResponse;
 
 /**
  * @author jagvir
@@ -19,7 +20,9 @@ public interface ShipperService {
 
 	boolean delete(Shipper shipper);
 
-	List<Shipper> getAll();
+	List<ShipperResponse> getAll();
 
 	Shipper get(int id);
+
+	ShipperResponse getMasterData();
 }

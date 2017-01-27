@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -26,6 +29,9 @@ public class TruckServiceImpl implements TruckService {
 
 	@Autowired
 	TruckDao truckDao;
+
+	@Autowired
+	SessionFactory sessionFactory;
 
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
@@ -68,10 +74,13 @@ public class TruckServiceImpl implements TruckService {
 					truckResponse.setUnitNo(truck.getUnitNo());
 					truckResponse.setOwner(truck.getOwner());
 					truckResponse.setoOName(truck.getoOName());
-					truckResponse.setCatogoryName(truck.getCategory().getName());
+					truckResponse
+							.setCatogoryName(truck.getCategory().getName());
 					truckResponse.setTruchUsage(truck.getUsage());
-					truckResponse.setDivisionName(truck.getDivision().getDivisionName());
-					truckResponse.setTerminalName(truck.getTerminal().getTerminalName());
+					truckResponse.setDivisionName(truck.getDivision()
+							.getDivisionName());
+					truckResponse.setTerminalName(truck.getTerminal()
+							.getTerminalName());
 					truckResponse.setTruckType(truck.getTruckType());
 					truckResponse.setFinance(truck.getFinance());
 					truckResponse.setStatusName(truck.getStatus().getStatus());
@@ -85,29 +94,59 @@ public class TruckServiceImpl implements TruckService {
 		logger.info("[TruckServiceImpl] [getAllTrucks] : Exit ");
 		return lstTruckResponse;
 	}
-//private List<TruckResponse> setTruckData(List<Truck> listOfTrucks) {
-//		
-//		List<TruckResponse> lstTruckResponses = new ArrayList<TruckResponse>();
-//		if(listOfTrucks != null && !listOfTrucks.isEmpty()){
-//			for (Truck truck : listOfTrucks) {
-//				TruckResponse truckResponse = new TruckResponse();
-//				BeanUtils.copyProperties(truck, truckResponse);
-//				truckResponse.setCatogoryName(truck.getCategory().getName());
-//				truckResponse.setTerminalName(truck.getTerminal().getTerminalName());
-//				truckResponse.setStatusName(truck.getStatus().getStatus());
-//				truckResponse.setDivisionName(truck.getDivision().getDivisionName());
-//				lstTruckResponses.add(truckResponse);
-//			}
-//		}
-//		
-//		return lstTruckResponses;
-//	}
 
+	// private List<TruckResponse> setTruckData(List<Truck> listOfTrucks) {
+	//
+	// List<TruckResponse> lstTruckResponses = new ArrayList<TruckResponse>();
+	// if(listOfTrucks != null && !listOfTrucks.isEmpty()){
+	// for (Truck truck : listOfTrucks) {
+	// TruckResponse truckResponse = new TruckResponse();
+	// BeanUtils.copyProperties(truck, truckResponse);
+	// truckResponse.setCatogoryName(truck.getCategory().getName());
+	// truckResponse.setTerminalName(truck.getTerminal().getTerminalName());
+	// truckResponse.setStatusName(truck.getStatus().getStatus());
+	// truckResponse.setDivisionName(truck.getDivision().getDivisionName());
+	// lstTruckResponses.add(truckResponse);
+	// }
+	// }
+	//
+	// return lstTruckResponses;
+	// }
 
 	@Override
 	public List<TruckResponse> add(TruckResponse truckResponse) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("TruckServiceImpl: add():  STARTS");
+
+		Session session = null;
+		Transaction tx = null;
+		List<TruckResponse> truckList = null;
+
+		try {
+
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Truck truck = truckDao.add(session, truckResponse);
+			truckList = getAllTrucks("");
+		} catch (Exception e) {
+			logger.fatal("TruckServiceImpl: add(): Exception: "
+					+ e.getMessage());
+			if (tx != null) {
+				tx.rollback();
+			}
+		} finally {
+			logger.info("TruckServiceImpl: add():  finally block");
+			if (tx != null) {
+				tx.commit();
+			}
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("TruckServiceImpl: add():  ENDS");
+
+		return truckList;
+
 	}
 
 	/*

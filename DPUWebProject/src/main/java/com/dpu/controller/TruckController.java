@@ -21,14 +21,16 @@ import com.dpu.constants.Iconstants;
 import com.dpu.entity.Company;
 import com.dpu.entity.Truck;
 import com.dpu.model.CompanyResponse;
+import com.dpu.model.DivisionReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TruckResponse;
 import com.dpu.service.TruckService;
+import com.dpu.util.MessageProperties;
 
 @RestController
 @RequestMapping(value = "truck")
-public class TruckController {
+public class TruckController extends MessageProperties {
 
 	Logger logger = Logger.getLogger(TruckController.class);
 
@@ -56,39 +58,34 @@ public class TruckController {
 	}
 
 	// Add new Truck
-	// @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method =
-	// RequestMethod.POST)
-	// public Object addTruck(@RequestBody TruckResponse truckResponse) {
-	// logger.info("[addTruck]:Controller:  Enter");
-	// Object obj = null;
-	// try {
-	//
-	// System.out.println(new ObjectMapper().writeValueAsString(truckResponse));
-	// Truck truck = setTruckValues(truckResponse);
-	// boolean result = truckService.addTruck(truck);
-	//
-	// if(result){
-	// obj = new ResponseEntity<Object>(new
-	// Success(Integer.parseInt(CommonProperties.Truck_added_code),
-	// CommonProperties.Truck_added_message, Iconstants.SUCCESS),
-	// HttpStatus.OK);
-	// }else{
-	// obj = new ResponseEntity<Object>(new
-	// Failed(Integer.parseInt(CommonProperties.Truck_unable_to_add_code),
-	// CommonProperties.Truck_unable_to_add_message, Iconstants.ERROR),
-	// HttpStatus.BAD_REQUEST);
-	// }
-	// } catch (Exception e) {
-	// logger.error("[addTruck]:" + e);
-	// obj = new ResponseEntity<Object>(new
-	// Failed(Integer.parseInt(CommonProperties.Truck_unable_to_add_code),
-	// CommonProperties.Truck_unable_to_add_message, Iconstants.ERROR),
-	// HttpStatus.BAD_REQUEST);
-	// }
-	// logger.info("[addTruck]:Controller:  Exit");
-	// return obj;
-	// }
-	//
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public Object addTruck(@RequestBody TruckResponse truckResponse) {
+		logger.info("[TruckController] [addTruck] : addTruck");
+		Object obj = null;
+		try {
+
+			List<TruckResponse> truckList = truckService.add(truckResponse);
+
+			if (truckList != null) {
+				if (truckList != null && truckList.size() > 0) {
+					obj = mapper.writeValueAsString(truckList);
+				}
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(truckUnableToAddCode),
+						truckUnableToAddMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.fatal("[TruckController]: add(): Exception: "
+					+ e.getMessage());
+		}
+
+		logger.info("[TruckController]: add(): ENDS");
+
+		return obj;
+	}
+
 	// private Truck setTruckValues(TruckResponse truckResponse) {
 	// Truck truck = new Truck();
 	// truck.setUnitNo(truckResponse.getUnitNo());

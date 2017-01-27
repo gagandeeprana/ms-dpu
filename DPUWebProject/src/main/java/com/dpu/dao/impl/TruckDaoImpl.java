@@ -8,8 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dpu.dao.TruckDao;
+import com.dpu.entity.Category;
 import com.dpu.entity.Division;
 import com.dpu.entity.Status;
+import com.dpu.entity.Terminal;
 import com.dpu.entity.Truck;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.TruckResponse;
@@ -33,46 +35,55 @@ public class TruckDaoImpl extends GenericDaoImpl<Truck> implements TruckDao {
 		Truck truck = null;
 		try {
 
-			truck = setDivisionValues(truckResponse);
-			// Status status = (Status) session.get(Status.class,
-			// divisionReq.getStatusId());
-			// division.setStatus(status);
-			//
-			// Long divisionId = (Long) session.save(division);
-			// division.setDivisionId(divisionId);
+			truck = setTruckValues(truckResponse);
+
+			Status status = (Status) session.get(Status.class,
+					truckResponse.getStatusId());
+			truck.setStatus(status);
+
+			Division division = (Division) session.get(Division.class,
+					truckResponse.getDivisionId());
+			truck.setDivision(division);
+
+			Category category = (Category) session.get(Category.class,
+					truckResponse.getCategoryId());
+			truck.setCategory(category);
+
+			Terminal terminal = (Terminal) session.get(Terminal.class,
+					truckResponse.getTerminalId());
+			truck.setTerminal(terminal);
+
+			Long truckId = (Long) session.save(truck);
+
+			truck.setTruckId(truckId);
 		} catch (Exception e) {
-			logger.fatal("DivisionDaoImpl: add(): Exception: " + e.getMessage());
+			logger.fatal("TruckDaoImpl: add(): Exception: " + e.getMessage());
 		}
 
-		logger.info("DivisionDaoImpl: add(): ENDS");
+		logger.info("TruckDaoImpl: add(): ENDS");
 
 		return truck;
 
 	}
 
-	private Truck setDivisionValues(TruckResponse truckResponse) {
+	private Truck setTruckValues(TruckResponse truckResponse) {
 
-		logger.info("TruckDaoImpl: setDivisionValues(): STARTS");
+		logger.info("TruckDaoImpl: setTruckValues(): STARTS");
 
 		Truck truck = new Truck();
-		// division.setDivisionCode(divisionReq.getDivisionCode());
-		// division.setDivisionName(divisionReq.getDivisionName());
-		// division.setFedral(divisionReq.getFedral());
-		// division.setProvincial(divisionReq.getProvincial());
-		// division.setSCAC(divisionReq.getSCAC());
-		// division.setCarrierCode(divisionReq.getCarrierCode());
-		// division.setContractPrefix(divisionReq.getContractPrefix());
-		// division.setInvoicePrefix(divisionReq.getInvoicePrefix());
-		// // Status status = statusService.get(divisionReq.getStatusId());
-		// // division.setStatus(status);
-		// division.setCreatedBy("jagvir");
-		// division.setCreatedOn(new Date());
-		// division.setModifiedBy("jagvir");
-		// division.setModifiedOn(new Date());
-		//
-		// logger.info("DivisionDaoImpl: setDivisionValues(): ENDS");
-		//
+		truck.setUnitNo(truckResponse.getUnitNo());
+		truck.setOwner(truckResponse.getOwner());
+		truck.setoOName(truckResponse.getoOName());
+		truck.setUsage(truckResponse.getTruchUsage());
+		truck.setTruckType(truckResponse.getTruckType());
+		truck.setFinance(truckResponse.getFinance());
+		truck.setCreatedBy("jagvir");
+		truck.setCreatedOn(new Date());
+		truck.setModifiedBy("jagvir");
+		truck.setModifiedOn(new Date());
+
+		logger.info("TruckDaoImpl: setTruckValues(): ENDS");
+
 		return truck;
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.CategoryDao;
+import com.dpu.dao.DivisionDao;
 import com.dpu.dao.DriverDao;
 import com.dpu.entity.Driver;
 import com.dpu.entity.Status;
@@ -49,31 +52,71 @@ public class DriverServiceImpl implements DriverService {
 	
 	@Autowired
 	TerminalService terminalService;
+	
+	@Autowired
+	CategoryDao categoryDao;
+	
+	@Autowired
+	DivisionDao divisionDao;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
 	@Override
-	public boolean addDriver(Driver driver) {
+	public Object addDriver(DriverReq driverReq) {
 
 		logger.info("[addDriver]:Service:  Enter");
-
-		boolean returnValue = false;
+		Driver driver = new Driver();
+		
 		try {
-				boolean isDriverExist = isDriverExist(driver.getDriverCode());
-				if(!isDriverExist){
-					driverDao.save(driver);
-					returnValue = true;
-					return returnValue;
-				}else{
-					return returnValue;
-				}
-			 
+			boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
+			if(!isDriverExist){
+					
+				BeanUtils.copyProperties(driverReq, driver);
+				driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
+				driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
+				//driver.setTerminal(terminalService.get(driverReq.getTerminalId()));
+				driver.setRole(typeService.get(driverReq.getRoleId()));
+				driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
+				driver.setStatus(statusService.get(driverReq.getStatusId()));
+				driverDao.save(driver);
+				return getAllDriver();
+			} else{
+				String errorString = "This driver code is already exist";
+				return errorString;
+			}
+			
+			
 		} catch (Exception e) {
-			return returnValue;
+			//return returnValue;
 		} finally {
-			logger.info("[addDriver]:Service:  returnValue : " + returnValue);
+			logger.info("[addDriver]:Service:  returnValue : " );
 		}
 
+		return null;
+	}
+	
+	private Driver setDriverValues(DriverReq driverReq) {
+		Driver driver = new Driver();
+		driver.setDriverCode(driverReq.getDriverCode());
+		driver.setFirstName(driverReq.getFirstName());
+		driver.setLastName(driverReq.getLastName());
+		driver.setAddress(driverReq.getAddress());
+		driver.setUnit(driverReq.getUnit());
+		driver.setCity(driverReq.getCity());
+		driver.setPostalCode(driverReq.getPostalCode());
+		driver.setEmail(driverReq.getEmail());
+		driver.setHome(driverReq.getHome());
+		driver.setFaxNo(driverReq.getFaxNo());
+		driver.setCellular(driverReq.getCellular());
+		driver.setPager(driverReq.getPager());
+	/*	driver.setDivision(driverReq.getDivision());
+		driver.setTerminalId(driverReq.getTerminalId());
+		driver.setCatogoryId(driverReq.getCatogoryId());
+		driver.setRoleId(driverReq.getRoleId());
+		driver.setStatusId(driverReq.getStatusId());
+		driver.setDriverClassId(driverReq.getDriverClassId());*/
+		driver.setCreatedOn(new Date());
+		return driver;
 	}
 
 	@Override
@@ -215,5 +258,6 @@ public class DriverServiceImpl implements DriverService {
 		
 		return driver;
 	}
+
 
 }

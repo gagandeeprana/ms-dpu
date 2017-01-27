@@ -1,22 +1,16 @@
-/**
- * 
- */
 package com.dpu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-/**
- * @author jagvir
- *
- */
 @Entity
 @Table(name = "shippermaster")
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -26,11 +20,11 @@ public class Shipper {
 	@Column(name = "shipper_id")
 	//@JsonProperty(value = "shipper_id")
 	@GeneratedValue
-	private int shipperId;
+	private Long shipperId;
 
-	@Column(name = "company")
-	//@JsonProperty(value = "company")
-	private String company;
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company;
 
 	@Column(name = "Address")
 	//@JsonProperty(value = "address")
@@ -116,19 +110,19 @@ public class Shipper {
 	//@JsonProperty(value = "standard_notes")
 	private String standardNotes;
 
-	public int getShipperId() {
+	public Long getShipperId() {
 		return shipperId;
 	}
 
-	public void setShipperId(int shipperId) {
+	public void setShipperId(Long shipperId) {
 		this.shipperId = shipperId;
 	}
 
-	public String getCompany() {
+	public Company getCompany() {
 		return company;
 	}
 
-	public void setCompany(String company) {
+	public void setCompany(Company company) {
 		this.company = company;
 	}
 

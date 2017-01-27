@@ -5,6 +5,7 @@ package com.dpu.service;
 
 import java.util.List;
 
+import com.dpu.entity.Category;
 import com.dpu.model.CategoryReq;
 
 /**
@@ -25,5 +26,7 @@ public interface CategoryService {
 	CategoryReq get(Long id);
 
 	List<CategoryReq> getCategoryByCategoryName(String categoryName);
+	
+	Category getCategory(Long categoryId);
 
 }

@@ -12,8 +12,6 @@ import com.dpu.model.DriverReq;
 
 public interface DriverService {
 
-	boolean addDriver(Driver driver);
-	
 	boolean updateDriver(String driverCode, Driver driver);
 	
 	List<DriverReq> getAllDriver();
@@ -23,6 +21,8 @@ public interface DriverService {
 	Driver getDriverByDriverCode(Integer driverId);
 
 	DriverReq getOpenAdd();
+
+	Object addDriver(DriverReq driverReq);
 	
 }
 

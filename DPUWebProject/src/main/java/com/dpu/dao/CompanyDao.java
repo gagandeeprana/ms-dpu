@@ -1,5 +1,7 @@
 package com.dpu.dao;
 
+import java.util.List;
+
 import com.dpu.entity.Company;
 
 public interface CompanyDao extends GenericDao<Company>{
@@ -13,5 +15,7 @@ public interface CompanyDao extends GenericDao<Company>{
 	List<Company> getAll(String name);
 	
 	Company get(int id);*/
+	
+	List<Object[]> getCompanyData();
 	
 }

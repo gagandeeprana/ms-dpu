@@ -1,26 +1,24 @@
 package com.dpu.model;
 
-
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Status;
 
 /**
  * @author jagvir
  *
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true) 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DivisionReq {
 
-	private int divisionId;
+	private long divisionId;
 
 	private String divisionCode;
 
@@ -36,18 +34,66 @@ public class DivisionReq {
 
 	private String contractPrefix;
 
+	private String status;
+
+	private Long statusId;
+
+	private List<Status> statusList;
 
 	private String invoicePrefix;
+
+//	private Date createdOn;
+
+	private String createdBy;
+
+	private String modifiedBy;
+
+//	private Date modifiedOn;
+
 	
-	private Date createdOn;
+	
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
 
-	private int createdBy;
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
 
-	public int getDivisionId() {
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	public long getDivisionId() {
 		return divisionId;
 	}
 
-	public void setDivisionId(int divisionId) {
+	public void setDivisionId(long divisionId) {
 		this.divisionId = divisionId;
 	}
 
@@ -115,21 +161,20 @@ public class DivisionReq {
 		this.invoicePrefix = invoicePrefix;
 	}
 
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public int getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
-
-
+//	public Date getCreatedOn() {
+//		return createdOn;
+//	}
+//
+//	public void setCreatedOn(Date createdOn) {
+//		this.createdOn = createdOn;
+//	}
+//
+//	public Date getModifiedOn() {
+//		return modifiedOn;
+//	}
+//	
+//	public void setModifiedOn(Date modifiedOn) {
+//		this.modifiedOn = modifiedOn;
+//	}
+	
 }

@@ -3,18 +3,19 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Truck;
+import com.dpu.model.DivisionReq;
+import com.dpu.model.TruckResponse;
 
 public interface TruckService {
-	
 
-	boolean addTruck(Truck driver);
-	
-	List<Truck> getAllTruck();
-	
-	Truck getTruckById(Long id);
+	List<TruckResponse> update(Long id, TruckResponse tuckResponse);
 
-	boolean updateTruck(Long id, Truck truck);
+	List<TruckResponse> delete(Long id);
 
-	boolean deleteTruck(Long id);
+	TruckResponse get(Long id);
+
+	List<TruckResponse> getAllTrucks(String owner);
+
+	List<TruckResponse> add(TruckResponse truckResponse);
 
 }

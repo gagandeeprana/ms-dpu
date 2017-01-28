@@ -6,20 +6,27 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Category;
+import com.dpu.model.CategoryReq;
 
 /**
  * @author jagvir
  *
  */
 public interface CategoryService {
-	boolean addCategory(Category category);
+	List<CategoryReq> addCategory(CategoryReq categoryReq);
 
-	Category update(int id, Category category);
+	List<CategoryReq> update(Long id, CategoryReq categoryReq);
 
-	boolean delete(Category category);
+	List<CategoryReq> delete(Long id);
 
-	List<Category> getAll();
+	List<CategoryReq> getAll();
 
-	Category get(int id);
+	CategoryReq getOpenAdd();
+
+	CategoryReq get(Long id);
+
+	List<CategoryReq> getCategoryByCategoryName(String categoryName);
+	
+	Category getCategory(Long categoryId);
 
 }

@@ -242,7 +242,6 @@ public class MessageProperties {
 	@Value("${trailer_unable_to_update_message}")
 	public String trailerUnableToUpdateMessage;
 
-
 	// Equipment Module Messages
 
 	@Value("${equipment_added_code}")
@@ -281,4 +280,41 @@ public class MessageProperties {
 	@Value("${equipment_unable_to_update_message}")
 	public String equipmentUnableToUpdateMessage;
 
+	// Truck Module Messages
+
+	@Value("${Truck_added_code}")
+	public String truckAddedCode;
+
+	@Value("${Truck_added_message}")
+	public String truckAddedMessage;
+
+	@Value("${Truck_unable_to_add_code}")
+	public String truckUnableToAddCode;
+
+	@Value("${Truck_unable_to_add_message}")
+	public String truckUnableToAddMessage;
+
+	@Value("${Truck_deleted_code}")
+	public String truckDeletedCode;
+
+	@Value("${Truck_deleted_message}")
+	public String truckDeletedMessage;
+
+	@Value("${Truck_unable_to_delete_code}")
+	public String truckUnableToDeleteCode;
+
+	@Value("${Truck_unable_to_delete_message}")
+	public String truckUnableToDeleteMessage;
+
+	@Value("${Truck_updated_code}")
+	public String truckUpdateCode;
+
+	@Value("${Truck_updated_message}")
+	public String truckUpdateMessage;
+
+	@Value("${Truck_unable_to_update_code}")
+	public String truckUnableToUpdateCode;
+
+	@Value("${Truck_unable_to_update_message}")
+	public String truckUnableToUpdateMessage;
 }

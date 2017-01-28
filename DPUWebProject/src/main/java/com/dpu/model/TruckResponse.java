@@ -1,9 +1,13 @@
 package com.dpu.model;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Status;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class TruckResponse implements Serializable {
@@ -12,32 +16,176 @@ public class TruckResponse implements Serializable {
 
 	private Long truckId;
 
-	private String usage;
-	
+	private String truchUsage;
+
 	private String owner;
-	
-	private String division;
-	
+
 	private String oOName;
-	
-	private String terminal;
-	
-	private String category;
 
 	private String truckType;
-	
+
 	private String finance;
 
 	private Integer unitNo;
-	
-	private String status;
-	
-	public String getUsage() {
-		return usage;
+
+	private Date createdOn;
+
+	private String createdBy;
+
+	private String modifiedBy;
+
+	private Date modifiedOn;
+
+	private String divisionName;
+	private Long divisionId;
+	private List<DivisionReq> divisionList;
+
+	private String terminalName;
+	private Long terminalId;
+	private List<TerminalResponse> terminalList;
+
+	private String catogoryName;
+	private Long categoryId;
+	private List<CategoryReq> categoryList;
+
+	private String statusName;
+	private Long statusId;
+	private List<Status> statusList;
+
+	public String getDivisionName() {
+		return divisionName;
 	}
 
-	public void setUsage(String usage) {
-		this.usage = usage;
+	public void setDivisionName(String divisionName) {
+		this.divisionName = divisionName;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public List<DivisionReq> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<DivisionReq> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public String getTerminalName() {
+		return terminalName;
+	}
+
+	public void setTerminalName(String terminalName) {
+		this.terminalName = terminalName;
+	}
+
+	public Long getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(Long terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public List<TerminalResponse> getTerminalList() {
+		return terminalList;
+	}
+
+	public void setTerminalList(List<TerminalResponse> terminalList) {
+		this.terminalList = terminalList;
+	}
+
+	public String getCatogoryName() {
+		return catogoryName;
+	}
+
+	public void setCatogoryName(String catogoryName) {
+		this.catogoryName = catogoryName;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public List<CategoryReq> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CategoryReq> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	public String getTruchUsage() {
+		return truchUsage;
+	}
+
+	public void setTruchUsage(String truchUsage) {
+		this.truchUsage = truchUsage;
+	}
+
+	public Date getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Date getModifiedOn() {
+		return modifiedOn;
+	}
+
+	public void setModifiedOn(Date modifiedOn) {
+		this.modifiedOn = modifiedOn;
 	}
 
 	public String getOwner() {
@@ -48,36 +196,12 @@ public class TruckResponse implements Serializable {
 		this.owner = owner;
 	}
 
-	public String getDivision() {
-		return division;
-	}
-
-	public void setDivision(String division) {
-		this.division = division;
-	}
-
 	public String getoOName() {
 		return oOName;
 	}
 
 	public void setoOName(String oOName) {
 		this.oOName = oOName;
-	}
-
-	public String getTerminal() {
-		return terminal;
-	}
-
-	public void setTerminal(String terminal) {
-		this.terminal = terminal;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
 	}
 
 	public String getTruckType() {
@@ -112,212 +236,4 @@ public class TruckResponse implements Serializable {
 		this.unitNo = unitNo;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	/*@Column(name = "truck_class")
-	private String truckClass;
-	
-	@Column(name = "owner_id")
-	private Integer ownerId;
-	
-	@Column(name = "VIN")
-	private String vin;
-	
-	@Column(name = "make")
-	private String make;
-	
-	@Column(name = "model")
-	private String model;
-	
-	@Column(name = "truck_year")
-	private Integer truckYear;
-	
-	@Column(name = "plate_no")
-	private String plateNo;
-	
-	@Column(name = "jurisdiction")
-	private String jurisdiction;
-	
-	@Column(name = "tare_weight")
-	private Integer tareWeight;
-	
-	@Column(name = "rgw")
-	private String rgw;
-	
-	 
-	@Column(name = "current_odometer")
-	private String currentOdometer;
-	
-	@Column(name = "equipment_type")
-	private String equipmentType;
-	
-	@Column(name = "created_by")
-	private String createdBy;
-	
-	@Column(name = "created_on")
-	private Date createdOn;
-	
-	@Column(name = "modified_by")
-	private String modifiedBy;
-	
-	@Column(name = "modified_on")
-	private Date modifiedOn;
-
-	public Long getTruckId() {
-		return truckId;
-	}
-
-	public void setTruckId(Long truckId) {
-		this.truckId = truckId;
-	}
-
-	public Integer getUnitNo() {
-		return unitNo;
-	}
-
-	public void setUnitNo(Integer unitNo) {
-		this.unitNo = unitNo;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getTruckClass() {
-		return truckClass;
-	}
-
-	public void setTruckClass(String truckClass) {
-		this.truckClass = truckClass;
-	}
-
-	public Integer getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(Integer ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public String getVin() {
-		return vin;
-	}
-
-	public void setVin(String vin) {
-		this.vin = vin;
-	}
-
-	public String getMake() {
-		return make;
-	}
-
-	public void setMake(String make) {
-		this.make = make;
-	}
-
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public Integer getTruckYear() {
-		return truckYear;
-	}
-
-	public void setTruckYear(Integer truckYear) {
-		this.truckYear = truckYear;
-	}
-
-	public String getPlateNo() {
-		return plateNo;
-	}
-
-	public void setPlateNo(String plateNo) {
-		this.plateNo = plateNo;
-	}
-
-	public String getJurisdiction() {
-		return jurisdiction;
-	}
-
-	public void setJurisdiction(String jurisdiction) {
-		this.jurisdiction = jurisdiction;
-	}
-
-	public Integer getTareWeight() {
-		return tareWeight;
-	}
-
-	public void setTareWeight(Integer tareWeight) {
-		this.tareWeight = tareWeight;
-	}
-
-	public String getRgw() {
-		return rgw;
-	}
-
-	public void setRgw(String rgw) {
-		this.rgw = rgw;
-	}
-
-	public String getCurrentOdometer() {
-		return currentOdometer;
-	}
-
-	public void setCurrentOdometer(String currentOdometer) {
-		this.currentOdometer = currentOdometer;
-	}
-
-	public String getEquipmentType() {
-		return equipmentType;
-	}
-
-	public void setEquipmentType(String equipmentType) {
-		this.equipmentType = equipmentType;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedOn() {
-		return modifiedOn;
-	}
-
-	public void setModifiedOn(Date modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}*/
 }

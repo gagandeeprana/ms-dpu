@@ -3,7 +3,6 @@
  */
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Shipper;
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
@@ -45,25 +43,17 @@ public class ShipperController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		logger.info("[getAll] : Enter");
+		logger.info("Inside ShipperController getAll() starts");
 		String json = null;
 		try {
-			List<Shipper> lstShippers = shipperService.getAll();
-			if (lstShippers != null && lstShippers.size() > 0) {
-				List<ShipperResponse> responses = new ArrayList<ShipperResponse>();
-				for(Shipper shipper : lstShippers) {
-					ShipperResponse response = new ShipperResponse();
-					BeanUtils.copyProperties(response, shipper);
-					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+			List<ShipperResponse> lstShippers = shipperService.getAll();
+			if(lstShippers != null && !lstShippers.isEmpty()) {
+				json = mapper.writeValueAsString(lstShippers);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Exception inside ShipperController getAll() :"+e.getMessage());
 		}
-		logger.info("[getAll] : Exit");
+		logger.info("Inside ShipperController getAll() ends");
 		return json;
 	}
 
@@ -126,7 +116,7 @@ public class ShipperController extends MessageProperties {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
-			shipper.setShipperId(id);
+			//shipper.setShipperId(id);
 			Shipper response = shipperService.update(shipper);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
@@ -167,4 +157,19 @@ public class ShipperController extends MessageProperties {
 		return json;
 	}
 
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getOpenAdd() {
+		logger.info("Inside ShipperController getOpenAdd() Starts. ");
+		String json = new String();
+		try {
+			ShipperResponse response = shipperService.getMasterData();
+			if (response != null) {
+				json = mapper.writeValueAsString(response);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside ShipperController getOpenAdd() :"+e.getMessage());
+		}
+		logger.info("Inside ShipperController getOpenAdd() Ends. ");
+		return json;
+	}
 }

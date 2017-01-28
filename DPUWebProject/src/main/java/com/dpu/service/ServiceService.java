@@ -1,12 +1,8 @@
-/**
- * 
- */
+
 package com.dpu.service;
 
 import java.util.List;
 
-import com.dpu.entity.Category;
-import com.dpu.entity.Service;
 import com.dpu.model.DPUService;
 
 /**
@@ -14,13 +10,17 @@ import com.dpu.model.DPUService;
  *
  */
 public interface ServiceService {
-	Service add(Service service);
+	List<DPUService> add(DPUService dpuService);
 
-	Service update(int id, Service service);
-
-	boolean delete(Service service);
+	List<DPUService> delete(Long id);
 
 	List<DPUService> getAll();
 
-	Service get(int id);
+	DPUService get(Long id);
+
+	DPUService getOpenAdd();
+
+	List<DPUService> update(Long id, DPUService dpuService);
+
+	List<DPUService> getServiceByServiceName(String serviceName);
 }

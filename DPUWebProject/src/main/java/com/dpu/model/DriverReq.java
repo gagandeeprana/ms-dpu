@@ -2,9 +2,13 @@ package com.dpu.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.entity.Status;
+import com.dpu.entity.Type;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DriverReq implements Serializable{
@@ -12,7 +16,7 @@ public class DriverReq implements Serializable{
 	 
 	private static final long serialVersionUID = 1L;
 
-	private int driverId;
+	private Long driverId;
 
 	private String driverCode;
 
@@ -40,67 +44,87 @@ public class DriverReq implements Serializable{
 	 
 	private String pager;
 	 
-	private String division;
+	private String divisionName;
+	private Long divisionId;
+	private List<DivisionReq> divisionList;
 
-	private Integer terminalId;
+	private String terminalName;
+	private Long terminalId;
+	private List<TerminalResponse> terminalList;
 
-	private Integer catogoryId;
+	private String categoryName;
+	private Long categoryId;
+	private List<CategoryReq> categoryList;
 	 
-	private Integer roleId;
+	private String roleName;
+	private Long roleId;
+	private List<TypeResponse> roleList;
 	 
-	private Integer statusId;
+	private String statusName;
+	private Long statusId;
+	private List<Status> statusList;
 	 
-	private Integer driverClassId;
+	private String driverClassName;
+	private Long driverClassId;
+	private List<TypeResponse> driverClassList;
  
+	public List<DivisionReq> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<DivisionReq> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public List<TerminalResponse> getTerminalList() {
+		return terminalList;
+	}
+
+	public void setTerminalList(List<TerminalResponse> terminalList) {
+		this.terminalList = terminalList;
+	}
+
+	public List<CategoryReq> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CategoryReq> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	public List<TypeResponse> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<TypeResponse> roleList) {
+		this.roleList = roleList;
+	}
+
+	public List<TypeResponse> getDriverClassList() {
+		return driverClassList;
+	}
+
+	public void setDriverClassList(List<TypeResponse> driverClassList) {
+		this.driverClassList = driverClassList;
+	}
+
 	private String createdBy;
 	 
 	private Date createdOn;
 	
-	public Integer getTerminalId() {
-		return terminalId;
-	}
-
-	public void setTerminalId(Integer terminalId) {
-		this.terminalId = terminalId;
-	}
-
-	public Integer getCatogoryId() {
-		return catogoryId;
-	}
-
-	public void setCatogoryId(Integer catogoryId) {
-		this.catogoryId = catogoryId;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
-	}
-
-	public Integer getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
-	}
-
-	public Integer getDriverClassId() {
-		return driverClassId;
-	}
-
-	public void setDriverClassId(Integer driverClassId) {
-		this.driverClassId = driverClassId;
-	}
-
-	public int getDriverId() {
+	public Long getDriverId() {
 		return driverId;
 	}
 
-	public void setDriverId(int driverId) {
+	public void setDriverId(Long driverId) {
 		this.driverId = driverId;
 	}
 
@@ -208,12 +232,100 @@ public class DriverReq implements Serializable{
 		this.pager = pager;
 	}
 
-	public String getDivision() {
-		return division;
+	public String getDivisionName() {
+		return divisionName;
 	}
 
-	public void setDivision(String division) {
-		this.division = division;
+	public void setDivisionName(String divisionName) {
+		this.divisionName = divisionName;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public String getTerminalName() {
+		return terminalName;
+	}
+
+	public void setTerminalName(String terminalName) {
+		this.terminalName = terminalName;
+	}
+
+	public Long getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(Long terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
+
+	public Long getDriverClassId() {
+		return driverClassId;
+	}
+
+	public void setDriverClassId(Long driverClassId) {
+		this.driverClassId = driverClassId;
 	}
 
 	public String getCreatedBy() {

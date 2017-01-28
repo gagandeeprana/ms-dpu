@@ -12,12 +12,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Equipment;
+import com.dpu.entity.Type;
 import com.dpu.model.EquipmentReq;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.EquipmentService;
@@ -42,20 +44,20 @@ public class EquipmentServiceImpl implements EquipmentService {
 	TypeService typeService;
 
 	@Override
-	public Equipment add(EquipmentReq equipmentReq) {
+	public List<EquipmentReq> add(EquipmentReq equipmentReq) {
 
 		logger.info("EquipmentServiceImpl: add():  STARTS");
 
 		Session session = null;
 		Transaction tx = null;
-		Equipment equipment = null;
+		List<EquipmentReq> equipmentList = null;
 		
 		try {
 			
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			equipment = equipmentDao.add(session, equipmentReq);
-
+			Equipment equipment = equipmentDao.add(session, equipmentReq);
+			equipmentList = getAll("");
 		} catch (Exception e) {
 			logger.fatal("EquipmentServiceImpl: add(): Exception: " + e.getMessage());
 			if(tx != null) {
@@ -73,24 +75,42 @@ public class EquipmentServiceImpl implements EquipmentService {
 		
 		logger.info("EquipmentServiceImpl: add():  ENDS");
 
-		return equipment;
+		return equipmentList;
 	}
 	
 	@Override
-	public Equipment update(Long id, Equipment equipment) {
-		return equipmentDao.update(equipment);
+	public List<EquipmentReq> update(Long id, EquipmentReq equipmentReq) {
+		
+		Equipment equipmentObj = equipmentDao.findById(id);
+		if(equipmentObj != null){
+			equipmentObj.setEquipmentName(equipmentReq.getEquipmentName());
+			equipmentObj.setDescription(equipmentReq.getDescription());
+			equipmentObj.setModifiedBy("gagan");
+			equipmentObj.setModifiedOn(new Date());
+			Type type = typeService.get(equipmentReq.getTypeId());
+			equipmentObj.setType(type);
+			equipmentDao.update(equipmentObj);
+			
+			return getAll("");
+		} else{
+			return null;
+		}
 	}
 
 	@Override
-	public boolean delete(Equipment equipment) {
-		boolean result = false;
-		try {
-			equipmentDao.delete(equipment);
-			result = true;
-		} catch (Exception e) {
-			result = false;
+	public List<EquipmentReq> delete(Long id) {
+		
+		Equipment equipment = equipmentDao.findById(id);
+		if(equipment != null){
+			try {
+				equipmentDao.delete(equipment);
+				return getAll("");
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
-		return result;
+		
+		return null;
 	}
 
 	@Override
@@ -98,8 +118,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<Equipment> equipments = null;
 		List<EquipmentReq> equipmentResponse = new ArrayList<EquipmentReq>();
 		if(equipmentName != null && equipmentName.length() > 0) {
-//			Criterion criterion = Restrictions.like("equipmentName", equipmentName);
-//			equipments = equipmentDao.find(criterion);
+			Criterion criterion = Restrictions.like("equipmentName", equipmentName, MatchMode.ANYWHERE);
+			equipments = equipmentDao.find(criterion);
 		} else {
 			equipments = equipmentDao.findAll();
 		}

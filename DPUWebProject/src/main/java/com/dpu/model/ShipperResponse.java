@@ -1,5 +1,7 @@
 package com.dpu.model;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -7,10 +9,11 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 public class ShipperResponse {
 
 	//@JsonProperty(value = "shipper_id")
-	private int shipperId;
+	private Long shipperId;
 
 	//@JsonProperty(value = "company")
 	private String company;
+	private Long companyId;
 
 	//@JsonProperty(value = "address")
 	private String address;
@@ -74,13 +77,31 @@ public class ShipperResponse {
 
 	//@JsonProperty(value = "standard_notes")
 	private String standardNotes;
+	
+	private List<CompanyResponse> companyList;
 
-	public int getShipperId() {
+	public List<CompanyResponse> getCompanyList() {
+		return companyList;
+	}
+
+	public void setCompanyList(List<CompanyResponse> companyList) {
+		this.companyList = companyList;
+	}
+
+	public Long getShipperId() {
 		return shipperId;
 	}
 
-	public void setShipperId(int shipperId) {
+	public void setShipperId(Long shipperId) {
 		this.shipperId = shipperId;
+	}
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 
 	public String getCompany() {

@@ -10,4 +10,6 @@ public interface StatusService {
 
 	List<Status> getAll();
 
+	Status get(Long statusId);
+
 }

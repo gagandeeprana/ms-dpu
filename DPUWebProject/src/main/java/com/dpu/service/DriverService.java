@@ -12,13 +12,13 @@ import com.dpu.model.DriverReq;
 
 public interface DriverService {
 
-	boolean updateDriver(String driverCode, Driver driver);
+	Object updateDriver(Long driverId, DriverReq driverReq);
 	
 	List<DriverReq> getAllDriver();
 	
-	boolean deleteDriver(Integer driverId);
+	Object deleteDriver(Long driverId);
 
-	Driver getDriverByDriverCode(Integer driverId);
+	DriverReq getDriverByDriverCode(Long driverId);
 
 	DriverReq getOpenAdd();
 

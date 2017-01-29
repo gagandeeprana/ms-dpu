@@ -26,53 +26,52 @@ public class Terminal {
 	@Id
 	@Column(name = "terminal_id")
 	@GeneratedValue
-	@JsonProperty(value = "terminal_id")
-	private BigInteger terminalId;
+	//@JsonProperty(value = "terminal_id")
+	private Long terminalId;
 
 	@Column(name = "terminal_name")
-	@JsonProperty(value = "terminal_name")
+	//@JsonProperty(value = "terminal_name")
 	private String terminalName;
 
 	@Column(name = "facility")
-	@JsonProperty(value = "facility")
+	//@JsonProperty(value = "facility")
 	private String facility;
 
 	@Column(name = "location")
-	@JsonProperty(value = "location")
+	//@JsonProperty(value = "location")
 	private String location;
 	
 	@Column(name = "available_services")
-	@JsonProperty(value = "available_services")
+	//@JsonProperty(value = "available_services")
 	private String availableServices;
 
 	@Column(name = "created_by")
-	@JsonProperty(value = "created_by")
+	//@JsonProperty(value = "created_by")
 	private String createdBy;
 
 	@Column(name = "created_on")
-	@JsonProperty(value = "created_on")
+	//@JsonProperty(value = "created_on")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn;
 
 	@Column(name = "modified_by")
-	@JsonProperty(value = "modified_by")
+	//@JsonProperty(value = "modified_by")
 	private String modifiedBy;
 
 	@Column(name = "modified_on")
-	@JsonProperty(value = "modified_on")
+	//@JsonProperty(value = "modified_on")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedOn;
+		
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="status_id")
-	private StatusMasterData statusmaster;
-	
-	
-	public BigInteger getTerminalId() {
+	public Long getTerminalId() {
 		return terminalId;
 	}
 
-	public void setTerminalId(BigInteger terminalId) {
+	public void setTerminalId(Long terminalId) {
 		this.terminalId = terminalId;
 	}
 
@@ -120,6 +119,14 @@ public class Terminal {
 		return createdOn;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
@@ -140,13 +147,15 @@ public class Terminal {
 		this.modifiedOn = modifiedOn;
 	}
 
-	public StatusMasterData getStatusmaster() {
-		return statusmaster;
-	}
+//	public Status getStatusmaster() {
+//		return statusmaster;
+//	}
+//
+//	public void setStatusmaster(Status statusmaster) {
+//		this.statusmaster = statusmaster;
+//	}
 
-	public void setStatusmaster(StatusMasterData statusmaster) {
-		this.statusmaster = statusmaster;
-	}
+	
 	
 	
 }

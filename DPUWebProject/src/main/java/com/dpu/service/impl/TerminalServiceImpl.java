@@ -5,13 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dpu.dao.ServiceDao;
 import com.dpu.dao.TerminalDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
@@ -22,7 +18,6 @@ import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.StatusService;
 import com.dpu.service.TerminalService;
-import com.dpu.service.TypeService;
 
 @Component
 public class TerminalServiceImpl implements TerminalService {
@@ -79,14 +74,34 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public List<TerminalResponse> deleteTerminal(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<TerminalResponse> terminalResp = null;
+		
+		Terminal terminal= terminalDao.findById(id);
+		try {
+			if(terminal != null){
+				terminalDao.delete(terminal);
+			}
+			terminalResp = getAllTerminals();
+		} catch (Exception e) {
+			terminalResp = null;
+		}
+		return terminalResp;
 	}
 
 	@Override
 	public TerminalResponse getTerminal(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		TerminalResponse terminalResp = new TerminalResponse();
+		Terminal terminal = terminalDao.findById(id);
+		
+		if(terminal != null){
+			terminalResp.setTerminalId(terminal.getTerminalId());
+			terminalResp.setStatusId(terminal.getStatus().getId());
+			terminalResp.setTerminalName(terminal.getTerminalName());
+			terminalResp.setLocation(terminal.getLocation());
+			terminalResp.setFacility(terminal.getFacility());
+			
+		}		
+		return terminalResp;
 	}
 
 	@Override
@@ -98,8 +113,15 @@ public class TerminalServiceImpl implements TerminalService {
 	@Override
 	public List<TerminalResponse> updateTerminal(Long id,
 			TerminalResponse terminalResponse) {
-		// TODO Auto-generated method stub
-		return null;
+			Terminal terminal= terminalDao.findById(id);
+			terminal.setTerminalName(terminalResponse.getTerminalName());
+			Status status = statusService.get(terminalResponse.getStatusId());
+			terminal.setFacility(terminalResponse.getFacility());
+			terminal.setAvailableServices(terminalResponse.getAvailableServices());
+			terminal.setModifiedOn(new Date());
+			terminal.setStatus(status);
+			terminalDao.update(terminal);
+			return getAllTerminals();
 	}
 
 	@Override

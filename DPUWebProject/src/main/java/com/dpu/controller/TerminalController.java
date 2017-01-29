@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
+import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
 import com.dpu.model.TerminalResponse;
 import com.dpu.service.TerminalService;
@@ -49,7 +50,7 @@ public class TerminalController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 			logger.error(e);
-			logger.error("DivisionController : getAll " + e);
+			logger.error("TerminalController : getAll " + e);
 		}
 		logger.info("[getAllTerminals] :Exit");
 		return json;
@@ -78,74 +79,68 @@ public class TerminalController extends MessageProperties {
 		return obj;
 	}
 
-//	
-//
-//	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-//	public Object delete(@PathVariable("id") int id) {
-//		logger.info("[delete] : Enter : Id : "+id);
-//		Object obj = null;
-//		boolean result = false;
-//		
-//		try {
-//			
-//			Terminal terminal = terminalService.get(id);
-//			if(terminal != null) {
-//				result = terminalService.delete(terminal);
-//			}
-//			if(result) {
-//				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(terminalDeletedCode), terminalDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
-//			} else {
-//				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(terminalUnableToDeleteCode), terminalUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-//			}
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//		logger.info("[delete] : Exit");
-//		return obj;
-//	}
-//
-//	@RequestMapping(value = "/{terminalid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-//	public Object update(@PathVariable("terminalid") BigInteger id, @RequestBody Terminal terminal) {
-//		logger.info("[update] : Enter : Id : "+id);
-//		Object obj = null;
-//		Calendar cal = Calendar.getInstance();
-//		try {
-//			terminal.setTerminalId(id);
-////			terminal.setCreatedOn(cal.getTime());
-//			terminal.setModifiedOn(cal.getTime());
-//			Terminal response = terminalService.update(terminal);
-//			if(response != null) {
-//				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(terminalUpdateCode), terminalUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);
-//			} else {
-//				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(terminalUnableToUpdateCode), terminalUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-//			}
-//		} catch (Exception e) {	
-//			System.out.println(e);
-//		}
-//		logger.info("[update] : Exit");
-//		return obj;
-//	}
-//
-//	@RequestMapping(value = "/{terminalId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-//	public Object get(@PathVariable("terminalId") int id) {
-//		logger.info("[get] : Enter");
-//		String json = new String();
-//		try {
-//			Terminal terminal = terminalService.get(id);
-//			if(terminal != null) {
-//				TerminalResponse response = new TerminalResponse();
-//				BeanUtils.copyProperties(response, response);
-//			
-//			if(response != null) {
-//				json = mapper.writeValueAsString(response);
-//			}
-//			}
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//		logger.info("[get] : Exit");
-//		return json;
-//	}
+	
+
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("id") Long id) {
+		logger.info("[delete] : Enter : Id : "+id);
+		Object obj = null;
+		try {
+			List<TerminalResponse> terminalResponse = null;
+			terminalResponse = terminalService.deleteTerminal(id);
+		
+			if (terminalResponse != null) {
+				obj = terminalResponse;
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(terminalUnableToDeleteCode),
+						terminalUnableToDeleteMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[delete] : Exit:   ");
+		return obj;
+	}
+
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object update(@PathVariable("id") Long id,
+			@RequestBody TerminalResponse terminalRes) {
+		logger.info("[update] : Enter : Id : "+id);
+		Object obj = null;
+		try {
+			//service.setServiceId(id);
+			List<TerminalResponse> terminalResponse = terminalService.updateTerminal(id, terminalRes);
+			if (terminalResponse != null) {
+				obj = terminalResponse;
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(terminalUnableToUpdateCode),
+						terminalUnableToUpdateMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[update] : Exit");
+		return obj;
+	}
+
+	@RequestMapping(value = "/{terminalid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object get(@PathVariable("terminalid") Long id) {
+		logger.info("[get] : Enter : Id : "+id);
+		String json = null;
+		try {
+			TerminalResponse terminalResponse = terminalService.getTerminal(id);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(terminalResponse);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[get] : Exit " );
+		return json;
+	}
 
 
 }

@@ -52,7 +52,7 @@ public class DriverReq implements Serializable{
 	private Long terminalId;
 	private List<TerminalResponse> terminalList;
 
-	private String catogoryName;
+	private String categoryName;
 	private Long categoryId;
 	private List<CategoryReq> categoryList;
 	 
@@ -264,12 +264,12 @@ public class DriverReq implements Serializable{
 		this.terminalId = terminalId;
 	}
 
-	public String getCatogoryName() {
-		return catogoryName;
+	public String getCategoryName() {
+		return categoryName;
 	}
 
-	public void setCatogoryName(String catogoryName) {
-		this.catogoryName = catogoryName;
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public Long getCategoryId() {

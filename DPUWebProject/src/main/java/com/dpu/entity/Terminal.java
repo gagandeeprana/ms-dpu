@@ -26,7 +26,11 @@ public class Terminal {
 	@Id
 	@Column(name = "terminal_id")
 	@GeneratedValue
+
 	//@JsonProperty(value = "terminal_id")
+
+	@JsonProperty(value = "terminal_id")
+
 	private Long terminalId;
 
 	@Column(name = "terminal_name")
@@ -44,6 +48,7 @@ public class Terminal {
 	@Column(name = "available_services")
 	//@JsonProperty(value = "available_services")
 	private String availableServices;
+
 
 	@Column(name = "created_by")
 	//@JsonProperty(value = "created_by")
@@ -67,6 +72,7 @@ public class Terminal {
 	@JoinColumn(name = "status_id")
 	private Status status;
 	
+
 	public Long getTerminalId() {
 		return terminalId;
 	}

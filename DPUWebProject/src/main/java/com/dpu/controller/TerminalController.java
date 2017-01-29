@@ -77,6 +77,7 @@ public class TerminalController extends MessageProperties {
 		logger.info("[addTerminal] : Exit");
 		return obj;
 	}
+
 //	
 //
 //	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
@@ -145,5 +146,6 @@ public class TerminalController extends MessageProperties {
 //		logger.info("[get] : Exit");
 //		return json;
 //	}
+
 
 }

@@ -19,7 +19,7 @@ public class Terminal {
 	@Column(name = "terminal_id")
 	@GeneratedValue
 	@JsonProperty(value = "terminal_id")
-	private int terminalId;
+	private Long terminalId;
 
 	@Column(name = "terminal_name")
 	@JsonProperty(value = "terminal_name")
@@ -37,11 +37,13 @@ public class Terminal {
 	@JsonProperty(value = "available_services")
 	private String availableServices;
 
-	public int getTerminalId() {
+	
+
+	public Long getTerminalId() {
 		return terminalId;
 	}
 
-	public void setTerminalId(int terminalId) {
+	public void setTerminalId(Long terminalId) {
 		this.terminalId = terminalId;
 	}
 

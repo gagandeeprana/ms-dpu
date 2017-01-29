@@ -36,26 +36,39 @@ public class TruckDaoImpl extends GenericDaoImpl<Truck> implements TruckDao {
 		try {
 
 			truck = setTruckValues(truckResponse);
-
+//			System.out.println("[1] " + truck.getFinance() + " "
+//					+ truck.getoOName() + " " + truck.getOwner() + " "
+//					+ truck.getTruckType() + " " + truck.getUsage() + " "
+//					+ truck.getTruckId() + " " + truck.getUnitNo() + " catId "
+//					+ truck.getCategory().getCategoryId() + " divId  " + truck.getDivision().getDivisionId() + " stId "
+//					+ truck.getStatus().getId() + " termId  " + truck.getTerminal().getTerminalId());
 			Status status = (Status) session.get(Status.class,
 					truckResponse.getStatusId());
 			truck.setStatus(status);
+			System.out.println("[2] ");
 
 			Division division = (Division) session.get(Division.class,
 					truckResponse.getDivisionId());
 			truck.setDivision(division);
-
+			System.out.println("[3] ");
 			Category category = (Category) session.get(Category.class,
 					truckResponse.getCategoryId());
 			truck.setCategory(category);
-
+			System.out.println("[4] ");
 			Terminal terminal = (Terminal) session.get(Terminal.class,
 					truckResponse.getTerminalId());
 			truck.setTerminal(terminal);
-
+			System.out.println("[5] ");
 			Long truckId = (Long) session.save(truck);
-
+			System.out.println("new tId  " + truckId);
 			truck.setTruckId(truckId);
+//			System.out.println(truck.getFinance() + " " + truck.getoOName()
+//					+ " " + truck.getOwner() + " " + truck.getTruckType() + " "
+//					+ truck.getUsage() + " " + truck.getTruckId() + " "
+//					+ truck.getUnitNo() + " " + truck.getCategory() + " "
+//					+ truck.getDivision() + " " + truck.getStatus() + " "
+//					+ truck.getTerminal());
+
 		} catch (Exception e) {
 			logger.fatal("TruckDaoImpl: add(): Exception: " + e.getMessage());
 		}

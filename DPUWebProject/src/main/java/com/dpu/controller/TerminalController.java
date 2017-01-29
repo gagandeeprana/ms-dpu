@@ -169,7 +169,7 @@ public class TerminalController {
 	}
 
 	@RequestMapping(value = "/{terminalid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("terminalid") int id, @RequestBody Terminal terminal) {
+	public Object update(@PathVariable("terminalid") Long id, @RequestBody Terminal terminal) {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {

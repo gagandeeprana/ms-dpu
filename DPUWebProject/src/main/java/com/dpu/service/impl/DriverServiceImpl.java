@@ -298,8 +298,10 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public List<DriverReq> getDriverByDriverCodeOrName(String driverCodeOrName) {
 		
+		List<DriverReq> driverReqList = new ArrayList<DriverReq>();
 		List<Driver> driverList = driverDao.searchDriverByDriverCodeOrName(driverCodeOrName);
-		return null;
+		driverReqList = setDriverData(driverList);
+		return driverReqList;
 	}
 
 

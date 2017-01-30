@@ -28,10 +28,10 @@ public class DriverDaoImpl extends GenericDaoImpl<Driver> implements DriverDao {
 		try{
 			session = sessionFactory.openSession();
 			StringBuilder sb = new StringBuilder("");
-			sb.append(" select d from Driver d where d.driverCode =:driverCodeOrName or d.firstName =:driverCodeOrName or d.lastName =:driverCodeOrName ");
+			sb.append(" select d from Driver d where d.driverCode like :driverCodeOrName or d.firstName like :driverCodeOrName or d.lastName like :driverCodeOrName ");
 			
 			Query query = session.createQuery(sb.toString());
-			query.setParameter("driverCodeOrName", driverCodeOrName);
+			query.setParameter("driverCodeOrName", "%"+driverCodeOrName+"%");
 			driverList = query.list();
 			
 		} catch(Exception e){

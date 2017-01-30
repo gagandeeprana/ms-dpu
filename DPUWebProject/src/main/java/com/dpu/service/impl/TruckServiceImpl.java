@@ -18,11 +18,9 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.TruckDao;
 import com.dpu.entity.Division;
 import com.dpu.entity.Driver;
-import com.dpu.entity.Equipment;
 import com.dpu.entity.Truck;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
-import com.dpu.model.EquipmentReq;
 import com.dpu.model.TruckResponse;
 import com.dpu.service.TruckService;
 
@@ -45,17 +43,7 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public List<TruckResponse> delete(Long id) {
-		logger.info("[TruckServiceImpl] [delete] : Enter ");
-		Truck truck = truckDao.findById(id);
-		if (truck != null) {
-			try {
-				truckDao.delete(truck);
-				return getAllTrucks("");
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		}
-		logger.info("[TruckServiceImpl] [delete" + "] : Exit ");
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -77,6 +65,7 @@ public class TruckServiceImpl implements TruckService {
 						MatchMode.ANYWHERE);
 				lstTruck = truckDao.find(criterion);
 			} else {
+				System.out.println(">>>>>>>>>>>>>>>>>>");
 				lstTruck = truckDao.findAll();
 			}
 			if (lstTruck != null && lstTruck.size() > 0) {
@@ -258,5 +247,8 @@ public class TruckServiceImpl implements TruckService {
 	 * 
 	 * public boolean isTruckExist(){ boolean isExist = false; return isExist; }
 	 */
+	public static void main(String args[]) {
+		System.out.println(new Date());
+	}
 
 }

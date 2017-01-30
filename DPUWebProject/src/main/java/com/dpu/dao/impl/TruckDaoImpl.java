@@ -36,6 +36,7 @@ public class TruckDaoImpl extends GenericDaoImpl<Truck> implements TruckDao {
 		try {
 
 			truck = setTruckValues(truckResponse);
+
 			Status status = (Status) session.get(Status.class,
 					truckResponse.getStatusId());
 			truck.setStatus(status);
@@ -55,7 +56,6 @@ public class TruckDaoImpl extends GenericDaoImpl<Truck> implements TruckDao {
 			Long truckId = (Long) session.save(truck);
 
 			truck.setTruckId(truckId);
-
 		} catch (Exception e) {
 			logger.fatal("TruckDaoImpl: add(): Exception: " + e.getMessage());
 		}

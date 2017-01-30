@@ -317,4 +317,43 @@ public class MessageProperties {
 
 	@Value("${Truck_unable_to_update_message}")
 	public String truckUnableToUpdateMessage;
+	
+	//Terminal Module Messages
+	
+	@Value("${terminal_added_code}")
+	public String terminalAddedCode;
+
+	@Value("${terminal_added_message}")
+	public String terminalAddedMessage;
+
+	@Value("${terminal_unable_to_add_code}")
+	public String terminalUnableToAddCode;
+	
+	@Value("${terminal_unable_to_add_message}")
+	public String terminalUnableToAddMessage;
+
+	@Value("${terminal_deleted_code}")
+	public String terminalDeletedCode;
+
+	@Value("${terminal_deleted_message}")
+	public String terminalDeletedMessage;
+
+	@Value("${terminal_unable_to_delete_code}")
+	public String terminalUnableToDeleteCode;
+
+	@Value("${terminal_unable_to_delete_message}")
+	public String terminalUnableToDeleteMessage;
+
+	@Value("${terminal_updated_code}")
+	public String terminalUpdateCode;
+
+	@Value("${terminal_updated_message}")
+	public String terminalUpdateMessage;
+
+	@Value("${terminal_unable_to_update_code}")
+	public String terminalUnableToUpdateCode;
+
+	@Value("${terminal_unable_to_update_message}")
+	public String terminalUnableToUpdateMessage;
+	
 }

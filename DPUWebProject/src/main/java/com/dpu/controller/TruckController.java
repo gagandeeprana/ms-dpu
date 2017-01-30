@@ -22,7 +22,6 @@ import com.dpu.entity.Company;
 import com.dpu.entity.Truck;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.DivisionReq;
-import com.dpu.model.EquipmentReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TruckResponse;
@@ -87,33 +86,6 @@ public class TruckController extends MessageProperties {
 		return obj;
 	}
 
-	// delete Truck
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object deleteTruck(@PathVariable("id") Long id) {
-		logger.info("[TruckController] [deleteTruck] : Enter");
-		logger.info("[deleteTruck] : controller : Enter : driverCode " + id);
-		Object obj = null;
-		try {
-			List<TruckResponse> response = truckService.delete(id);
-			if (response != null) {
-				if (response != null && response.size() > 0) {
-					obj = mapper.writeValueAsString(response);
-				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(equipmentUnableToDeleteCode),
-						equipmentUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-			logger.error("TruckController : deleteTruck " + e);
-		}
-		logger.info("[TruckController]: deleteTruck(): ENDS");
-		return obj;
-
-	}
-
 	// private Truck setTruckValues(TruckResponse truckResponse) {
 	// Truck truck = new Truck();
 	// truck.setUnitNo(truckResponse.getUnitNo());
@@ -129,7 +101,36 @@ public class TruckController extends MessageProperties {
 	// return truck;
 	// }
 	//
-
+	// // delete Truck
+	// @RequestMapping(value = "/{id}", produces =
+	// MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	// public Object deleteTruck(@PathVariable("id") Long id) {
+	// logger.info("[deleteTruck] : controller : Enter : driverCode "
+	// + id);
+	// Object obj = null;
+	// try {
+	// boolean result = truckService.deleteTruck(id);
+	//
+	// if(result) {
+	// obj = new ResponseEntity<Object>(new
+	// Success(Integer.parseInt(CommonProperties.Truck_deleted_code),
+	// CommonProperties.Truck_deleted_message, Iconstants.SUCCESS),
+	// HttpStatus.OK);
+	// } else {
+	// obj = new ResponseEntity<Object>(new
+	// Failed(Integer.parseInt(CommonProperties.Truck_unable_to_delete_code),
+	// CommonProperties.Truck_unable_to_delete_message, Iconstants.ERROR),
+	// HttpStatus.BAD_REQUEST);
+	// }
+	// } catch (Exception e) {
+	// logger.error("[deleteTruck] : controller : Exception" + e);
+	// obj = new ResponseEntity<Object>(new
+	// Failed(Integer.parseInt(CommonProperties.Truck_unable_to_delete_code),
+	// CommonProperties.Truck_unable_to_delete_message, Iconstants.ERROR),
+	// HttpStatus.BAD_REQUEST);
+	// }
+	// return obj;
+	// }
 	//
 	// // Update Truck
 	// @RequestMapping(value = "/{id}", produces =

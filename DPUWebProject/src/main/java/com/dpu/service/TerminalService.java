@@ -3,17 +3,24 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Terminal;
+import com.dpu.model.DPUService;
+import com.dpu.model.TerminalResponse;
 
 public interface TerminalService {
 
-	Terminal add(Terminal terminal);
 	
-	Terminal update(Terminal terminal);
-	
-	boolean delete(Terminal terminal);
-	
-	List<Terminal> getAll();
-	
-	Terminal get(int id);
+	List<TerminalResponse> addTerminal(TerminalResponse terminalResponse);
+
+	List<TerminalResponse> deleteTerminal(Long id);
+
+	List<TerminalResponse> getAllTerminals();
+
+	TerminalResponse getTerminal(Long id);
+
+	TerminalResponse getOpenAdd();
+
+	List<TerminalResponse> updateTerminal(Long id, TerminalResponse terminalResponse);
+
+	List<TerminalResponse> getTerminalByTerminalName(String serviceName);
 	
 }

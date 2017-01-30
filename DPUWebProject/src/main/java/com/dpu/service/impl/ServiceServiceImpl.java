@@ -155,11 +155,11 @@ public class ServiceServiceImpl implements ServiceService {
 	public List<DPUService> getServiceByServiceName(String serviceName) {
 		
 		List<Service> serviceList = null;
+		List<DPUService> servicesList = new ArrayList<DPUService>();
 		if(serviceName != null && serviceName.length() > 0) {
 			Criterion criterion = Restrictions.like("serviceName", serviceName, MatchMode.ANYWHERE);
 			serviceList = serviceDao.find(criterion);
 		}
-		List<DPUService> servicesList = new ArrayList<DPUService>();
 		
 		if(serviceList != null && !serviceList.isEmpty()){
 			for (Service service : serviceList) {

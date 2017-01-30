@@ -86,6 +86,22 @@ public class TruckController extends MessageProperties {
 		return obj;
 	}
 
+	// get Truck by Id
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getTruckById(@PathVariable("id") Long id) {
+		logger.info("[TruckController] [getTruckById] : getTruckById");
+
+		String json = null;
+		try {
+			TruckResponse truckResponse = truckService.get(id);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(truckResponse);
+		} catch (Exception e) {
+			logger.error("[getTruckById]:" + e);
+		}
+		return json;
+	}
+
 	// private Truck setTruckValues(TruckResponse truckResponse) {
 	// Truck truck = new Truck();
 	// truck.setUnitNo(truckResponse.getUnitNo());
@@ -132,57 +148,28 @@ public class TruckController extends MessageProperties {
 	// return obj;
 	// }
 	//
-	// // Update Truck
-	// @RequestMapping(value = "/{id}", produces =
-	// MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	// public Object updateTruck(@PathVariable("id") Long id, @RequestBody Truck
-	// truck) {
-	//
-	// logger.info("[updateTruck]:Enter Controller: driverCode : "+ id);
-	// Object obj = null;
-	// try {
-	// truck.setTruckId(id);
-	// boolean result = truckService.updateTruck(id, truck);
-	//
-	// if(result) {
-	// obj = new ResponseEntity<Object>(new
-	// Success(Integer.parseInt(CommonProperties.Truck_updated_code),
-	// CommonProperties.Truck_updated_message, Iconstants.SUCCESS),
-	// HttpStatus.OK);
-	// } else {
-	// obj = new ResponseEntity<Object>(new
-	// Failed(Integer.parseInt(CommonProperties.Truck_unable_to_update_code),
-	// CommonProperties.Truck_unable_to_update_message, Iconstants.ERROR),
-	// HttpStatus.BAD_REQUEST);
-	// }
-	// } catch (Exception e) {
-	// logger.error("[updateTruck]: Exception "+e);
-	// obj = new ResponseEntity<Object>(new
-	// Failed(Integer.parseInt(CommonProperties.Truck_unable_to_update_code),
-	// CommonProperties.Truck_unable_to_update_message, Iconstants.ERROR),
-	// HttpStatus.BAD_REQUEST);
-	// }
-	// return obj;
-	// }
-	//
-	// // get Truck by Id
-	// @RequestMapping(value = "/{id}", produces =
-	// MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	// public Object getTruckById(@PathVariable("id") Long id) {
-	// logger.info("[getTruckById] : Controller : Enter");
-	// String json = null;
-	// try {
-	// Truck truck = truckService.getTruckById(id);
-	// ObjectMapper mapper = new ObjectMapper();
-	// TruckResponse response = new TruckResponse();
-	// BeanUtils.copyProperties(response, truck);
-	//
-	// if(response != null) {
-	// json = mapper.writeValueAsString(response);
-	// }
-	// } catch (Exception e) {
-	// logger.error("[getTruckById]:" + e);
-	// }
-	// return json;
-	// }
+	// Update Truck
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateTruck(@PathVariable("id") Long id,
+			@RequestBody TruckResponse truckResponse) {
+
+		logger.info("[TruckController] [updateTruck] : Enter");
+		String json = null;
+		try {
+			truckResponse.setTruckId(id);
+			List<TruckResponse> lstResponses = truckService.update(id,
+					truckResponse);
+			if (lstResponses != null) {
+				if (lstResponses != null && lstResponses.size() > 0) {
+					json = mapper.writeValueAsString(lstResponses);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			logger.error("EquipmentController : update " + e);
+		}
+		logger.info("[TruckController] [update] :Exit   ");
+		return json;
+	}
+
 }

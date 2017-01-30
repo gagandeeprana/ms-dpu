@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Driver;
+import com.dpu.model.DPUService;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -131,7 +132,7 @@ public class DriverController extends MessageProperties  {
 			Object result = driverService.updateDriver(driverId, driverReq);
 
 			if(result instanceof List<?>) {
-				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(CommonProperties.Driver_updated_code), CommonProperties.Driver_updated_message, Iconstants.SUCCESS), HttpStatus.OK);
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_update_code), CommonProperties.Driver_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
@@ -174,6 +175,23 @@ public class DriverController extends MessageProperties  {
 			System.out.println(e);
 		}
 		logger.info(" Inside driverController openAdd() Ends ");
+		return json;
+	}
+	
+	@RequestMapping(value = "/{driverCodeOrName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchDriver(@PathVariable("driverCodeOrName") String driverCodeOrName) {
+		logger.info("Inside driverController searchDriver() Starts, driverCodeOrName :"+driverCodeOrName);
+		String json = new String();
+		try {
+			List<DriverReq> serviceList = driverService.getDriverByDriverCodeOrName(driverCodeOrName);
+			if(serviceList != null && serviceList.size() > 0) {
+				json = mapper.writeValueAsString(serviceList);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Exception inside ServiceController searchService() is :" + e);
+		}
+		logger.info(" Inside ServiceController searchService() Starts, serviceName :"+driverCodeOrName);
 		return json;
 	}
 }

@@ -50,7 +50,6 @@ public class DivisionServiceImpl implements DivisionService {
 		logger.info("[DivisionServiceImpl] [update] : Srvice: Enter");
 		Division division = divisionDao.findById(id);
 		if (division != null) {
-			logger.info("[DivisionServiceImpl] [update] : 1111111111111111111");
 			division.setDivisionCode(divisionReq.getDivisionCode());
 			division.setDivisionName(divisionReq.getDivisionName());
 			division.setFedral(divisionReq.getFedral());
@@ -59,18 +58,13 @@ public class DivisionServiceImpl implements DivisionService {
 			division.setCarrierCode(divisionReq.getCarrierCode());
 			division.setContractPrefix(divisionReq.getContractPrefix());
 			division.setInvoicePrefix(divisionReq.getInvoicePrefix());
-			logger.info("[DivisionServiceImpl] [update] : 22222222222222");
 			Status status = statusService.get(divisionReq.getStatusId());
 			division.setStatus(status);
-			logger.info("[DivisionServiceImpl] [update] : 333333333");
 			division.setModifiedBy("jagvir");
 			division.setModifiedOn(new Date());
-			logger.info("[DivisionServiceImpl] [update] : 4444444444");
 			divisionDao.update(division);
-			logger.info("[DivisionServiceImpl] [update]: Division updated Successfully.");
 			return getAll("");
 		} else {
-			logger.info("[DivisionServiceImpl] [update] : 55555555");
 			return null;
 		}
 	}
@@ -94,7 +88,7 @@ public class DivisionServiceImpl implements DivisionService {
 	public DivisionReq get(Long id) {
 		Division division = divisionDao.findById(id);
 		DivisionReq response = null;
-		if(division != null) {
+		if (division != null) {
 			response = new DivisionReq();
 			response.setDivisionId(division.getDivisionId());
 			response.setDivisionCode(division.getDivisionCode());
@@ -105,15 +99,15 @@ public class DivisionServiceImpl implements DivisionService {
 			response.setCarrierCode(division.getCarrierCode());
 			response.setContractPrefix(division.getContractPrefix());
 			response.setInvoicePrefix(division.getInvoicePrefix());
-			
+
 			List<Status> statusList = statusService.getAll();
-			
-			if(statusList != null && !statusList.isEmpty()){
+
+			if (statusList != null && !statusList.isEmpty()) {
 				response.setStatusList(statusList);
 			}
-			
+
 		}
-		
+
 		return response;
 
 	}
@@ -128,11 +122,9 @@ public class DivisionServiceImpl implements DivisionService {
 					divisionName, MatchMode.ANYWHERE);
 			lstDivision = divisionDao.find(criterion);
 		} else {
-			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 			lstDivision = divisionDao.findAll();
 		}
 		if (lstDivision != null && lstDivision.size() > 0) {
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			for (Division division : lstDivision) {
 				DivisionReq divisionReq = new DivisionReq();
 				divisionReq.setDivisionCode(division.getDivisionCode());

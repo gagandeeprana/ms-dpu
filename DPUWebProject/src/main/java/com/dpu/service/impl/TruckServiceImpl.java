@@ -57,8 +57,25 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public List<TruckResponse> update(Long id, TruckResponse tuckResponse) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("[TruckServiceImpl] [update] : Enter ");
+		Truck truck = truckDao.findById(id);
+		if (truck != null) {
+			truck.setUnitNo(tuckResponse.getUnitNo());
+			truck.setOwner(tuckResponse.getOwner());
+			truck.setoOName(tuckResponse.getoOName());
+			truck.setCategory(categoryService.getCategory(tuckResponse
+					.getCategoryId()));
+			truck.setStatus(statusService.get(tuckResponse.getStatusId()));
+			truck.setUsage(tuckResponse.getTruchUsage());
+			truck.setTruckType(tuckResponse.getTruckType());
+			truck.setFinance(tuckResponse.getFinance());
+
+			truckDao.update(truck);
+			return getAllTrucks("");
+		} else {
+			logger.info("[TruckServiceImpl] [get] : Exit ");
+			return null;
+		}
 	}
 
 	@Override
@@ -97,7 +114,7 @@ public class TruckServiceImpl implements TruckService {
 
 			List<DivisionReq> lstDivision = divisionService.getAll("");
 			truckResponse.setDivisionList(lstDivision);
-						
+
 		}
 		logger.info("[TruckServiceImpl] [get] : Exit ");
 		return truckResponse;

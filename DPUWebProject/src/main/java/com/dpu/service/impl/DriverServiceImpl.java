@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.DriverDao;
+import com.dpu.dao.TerminalDao;
 import com.dpu.entity.Driver;
 import com.dpu.entity.Status;
 import com.dpu.model.CategoryReq;
@@ -60,6 +61,9 @@ public class DriverServiceImpl implements DriverService {
 	
 	@Autowired
 	DivisionDao divisionDao;
+	
+	@Autowired
+	TerminalDao terminalDao;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
@@ -76,7 +80,7 @@ public class DriverServiceImpl implements DriverService {
 				BeanUtils.copyProperties(driverReq, driver);
 				driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
 				driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
-				//driver.setTerminal(terminalService.get(driverReq.getTerminalId()));
+				driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
 				driver.setRole(typeService.get(driverReq.getRoleId()));
 				driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
 				driver.setStatus(statusService.get(driverReq.getStatusId()));
@@ -134,7 +138,7 @@ public class DriverServiceImpl implements DriverService {
 			BeanUtils.copyProperties(driverReq, driver,ignoreProp);
 			driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
 			driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
-			//driver.setTerminal(terminalService.get(driverReq.getTerminalId()));
+			driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
 			driver.setRole(typeService.get(driverReq.getRoleId()));
 			driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
 			driver.setStatus(statusService.get(driverReq.getStatusId()));
@@ -199,7 +203,7 @@ public class DriverServiceImpl implements DriverService {
 				DriverReq driverReq = new DriverReq();
 				BeanUtils.copyProperties(driver, driverReq);
 				driverReq.setCategoryName(driver.getCategory().getName());
-				//driverReq.setTerminalName(driver.getTerminal().getTerminalName());
+				driverReq.setTerminalName(driver.getTerminal().getTerminalName());
 				driverReq.setStatusName(driver.getStatus().getStatus());
 				driverReq.setDivisionName(driver.getDivision().getDivisionName());
 				driverReq.setDriverClassName(driver.getDriverClass().getTypeName());

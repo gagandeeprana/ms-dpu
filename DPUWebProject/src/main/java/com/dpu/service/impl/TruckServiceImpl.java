@@ -16,12 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.TruckDao;
+import com.dpu.entity.Category;
 import com.dpu.entity.Division;
 import com.dpu.entity.Driver;
+import com.dpu.entity.Status;
 import com.dpu.entity.Truck;
+import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
+import com.dpu.model.TerminalResponse;
 import com.dpu.model.TruckResponse;
+import com.dpu.service.CategoryService;
+import com.dpu.service.DivisionService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TerminalService;
 import com.dpu.service.TruckService;
 
 @Component
@@ -31,7 +39,19 @@ public class TruckServiceImpl implements TruckService {
 	TruckDao truckDao;
 
 	@Autowired
+	StatusService statusService;
+
+	@Autowired
 	SessionFactory sessionFactory;
+
+	@Autowired
+	CategoryService categoryService;
+
+	@Autowired
+	DivisionService divisionService;
+
+	@Autowired
+	TerminalService terminalService;
 
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
@@ -49,8 +69,38 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public TruckResponse get(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("[TruckServiceImpl] [get] : Enter ");
+		Truck truck = truckDao.findById(id);
+		TruckResponse truckResponse = new TruckResponse();
+		if (truck != null) {
+			BeanUtils.copyProperties(truck, truckResponse);
+			truckResponse.setUnitNo(truck.getUnitNo());
+			truckResponse.setOwner(truck.getOwner());
+			truckResponse.setoOName(truck.getoOName());
+			truckResponse.setStatusName(truck.getStatus().getStatus());
+			truckResponse.setTruchUsage(truck.getUsage());
+			truckResponse.setDivisionId(truck.getDivision().getDivisionId());
+			truckResponse.setCategoryId(truck.getCategory().getCategoryId());
+			truckResponse.setTerminalId(truck.getTerminal().getTerminalId());
+			truckResponse.setTruckType(truck.getTruckType());
+			truckResponse.setFinance(truck.getFinance());
+
+			List<Status> lstStatus = statusService.getAll();
+			truckResponse.setStatusList(lstStatus);
+
+			List<CategoryReq> lstCategories = categoryService.getAll();
+			truckResponse.setCategoryList(lstCategories);
+
+			List<TerminalResponse> lstTerminalResponses = terminalService
+					.getAllTerminals();
+			truckResponse.setTerminalList(lstTerminalResponses);
+
+			List<DivisionReq> lstDivision = divisionService.getAll("");
+			truckResponse.setDivisionList(lstDivision);
+						
+		}
+		logger.info("[TruckServiceImpl] [get] : Exit ");
+		return truckResponse;
 	}
 
 	@Override

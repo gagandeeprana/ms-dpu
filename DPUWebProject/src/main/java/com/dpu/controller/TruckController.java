@@ -86,6 +86,21 @@ public class TruckController extends MessageProperties {
 		return obj;
 	}
 
+	// get Truck by Id
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getTruckById(@PathVariable("id") Long id) {
+		logger.info("[getTruckById] : Controller : Enter");
+		String json = null;
+		try {
+			TruckResponse truckResponse = truckService.get(id);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(truckResponse);
+		} catch (Exception e) {
+			logger.error("[getTruckById]:" + e);
+		}
+		return json;
+	}
+
 	// private Truck setTruckValues(TruckResponse truckResponse) {
 	// Truck truck = new Truck();
 	// truck.setUnitNo(truckResponse.getUnitNo());
@@ -165,24 +180,4 @@ public class TruckController extends MessageProperties {
 	// return obj;
 	// }
 	//
-	// // get Truck by Id
-	// @RequestMapping(value = "/{id}", produces =
-	// MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	// public Object getTruckById(@PathVariable("id") Long id) {
-	// logger.info("[getTruckById] : Controller : Enter");
-	// String json = null;
-	// try {
-	// Truck truck = truckService.getTruckById(id);
-	// ObjectMapper mapper = new ObjectMapper();
-	// TruckResponse response = new TruckResponse();
-	// BeanUtils.copyProperties(response, truck);
-	//
-	// if(response != null) {
-	// json = mapper.writeValueAsString(response);
-	// }
-	// } catch (Exception e) {
-	// logger.error("[getTruckById]:" + e);
-	// }
-	// return json;
-	// }
 }

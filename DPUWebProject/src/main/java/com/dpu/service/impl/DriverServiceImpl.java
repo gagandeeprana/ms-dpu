@@ -20,6 +20,7 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
+import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.DivisionService;
@@ -245,10 +246,9 @@ public class DriverServiceImpl implements DriverService {
 			List<DivisionReq> divisionList = divisionService.getAll("");
 			response.setDivisionList(divisionList);
 			
+			List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+			response.setTerminalList(terminalList);
 			
-			/*Driver driver = listOfDriver.get(0);
-			logger.info("[getDriverByDriverCode]:  Driver details got succesfully. ");
-			return driver;*/
 		}
 		return response;
 	}
@@ -289,7 +289,8 @@ public class DriverServiceImpl implements DriverService {
 		List<DivisionReq> divisionList = divisionService.getAll("");
 		driver.setDivisionList(divisionList);
 		
-		//List<TerminalResponse> terminalList = terminalService.getAll();
+		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		driver.setTerminalList(terminalList);
 		
 		
 		return driver;

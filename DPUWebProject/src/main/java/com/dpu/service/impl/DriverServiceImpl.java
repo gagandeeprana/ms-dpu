@@ -122,26 +122,27 @@ public class DriverServiceImpl implements DriverService {
 
 	@Override
 	public Object updateDriver(Long driverId, DriverReq driverReq) {
-		logger.info("[updateDriver] : Srvice: Enter");
-		/*Criterion getDriverByDriverCode = Restrictions.eq("driverCode",
-				driverCode);*/
 		
+		logger.info("[updateDriver] : Srvice: Enter");
 		Driver driver = driverDao.findById(driverId);
-		//List<Driver> listofDriver = driverDao.find(getDriverByDriverCode);
-
+		List<DriverReq> driverList = new ArrayList<DriverReq>();
+		
 		if (driver != null) {
-			/*Driver driverEntity = listofDriver.get(0);
-
-			driverEntity.setFirstName(driver.getFirstName());
-			driverEntity.setLastName(driver.getLastName());*/
-
-			// update Driver
+			String[] ignoreProp = new String[1];
+			ignoreProp[0] = "driverId";
+			BeanUtils.copyProperties(driverReq, driver,ignoreProp);
+			driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
+			driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
+			//driver.setTerminal(terminalService.get(driverReq.getTerminalId()));
+			driver.setRole(typeService.get(driverReq.getRoleId()));
+			driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
+			driver.setStatus(statusService.get(driverReq.getStatusId()));
 			driverDao.update(driver);
 			logger.info("[updateDriver]: Driver updated Successfully.");
-			return true;
+			driverList = getAllDriver();
 		}
 
-		return false;
+		return driverList;
 	}
 
 	@Override
@@ -292,6 +293,13 @@ public class DriverServiceImpl implements DriverService {
 		
 		
 		return driver;
+	}
+
+	@Override
+	public List<DriverReq> getDriverByDriverCodeOrName(String driverCodeOrName) {
+		
+		List<Driver> driverList = driverDao.searchDriverByDriverCodeOrName(driverCodeOrName);
+		return null;
 	}
 
 

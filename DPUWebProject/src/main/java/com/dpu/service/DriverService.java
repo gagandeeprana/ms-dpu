@@ -23,6 +23,8 @@ public interface DriverService {
 	DriverReq getOpenAdd();
 
 	Object addDriver(DriverReq driverReq);
+
+	List<DriverReq> getDriverByDriverCodeOrName(String driverCodeOrName);
 	
 }
 

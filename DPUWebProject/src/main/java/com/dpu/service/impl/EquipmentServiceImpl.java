@@ -57,6 +57,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
 			Equipment equipment = equipmentDao.add(session, equipmentReq);
+			if(tx != null) {
+				tx.commit();
+			}
 			equipmentList = getAll("");
 		} catch (Exception e) {
 			logger.fatal("EquipmentServiceImpl: add(): Exception: " + e.getMessage());
@@ -65,9 +68,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 			}
 		} finally {
 			logger.info("EquipmentServiceImpl: add():  finally block");
-			if(tx != null) {
-				tx.commit();
-			}
 			if(session != null) {
 				session.close();
 			}

@@ -14,12 +14,14 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.DriverDao;
+import com.dpu.dao.TerminalDao;
 import com.dpu.entity.Driver;
 import com.dpu.entity.Status;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
+import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.DivisionService;
@@ -59,6 +61,9 @@ public class DriverServiceImpl implements DriverService {
 	
 	@Autowired
 	DivisionDao divisionDao;
+	
+	@Autowired
+	TerminalDao terminalDao;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
@@ -75,7 +80,7 @@ public class DriverServiceImpl implements DriverService {
 				BeanUtils.copyProperties(driverReq, driver);
 				driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
 				driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
-				//driver.setTerminal(terminalService.get(driverReq.getTerminalId()));
+				driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
 				driver.setRole(typeService.get(driverReq.getRoleId()));
 				driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
 				driver.setStatus(statusService.get(driverReq.getStatusId()));
@@ -122,26 +127,27 @@ public class DriverServiceImpl implements DriverService {
 
 	@Override
 	public Object updateDriver(Long driverId, DriverReq driverReq) {
-		logger.info("[updateDriver] : Srvice: Enter");
-		/*Criterion getDriverByDriverCode = Restrictions.eq("driverCode",
-				driverCode);*/
 		
+		logger.info("[updateDriver] : Srvice: Enter");
 		Driver driver = driverDao.findById(driverId);
-		//List<Driver> listofDriver = driverDao.find(getDriverByDriverCode);
-
+		List<DriverReq> driverList = new ArrayList<DriverReq>();
+		
 		if (driver != null) {
-			/*Driver driverEntity = listofDriver.get(0);
-
-			driverEntity.setFirstName(driver.getFirstName());
-			driverEntity.setLastName(driver.getLastName());*/
-
-			// update Driver
+			String[] ignoreProp = new String[1];
+			ignoreProp[0] = "driverId";
+			BeanUtils.copyProperties(driverReq, driver,ignoreProp);
+			driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
+			driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
+			driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
+			driver.setRole(typeService.get(driverReq.getRoleId()));
+			driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
+			driver.setStatus(statusService.get(driverReq.getStatusId()));
 			driverDao.update(driver);
 			logger.info("[updateDriver]: Driver updated Successfully.");
-			return true;
+			driverList = getAllDriver();
 		}
 
-		return false;
+		return driverList;
 	}
 
 	@Override
@@ -197,7 +203,7 @@ public class DriverServiceImpl implements DriverService {
 				DriverReq driverReq = new DriverReq();
 				BeanUtils.copyProperties(driver, driverReq);
 				driverReq.setCategoryName(driver.getCategory().getName());
-				//driverReq.setTerminalName(driver.getTerminal().getTerminalName());
+				driverReq.setTerminalName(driver.getTerminal().getTerminalName());
 				driverReq.setStatusName(driver.getStatus().getStatus());
 				driverReq.setDivisionName(driver.getDivision().getDivisionName());
 				driverReq.setDriverClassName(driver.getDriverClass().getTypeName());
@@ -244,10 +250,9 @@ public class DriverServiceImpl implements DriverService {
 			List<DivisionReq> divisionList = divisionService.getAll("");
 			response.setDivisionList(divisionList);
 			
+			List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+			response.setTerminalList(terminalList);
 			
-			/*Driver driver = listOfDriver.get(0);
-			logger.info("[getDriverByDriverCode]:  Driver details got succesfully. ");
-			return driver;*/
 		}
 		return response;
 	}
@@ -288,10 +293,20 @@ public class DriverServiceImpl implements DriverService {
 		List<DivisionReq> divisionList = divisionService.getAll("");
 		driver.setDivisionList(divisionList);
 		
-		//List<TerminalResponse> terminalList = terminalService.getAll();
+		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		driver.setTerminalList(terminalList);
 		
 		
 		return driver;
+	}
+
+	@Override
+	public List<DriverReq> getDriverByDriverCodeOrName(String driverCodeOrName) {
+		
+		List<DriverReq> driverReqList = new ArrayList<DriverReq>();
+		List<Driver> driverList = driverDao.searchDriverByDriverCodeOrName(driverCodeOrName);
+		driverReqList = setDriverData(driverList);
+		return driverReqList;
 	}
 
 

@@ -28,7 +28,7 @@ public class DivisionReq {
 
 	private String provincial;
 
-	private String SCAC;
+	private String scac;
 
 	private String carrierCode;
 
@@ -129,12 +129,12 @@ public class DivisionReq {
 		this.provincial = provincial;
 	}
 
-	public String getSCAC() {
-		return SCAC;
+	public String getScac() {
+		return scac;
 	}
 
-	public void setSCAC(String sCAC) {
-		SCAC = sCAC;
+	public void setScac(String scac) {
+		this.scac = scac;
 	}
 
 	public String getCarrierCode() {

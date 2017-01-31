@@ -99,6 +99,7 @@ public class DivisionServiceImpl implements DivisionService {
 			response.setCarrierCode(division.getCarrierCode());
 			response.setContractPrefix(division.getContractPrefix());
 			response.setInvoicePrefix(division.getInvoicePrefix());
+			response.setStatusId(division.getStatus().getId());
 
 			List<Status> statusList = statusService.getAll();
 

@@ -158,4 +158,19 @@ public class TerminalController extends MessageProperties {
 		logger.info(" Inside TerminalController terminalService() Starts, terminalName :"+terminalName);
 		return json;
 	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside TerminalController openAdd() Starts ");
+		String json = null;
+		try {
+			TerminalResponse terResponse = terminalService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(terResponse);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside TerminalController openAdd() Ends ");
+		return json;
+	}
 }

@@ -15,10 +15,10 @@ import com.dpu.dao.TerminalDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Terminal;
-import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
+import com.dpu.service.ServiceService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TerminalService;
 
@@ -32,6 +32,9 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	ServiceService serviceService;
 
 	@Override
 	public List<TerminalResponse> getAllTerminals() {
@@ -109,8 +112,10 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public TerminalResponse getOpenAdd() {
-		// TODO Auto-generated method stub
-		return null;
+		TerminalResponse tresponse = new TerminalResponse();
+		List<DPUService> serviceList = serviceService.getAll();
+		tresponse.setServiceList(serviceList);
+		return tresponse;
 	}
 
 	@Override

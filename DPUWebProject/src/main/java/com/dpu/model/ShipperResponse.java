@@ -32,6 +32,7 @@ public class ShipperResponse {
 
 	//@JsonProperty(value = "status")
 	private String status;
+	private Long statusId;
 
 	//@JsonProperty(value = "zone")
 	private String zone;
@@ -278,5 +279,13 @@ public class ShipperResponse {
 
 	public void setStandardNotes(String standardNotes) {
 		this.standardNotes = standardNotes;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
 	}
 }

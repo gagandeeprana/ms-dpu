@@ -58,15 +58,15 @@ public class ShipperController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody Shipper shipper) {
-		logger.info("[add] : Enter");
+	public Object add(@RequestBody ShipperResponse shipperResponse) {
+		
+		logger.info("Inside ShipperController add() Starts ");
 		Object obj = null;
+		
 		try {
-			Shipper response = shipperService.add(shipper);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(shipperAddedCode),
-						shipperAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			Object response = shipperService.add(shipperResponse);
+			if (response instanceof List<?>) {
+				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(shipperUnableToAddCode),
@@ -74,9 +74,10 @@ public class ShipperController extends MessageProperties {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ShipperController add() :"+e.getMessage());
 		}
-		logger.info("[add] : Exit");
+		
+		logger.info("Inside ShipperController add() Ends ");
 		return obj;
 	}
 

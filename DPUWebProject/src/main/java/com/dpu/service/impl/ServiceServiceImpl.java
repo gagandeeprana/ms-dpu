@@ -14,6 +14,7 @@ import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.DPUService;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
@@ -176,4 +177,21 @@ public class ServiceServiceImpl implements ServiceService {
 		return servicesList;
 	}
 
+	@Override
+	public List<DPUService> getServiceData() {
+		
+		List<Object[]> serviceData = serviceDao.getServiceData();
+		List<DPUService> returnServ = new ArrayList<DPUService>();
+		
+		if(serviceData != null && !serviceData.isEmpty()){
+			for (Object[] row : serviceData) {
+				DPUService res = new DPUService();
+				res.setServiceId(Long.valueOf(String.valueOf(row[0])));
+				res.setServiceName(String.valueOf(row[1]));
+				returnServ.add(res);
+			}
+		}
+		
+		return returnServ;
+	}
 }

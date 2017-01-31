@@ -8,7 +8,7 @@ import com.dpu.model.TruckResponse;
 
 public interface TruckService {
 
-	List<TruckResponse> update(Long id, TruckResponse tuckResponse);
+	List<TruckResponse> update(Long id, TruckResponse truckResponse);
 
 	List<TruckResponse> delete(Long id);
 

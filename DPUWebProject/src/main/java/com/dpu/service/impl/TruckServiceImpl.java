@@ -56,19 +56,21 @@ public class TruckServiceImpl implements TruckService {
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
 	@Override
-	public List<TruckResponse> update(Long id, TruckResponse tuckResponse) {
+	public List<TruckResponse> update(Long id, TruckResponse truckResponse) {
 		logger.info("[TruckServiceImpl] [update] : Enter ");
 		Truck truck = truckDao.findById(id);
 		if (truck != null) {
-			truck.setUnitNo(tuckResponse.getUnitNo());
-			truck.setOwner(tuckResponse.getOwner());
-			truck.setoOName(tuckResponse.getoOName());
-			truck.setCategory(categoryService.getCategory(tuckResponse
+			truck.setUnitNo(truckResponse.getUnitNo());
+			truck.setOwner(truckResponse.getOwner());
+			truck.setoOName(truckResponse.getoOName());
+			truck.setCategory(categoryService.getCategory(truckResponse
 					.getCategoryId()));
-			truck.setStatus(statusService.get(tuckResponse.getStatusId()));
-			truck.setUsage(tuckResponse.getTruchUsage());
-			truck.setTruckType(tuckResponse.getTruckType());
-			truck.setFinance(tuckResponse.getFinance());
+			// truck.setDivision(divisionService.get(truckResponse.getDivisionId()));
+			// truck.setTerminal(terminalService.getTerminal(truckResponse.getTerminalId()));
+			truck.setStatus(statusService.get(truckResponse.getStatusId()));
+			truck.setUsage(truckResponse.getTruchUsage());
+			truck.setTruckType(truckResponse.getTruckType());
+			truck.setFinance(truckResponse.getFinance());
 
 			truckDao.update(truck);
 			return getAllTrucks("");
@@ -80,7 +82,15 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public List<TruckResponse> delete(Long id) {
-		// TODO Auto-generated method stub
+		Truck truck = truckDao.findById(id);
+		if (truck != null) {
+			try {
+				truckDao.delete(truck);
+				return getAllTrucks("");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 

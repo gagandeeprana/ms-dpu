@@ -16,6 +16,7 @@ import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Terminal;
 import com.dpu.model.DPUService;
+import com.dpu.model.ShipperResponse;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
@@ -112,9 +113,9 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public TerminalResponse getOpenAdd() {
+		
 		TerminalResponse tresponse = new TerminalResponse();
-		List<DPUService> serviceList = serviceService.getAll();
-		tresponse.setServiceList(serviceList);
+		tresponse.setServiceList(serviceService.getServiceData());
 		return tresponse;
 	}
 

@@ -22,6 +22,7 @@ import com.dpu.entity.Company;
 import com.dpu.entity.Truck;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.DivisionReq;
+import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TruckResponse;
@@ -162,6 +163,21 @@ public class TruckController extends MessageProperties {
 			logger.error("EquipmentController : update " + e);
 		}
 		logger.info("[TruckController] [update] :Exit   ");
+		return json;
+	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info("[TruckController] [openAdd] : Enter");
+		String json = null;
+		try {
+			TruckResponse truckResponse = truckService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(truckResponse);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[TruckController] [openAdd] : End");
 		return json;
 	}
 

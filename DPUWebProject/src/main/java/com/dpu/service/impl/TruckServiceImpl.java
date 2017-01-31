@@ -26,11 +26,13 @@ import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TruckResponse;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.DivisionService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TerminalService;
 import com.dpu.service.TruckService;
+import com.dpu.service.TypeService;
 
 @Component
 public class TruckServiceImpl implements TruckService {
@@ -52,6 +54,9 @@ public class TruckServiceImpl implements TruckService {
 
 	@Autowired
 	TerminalService terminalService;
+
+	@Autowired
+	TypeService typeService;
 
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
@@ -324,8 +329,25 @@ public class TruckServiceImpl implements TruckService {
 	 * 
 	 * public boolean isTruckExist(){ boolean isExist = false; return isExist; }
 	 */
-	public static void main(String args[]) {
-		System.out.println(new Date());
+
+	@Override
+	public TruckResponse getOpenAdd() {
+		TruckResponse truckResponse = new TruckResponse();
+
+		List<Status> lstStatus = statusService.getAll();
+		truckResponse.setStatusList(lstStatus);
+
+		List<CategoryReq> categoryList = categoryService.getAll();
+		truckResponse.setCategoryList(categoryList);
+
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		truckResponse.setDivisionList(divisionList);
+
+		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		truckResponse.setTerminalList(terminalList);
+
+		return truckResponse;
+
 	}
 
 }

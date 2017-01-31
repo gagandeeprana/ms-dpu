@@ -31,6 +31,7 @@ import com.dpu.model.DivisionReq;
 import com.dpu.model.EquipmentReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
+import com.dpu.model.TruckResponse;
 import com.dpu.service.DivisionService;
 import com.dpu.util.MessageProperties;
 
@@ -131,35 +132,29 @@ public class DivisionController extends MessageProperties {
 	// return division;
 	// }
 	//
-	// @RequestMapping(value = "/{id}", produces =
-	// MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	// public Object delete(@PathVariable("id") int id) {
-	// logger.info("[delete] : Enter  : Id : " + id);
-	// Object obj = null;
-	// boolean result = false;
-	// try {
-	// Division division = divisionService.get(id);
-	// if (division != null) {
-	// result = divisionService.delete(division);
-	// }
-	// if (result) {
-	// obj = new ResponseEntity<Object>(new Success(
-	// Integer.parseInt(divisionDeletedCode),
-	// divisionDeletedMessage, Iconstants.SUCCESS),
-	// HttpStatus.OK);
-	// } else {
-	// obj = new ResponseEntity<Object>(new Failed(
-	// Integer.parseInt(divisionUnableToDeleteCode),
-	// divisionUnableToDeleteMessage, Iconstants.ERROR),
-	// HttpStatus.BAD_REQUEST);
-	// }
-	// } catch (Exception e) {
-	// System.out.println(e);
-	// logger.error("DivisionController: delete " + e);
-	// }
-	// logger.info("[delete] : Exit  ");
-	// return obj;
-	// }
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("id") Long id) {
+		logger.info("[delete] : Enter  : Id : " + id);
+		Object obj = null;
+		try {
+			List<DivisionReq> divisionReqs = divisionService.delete(id);
+			if (divisionReqs != null) {
+				if (divisionReqs != null && divisionReqs.size() > 0) {
+					obj = mapper.writeValueAsString(divisionReqs);
+				}
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(divisionUnableToDeleteCode),
+						divisionUnableToDeleteMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+		}
+		logger.info("[delete] : Exit : ");
+		return obj;
+
+	}
+
 	//
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id,

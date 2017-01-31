@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Shipper;
+import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
@@ -171,6 +172,23 @@ public class ShipperController extends MessageProperties {
 			logger.error("Exception inside ShipperController getOpenAdd() :"+e.getMessage());
 		}
 		logger.info("Inside ShipperController getOpenAdd() Ends. ");
+		return json;
+	}
+	
+	@RequestMapping(value = "/{companyName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchShipper(@PathVariable("companyName") String companyName) {
+		logger.info("Inside driverController searchDriver() Starts, driverCodeOrName :"+companyName);
+		String json = new String();
+		try {
+			List<ShipperResponse> shipperList = shipperService.getShipperByCompanyName(companyName);
+			if(shipperList != null && shipperList.size() > 0) {
+				json = mapper.writeValueAsString(shipperList);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Exception inside ServiceController searchService() is :" + e.getMessage());
+		}
+		logger.info(" Inside ServiceController searchService() Starts, serviceName :"+companyName);
 		return json;
 	}
 }

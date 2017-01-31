@@ -25,4 +25,6 @@ public interface ShipperService {
 	Shipper get(int id);
 
 	ShipperResponse getMasterData();
+
+	List<ShipperResponse> getShipperByCompanyName(String companyName);
 }

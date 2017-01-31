@@ -4,6 +4,14 @@
 
 package com.dpu.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.ShipperDao;
@@ -15,6 +23,32 @@ import com.dpu.entity.Shipper;
  */
 @Repository
 public class ShipperDaoImpl extends GenericDaoImpl<Shipper> implements ShipperDao {
+
+	@Autowired
+	SessionFactory sessionFactory;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Shipper> findByCompanyName(String companyName) {
+		Session session = null;
+		List<Shipper> list = null;
+		try{
+			session = sessionFactory.openSession();
+			Criteria c2 = session.createCriteria(Shipper.class);
+			Criteria c3 = c2.createCriteria("company");
+			
+			c3.add(Restrictions.like("name", companyName, MatchMode.ANYWHERE));
+			list = c2.list();
+			
+		} catch(Exception e){
+			
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		return list;
+	}
 
 //	Logger logger = Logger.getLogger(ShipperDaoImpl.class);
 //

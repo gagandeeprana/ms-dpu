@@ -6,14 +6,19 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
+import com.dpu.entity.Service;
 import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
+import com.dpu.model.DPUService;
 import com.dpu.model.ShipperResponse;
 import com.dpu.service.CompanyService;
 import com.dpu.service.ShipperService;
@@ -98,6 +103,28 @@ public class ShipperServiceImpl implements ShipperService {
 		List<Status> statusList = statusService.getAll();
 		response.setStatusList(statusList);
 		return response;
+	}
+
+	@Override
+	public List<ShipperResponse> getShipperByCompanyName(String companyName) {
+		
+		List<Shipper> shipperList = null;
+		List<ShipperResponse> responses = new ArrayList<ShipperResponse>();
+		if(companyName != null && companyName.length() > 0) {
+			//Criterion criterion = Restrictions.like("company.name", companyName, MatchMode.ANYWHERE);
+			shipperList = shipperDao.findByCompanyName(companyName);
+		}
+		if(shipperList != null && ! shipperList.isEmpty()){
+			for (Shipper shipper : shipperList) {
+				ShipperResponse shipperResponse = new ShipperResponse();
+				BeanUtils.copyProperties(shipper, shipperResponse);
+				shipperResponse.setCompany(shipper.getCompany().getName());
+				shipperResponse.setStatus(shipper.getStatus().getStatus());
+				responses.add(shipperResponse);
+			}
+		}
+		
+		return responses;
 	}
 
 }

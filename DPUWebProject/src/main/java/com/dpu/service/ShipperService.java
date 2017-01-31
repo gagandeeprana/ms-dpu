@@ -14,7 +14,7 @@ import com.dpu.model.ShipperResponse;
  */
 public interface ShipperService {
 
-	Shipper add(Shipper shipper);
+	Object add(ShipperResponse shipperResponse);
 
 	Shipper update(Shipper shipper);
 

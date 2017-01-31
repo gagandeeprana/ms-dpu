@@ -21,6 +21,6 @@ public interface TerminalService {
 
 	List<TerminalResponse> updateTerminal(Long id, TerminalResponse terminalResponse);
 
-	List<TerminalResponse> getTerminalByTerminalName(String serviceName);
+	List<TerminalResponse> getTerminalByTerminalName(String terminalName);
 	
 }

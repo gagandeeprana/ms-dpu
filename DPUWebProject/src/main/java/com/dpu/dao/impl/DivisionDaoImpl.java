@@ -58,7 +58,7 @@ public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
 		division.setDivisionName(divisionReq.getDivisionName());
 		division.setFedral(divisionReq.getFedral());
 		division.setProvincial(divisionReq.getProvincial());
-		division.setSCAC(divisionReq.getSCAC());
+		division.setSCAC(divisionReq.getScac());
 		division.setCarrierCode(divisionReq.getCarrierCode());
 		division.setContractPrefix(divisionReq.getContractPrefix());
 		division.setInvoicePrefix(divisionReq.getInvoicePrefix());

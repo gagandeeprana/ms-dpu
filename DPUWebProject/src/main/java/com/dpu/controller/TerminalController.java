@@ -142,5 +142,20 @@ public class TerminalController extends MessageProperties {
 		return json;
 	}
 
-
+	@RequestMapping(value = "/{terminalName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchTerminal(@PathVariable("terminalName") String terminalName) {
+		logger.info("Inside TerminalController search, terminalName :"+terminalName);
+		String json = new String();
+		try {
+			List<TerminalResponse> terminalList = terminalService.getTerminalByTerminalName(terminalName);
+			if(terminalList != null && terminalList.size() > 0) {
+				json = mapper.writeValueAsString(terminalList);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Exception inside TerminalController search is :" + e);
+		}
+		logger.info(" Inside TerminalController terminalService() Starts, terminalName :"+terminalName);
+		return json;
+	}
 }

@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -125,9 +128,28 @@ public class TerminalServiceImpl implements TerminalService {
 	}
 
 	@Override
-	public List<TerminalResponse> getTerminalByTerminalName(String serviceName) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TerminalResponse> getTerminalByTerminalName(String terminalName) {
+		List<Terminal> terminalList = null;
+		if(terminalName != null && terminalName.length() > 0) {
+			Criterion criterion = Restrictions.like("terminalName", terminalName, MatchMode.ANYWHERE);
+			terminalList = terminalDao.find(criterion);
+		}
+		List<TerminalResponse> termList = new ArrayList<TerminalResponse>();
+		
+		if(terminalList != null && !terminalList.isEmpty()){
+			for (Terminal terminal: terminalList) {
+				TerminalResponse terminalObj = new TerminalResponse();
+				terminalObj.setTerminalId(terminal.getTerminalId());
+				terminalObj.setStatusId(terminal.getStatus().getId());
+				terminalObj.setTerminalName(terminal.getTerminalName());
+				terminalObj.setLocation(terminal.getLocation());
+				terminalObj.setFacility(terminal.getFacility());
+				terminalObj.setStatus(terminal.getStatus().getStatus());
+				termList.add(terminalObj);
+			}
+		}
+		
+		return termList;
 	}
 
 

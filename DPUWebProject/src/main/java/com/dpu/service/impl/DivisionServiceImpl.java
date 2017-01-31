@@ -54,7 +54,7 @@ public class DivisionServiceImpl implements DivisionService {
 			division.setDivisionName(divisionReq.getDivisionName());
 			division.setFedral(divisionReq.getFedral());
 			division.setProvincial(divisionReq.getProvincial());
-			division.setSCAC(divisionReq.getSCAC());
+			division.setSCAC(divisionReq.getScac());
 			division.setCarrierCode(divisionReq.getCarrierCode());
 			division.setContractPrefix(divisionReq.getContractPrefix());
 			division.setInvoicePrefix(divisionReq.getInvoicePrefix());
@@ -90,11 +90,12 @@ public class DivisionServiceImpl implements DivisionService {
 		DivisionReq response = null;
 		if (division != null) {
 			response = new DivisionReq();
+			response.setDivisionId(division.getDivisionId());
 			response.setDivisionCode(division.getDivisionCode());
 			response.setDivisionName(division.getDivisionName());
 			response.setFedral(division.getFedral());
 			response.setProvincial(division.getProvincial());
-			response.setSCAC(division.getSCAC());
+			response.setScac(division.getSCAC());
 			response.setCarrierCode(division.getCarrierCode());
 			response.setContractPrefix(division.getContractPrefix());
 			response.setInvoicePrefix(division.getInvoicePrefix());
@@ -151,6 +152,9 @@ public class DivisionServiceImpl implements DivisionService {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
 			Division division = divisionDao.add(session, divisionReq);
+			if (tx != null) {
+				tx.commit();
+			}
 			divisionList = getAll("");
 		} catch (Exception e) {
 			logger.fatal("DivisionServiceImpl: add(): Exception: "
@@ -160,9 +164,6 @@ public class DivisionServiceImpl implements DivisionService {
 			}
 		} finally {
 			logger.info("DivisionServiceImpl: add():  finally block");
-			if (tx != null) {
-				tx.commit();
-			}
 			if (session != null) {
 				session.close();
 			}

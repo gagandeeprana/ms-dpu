@@ -60,15 +60,18 @@ public class ShipperServiceImpl implements ShipperService {
 	}
 
 	@Override
-	public boolean delete(Shipper shipper) {
-		boolean result = false;
+	public Object delete(Long  shipperId) {
+		
+		Object obj = null;
 		try {
-			shipperDao.delete(shipper);
-			result = true;
+			Shipper shipper = shipperDao.findById(shipperId);
+			if(shipper != null){
+				shipperDao.delete(shipper);
+			}
+			 obj = getAll();
 		} catch (Exception e) {
-			result = false;
 		}
-		return result;
+		return obj;
 	}
 
 	@Override

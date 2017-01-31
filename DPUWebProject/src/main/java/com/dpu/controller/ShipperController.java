@@ -83,21 +83,16 @@ public class ShipperController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] : Enter : Id: "+id);
 		Object obj = null;
-		boolean result = false;
 
 		try {
 
-			Shipper shipper = shipperService.get(id);
-			if (shipper != null) {
-				result = shipperService.delete(shipper);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(shipperDeletedCode),
-						shipperDeletedMessage, Iconstants.SUCCESS),
+			obj = shipperService.delete(id);
+			
+			if (obj instanceof List<?>) {
+				obj = new ResponseEntity<Object>(obj,
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(

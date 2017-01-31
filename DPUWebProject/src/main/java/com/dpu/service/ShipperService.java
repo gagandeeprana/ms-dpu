@@ -18,7 +18,7 @@ public interface ShipperService {
 
 	Shipper update(Shipper shipper);
 
-	boolean delete(Shipper shipper);
+	Object delete(Long id);
 
 	List<ShipperResponse> getAll();
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
 import com.dpu.entity.Shipper;
+import com.dpu.entity.Status;
 import com.dpu.model.ShipperResponse;
 import com.dpu.service.CompanyService;
 import com.dpu.service.ShipperService;
@@ -94,6 +95,8 @@ public class ShipperServiceImpl implements ShipperService {
 		
 		ShipperResponse response = new ShipperResponse();
 		response.setCompanyList(companyService.getCompanyData());
+		List<Status> statusList = statusService.getAll();
+		response.setStatusList(statusList);
 		return response;
 	}
 

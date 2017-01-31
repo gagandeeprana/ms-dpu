@@ -67,6 +67,26 @@ public class DivisionController extends MessageProperties {
 		return json;
 	}
 
+	@RequestMapping(value = "/{divisionname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAllDivision(
+			@PathVariable("divisionname") String divisionName) {
+		logger.info("[getAllDivision]: Enter");
+		String json = new String();
+		try {
+			List<DivisionReq> lstDivisions = divisionService
+					.getAll(divisionName);
+			if (lstDivisions != null && lstDivisions.size() > 0) {
+				json = mapper.writeValueAsString(lstDivisions);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			logger.error(e);
+			logger.error("DivisionController : getAllDivision " + e);
+		}
+		logger.info("[getAllDivision] :Exit");
+		return json;
+	}
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object addDivision(@RequestBody DivisionReq divisionReq) {
 		logger.info("[DivisionController] : addDivision");
@@ -169,7 +189,7 @@ public class DivisionController extends MessageProperties {
 		String json = null;
 		try {
 			DivisionReq divisionReq = divisionService.get(id);
-			if(divisionReq != null) {
+			if (divisionReq != null) {
 				ObjectMapper mapper = new ObjectMapper();
 				json = mapper.writeValueAsString(divisionReq);
 				System.out.println(json);

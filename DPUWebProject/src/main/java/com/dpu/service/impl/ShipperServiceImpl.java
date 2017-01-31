@@ -10,11 +10,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
 import com.dpu.entity.Shipper;
+import com.dpu.entity.Status;
 import com.dpu.model.ShipperResponse;
 import com.dpu.service.CompanyService;
 import com.dpu.service.ShipperService;
+import com.dpu.service.StatusService;
 
 /**
  * @author jagvir
@@ -28,10 +31,22 @@ public class ShipperServiceImpl implements ShipperService {
 	
 	@Autowired
 	CompanyService companyService;
+	
+	@Autowired
+	CompanyDao companyDao;
+	
+	@Autowired
+	StatusService statusService;
 
 	@Override
-	public Shipper add(Shipper shipper) {
-		return shipperDao.save(shipper);
+	public Object add(ShipperResponse shipperResponse) {
+	
+		Shipper shipper = new Shipper();
+		BeanUtils.copyProperties(shipperResponse, shipper);
+		shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));
+		shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
+		shipperDao.save(shipper);
+		return getAll();
 	}
 
 	@Override
@@ -62,6 +77,7 @@ public class ShipperServiceImpl implements ShipperService {
 				ShipperResponse shipperResponse = new ShipperResponse();
 				BeanUtils.copyProperties(shipper, shipperResponse);
 				shipperResponse.setCompany(shipper.getCompany().getName());
+				shipperResponse.setStatus(shipper.getStatus().getStatus());
 				responses.add(shipperResponse);
 			}
 		}
@@ -79,6 +95,8 @@ public class ShipperServiceImpl implements ShipperService {
 		
 		ShipperResponse response = new ShipperResponse();
 		response.setCompanyList(companyService.getCompanyData());
+		List<Status> statusList = statusService.getAll();
+		response.setStatusList(statusList);
 		return response;
 	}
 

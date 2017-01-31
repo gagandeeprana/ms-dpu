@@ -46,9 +46,9 @@ public class Shipper {
 	//@JsonProperty(value = "postal_zip")
 	private String postalZip;
 
-	@Column(name = "status")
-	//@JsonProperty(value = "status")
-	private String status;
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
 
 	@Column(name = "zone")
 	//@JsonProperty(value = "zone")
@@ -164,14 +164,6 @@ public class Shipper {
 
 	public void setPostalZip(String postalZip) {
 		this.postalZip = postalZip;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getZone() {
@@ -292,6 +284,14 @@ public class Shipper {
 
 	public void setStandardNotes(String standardNotes) {
 		this.standardNotes = standardNotes;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	// private String ReportName;

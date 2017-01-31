@@ -26,11 +26,13 @@ import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TruckResponse;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.DivisionService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TerminalService;
 import com.dpu.service.TruckService;
+import com.dpu.service.TypeService;
 
 @Component
 public class TruckServiceImpl implements TruckService {
@@ -53,22 +55,27 @@ public class TruckServiceImpl implements TruckService {
 	@Autowired
 	TerminalService terminalService;
 
+	@Autowired
+	TypeService typeService;
+
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
 	@Override
-	public List<TruckResponse> update(Long id, TruckResponse tuckResponse) {
+	public List<TruckResponse> update(Long id, TruckResponse truckResponse) {
 		logger.info("[TruckServiceImpl] [update] : Enter ");
 		Truck truck = truckDao.findById(id);
 		if (truck != null) {
-			truck.setUnitNo(tuckResponse.getUnitNo());
-			truck.setOwner(tuckResponse.getOwner());
-			truck.setoOName(tuckResponse.getoOName());
-			truck.setCategory(categoryService.getCategory(tuckResponse
+			truck.setUnitNo(truckResponse.getUnitNo());
+			truck.setOwner(truckResponse.getOwner());
+			truck.setoOName(truckResponse.getoOName());
+			truck.setCategory(categoryService.getCategory(truckResponse
 					.getCategoryId()));
-			truck.setStatus(statusService.get(tuckResponse.getStatusId()));
-			truck.setUsage(tuckResponse.getTruchUsage());
-			truck.setTruckType(tuckResponse.getTruckType());
-			truck.setFinance(tuckResponse.getFinance());
+			// truck.setDivision(divisionService.get(truckResponse.getDivisionId()));
+			// truck.setTerminal(terminalService.getTerminal(truckResponse.getTerminalId()));
+			truck.setStatus(statusService.get(truckResponse.getStatusId()));
+			truck.setUsage(truckResponse.getTruchUsage());
+			truck.setTruckType(truckResponse.getTruckType());
+			truck.setFinance(truckResponse.getFinance());
 
 			truckDao.update(truck);
 			return getAllTrucks("");
@@ -80,7 +87,15 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public List<TruckResponse> delete(Long id) {
-		// TODO Auto-generated method stub
+		Truck truck = truckDao.findById(id);
+		if (truck != null) {
+			try {
+				truckDao.delete(truck);
+				return getAllTrucks("");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
@@ -314,8 +329,25 @@ public class TruckServiceImpl implements TruckService {
 	 * 
 	 * public boolean isTruckExist(){ boolean isExist = false; return isExist; }
 	 */
-	public static void main(String args[]) {
-		System.out.println(new Date());
+
+	@Override
+	public TruckResponse getOpenAdd() {
+		TruckResponse truckResponse = new TruckResponse();
+
+		List<Status> lstStatus = statusService.getAll();
+		truckResponse.setStatusList(lstStatus);
+
+		List<CategoryReq> categoryList = categoryService.getAll();
+		truckResponse.setCategoryList(categoryList);
+
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		truckResponse.setDivisionList(divisionList);
+
+		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		truckResponse.setTerminalList(terminalList);
+
+		return truckResponse;
+
 	}
 
 }

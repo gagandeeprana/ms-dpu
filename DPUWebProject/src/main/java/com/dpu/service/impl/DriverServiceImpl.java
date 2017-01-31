@@ -234,7 +234,7 @@ public class DriverServiceImpl implements DriverService {
 			response.setDivisionId(driver.getDivision().getDivisionId());
 			response.setDriverClassId(driver.getDriverClass().getTypeId());
 			response.setRoleId(driver.getRole().getTypeId());
-			
+			response.setTerminalId(driver.getTerminal().getTerminalId());
 			List<Status> statusList = statusService.getAll();
 			response.setStatusList(statusList);
 			

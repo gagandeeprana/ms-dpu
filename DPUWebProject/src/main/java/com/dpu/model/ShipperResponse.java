@@ -5,6 +5,8 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.dpu.entity.Status;
+
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ShipperResponse {
 
@@ -32,6 +34,7 @@ public class ShipperResponse {
 
 	//@JsonProperty(value = "status")
 	private String status;
+	private Long statusId;
 
 	//@JsonProperty(value = "zone")
 	private String zone;
@@ -79,6 +82,7 @@ public class ShipperResponse {
 	private String standardNotes;
 	
 	private List<CompanyResponse> companyList;
+	private List<Status> statusList;
 
 	public List<CompanyResponse> getCompanyList() {
 		return companyList;
@@ -278,5 +282,21 @@ public class ShipperResponse {
 
 	public void setStandardNotes(String standardNotes) {
 		this.standardNotes = standardNotes;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
 	}
 }

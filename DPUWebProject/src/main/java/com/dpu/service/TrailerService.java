@@ -16,4 +16,6 @@ public interface TrailerService {
 	List<TrailerRequest> getAll();
 	
 	Trailer get(int id);
+
+	TrailerRequest getOpenAdd();
 }

@@ -2,8 +2,11 @@ package com.dpu.model;
 
 import java.util.List;
 
-import com.dpu.entity.Status;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.dpu.entity.Status;
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class TrailerRequest {
 
 	private Long trailerId;
@@ -30,7 +33,7 @@ public class TrailerRequest {
 
 	private String trailerType;
 	private Long trailerTypeId;
-	private List<TrailerRequest> trailerList;
+	private List<TypeResponse> trailerTypeList;
 
 	private String status;
 	public Long getTrailerId() {
@@ -105,16 +108,16 @@ public class TrailerRequest {
 		this.trailerTypeId = trailerTypeId;
 	}
 
-	public List<TrailerRequest> getTrailerList() {
-		return trailerList;
-	}
-
-	public void setTrailerList(List<TrailerRequest> trailerList) {
-		this.trailerList = trailerList;
-	}
-
 	public Long getStatusId() {
 		return statusId;
+	}
+
+	public List<TypeResponse> getTrailerTypeList() {
+		return trailerTypeList;
+	}
+
+	public void setTrailerTypeList(List<TypeResponse> trailerTypeList) {
+		this.trailerTypeList = trailerTypeList;
 	}
 
 	public void setStatusId(Long statusId) {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Trailer;
+import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TrailerRequest;
@@ -36,24 +37,29 @@ public class TrailerController extends MessageProperties {
 	ObjectMapper mapper = new ObjectMapper();
 	
 	
-
+	/**
+	 * this method is used to get all trailers
+	 * @return List<trailers>
+	 * @author lakhvir
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 		
-		logger.info("Inside getAll(): TrailerController:");
+		logger.info("Inside TrailerController getAll() Starts ");
 		String json = new String();
 		
 		try {
 			List<TrailerRequest> lstTrailers = trailerService.getAll();
-			logger.info("Inside getAll(): TrailerController: List Size: " + lstTrailers.size());
 
 			if(lstTrailers != null && !lstTrailers.isEmpty()) {
 				json = mapper.writeValueAsString(lstTrailers);
 			}
 			
 		} catch (Exception e) {
-			logger.error("Inside getAll(): TrailerController: Exception is: " + e.getMessage());
+			logger.error("Exception inside  TrailerController getAll() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController getAll() Ends ");
 		return json;
 	}
 	
@@ -172,4 +178,21 @@ public class TrailerController extends MessageProperties {
 		
 		return trailer;
 	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside TrailerController openAdd() Starts ");
+		String json = null;
+		try {
+			TrailerRequest trailerReq = trailerService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(trailerReq);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside TrailerController openAdd() Ends ");
+		return json;
+	}
+	
+	
 }

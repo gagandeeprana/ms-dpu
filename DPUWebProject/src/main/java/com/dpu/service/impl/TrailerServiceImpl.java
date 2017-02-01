@@ -8,14 +8,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.TrailerDao;
+import com.dpu.entity.Status;
 import com.dpu.entity.Trailer;
+import com.dpu.model.CategoryReq;
+import com.dpu.model.DivisionReq;
+import com.dpu.model.DriverReq;
+import com.dpu.model.TerminalResponse;
 import com.dpu.model.TrailerRequest;
+import com.dpu.model.TypeResponse;
+import com.dpu.service.CategoryService;
+import com.dpu.service.DivisionService;
+import com.dpu.service.StatusService;
+import com.dpu.service.TerminalService;
 import com.dpu.service.TrailerService;
+import com.dpu.service.TypeService;
 
 @Component
 public class TrailerServiceImpl implements TrailerService{
 	@Autowired
 	TrailerDao trailerdao;
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
+	
+	@Autowired
+	CategoryService categoryService;
+	
+	@Autowired
+	DivisionService divisionService;
+	
+	@Autowired
+	TerminalService terminalService;
 	
 	@Override
 	public Trailer add(Trailer trailer) {
@@ -67,5 +93,29 @@ public class TrailerServiceImpl implements TrailerService{
 	@Override
 	public Trailer get(int id) {
 		return trailerdao.findById(id);
+	}
+
+	@Override
+	public TrailerRequest getOpenAdd() {
+
+		TrailerRequest trailer = new TrailerRequest();
+		
+		List<Status> statusList = statusService.getAll();
+		trailer.setStatusList(statusList);
+		
+		List<TypeResponse> trailerTypeList = typeService.getAll(7l);
+		trailer.setTrailerTypeList(trailerTypeList);
+				
+		List<CategoryReq> categoryList = categoryService.getAll();
+		trailer.setCategoryList(categoryList);
+		
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		trailer.setDivisionList(divisionList);
+		
+		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		trailer.setTerminalList(terminalList);
+		
+		
+		return trailer;
 	}
 }

@@ -50,7 +50,7 @@ public class Trailer {
 	private Type type;
 	
 	@ManyToOne
-	@JoinColumn(name = "status")
+	@JoinColumn(name = "status_id")
 	private Status status;
 	
 	@Column(name = "finance")

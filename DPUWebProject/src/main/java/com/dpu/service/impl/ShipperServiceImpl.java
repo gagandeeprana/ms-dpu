@@ -94,7 +94,7 @@ public class ShipperServiceImpl implements ShipperService {
 	}
 
 	@Override
-	public Shipper get(int id) {
+	public Shipper get(Long id) {
 		return shipperDao.findById(id);
 	}
 

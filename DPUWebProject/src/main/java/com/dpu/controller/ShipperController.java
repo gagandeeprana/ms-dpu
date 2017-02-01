@@ -134,7 +134,7 @@ public class ShipperController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{shipperId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("shipperId") int id) {
+	public Object get(@PathVariable("shipperId") Long id) {
 		logger.info("[get ] : Enter: Id : "+id);
 		String json = new String();
 		try {

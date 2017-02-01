@@ -22,7 +22,7 @@ public interface ShipperService {
 
 	List<ShipperResponse> getAll();
 
-	Shipper get(int id);
+	Shipper get(Long id);
 
 	ShipperResponse getMasterData();
 

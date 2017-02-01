@@ -37,7 +37,7 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getAll(@PathVariable("companyid") int companyId) {
+	public Object getAll(@PathVariable("companyid") Long companyId) {
 		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
@@ -76,7 +76,7 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] : Enter : ID : "+id);
 		Object obj = null;
 		boolean result = false;
@@ -119,7 +119,7 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("id") int id) {
+	public Object get(@PathVariable("id") Long id) {
 		logger.info("[get] : Enter : ID : "+id);
 		String json = new String();
 		try {

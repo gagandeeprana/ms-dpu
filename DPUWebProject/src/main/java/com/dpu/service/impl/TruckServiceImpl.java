@@ -147,7 +147,6 @@ public class TruckServiceImpl implements TruckService {
 						MatchMode.ANYWHERE);
 				lstTruck = truckDao.find(criterion);
 			} else {
-				System.out.println(">>>>>>>>>>>>>>>>>>");
 				lstTruck = truckDao.findAll();
 			}
 			if (lstTruck != null && lstTruck.size() > 0) {
@@ -346,6 +345,7 @@ public class TruckServiceImpl implements TruckService {
 		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
 		truckResponse.setTerminalList(terminalList);
 
+//		List<TypeResponse> typeResponsesList = typeService.getAll();
 		return truckResponse;
 
 	}

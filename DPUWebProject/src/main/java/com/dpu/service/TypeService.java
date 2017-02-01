@@ -9,6 +9,7 @@ public interface TypeService {
 
 	List<TypeResponse> getAll(Long typeValue);
 
+
 	Type get(Long typeId);
 	
 }

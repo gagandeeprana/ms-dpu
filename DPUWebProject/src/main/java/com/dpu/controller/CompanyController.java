@@ -138,7 +138,7 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("id") int id) {
+	public Object get(@PathVariable("id") Long id) {
 		
 		logger.info("[get] : Enter : ID : "+id);
 		String json = new String();

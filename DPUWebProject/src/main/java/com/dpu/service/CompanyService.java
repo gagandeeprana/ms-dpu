@@ -15,8 +15,8 @@ public interface CompanyService {
 	
 	List<CompanyResponse> getAll();
 	
-	CompanyResponse get(int id);
-	
 	List<CompanyResponse> getCompanyData();
+
+	CompanyResponse get(Long id);
 	
 }

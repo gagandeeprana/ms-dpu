@@ -43,12 +43,22 @@ public class TrailerServiceImpl implements TrailerService{
 
 	@Override
 	public List<TrailerRequest> getAll() {
+		
 		List<Trailer> trailerList = trailerdao.findAll();
 		List<TrailerRequest> returnResponse = new ArrayList<TrailerRequest>();
+		
 		if(trailerList !=  null && !trailerList.isEmpty()){
+			
 			for (Trailer trailer : trailerList) {
 				TrailerRequest response = new TrailerRequest();
 				BeanUtils.copyProperties(trailer, response);
+				response.setCategory(trailer.getCategory().getName());
+				response.setDivision(trailer.getDivision().getDivisionName());
+				response.setTerminal(trailer.getTerminal().getTerminalName());
+				response.setStatus(trailer.getStatus().getStatus());
+				response.setTrailerType(trailer.getType().getTypeName());
+				
+				returnResponse.add(response);
 			}
 		}
 		 return returnResponse;

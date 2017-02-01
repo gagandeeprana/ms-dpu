@@ -41,28 +41,18 @@ public class TrailerController extends MessageProperties {
 	public Object getAll() {
 		
 		logger.info("Inside getAll(): TrailerController:");
-		
 		String json = new String();
+		
 		try {
-			
 			List<TrailerRequest> lstTrailers = trailerService.getAll();
 			logger.info("Inside getAll(): TrailerController: List Size: " + lstTrailers.size());
 
-			/*if (lstTrailers != null && lstTrailers.size() > 0) {
-				List<TrailerRequest> responses = new ArrayList<TrailerRequest>();
-				for(Trailer trailer : lstTrailers) {
-					TrailerRequest response = new TrailerRequest();
-					BeanUtils.copyProperties(response, trailer);
-					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
-			}*/
+			if(lstTrailers != null && !lstTrailers.isEmpty()) {
+				json = mapper.writeValueAsString(lstTrailers);
+			}
+			
 		} catch (Exception e) {
 			logger.error("Inside getAll(): TrailerController: Exception is: " + e.getMessage());
-
-			System.out.println(e);
 		}
 		return json;
 	}

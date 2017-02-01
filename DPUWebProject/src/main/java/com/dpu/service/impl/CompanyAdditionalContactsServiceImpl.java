@@ -40,7 +40,7 @@ public class CompanyAdditionalContactsServiceImpl implements CompanyAdditionalCo
 	}
 
 	@Override
-	public List<CompanyAdditionalContacts> getAll(int companyId) {
+	public List<CompanyAdditionalContacts> getAll(Long companyId) {
 		try {
 			Criterion criterion = Restrictions.eq("company.companyId", companyId);
 			return companyAdditionalContactsDao.find(criterion);
@@ -50,7 +50,7 @@ public class CompanyAdditionalContactsServiceImpl implements CompanyAdditionalCo
 	}
 
 	@Override
-	public CompanyAdditionalContacts get(int id) {
+	public CompanyAdditionalContacts get(Long id) {
 		return companyAdditionalContactsDao.findById(id);
 	}
 }

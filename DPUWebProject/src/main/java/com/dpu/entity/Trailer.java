@@ -13,7 +13,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
-@Table(name = "newtrailermaster")
+@Table(name = "trailer")
 public class Trailer {
 
 	@Id

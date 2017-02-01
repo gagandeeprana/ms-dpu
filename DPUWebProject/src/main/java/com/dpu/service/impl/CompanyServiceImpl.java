@@ -184,7 +184,7 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	@Override
-	public CompanyResponse get(int id) {
+	public CompanyResponse get(Long id) {
 		Company company = companyDao.findById(id);
 		CompanyResponse response = new CompanyResponse();
 		if (company != null) {

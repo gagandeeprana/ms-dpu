@@ -12,8 +12,8 @@ public interface CompanyAdditionalContactsService {
 	
 	boolean delete(CompanyAdditionalContacts companyAdditionalContacts);
 	
-	List<CompanyAdditionalContacts> getAll(int companyId);
+	List<CompanyAdditionalContacts> getAll(Long companyId);
 	
-	CompanyAdditionalContacts get(int id);
+	CompanyAdditionalContacts get(Long id);
 	
 }

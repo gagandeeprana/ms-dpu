@@ -125,7 +125,7 @@ public class TrailerController extends MessageProperties {
 
 		Object obj = null;
 		try {
-			trailerrequest.setTrailerId(id);
+			//trailerrequest.setTrailerId(id);
 			Trailer tr = setTrailerValues(trailerrequest);
 			
 			
@@ -168,7 +168,7 @@ public class TrailerController extends MessageProperties {
 	
 	private Trailer setTrailerValues(TrailerRequest trailerRequest){
 		Trailer trailer = new Trailer();
-		trailer.setTrailerId(trailerRequest.getTrailerId());
+		/*trailer.setTrailerId(trailerRequest.getTrailerId());
 		trailer.setUnitNo(trailerRequest.getUnitNo());
 		trailer.setUsage(trailerRequest.getUsage());
 		trailer.setOwner(trailerRequest.getOwner());
@@ -178,7 +178,7 @@ public class TrailerController extends MessageProperties {
 		trailer.setCategory(trailerRequest.getCategory());
 		trailer.setTrailerType(trailerRequest.getTrailerType());
 		trailer.setStatus(trailerRequest.getStatus());
-		trailer.setFinance(trailerRequest.getFinance());
+		trailer.setFinance(trailerRequest.getFinance());*/
 		
 		return trailer;
 	}

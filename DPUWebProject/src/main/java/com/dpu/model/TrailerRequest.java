@@ -1,44 +1,139 @@
 package com.dpu.model;
 
+import java.util.List;
+
+import com.dpu.entity.Status;
+
 public class TrailerRequest {
 
-	private Integer trailerId;
+	private Long trailerId;
 
-	private Integer unitNo;
+	private Long unitNo;
 
 	private String usage;
 
 	private String owner;
 
 	private String division;
+	private Long divisionId;
+	private List<DivisionReq> divisionList;
 
 	private String oOName;
 
 	private String terminal;
+	private Long terminalId;
+	private List<TerminalResponse> terminalList;
 
 	private String category;
+	private Long categoryId;
+	private List<CategoryReq> categoryList;
 
 	private String trailerType;
+	private Long trailerTypeId;
+	private List<TrailerRequest> trailerList;
 
 	private String status;
-
-	private String finance;
-
-	public Integer getTrailerId() {
+	public Long getTrailerId() {
 		return trailerId;
 	}
 
-	public void setTrailerId(Integer trailerId) {
+	public void setTrailerId(Long trailerId) {
 		this.trailerId = trailerId;
 	}
 
-	public Integer getUnitNo() {
+	public Long getUnitNo() {
 		return unitNo;
 	}
 
-	public void setUnitNo(Integer unitNo) {
+	public void setUnitNo(Long unitNo) {
 		this.unitNo = unitNo;
 	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public List<DivisionReq> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<DivisionReq> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public Long getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(Long terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public List<TerminalResponse> getTerminalList() {
+		return terminalList;
+	}
+
+	public void setTerminalList(List<TerminalResponse> terminalList) {
+		this.terminalList = terminalList;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public List<CategoryReq> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CategoryReq> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public Long getTrailerTypeId() {
+		return trailerTypeId;
+	}
+
+	public void setTrailerTypeId(Long trailerTypeId) {
+		this.trailerTypeId = trailerTypeId;
+	}
+
+	public List<TrailerRequest> getTrailerList() {
+		return trailerList;
+	}
+
+	public void setTrailerList(List<TrailerRequest> trailerList) {
+		this.trailerList = trailerList;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
+	private Long statusId;
+	private List<Status> statusList;
+
+	private String finance;
+
 
 	public String getUsage() {
 		return usage;

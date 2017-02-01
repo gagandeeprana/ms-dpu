@@ -230,6 +230,7 @@ public class CompanyServiceImpl implements CompanyService{
 
 	private void setCompanyData(Company companyObj, CompanyResponse response) {
 		
+		response.setCompanyId(companyObj.getCompanyId());
 		response.setAddress(companyObj.getAddress());
 		response.setAfterHours(companyObj.getAfterHours());
 		response.setCellular(companyObj.getCellular());

@@ -3,6 +3,7 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Trailer;
+import com.dpu.model.TrailerRequest;
 
 public interface TrailerService {
 
@@ -12,7 +13,7 @@ public interface TrailerService {
 	
 	Trailer update(Trailer trailer);
 	
-	List<Trailer> getAll();
+	List<TrailerRequest> getAll();
 	
 	Trailer get(int id);
 }

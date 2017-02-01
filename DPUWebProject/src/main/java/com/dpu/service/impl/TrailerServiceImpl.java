@@ -1,12 +1,15 @@
 package com.dpu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.TrailerDao;
 import com.dpu.entity.Trailer;
+import com.dpu.model.TrailerRequest;
 import com.dpu.service.TrailerService;
 
 @Component
@@ -39,8 +42,16 @@ public class TrailerServiceImpl implements TrailerService{
 	}
 
 	@Override
-	public List<Trailer> getAll() {
-		return trailerdao.findAll();
+	public List<TrailerRequest> getAll() {
+		List<Trailer> trailerList = trailerdao.findAll();
+		List<TrailerRequest> returnResponse = new ArrayList<TrailerRequest>();
+		if(trailerList !=  null && !trailerList.isEmpty()){
+			for (Trailer trailer : trailerList) {
+				TrailerRequest response = new TrailerRequest();
+				BeanUtils.copyProperties(trailer, response);
+			}
+		}
+		 return returnResponse;
 	}
 
 	@Override

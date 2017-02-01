@@ -116,8 +116,9 @@ public class CompanyController extends MessageProperties {
 		logger.info("[update] : Enter : ID : "+id);
 		Object obj = null;
 		try {
-			company.setCompanyId(id);
-			Company response = companyService.update(company);
+			//company.setCompanyId(id);
+			Company response = null;
+			response = companyService.update(company);
 			if (response != null) {
 				obj = new ResponseEntity<Object>(new Success(
 						Integer.parseInt(companyUpdateCode),

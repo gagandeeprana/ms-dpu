@@ -3,14 +3,10 @@ package com.dpu.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -27,6 +23,7 @@ public class TerminalResponse {
 	private String status;
 	private Long statusId;
 	private List<Status> statusList;
+	private List<DPUService> serviceList;
 	
 	public Long getTerminalId() {
 		return terminalId;
@@ -100,6 +97,10 @@ public class TerminalResponse {
 	public void setStatusList(List<Status> statusList) {
 		this.statusList = statusList;
 	}
-	
-	
+	public List<DPUService> getServiceList() {
+		return serviceList;
+	}
+	public void setServiceList(List<DPUService> serviceList) {
+		this.serviceList = serviceList;
+	}	
 }

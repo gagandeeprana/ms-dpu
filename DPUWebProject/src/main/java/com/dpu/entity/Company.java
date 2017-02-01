@@ -21,7 +21,7 @@ public class Company {
 	@Id
 	@Column(name = "company_id")
 	@GeneratedValue
-	private int companyId;
+	private Long companyId;
 	
 	@Column(name = "name")
 	private String name;
@@ -102,11 +102,11 @@ public class Company {
 		this.billingLocations = billingLocations;
 	}
 
-	public int getCompanyId() {
+	public Long getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
 	}
 

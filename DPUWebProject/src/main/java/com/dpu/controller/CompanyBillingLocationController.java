@@ -74,27 +74,30 @@ public class CompanyBillingLocationController extends MessageProperties {
 		return obj;
 	}
 
+	/**
+	 * this method is used to delete particular billing location based on billingLocationId
+	 * @param id
+	 * @return object
+	 * @author lakhvir
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
-		logger.info("[delete] : Enter : Id : "+id);
+		logger.info("Inside CompanyBillingLocationController delete() starts, billingocationId: "+id);
 		Object obj = null;
 		boolean result = false;
 
 		try {
-			
-			CompanyBillingLocation companyBillingLocation = companyBillingLocationService.get(id);
-			if(companyBillingLocation != null) {
-				result = companyBillingLocationService.delete(companyBillingLocation);
-			}
+			result = companyBillingLocationService.delete(id);
 			if(result) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyDeletedCode), companyDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(companyUnableToDeleteCode), companyUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Excepton inside CompanyBillingLocationController delete() :"+e.getMessage());
 		}
-		logger.info("[delete] : Exit");
+		
+		logger.info("Inside CompanyBillingLocationController delete() Ends, billingocationId: "+id);
 		return obj;
 	}
 
@@ -103,7 +106,7 @@ public class CompanyBillingLocationController extends MessageProperties {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
-			companyBillingLocation.setBillingLocationId(id);
+			//companyBillingLocation.setBillingLocationId(id);
 			CompanyBillingLocation response = companyBillingLocationService.update(companyBillingLocation);
 			if(response != null) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyUpdateCode), companyUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);

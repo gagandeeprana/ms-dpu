@@ -65,15 +65,13 @@ public class TrailerController extends MessageProperties {
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody TrailerRequest trailerRequest) {
+		
+		logger.info("Inside TrailerController add() starts");
 		Object obj = null;
 		try {
-			
-			Trailer trailer = setTrailerValues(trailerRequest);
-			Trailer response = trailerService.add(trailer);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(trailerAddedCode),
-						trailerAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			Object response = trailerService.add(trailerRequest);
+			if (response instanceof List<?>) {
+				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(trailerUnableToAddCode),
@@ -81,8 +79,10 @@ public class TrailerController extends MessageProperties {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TrailerController add() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController add() Ends");
 		return obj;
 	}
 

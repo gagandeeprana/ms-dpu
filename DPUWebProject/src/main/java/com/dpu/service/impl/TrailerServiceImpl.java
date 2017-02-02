@@ -7,6 +7,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.CategoryDao;
+import com.dpu.dao.DivisionDao;
+import com.dpu.dao.TerminalDao;
 import com.dpu.dao.TrailerDao;
 import com.dpu.entity.Status;
 import com.dpu.entity.Trailer;
@@ -43,11 +46,29 @@ public class TrailerServiceImpl implements TrailerService{
 	@Autowired
 	TerminalService terminalService;
 	
+	@Autowired
+	CategoryDao categoryDao;
+	
+	@Autowired
+	DivisionDao divisionDao;
+	
+	@Autowired
+	TerminalDao terminalDao;
+	
+	
+	
 	@Override
-	public Trailer add(Trailer trailer) {
-//		trailer.setReadingTakenDate(new Date());
-//		trailer.setCreatedOn(new Date());
-		return trailerdao.save(trailer);
+	public Object add(TrailerRequest trailerRequest) {
+		
+		Trailer trailer = new Trailer();
+		BeanUtils.copyProperties(trailerRequest, trailer);
+		trailer.setCategory(categoryDao.findById(trailerRequest.getCategoryId()));
+		trailer.setDivision(divisionDao.findById(trailerRequest.getDivisionId()));
+		trailer.setTerminal(terminalDao.findById(trailerRequest.getTerminalId()));
+		trailer.setType(typeService.get(trailerRequest.getTrailerTypeId()));
+		trailer.setStatus(statusService.get(trailerRequest.getStatusId()));
+		trailerdao.save(trailer);
+		return getAll();
 	}
 
 	@Override

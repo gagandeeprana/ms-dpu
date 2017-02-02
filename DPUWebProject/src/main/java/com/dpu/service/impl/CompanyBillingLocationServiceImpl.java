@@ -28,11 +28,14 @@ public class CompanyBillingLocationServiceImpl implements CompanyBillingLocation
 	}
 
 	@Override
-	public boolean delete(CompanyBillingLocation companyBillingLocation) {
+	public boolean delete(Long billingId) {
 		boolean result = false;
 		try {
-			companyBillingLocationDao.delete(companyBillingLocation);
-			result = true;
+			CompanyBillingLocation billingLocation = get(billingId);
+			if(billingLocation != null){
+				companyBillingLocationDao.delete(billingLocation);
+				result = true;
+			}
 		} catch (Exception e) {
 			result = false;
 		}

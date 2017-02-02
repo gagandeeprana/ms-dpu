@@ -10,7 +10,7 @@ public interface CompanyBillingLocationService {
 	
 	CompanyBillingLocation update(CompanyBillingLocation companyBillingLocation);
 	
-	boolean delete(CompanyBillingLocation companyBillingLocation);
+	boolean delete(Long id);
 	
 	List<CompanyBillingLocation> getAll(Long companyId);
 	

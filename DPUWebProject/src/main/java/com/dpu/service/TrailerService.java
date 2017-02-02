@@ -7,7 +7,7 @@ import com.dpu.model.TrailerRequest;
 
 public interface TrailerService {
 
-	Trailer add(Trailer trailer);
+	Object add(TrailerRequest trailerRequest);
 	
 	boolean delete(Trailer trailer);
 	

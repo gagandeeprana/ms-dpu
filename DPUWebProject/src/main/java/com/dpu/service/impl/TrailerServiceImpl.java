@@ -77,15 +77,14 @@ public class TrailerServiceImpl implements TrailerService{
 	}
 
 	@Override
-	public boolean delete(Trailer trailer) {
-		boolean result = false;
-		try {
+	public Object delete(Long trailerId) {
+
+		Trailer trailer = trailerdao.findById(trailerId);
+		if(trailer != null){
 			trailerdao.delete(trailer);
-			result = true;
-		} catch (Exception e) {
-			result = false;
 		}
-		return result;
+		
+		return getAll();
 	}
 
 	@Override

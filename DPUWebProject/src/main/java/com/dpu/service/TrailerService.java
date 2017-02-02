@@ -9,7 +9,7 @@ public interface TrailerService {
 
 	Object add(TrailerRequest trailerRequest);
 	
-	boolean delete(Trailer trailer);
+	Object delete(Long trailerId);
 	
 	Trailer update(Trailer trailer);
 	

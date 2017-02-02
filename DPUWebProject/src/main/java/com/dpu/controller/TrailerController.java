@@ -63,6 +63,12 @@ public class TrailerController extends MessageProperties {
 		return json;
 	}
 	
+	/**
+	 * this method is used to add the trailer
+	 * @param trailerRequest
+	 * @return all trailers List
+	 * @author lakhvir
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody TrailerRequest trailerRequest) {
 		
@@ -87,21 +93,15 @@ public class TrailerController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long trailerId) {
 
 		Object obj = null;
-		boolean result = false;
-
 		try {
 
-			Trailer trailer = trailerService.get(id);
-			if (trailer != null) {
-				result = trailerService.delete(trailer);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(trailerDeletedCode),
-						trailerDeletedMessage, Iconstants.SUCCESS),
+			obj = trailerService.delete(trailerId);
+			
+			if (obj instanceof List<?>) {
+				obj = new ResponseEntity<Object>(obj,
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(

@@ -136,16 +136,28 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	@Override
-	public boolean delete(Company company) {
-		boolean result = false;
-		try {
-			companyDao.delete(company);
+	public Object delete(Long companyId) {
 			
-			result = true;
-		} catch (Exception e) {
-			result = false;
+		Company company = companyDao.findById(companyId);
+		
+		if(company != null){
+			
+			List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(companyId);
+			if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
+				for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
+					companyBillingLocationDao.delete(companyBillingLocation);
+				}
+			}
+			
+			List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(companyId);
+			if(comAddContacts != null && !comAddContacts.isEmpty()){
+				for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
+					companyAdditionalContactsDao.delete(companyAdditionalContacts);
+				}
+			}
+			companyDao.delete(company);
 		}
-		return result;
+		return getAll();
 	}
 
 	@Override

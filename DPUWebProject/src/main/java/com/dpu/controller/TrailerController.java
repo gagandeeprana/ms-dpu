@@ -1,6 +1,5 @@
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -18,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Trailer;
-import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
-import com.dpu.model.Success;
 import com.dpu.model.TrailerRequest;
 import com.dpu.service.TrailerService;
 import com.dpu.util.MessageProperties;
@@ -116,21 +113,13 @@ public class TrailerController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
-			@RequestBody TrailerRequest trailerrequest) {
+	public Object update(@PathVariable("id") Long trailerId,@RequestBody TrailerRequest trailerRequest) {
 
 		Object obj = null;
 		try {
-			//trailerrequest.setTrailerId(id);
-			Trailer tr = setTrailerValues(trailerrequest);
-			
-			
-			Trailer response = trailerService.update(tr);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(trailerUpdateCode),
-						trailerUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			Object response = trailerService.update(trailerId,trailerRequest);
+			if (response instanceof List<?>) {
+				obj = new ResponseEntity<Object>(response,HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(trailerUnableToUpdateCode),

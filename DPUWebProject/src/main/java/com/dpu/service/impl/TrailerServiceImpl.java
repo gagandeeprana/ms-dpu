@@ -15,7 +15,6 @@ import com.dpu.entity.Status;
 import com.dpu.entity.Trailer;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
-import com.dpu.model.DriverReq;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TrailerRequest;
 import com.dpu.model.TypeResponse;
@@ -72,8 +71,23 @@ public class TrailerServiceImpl implements TrailerService{
 	}
 
 	@Override
-	public Trailer update(Trailer trailer) {
-		return trailerdao.update(trailer);
+	public Object update(Long trailerId, TrailerRequest trailerRequest) {
+		
+		Trailer trailer = trailerdao.findById(trailerId);
+		
+		if(trailer != null){
+			String[] ignoreProp = new String[1];
+			ignoreProp[0] = "trailerId";
+			BeanUtils.copyProperties(trailerRequest, trailer, ignoreProp);
+			trailer.setCategory(categoryDao.findById(trailerRequest.getCategoryId()));
+			trailer.setDivision(divisionDao.findById(trailerRequest.getDivisionId()));
+			trailer.setTerminal(terminalDao.findById(trailerRequest.getTerminalId()));
+			trailer.setType(typeService.get(trailerRequest.getTrailerTypeId()));
+			trailer.setStatus(statusService.get(trailerRequest.getStatusId()));
+			trailerdao.update(trailer);
+		}
+		
+		return getAll();
 	}
 
 	@Override

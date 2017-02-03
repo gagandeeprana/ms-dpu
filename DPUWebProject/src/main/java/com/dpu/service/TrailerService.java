@@ -11,7 +11,7 @@ public interface TrailerService {
 	
 	Object delete(Long trailerId);
 	
-	Trailer update(Trailer trailer);
+	Object update(Long trailerId, TrailerRequest trailerRequest);
 	
 	List<TrailerRequest> getAll();
 	

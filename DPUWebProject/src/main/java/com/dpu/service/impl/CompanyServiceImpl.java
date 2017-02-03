@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,9 @@ public class CompanyServiceImpl implements CompanyService{
 	
 	@Autowired
 	CompanyAdditionalContactsService companyAdditionalContactsService;
+	
+	@Autowired
+	SessionFactory sessionFactory;
 	
 	@Override
 	public Company addCompanyData(CompanyResponse companyResponse) {
@@ -281,5 +287,36 @@ public class CompanyServiceImpl implements CompanyService{
 		}
 		
 		return returnRes;
+	}
+
+	@Override
+	public Object update(Long id, CompanyResponse companyResponse) {
+
+		Company company = companyDao.findById(id);
+		Session session = null;
+		Transaction tx = null;
+		Object obj = null;
+		try{
+			if(company != null){
+				session = sessionFactory.openSession();
+				tx = session.beginTransaction();
+				
+				companyDao.updateData(company, companyResponse,session);
+				obj = getAll();
+			}
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return obj;
 	}
 }

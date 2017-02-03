@@ -20,7 +20,7 @@ public class CompanyBillingLocation {
     @Id
     @Column(name = "billing_location_id")
     @GeneratedValue
-    private int billingLocationId;
+    private Long billingLocationId;
 
     @Column(name = "name")
     private String name;
@@ -80,11 +80,11 @@ public class CompanyBillingLocation {
     @JoinColumn(name = "company_id")
     private Company company;
 
-	public int getBillingLocationId() {
+	public Long getBillingLocationId() {
 		return billingLocationId;
 	}
 
-	public void setBillingLocationId(int billingLocationId) {
+	public void setBillingLocationId(Long billingLocationId) {
 		this.billingLocationId = billingLocationId;
 	}
 

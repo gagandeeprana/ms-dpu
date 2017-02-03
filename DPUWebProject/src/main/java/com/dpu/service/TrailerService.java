@@ -3,16 +3,19 @@ package com.dpu.service;
 import java.util.List;
 
 import com.dpu.entity.Trailer;
+import com.dpu.model.TrailerRequest;
 
 public interface TrailerService {
 
-	Trailer add(Trailer trailer);
+	Object add(TrailerRequest trailerRequest);
 	
-	boolean delete(Trailer trailer);
+	Object delete(Long trailerId);
 	
-	Trailer update(Trailer trailer);
+	Object update(Long trailerId, TrailerRequest trailerRequest);
 	
-	List<Trailer> getAll();
+	List<TrailerRequest> getAll();
 	
 	Trailer get(int id);
+
+	TrailerRequest getOpenAdd();
 }

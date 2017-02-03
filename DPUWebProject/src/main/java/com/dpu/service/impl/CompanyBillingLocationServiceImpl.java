@@ -28,11 +28,14 @@ public class CompanyBillingLocationServiceImpl implements CompanyBillingLocation
 	}
 
 	@Override
-	public boolean delete(CompanyBillingLocation companyBillingLocation) {
+	public boolean delete(Long billingId) {
 		boolean result = false;
 		try {
-			companyBillingLocationDao.delete(companyBillingLocation);
-			result = true;
+			CompanyBillingLocation billingLocation = get(billingId);
+			if(billingLocation != null){
+				companyBillingLocationDao.delete(billingLocation);
+				result = true;
+			}
 		} catch (Exception e) {
 			result = false;
 		}
@@ -40,7 +43,7 @@ public class CompanyBillingLocationServiceImpl implements CompanyBillingLocation
 	}
 
 	@Override
-	public List<CompanyBillingLocation> getAll(int companyId) {
+	public List<CompanyBillingLocation> getAll(Long companyId) {
 		try {
 			Criterion criterion = Restrictions.eq("company.companyId", companyId);
 			return companyBillingLocationDao.find(criterion);
@@ -50,7 +53,7 @@ public class CompanyBillingLocationServiceImpl implements CompanyBillingLocation
 	}
 
 	@Override
-	public CompanyBillingLocation get(int id) {
+	public CompanyBillingLocation get(Long id) {
 		return companyBillingLocationDao.findById(id);
 	}
 }

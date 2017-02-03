@@ -11,12 +11,12 @@ public interface CompanyService {
 	
 	Company update(Company company);
 	
-	boolean delete(Company company);
+	Object delete(Long companyId);
 	
 	List<CompanyResponse> getAll();
 	
-	CompanyResponse get(int id);
-	
 	List<CompanyResponse> getCompanyData();
+
+	CompanyResponse get(Long id);
 	
 }

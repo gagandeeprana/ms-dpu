@@ -80,23 +80,15 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
-		logger.info("[delete] : Enter : ID : "+id);
+	public Object delete(@PathVariable("id") Long companyId) {
+		logger.info("[delete] : Enter : ID : ");
 		Object obj = null;
-		boolean result = false;
 
 		try {
 			
-			Company company = null;
-			//Company company = companyService.get(id);
-			if (company != null) {
-				result = companyService.delete(company);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyDeletedCode),
-						companyDeletedMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			obj = companyService.delete(companyId);
+			if (obj instanceof List<?>) {
+				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(companyUnableToDeleteCode),
@@ -138,7 +130,7 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("id") int id) {
+	public Object get(@PathVariable("id") Long id) {
 		
 		logger.info("[get] : Enter : ID : "+id);
 		String json = new String();

@@ -1,6 +1,5 @@
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Trailer;
 import com.dpu.model.Failed;
-import com.dpu.model.Success;
 import com.dpu.model.TrailerRequest;
 import com.dpu.service.TrailerService;
 import com.dpu.util.MessageProperties;
@@ -36,48 +34,47 @@ public class TrailerController extends MessageProperties {
 	ObjectMapper mapper = new ObjectMapper();
 	
 	
-
+	/**
+	 * this method is used to get all trailers
+	 * @return List<trailers>
+	 * @author lakhvir
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 		
-		logger.info("Inside getAll(): TrailerController:");
-		
+		logger.info("Inside TrailerController getAll() Starts ");
 		String json = new String();
+		
 		try {
-			
-			List<Trailer> lstTrailers = trailerService.getAll();
-			logger.info("Inside getAll(): TrailerController: List Size: " + lstTrailers.size());
+			List<TrailerRequest> lstTrailers = trailerService.getAll();
 
-			if (lstTrailers != null && lstTrailers.size() > 0) {
-				List<TrailerRequest> responses = new ArrayList<TrailerRequest>();
-				for(Trailer trailer : lstTrailers) {
-					TrailerRequest response = new TrailerRequest();
-					BeanUtils.copyProperties(response, trailer);
-					responses.add(response);
-				}
-				if(responses != null && !responses.isEmpty()) {
-					json = mapper.writeValueAsString(responses);
-				}
+			if(lstTrailers != null && !lstTrailers.isEmpty()) {
+				json = mapper.writeValueAsString(lstTrailers);
 			}
+			
 		} catch (Exception e) {
-			logger.error("Inside getAll(): TrailerController: Exception is: " + e.getMessage());
-
-			System.out.println(e);
+			logger.error("Exception inside  TrailerController getAll() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController getAll() Ends ");
 		return json;
 	}
 	
+	/**
+	 * this method is used to add the trailer
+	 * @param trailerRequest
+	 * @return all trailers List
+	 * @author lakhvir
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody TrailerRequest trailerRequest) {
+		
+		logger.info("Inside TrailerController add() starts");
 		Object obj = null;
 		try {
-			
-			Trailer trailer = setTrailerValues(trailerRequest);
-			Trailer response = trailerService.add(trailer);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(trailerAddedCode),
-						trailerAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			Object response = trailerService.add(trailerRequest);
+			if (response instanceof List<?>) {
+				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(trailerUnableToAddCode),
@@ -85,27 +82,23 @@ public class TrailerController extends MessageProperties {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TrailerController add() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController add() Ends");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") int id) {
+	public Object delete(@PathVariable("id") Long trailerId) {
 
 		Object obj = null;
-		boolean result = false;
-
 		try {
 
-			Trailer trailer = trailerService.get(id);
-			if (trailer != null) {
-				result = trailerService.delete(trailer);
-			}
-			if (result) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(trailerDeletedCode),
-						trailerDeletedMessage, Iconstants.SUCCESS),
+			obj = trailerService.delete(trailerId);
+			
+			if (obj instanceof List<?>) {
+				obj = new ResponseEntity<Object>(obj,
 						HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
@@ -120,21 +113,13 @@ public class TrailerController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
-			@RequestBody TrailerRequest trailerrequest) {
+	public Object update(@PathVariable("id") Long trailerId,@RequestBody TrailerRequest trailerRequest) {
 
 		Object obj = null;
 		try {
-			trailerrequest.setTrailerId(id);
-			Trailer tr = setTrailerValues(trailerrequest);
-			
-			
-			Trailer response = trailerService.update(tr);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(trailerUpdateCode),
-						trailerUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			Object response = trailerService.update(trailerId,trailerRequest);
+			if (response instanceof List<?>) {
+				obj = new ResponseEntity<Object>(response,HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(trailerUnableToUpdateCode),
@@ -168,7 +153,7 @@ public class TrailerController extends MessageProperties {
 	
 	private Trailer setTrailerValues(TrailerRequest trailerRequest){
 		Trailer trailer = new Trailer();
-		trailer.setTrailerId(trailerRequest.getTrailerId());
+		/*trailer.setTrailerId(trailerRequest.getTrailerId());
 		trailer.setUnitNo(trailerRequest.getUnitNo());
 		trailer.setUsage(trailerRequest.getUsage());
 		trailer.setOwner(trailerRequest.getOwner());
@@ -178,8 +163,25 @@ public class TrailerController extends MessageProperties {
 		trailer.setCategory(trailerRequest.getCategory());
 		trailer.setTrailerType(trailerRequest.getTrailerType());
 		trailer.setStatus(trailerRequest.getStatus());
-		trailer.setFinance(trailerRequest.getFinance());
+		trailer.setFinance(trailerRequest.getFinance());*/
 		
 		return trailer;
 	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		logger.info(" Inside TrailerController openAdd() Starts ");
+		String json = null;
+		try {
+			TrailerRequest trailerReq = trailerService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(trailerReq);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info(" Inside TrailerController openAdd() Ends ");
+		return json;
+	}
+	
+	
 }

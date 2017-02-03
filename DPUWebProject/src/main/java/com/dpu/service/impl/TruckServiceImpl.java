@@ -228,8 +228,8 @@ public class TruckServiceImpl implements TruckService {
 		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
 		truckResponse.setTerminalList(terminalList);
 
-		List<TypeResponse> roleList = typeService.getAll(6l);
-		truckResponse.setTypeList(roleList);
+		List<TypeResponse> truckTypeList = typeService.getAll(8l);
+		truckResponse.setTypeList(truckTypeList);
 
 		return truckResponse;
 

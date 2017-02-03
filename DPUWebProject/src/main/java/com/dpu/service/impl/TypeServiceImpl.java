@@ -45,6 +45,7 @@ public class TypeServiceImpl implements TypeService {
 				TypeResponse typeResponse = new TypeResponse();
 				typeResponse.setTypeId(type.getTypeId());
 				typeResponse.setTypeName(type.getTypeName());
+				typeResponse.setTypeValue(type.getValue());
 				response.add(typeResponse);
 			}
 		}

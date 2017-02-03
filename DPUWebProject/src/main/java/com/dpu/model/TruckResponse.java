@@ -52,6 +52,34 @@ public class TruckResponse implements Serializable {
 	private Long statusId;
 	private List<Status> statusList;
 
+	private String typeName;
+	private Long typeId;
+	private List<TypeResponse> typeList;
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public Long getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
+	}
+
+	public List<TypeResponse> getTypeList() {
+		return typeList;
+	}
+
+	public void setTypeList(List<TypeResponse> typeList) {
+		this.typeList = typeList;
+	}
+
 	public String getDivisionName() {
 		return divisionName;
 	}

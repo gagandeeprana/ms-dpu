@@ -19,11 +19,8 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
-import com.dpu.entity.Equipment;
 import com.dpu.entity.Status;
 import com.dpu.model.DivisionReq;
-import com.dpu.model.EquipmentReq;
-import com.dpu.model.TypeResponse;
 import com.dpu.service.DivisionService;
 import com.dpu.service.StatusService;
 
@@ -175,63 +172,5 @@ public class DivisionServiceImpl implements DivisionService {
 		return divisionList;
 
 	}
-
-	// @Override
-	// public boolean add(Division division) {
-	// logger.info("[addCategory]:Service:  Enter");
-	//
-	// boolean returnValue = false;
-	// try {
-	//
-	// // truck.setCreated("sumit");
-	// // truck.setCreatedOn(new Date());
-	// //
-	// // truck.setModifiedBy("sumit");
-	// // truck.setModifiedOn(new Date());
-	//
-	// Division divisionn = divisionDao.save(division);
-	// division.setCreatedOn(new Date());
-	// System.out.println("[addCategory]category Id :"
-	// + divisionn.getDivisionId());
-	// returnValue = true;
-	// return returnValue;
-	//
-	// } catch (Exception e) {
-	// logger.info("[addCategory]:Exception:    : ", e);
-	// System.out.println(e);
-	// return returnValue;
-	// } finally {
-	// logger.info("[addCategory]:Service:  returnValue : " + returnValue);
-	// }
-	// }
-	//
-	// @Override
-	// public Division update(int id, Division division) {
-	// division.setCreatedOn(new Date());
-	// return divisionDao.update(division);
-	// }
-	//
-	// @Override
-	// public boolean delete(Division division) {
-	// boolean result = false;
-	// try {
-	// divisionDao.delete(division);
-	// result = true;
-	// } catch (Exception e) {
-	// result = false;
-	// }
-	// return result;
-	// }
-	//
-	// @Override
-	// public List<Division> getAll(String divisionName) {
-	//
-	// return divisionDao.findAll();
-	// }
-	//
-	// @Override
-	// public Division get(int id) {
-	// return divisionDao.findById(id);
-	// }
 
 }

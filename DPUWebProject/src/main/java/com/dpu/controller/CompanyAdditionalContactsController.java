@@ -76,17 +76,14 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long id) {
-		logger.info("[delete] : Enter : ID : "+id);
+	public Object delete(@PathVariable("id") Long additionalContactId) {
+		logger.info("[delete] : Enter : ID : "+additionalContactId);
 		Object obj = null;
 		boolean result = false;
 
 		try {
 			
-			CompanyAdditionalContacts companyAdditionalContacts = companyAdditionalContactsService.get(id);
-			if(companyAdditionalContacts != null) {
-				result = companyAdditionalContactsService.delete(companyAdditionalContacts);
-			}
+			result = companyAdditionalContactsService.delete(additionalContactId);
 			if(result) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyDeletedCode), companyDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
 			} else {
@@ -104,7 +101,7 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 		logger.info("[update] : Enter : ID : "+id);
 		Object obj = null;
 		try {
-			companyAdditionalContacts.setAdditionalContactId(id);
+			//companyAdditionalContacts.setAdditionalContactId(id);
 			CompanyAdditionalContacts response = companyAdditionalContactsService.update(companyAdditionalContacts);
 			if(response != null) {
 				obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyUpdateCode), companyUpdateMessage, Iconstants.SUCCESS), HttpStatus.OK);

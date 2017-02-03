@@ -28,11 +28,15 @@ public class CompanyAdditionalContactsServiceImpl implements CompanyAdditionalCo
 	}
 
 	@Override
-	public boolean delete(CompanyAdditionalContacts companyAdditionalContacts) {
+	public boolean delete(Long additionalContactId) {
 		boolean result = false;
 		try {
-			companyAdditionalContactsDao.delete(companyAdditionalContacts);
-			result = true;
+			CompanyAdditionalContacts companyAdditionalContacts = get(additionalContactId);
+			if(companyAdditionalContacts != null){
+				companyAdditionalContactsDao.delete(companyAdditionalContacts);
+				result = true;
+			}
+			
 		} catch (Exception e) {
 			result = false;
 		}

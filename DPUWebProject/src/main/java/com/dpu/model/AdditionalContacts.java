@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 public class AdditionalContacts {
 
 	////@JsonProperty("add_contact_id")
-	private int additionalContactId;
+	private Long additionalContactId;
 
 	////@JsonProperty("customer_name")
 	private String customerName;
@@ -37,11 +37,11 @@ public class AdditionalContacts {
 	//@JsonProperty("email")
 	private String email;
 
-	public int getAdditionalContactId() {
+	public Long getAdditionalContactId() {
 		return additionalContactId;
 	}
 
-	public void setAdditionalContactId(int additionalContactId) {
+	public void setAdditionalContactId(Long additionalContactId) {
 		this.additionalContactId = additionalContactId;
 	}
 

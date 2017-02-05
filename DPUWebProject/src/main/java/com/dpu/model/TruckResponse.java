@@ -15,69 +15,69 @@ public class TruckResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long truckId;
-
 	private String truchUsage;
-
 	private String owner;
-
 	private String oOName;
-
 	private String truckType;
-
 	private String finance;
-
 	private Integer unitNo;
-
 	private Date createdOn;
-
 	private String createdBy;
-
 	private String modifiedBy;
-
 	private Date modifiedOn;
-
 	private String divisionName;
 	private Long divisionId;
 	private List<DivisionReq> divisionList;
-
 	private String terminalName;
 	private Long terminalId;
 	private List<TerminalResponse> terminalList;
-
 	private String catogoryName;
 	private Long categoryId;
 	private List<CategoryReq> categoryList;
-
 	private String statusName;
 	private Long statusId;
 	private List<Status> statusList;
-
-	private String typeName;
-	private Long typeId;
-	private List<TypeResponse> typeList;
-
-	public String getTypeName() {
-		return typeName;
+	private Long truckTypeId;
+	private List<TypeResponse> truckTypeList;
+	
+	public List<DivisionReq> getDivisionList() {
+		return divisionList;
 	}
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
+	public void setDivisionList(List<DivisionReq> divisionList) {
+		this.divisionList = divisionList;
 	}
 
-	public Long getTypeId() {
-		return typeId;
+	public List<TerminalResponse> getTerminalList() {
+		return terminalList;
 	}
 
-	public void setTypeId(Long typeId) {
-		this.typeId = typeId;
+	public void setTerminalList(List<TerminalResponse> terminalList) {
+		this.terminalList = terminalList;
 	}
 
-	public List<TypeResponse> getTypeList() {
-		return typeList;
+	public List<CategoryReq> getCategoryList() {
+		return categoryList;
 	}
 
-	public void setTypeList(List<TypeResponse> typeList) {
-		this.typeList = typeList;
+	public void setCategoryList(List<CategoryReq> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public List<TypeResponse> getTruckTypeList() {
+		return truckTypeList;
+	}
+
+	public void setTruckTypeList(List<TypeResponse> truckTypeList) {
+		this.truckTypeList = truckTypeList;
+	}
+
+	public Long getTruckTypeId() {
+		return truckTypeId;
+	}
+
+	public void setTruckTypeId(Long truckTypeId) {
+		this.truckTypeId = truckTypeId;
 	}
 
 	public String getDivisionName() {
@@ -96,14 +96,6 @@ public class TruckResponse implements Serializable {
 		this.divisionId = divisionId;
 	}
 
-	public List<DivisionReq> getDivisionList() {
-		return divisionList;
-	}
-
-	public void setDivisionList(List<DivisionReq> divisionList) {
-		this.divisionList = divisionList;
-	}
-
 	public String getTerminalName() {
 		return terminalName;
 	}
@@ -120,14 +112,6 @@ public class TruckResponse implements Serializable {
 		this.terminalId = terminalId;
 	}
 
-	public List<TerminalResponse> getTerminalList() {
-		return terminalList;
-	}
-
-	public void setTerminalList(List<TerminalResponse> terminalList) {
-		this.terminalList = terminalList;
-	}
-
 	public String getCatogoryName() {
 		return catogoryName;
 	}
@@ -142,14 +126,6 @@ public class TruckResponse implements Serializable {
 
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
-	}
-
-	public List<CategoryReq> getCategoryList() {
-		return categoryList;
-	}
-
-	public void setCategoryList(List<CategoryReq> categoryList) {
-		this.categoryList = categoryList;
 	}
 
 	public String getStatusName() {

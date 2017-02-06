@@ -24,4 +24,5 @@ public interface GenericDao<T> {
 
 	public List<T> findByCriteria(LogicalExpression reExp, String columnName);
 
+	public List<Object[]> getSpecificData(String tableName, String firstColumn, String secondColumn);
 }

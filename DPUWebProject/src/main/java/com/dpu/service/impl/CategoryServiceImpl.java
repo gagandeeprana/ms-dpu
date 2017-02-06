@@ -204,4 +204,22 @@ public class CategoryServiceImpl implements CategoryService {
 		return category;
 	}
 
+	@Override
+	public List<CategoryReq> getSpecificData(){
+		List<Object[]> categoryData = categoryDao.getSpecificData("Category","categoryId","name");
+		
+		List<CategoryReq> categories = new ArrayList<CategoryReq>();
+		if(categoryData != null && !categoryData.isEmpty()){
+			for (Object[] row : categoryData) {
+				CategoryReq categoryObj = new CategoryReq();
+				categoryObj.setCategoryId((Long) row[0]);
+				categoryObj.setName(String.valueOf(row[1]));
+				categories.add(categoryObj);
+			}
+		}
+		
+		return categories;
+	}
+
+	
 }

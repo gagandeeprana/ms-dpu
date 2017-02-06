@@ -29,4 +29,6 @@ public interface CategoryService {
 	
 	Category getCategory(Long categoryId);
 
+	List<CategoryReq> getSpecificData();
+
 }

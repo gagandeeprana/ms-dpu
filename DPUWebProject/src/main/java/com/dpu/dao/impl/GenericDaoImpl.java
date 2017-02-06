@@ -211,6 +211,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -413,4 +414,26 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 		return t;
 	}
 
+	@SuppressWarnings({ "unchecked" })
+	public List<Object[]> getSpecificData(String tableName, String firstColumn, String secondColumn) {
+
+		List<Object[]> data = null;
+		Session session = sessionFactory.openSession();
+		try {
+			Query query = session.createQuery(" select "+firstColumn+" , "+secondColumn+" from "+tableName);
+			/*query.setParameter("firstColumn", firstColumn);
+			query.setParameter("secondColumn", secondColumn);*/
+			/*query.setParameter("tableName", tableName);*/
+			data = query.list();
+			
+		} catch (Exception e) {
+			logger.error("[save]" + e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return data;
+	}
 }

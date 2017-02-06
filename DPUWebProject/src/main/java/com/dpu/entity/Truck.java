@@ -30,6 +30,18 @@ public class Truck implements Serializable {
 	@JoinColumn(name = "terminal_id")
 	private Terminal terminal;
 
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
+
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
+
+	@ManyToOne
+	@JoinColumn(name = "truck_type_id")
+	private Type type;
+
 	@Column(name = "unit_no")
 	private Integer unitNo;
 
@@ -39,19 +51,11 @@ public class Truck implements Serializable {
 	@Column(name = "owner")
 	private String owner;
 
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category category;
-
-	@Column(name = "truck_type")
-	private String truckType;
+//	@Column(name = "truck_type")
+//	private String truckType;
 
 	@Column(name = "finance")
 	private String finance;
-
-	@ManyToOne
-	@JoinColumn(name = "status_id")
-	private Status status;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -67,6 +71,18 @@ public class Truck implements Serializable {
 
 	@Column(name = "oo_name")
 	private String oOName;
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	public String getoOName() {
 		return oOName;
@@ -120,13 +136,13 @@ public class Truck implements Serializable {
 		this.owner = owner;
 	}
 
-	public String getTruckType() {
-		return truckType;
-	}
-
-	public void setTruckType(String truckType) {
-		this.truckType = truckType;
-	}
+//	public String getTruckType() {
+//		return truckType;
+//	}
+//
+//	public void setTruckType(String truckType) {
+//		this.truckType = truckType;
+//	}
 
 	public String getFinance() {
 		return finance;

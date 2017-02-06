@@ -74,7 +74,7 @@ public class TruckServiceImpl implements TruckService {
 			// truck.setTerminal(terminalService.getTerminal(truckResponse.getTerminalId()));
 			truck.setStatus(statusService.get(truckResponse.getStatusId()));
 			truck.setUsage(truckResponse.getTruchUsage());
-			truck.setTruckType(truckResponse.getTruckType());
+			truck.setType(typeService.get(truckResponse.getTypeId()));
 			truck.setFinance(truckResponse.getFinance());
 
 			truckDao.update(truck);
@@ -114,7 +114,7 @@ public class TruckServiceImpl implements TruckService {
 			truckResponse.setDivisionId(truck.getDivision().getDivisionId());
 			truckResponse.setCategoryId(truck.getCategory().getCategoryId());
 			truckResponse.setTerminalId(truck.getTerminal().getTerminalId());
-			truckResponse.setTruckType(truck.getTruckType());
+			truckResponse.setTypeName(truck.getType().getTypeName());
 			truckResponse.setFinance(truck.getFinance());
 
 			List<Status> lstStatus = statusService.getAll();
@@ -129,6 +129,8 @@ public class TruckServiceImpl implements TruckService {
 
 			List<DivisionReq> lstDivision = divisionService.getAll("");
 			truckResponse.setDivisionList(lstDivision);
+			List<TypeResponse> roleList = typeService.getAll(6l);
+			truckResponse.setTypeList(roleList);
 
 		}
 		logger.info("[TruckServiceImpl] [get] : Exit ");
@@ -162,7 +164,7 @@ public class TruckServiceImpl implements TruckService {
 							.getDivisionName());
 					truckResponse.setTerminalName(truck.getTerminal()
 							.getTerminalName());
-					truckResponse.setTruckType(truck.getTruckType());
+					truckResponse.setTypeName(truck.getType().getTypeName());
 					truckResponse.setFinance(truck.getFinance());
 					truckResponse.setStatusName(truck.getStatus().getStatus());
 					lstTruckResponse.add(truckResponse);

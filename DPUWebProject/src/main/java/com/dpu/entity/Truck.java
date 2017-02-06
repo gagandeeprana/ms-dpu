@@ -51,8 +51,8 @@ public class Truck implements Serializable {
 	@Column(name = "owner")
 	private String owner;
 
-//	@Column(name = "truck_type")
-//	private String truckType;
+	// @Column(name = "truck_type")
+	// private String truckType;
 
 	@Column(name = "finance")
 	private String finance;
@@ -136,13 +136,13 @@ public class Truck implements Serializable {
 		this.owner = owner;
 	}
 
-//	public String getTruckType() {
-//		return truckType;
-//	}
-//
-//	public void setTruckType(String truckType) {
-//		this.truckType = truckType;
-//	}
+	// public String getTruckType() {
+	// return truckType;
+	// }
+	//
+	// public void setTruckType(String truckType) {
+	// this.truckType = truckType;
+	// }
 
 	public String getFinance() {
 		return finance;

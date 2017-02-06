@@ -74,7 +74,7 @@ public class DriverController extends MessageProperties  {
 		try {
 			Object result = driverService.addDriver(driverReq);
 			if(result != null){
-				if(result instanceof List<?>){ 
+				if(result instanceof Success){ 
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 				} else{
 					obj = new ResponseEntity<Object>(new Failed(Integer.parseInt("1234"), "this driver code is already present", Iconstants.ERROR), HttpStatus.BAD_REQUEST);

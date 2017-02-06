@@ -49,6 +49,7 @@ public class Equipment {
 	@Column(name = "modified_on")
 	private Date modifiedOn;
 	
+	
 	@ManyToOne
 	//@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "type_id")

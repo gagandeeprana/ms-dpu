@@ -10,7 +10,7 @@ public interface CompanyAdditionalContactsService {
 	
 	CompanyAdditionalContacts update(CompanyAdditionalContacts companyAdditionalContacts);
 	
-	boolean delete(CompanyAdditionalContacts companyAdditionalContacts);
+	boolean delete(Long additionalContactId);
 	
 	List<CompanyAdditionalContacts> getAll(Long companyId);
 	

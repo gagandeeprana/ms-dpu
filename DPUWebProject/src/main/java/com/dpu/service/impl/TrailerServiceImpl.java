@@ -125,8 +125,35 @@ public class TrailerServiceImpl implements TrailerService{
 	}
 
 	@Override
-	public Trailer get(int id) {
-		return trailerdao.findById(id);
+	public TrailerRequest get(Long trailerId) {
+		
+		TrailerRequest response = new TrailerRequest();
+		Trailer trailer = trailerdao.findById(trailerId);
+		if(trailer != null){
+			BeanUtils.copyProperties(trailer, response);
+			response.setCategoryId(trailer.getCategory().getCategoryId());
+			response.setDivisionId(trailer.getDivision().getDivisionId());
+			response.setTerminalId(trailer.getTerminal().getTerminalId());
+			response.setStatusId(trailer.getStatus().getId());
+			response.setTrailerTypeId(trailer.getType().getTypeId());
+		}
+		
+		List<Status> statusList = statusService.getAll();
+		response.setStatusList(statusList);
+		
+		List<TypeResponse> trailerTypeList = typeService.getAll(7l);
+		response.setTrailerTypeList(trailerTypeList);
+				
+		List<CategoryReq> categoryList = categoryService.getAll();
+		response.setCategoryList(categoryList);
+		
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		response.setDivisionList(divisionList);
+		
+		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		response.setTerminalList(terminalList);
+		
+		return response;
 	}
 
 	@Override

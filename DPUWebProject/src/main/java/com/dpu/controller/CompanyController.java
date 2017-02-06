@@ -103,19 +103,15 @@ public class CompanyController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") int id,
-			@RequestBody Company company) {
+	public Object update(@PathVariable("id") Long id, @RequestBody CompanyResponse companyResponse) {
 		logger.info("[update] : Enter : ID : "+id);
 		Object obj = null;
 		try {
 			//company.setCompanyId(id);
-			Company response = null;
-			response = companyService.update(company);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyUpdateCode),
-						companyUpdateMessage, Iconstants.SUCCESS),
-						HttpStatus.OK);
+			
+			obj = companyService.update(id, companyResponse);
+			if (obj instanceof List<?>) {
+				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
 						Integer.parseInt(companyUnableToUpdateCode),

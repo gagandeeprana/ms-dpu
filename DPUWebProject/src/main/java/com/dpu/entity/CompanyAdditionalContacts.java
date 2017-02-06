@@ -25,7 +25,7 @@ public class CompanyAdditionalContacts {
 	@Id
 	@Column(name = "add_contact_id")
 	@GeneratedValue
-	private int additionalContactId;
+	private Long additionalContactId;
 
 	@Column(name = "customer_name")
 	private String customerName;
@@ -61,11 +61,11 @@ public class CompanyAdditionalContacts {
 	@JoinColumn(name = "company_id")
 	private Company company;
 
-	public int getAdditionalContactId() {
+	public Long getAdditionalContactId() {
 		return additionalContactId;
 	}
 
-	public void setAdditionalContactId(int additionalContactId) {
+	public void setAdditionalContactId(Long additionalContactId) {
 		this.additionalContactId = additionalContactId;
 	}
 

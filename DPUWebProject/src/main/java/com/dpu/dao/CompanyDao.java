@@ -2,7 +2,10 @@ package com.dpu.dao;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.dpu.entity.Company;
+import com.dpu.model.CompanyResponse;
 
 public interface CompanyDao extends GenericDao<Company>{
 
@@ -17,5 +20,7 @@ public interface CompanyDao extends GenericDao<Company>{
 	Company get(int id);*/
 	
 	List<Object[]> getCompanyData();
+
+	void updateData(Company company, CompanyResponse companyResponse, Session session);
 	
 }

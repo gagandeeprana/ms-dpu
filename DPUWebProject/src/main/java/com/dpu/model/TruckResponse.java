@@ -25,21 +25,43 @@ public class TruckResponse implements Serializable {
 	private String createdBy;
 	private String modifiedBy;
 	private Date modifiedOn;
+
 	private String divisionName;
 	private Long divisionId;
 	private List<DivisionReq> divisionList;
+
 	private String terminalName;
 	private Long terminalId;
 	private List<TerminalResponse> terminalList;
+
 	private String catogoryName;
 	private Long categoryId;
 	private List<CategoryReq> categoryList;
+
 	private String statusName;
 	private Long statusId;
 	private List<Status> statusList;
+
 	private Long truckTypeId;
+	private String typeName;
 	private List<TypeResponse> truckTypeList;
 	
+	public List<TypeResponse> getTruckTypeList() {
+		return truckTypeList;
+	}
+
+	public void setTruckTypeList(List<TypeResponse> truckTypeList) {
+		this.truckTypeList = truckTypeList;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
 	public List<DivisionReq> getDivisionList() {
 		return divisionList;
 	}
@@ -62,14 +84,6 @@ public class TruckResponse implements Serializable {
 
 	public void setCategoryList(List<CategoryReq> categoryList) {
 		this.categoryList = categoryList;
-	}
-
-	public List<TypeResponse> getTruckTypeList() {
-		return truckTypeList;
-	}
-
-	public void setTruckTypeList(List<TypeResponse> truckTypeList) {
-		this.truckTypeList = truckTypeList;
 	}
 
 	public Long getTruckTypeId() {

@@ -2,7 +2,6 @@ package com.dpu.controller;
 
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Trailer;
 import com.dpu.model.Failed;
 import com.dpu.model.TrailerRequest;
 import com.dpu.service.TrailerService;
@@ -89,6 +87,12 @@ public class TrailerController extends MessageProperties {
 		return obj;
 	}
 
+	/**
+	 * this method is used to delete the trailer based on trailerId
+	 * @param trailerId
+	 * @return List<Trailers>
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long trailerId) {
 
@@ -112,6 +116,13 @@ public class TrailerController extends MessageProperties {
 		return obj;
 	}
 
+	/**
+	 * this method is used to update the update the trailer based on trailerId
+	 * @param trailerId
+	 * @param trailerRequest
+	 * @return List<trailer>
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long trailerId,@RequestBody TrailerRequest trailerRequest) {
 
@@ -132,6 +143,12 @@ public class TrailerController extends MessageProperties {
 		return obj;
 	}
 
+	/**
+	 * this method is used to get the trailer based on trailerId
+	 * @param id
+	 * @return particular trailer info
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("id") Long id) {
 		String json = new String();
@@ -149,9 +166,9 @@ public class TrailerController extends MessageProperties {
 		return json;
 	}
 	
-	private Trailer setTrailerValues(TrailerRequest trailerRequest){
+	/*private Trailer setTrailerValues(TrailerRequest trailerRequest){
 		Trailer trailer = new Trailer();
-		/*trailer.setTrailerId(trailerRequest.getTrailerId());
+		trailer.setTrailerId(trailerRequest.getTrailerId());
 		trailer.setUnitNo(trailerRequest.getUnitNo());
 		trailer.setUsage(trailerRequest.getUsage());
 		trailer.setOwner(trailerRequest.getOwner());
@@ -161,11 +178,16 @@ public class TrailerController extends MessageProperties {
 		trailer.setCategory(trailerRequest.getCategory());
 		trailer.setTrailerType(trailerRequest.getTrailerType());
 		trailer.setStatus(trailerRequest.getStatus());
-		trailer.setFinance(trailerRequest.getFinance());*/
+		trailer.setFinance(trailerRequest.getFinance());
 		
 		return trailer;
-	}
+	}*/
 	
+	/**
+	 * this method is used when we click on add trailer
+	 * @return masterdata for trailer
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		logger.info(" Inside TrailerController openAdd() Starts ");

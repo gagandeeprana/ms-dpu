@@ -133,15 +133,13 @@ public class TrailerController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("id") int id) {
+	public Object get(@PathVariable("id") Long id) {
 		String json = new String();
 		try {
-			Trailer trailer = trailerService.get(id);
-			if (trailer != null) {
-				TrailerRequest response = new TrailerRequest();
-				BeanUtils.copyProperties(response, trailer);
-				if(response != null) {
-					json = mapper.writeValueAsString(response);
+			TrailerRequest trailerRequest = trailerService.get(id);
+			if (trailerRequest != null) {
+				if(trailerRequest != null) {
+					json = mapper.writeValueAsString(trailerRequest);
 				}
 				System.out.println(json);
 			}

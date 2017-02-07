@@ -217,4 +217,24 @@ public class CategoryController extends MessageProperties {
 		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :"+categoryName);
 		return json;
 	}
+	
+	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getSpecificData() {
+		
+		logger.info("Inside CategoryController searchCategory() Starts");
+		String json = new String();
+		
+		try {
+			List<CategoryReq> categoryList = categoryService.getSpecificData();
+			if(categoryList != null && categoryList.size() > 0) {
+				json = mapper.writeValueAsString(categoryList);
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Exception inside CategoryController searchCategory() is :" + e.getMessage());
+		}
+		
+		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :");
+		return json;
+	}
 }

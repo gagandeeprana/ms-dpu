@@ -44,7 +44,15 @@ public class TruckResponse implements Serializable {
 
 	private Long truckTypeId;
 	private String typeName;
-	private List<TypeResponse> typeList;
+	private List<TypeResponse> truckTypeList;
+	
+	public List<TypeResponse> getTruckTypeList() {
+		return truckTypeList;
+	}
+
+	public void setTruckTypeList(List<TypeResponse> truckTypeList) {
+		this.truckTypeList = truckTypeList;
+	}
 
 	public String getTypeName() {
 		return typeName;
@@ -52,14 +60,6 @@ public class TruckResponse implements Serializable {
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
-	}
-
-	public List<TypeResponse> getTypeList() {
-		return typeList;
-	}
-
-	public void setTypeList(List<TypeResponse> typeList) {
-		this.typeList = typeList;
 	}
 
 	public List<DivisionReq> getDivisionList() {

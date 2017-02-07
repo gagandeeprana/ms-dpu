@@ -21,6 +21,7 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
@@ -74,8 +75,8 @@ public class DriverServiceImpl implements DriverService {
 		Driver driver = new Driver();
 		
 		try {
-			boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
-			if(!isDriverExist){
+			//boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
+//			if(!isDriverExist){
 					
 				BeanUtils.copyProperties(driverReq, driver);
 				driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
@@ -85,11 +86,12 @@ public class DriverServiceImpl implements DriverService {
 				driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
 				driver.setStatus(statusService.get(driverReq.getStatusId()));
 				driverDao.save(driver);
-				return getAllDriver();
-			} else{
-				String errorString = "This driver code is already exist";
-				return errorString;
-			}
+				//return getAllDriver();
+				return createSuccessObject();
+//			} else{
+//				String errorString = "This driver code is already exist";
+//				return errorString;
+//			}
 			
 			
 		} catch (Exception e) {
@@ -101,6 +103,13 @@ public class DriverServiceImpl implements DriverService {
 		return null;
 	}
 	
+	private Object createSuccessObject() {
+		Success success = new Success();
+		success.setMessage("Record Added Successfully");
+		success.setResultList(getAllDriver());
+		return success;
+	}
+
 	private Driver setDriverValues(DriverReq driverReq) {
 		Driver driver = new Driver();
 		driver.setDriverCode(driverReq.getDriverCode());

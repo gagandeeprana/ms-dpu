@@ -38,7 +38,7 @@ public class ShipperServiceImpl implements ShipperService {
 	
 		Shipper shipper = new Shipper();
 		BeanUtils.copyProperties(shipperResponse, shipper);
-		shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));
+		/*shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));*/
 		shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
 		shipperDao.save(shipper);
 		return getAll();
@@ -54,7 +54,7 @@ public class ShipperServiceImpl implements ShipperService {
 				String[] ignoreProp = new String[1];
 				ignoreProp[0] = "shipperId";
 				BeanUtils.copyProperties(shipperResponse, shipper, ignoreProp);
-				shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));
+				/*shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));*/
 				shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
 				shipperDao.update(shipper);
 				obj = getAll();
@@ -90,7 +90,7 @@ public class ShipperServiceImpl implements ShipperService {
 			for (Shipper shipper : shipperlist) {
 				ShipperResponse shipperResponse = new ShipperResponse();
 				BeanUtils.copyProperties(shipper, shipperResponse);
-				shipperResponse.setCompany(shipper.getCompany().getName());
+				/*shipperResponse.setCompany(shipper.getCompany().getName());*/
 				shipperResponse.setStatus(shipper.getStatus().getStatus());
 				responses.add(shipperResponse);
 			}
@@ -106,9 +106,9 @@ public class ShipperServiceImpl implements ShipperService {
 		ShipperResponse response = new ShipperResponse();
 		if(shipper != null){
 			BeanUtils.copyProperties(shipper, response);
-			response.setCompanyId(shipper.getCompany().getCompanyId());
+		/*	response.setCompanyId(shipper.getCompany().getCompanyId());*/
 			response.setStatusId(shipper.getStatus().getId());
-			response.setCompanyList(companyService.getCompanyData());
+			/*response.setCompanyList(companyService.getCompanyData());*/
 			List<Status> statusList = statusService.getAll();
 			response.setStatusList(statusList);
 		}
@@ -120,7 +120,7 @@ public class ShipperServiceImpl implements ShipperService {
 	public ShipperResponse getMasterData() {
 		
 		ShipperResponse response = new ShipperResponse();
-		response.setCompanyList(companyService.getCompanyData());
+		/*response.setCompanyList(companyService.getCompanyData());*/
 		List<Status> statusList = statusService.getAll();
 		response.setStatusList(statusList);
 		return response;
@@ -140,7 +140,7 @@ public class ShipperServiceImpl implements ShipperService {
 			for (Shipper shipper : shipperList) {
 				ShipperResponse shipperResponse = new ShipperResponse();
 				BeanUtils.copyProperties(shipper, shipperResponse);
-				shipperResponse.setCompany(shipper.getCompany().getName());
+				/*shipperResponse.setCompany(shipper.getCompany().getName());*/
 				shipperResponse.setStatus(shipper.getStatus().getStatus());
 				responses.add(shipperResponse);
 			}

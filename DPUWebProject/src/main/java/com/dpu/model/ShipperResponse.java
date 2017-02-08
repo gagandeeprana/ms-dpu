@@ -14,8 +14,7 @@ public class ShipperResponse {
 	private Long shipperId;
 
 	//@JsonProperty(value = "company")
-	private String company;
-	private Long companyId;
+	private String locationName;
 
 	//@JsonProperty(value = "address")
 	private String address;
@@ -100,20 +99,12 @@ public class ShipperResponse {
 		this.shipperId = shipperId;
 	}
 
-	public Long getCompanyId() {
-		return companyId;
+	public String getLocationName() {
+		return locationName;
 	}
 
-	public void setCompanyId(Long companyId) {
-		this.companyId = companyId;
-	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 
 	public String getAddress() {

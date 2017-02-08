@@ -1,7 +1,6 @@
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,15 +14,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.constants.Iconstants;
 import com.dpu.dao.TruckDao;
-import com.dpu.entity.Category;
-import com.dpu.entity.Division;
-import com.dpu.entity.Driver;
 import com.dpu.entity.Status;
 import com.dpu.entity.Truck;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
-import com.dpu.model.DriverReq;
+import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TruckResponse;
 import com.dpu.model.TypeResponse;
@@ -60,9 +57,17 @@ public class TruckServiceImpl implements TruckService {
 
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
+	private Object createSuccessObject(String msg) {
+		Success success = new Success();
+		success.setMessage(msg);
+		success.setResultList(getAllTrucks(""));
+		return success;
+	}
+
 	@Override
-	public List<TruckResponse> update(Long id, TruckResponse truckResponse) {
+	public Object update(Long id, TruckResponse truckResponse) {
 		logger.info("[TruckServiceImpl] [update] : Enter ");
+		String msg = "Truck Update Successfully";
 		Truck truck = truckDao.findById(id);
 		if (truck != null) {
 			truck.setUnitNo(truckResponse.getUnitNo());
@@ -82,24 +87,26 @@ public class TruckServiceImpl implements TruckService {
 			truck.setFinance(truckResponse.getFinance());
 
 			truckDao.update(truck);
-			return getAllTrucks("");
-		} else {
-			logger.info("[TruckServiceImpl] [get] : Exit ");
-			return null;
+
 		}
+		logger.info("[TruckServiceImpl] [get] : Exit ");
+		return createSuccessObject(msg);
 	}
 
 	@Override
-	public List<TruckResponse> delete(Long id) {
+	public Object delete(Long id) {
+		logger.info("[TruckServiceImpl] [delete] : Enter ");
+		String msg = "Truck Deleted Successfully";
 		Truck truck = truckDao.findById(id);
 		if (truck != null) {
 			try {
 				truckDao.delete(truck);
-				return getAllTrucks("");
+				return createSuccessObject(msg);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("[TruckServiceImpl] [delete] : ", e);
 			}
 		}
+		logger.info("[TruckServiceImpl] [get] : Exit ");
 		return null;
 	}
 
@@ -197,25 +204,21 @@ public class TruckServiceImpl implements TruckService {
 	}
 
 	@Override
-	public List<TruckResponse> add(TruckResponse truckResponse) {
+	public Object add(TruckResponse truckResponse) {
 		logger.info("TruckServiceImpl: add():  STARTS");
-
+		String msg = "Truck Added Successfuly";
 		Session session = null;
 		Transaction tx = null;
-		List<TruckResponse> truckList = null;
-
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Truck truck = truckDao.add(session, truckResponse);
+			truckDao.add(session, truckResponse);
 			if (tx != null) {
 				tx.commit();
 			}
-			truckList = getAllTrucks("");
 		} catch (Exception e) {
-			logger.fatal("TruckServiceImpl: add(): Exception: "
-					+ e.getMessage());
+			logger.error("TruckServiceImpl: add(): Exception: ", e);
 			if (tx != null) {
 				tx.rollback();
 			}
@@ -228,7 +231,7 @@ public class TruckServiceImpl implements TruckService {
 
 		logger.info("TruckServiceImpl: add():  ENDS");
 
-		return truckList;
+		return createSuccessObject(msg);
 
 	}
 

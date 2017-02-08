@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
 import com.dpu.entity.Category;
 import com.dpu.entity.Division;
@@ -94,11 +95,17 @@ public class DivisionController extends MessageProperties {
 		Object obj = null;
 		try {
 
-			List<DivisionReq> divisionList = divisionService.add(divisionReq);
+			Object result = divisionService.add(divisionReq);
 
-			if (divisionList != null) {
-				if (divisionList != null && divisionList.size() > 0) {
-					obj = mapper.writeValueAsString(divisionList);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				} else {
+					obj = new ResponseEntity<Object>(
+							new Failed(
+									Integer.parseInt(CommonProperties.Division_unable_to_add_code),
+									CommonProperties.Division_unable_to_add_message,
+									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
@@ -109,6 +116,10 @@ public class DivisionController extends MessageProperties {
 		} catch (Exception e) {
 			logger.fatal("DivisionController: add(): Exception: "
 					+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(divisionUnableToAddCode),
+					divisionUnableToAddMessage, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info("DivisionController: add(): ENDS");
@@ -137,10 +148,16 @@ public class DivisionController extends MessageProperties {
 		logger.info("[delete] : Enter  : Id : " + id);
 		Object obj = null;
 		try {
-			List<DivisionReq> divisionReqs = divisionService.delete(id);
-			if (divisionReqs != null) {
-				if (divisionReqs != null && divisionReqs.size() > 0) {
-					obj = mapper.writeValueAsString(divisionReqs);
+			Object result = divisionService.delete(id);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				} else {
+					obj = new ResponseEntity<Object>(
+							new Failed(
+									Integer.parseInt(CommonProperties.Division_unable_to_delete_code),
+									CommonProperties.Division_unable_to_delete_message,
+									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
@@ -149,6 +166,11 @@ public class DivisionController extends MessageProperties {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
+			logger.info("Exception in delete of DivisionController ", e);
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(divisionUnableToDeleteCode),
+					divisionUnableToDeleteMessage, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 		logger.info("[delete] : Exit : ");
 		return obj;
@@ -160,22 +182,35 @@ public class DivisionController extends MessageProperties {
 	public Object update(@PathVariable("id") Long id,
 			@RequestBody DivisionReq divisionReq) {
 		logger.info("[DivisionController] [update] :Enter :ID:  " + id);
-		String json = null;
+		Object obj = null;
 		try {
 			divisionReq.setDivisionId(id);
-			List<DivisionReq> response = divisionService
-					.update(id, divisionReq);
-			if (response != null) {
-				if (response != null && response.size() > 0) {
-					json = mapper.writeValueAsString(response);
+			Object result = divisionService.update(id, divisionReq);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				} else {
+					obj = new ResponseEntity<Object>(
+							new Failed(
+									Integer.parseInt(CommonProperties.Division_unable_to_update_code),
+									CommonProperties.Division_unable_to_update_message,
+									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
+			} else {
+				obj = new ResponseEntity<Object>(new Failed(
+						Integer.parseInt(divisionUnableToUpdateCode),
+						divisionUnableToUpdateMessage, Iconstants.ERROR),
+						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(divisionUnableToUpdateCode),
+					divisionUnableToUpdateMessage, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 			logger.error("EquipmentController : update " + e);
 		}
 		logger.info("[DivisionController] [update] :Exit   ");
-		return json;
+		return obj;
 	}
 
 	@RequestMapping(value = "/{divisionId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

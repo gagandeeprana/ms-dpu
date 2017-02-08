@@ -21,6 +21,7 @@ import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
 import com.dpu.entity.Status;
 import com.dpu.model.DivisionReq;
+import com.dpu.model.Success;
 import com.dpu.service.DivisionService;
 import com.dpu.service.StatusService;
 
@@ -42,10 +43,18 @@ public class DivisionServiceImpl implements DivisionService {
 	@Autowired
 	StatusService statusService;
 
+	private Object createSuccessObject(String msg) {
+		Success success = new Success();
+		success.setMessage(msg);
+		success.setResultList(getAll(""));
+		return success;
+	}
+
 	@Override
-	public List<DivisionReq> update(Long id, DivisionReq divisionReq) {
+	public Object update(Long id, DivisionReq divisionReq) {
 		logger.info("[DivisionServiceImpl] [update] : Srvice: Enter");
 		Division division = divisionDao.findById(id);
+		String msg = "Division Updated Successfully";
 		if (division != null) {
 			division.setDivisionCode(divisionReq.getDivisionCode());
 			division.setDivisionName(divisionReq.getDivisionName());
@@ -60,19 +69,20 @@ public class DivisionServiceImpl implements DivisionService {
 			division.setModifiedBy("jagvir");
 			division.setModifiedOn(new Date());
 			divisionDao.update(division);
-			return getAll("");
+			return createSuccessObject(msg);
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public List<DivisionReq> delete(Long id) {
+	public Object delete(Long id) {
+		String msg = "Division Deleted Successfully";
 		Division division = divisionDao.findById(id);
 		if (division != null) {
 			try {
 				divisionDao.delete(division);
-				return getAll("");
+				return createSuccessObject(msg);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -138,22 +148,21 @@ public class DivisionServiceImpl implements DivisionService {
 	}
 
 	@Override
-	public List<DivisionReq> add(DivisionReq divisionReq) {
+	public Object add(DivisionReq divisionReq) {
 		logger.info("DivisionServiceImpl: add():  STARTS");
-
+		String msg = "Division Added Successfully";
 		Session session = null;
 		Transaction tx = null;
-		List<DivisionReq> divisionList = null;
 
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Division division = divisionDao.add(session, divisionReq);
+			divisionDao.add(session, divisionReq);
 			if (tx != null) {
 				tx.commit();
 			}
-			divisionList = getAll("");
+
 		} catch (Exception e) {
 			logger.fatal("DivisionServiceImpl: add(): Exception: "
 					+ e.getMessage());
@@ -169,7 +178,7 @@ public class DivisionServiceImpl implements DivisionService {
 
 		logger.info("DivisionServiceImpl: add():  ENDS");
 
-		return divisionList;
+		return createSuccessObject(msg);
 
 	}
 

@@ -62,24 +62,34 @@ public class TruckController extends MessageProperties {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object addTruck(@RequestBody TruckResponse truckResponse) {
 		logger.info("[TruckController] [addTruck] : addTruck");
-		Object obj = null;
+		ResponseEntity<Object> obj = null;
 		try {
 
-			List<TruckResponse> truckList = truckService.add(truckResponse);
+			Object result = truckService.add(truckResponse);
 
-			if (truckList != null) {
-				if (truckList != null && truckList.size() > 0) {
-					obj = mapper.writeValueAsString(truckList);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				} else {
+					obj = new ResponseEntity<Object>(new Failed(
+							Integer.parseInt("1234"),
+							"this truck code is already present",
+							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(truckUnableToAddCode),
-						truckUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(
+						new Failed(
+								Integer.parseInt(CommonProperties.Truck_unable_to_add_code),
+								CommonProperties.Truck_unable_to_add_message,
+								Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.fatal("[TruckController]: add(): Exception: "
-					+ e.getMessage());
+			logger.fatal("[TruckController]: add(): Exception: ", e);
+			obj = new ResponseEntity<Object>(
+					new Failed(
+							Integer.parseInt(CommonProperties.Truck_unable_to_add_code),
+							CommonProperties.Truck_unable_to_add_message,
+							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info("[TruckController]: add(): ENDS");
@@ -124,10 +134,16 @@ public class TruckController extends MessageProperties {
 		logger.info("[deleteTruck] : controller : Enter : driverCode " + id);
 		Object obj = null;
 		try {
-			List<TruckResponse> truckResponse = truckService.delete(id);
-			if (truckResponse != null) {
-				if(truckResponse != null && truckResponse.size() > 0) {
-					obj = mapper.writeValueAsString(truckResponse);
+			Object result = truckService.delete(id);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				} else {
+					obj = new ResponseEntity<Object>(
+							new Failed(
+									Integer.parseInt(CommonProperties.Truck_unable_to_delete_code),
+									CommonProperties.Truck_unable_to_delete_message,
+									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
 			} else {
 				obj = new ResponseEntity<Object>(new Failed(
@@ -136,6 +152,11 @@ public class TruckController extends MessageProperties {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
+			logger.error("Exception inside TruckController deleteTruck() :", e);
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(truckUnableToDeleteCode),
+					truckUnableToDeleteMessage, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 		logger.info("[deleteTruck] : controller : Exit ");
 		return obj;
@@ -148,24 +169,33 @@ public class TruckController extends MessageProperties {
 			@RequestBody TruckResponse truckResponse) {
 
 		logger.info("[TruckController] [updateTruck] : Enter");
-		String json = null;
+		Object obj = null;
 		try {
 			truckResponse.setTruckId(id);
-			List<TruckResponse> lstResponses = truckService.update(id,
-					truckResponse);
-			if (lstResponses != null) {
-				if (lstResponses != null && lstResponses.size() > 0) {
-					json = mapper.writeValueAsString(lstResponses);
+			Object result = truckService.update(id, truckResponse);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				} else {
+					obj = new ResponseEntity<Object>(
+							new Failed(
+									Integer.parseInt(CommonProperties.Truck_unable_to_update_code),
+									CommonProperties.Truck_unable_to_update_message,
+									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e);
 			logger.error("EquipmentController : update " + e);
+			obj = new ResponseEntity<Object>(
+					new Failed(
+							Integer.parseInt(CommonProperties.Truck_unable_to_update_code),
+							CommonProperties.Truck_unable_to_update_message,
+							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		logger.info("[TruckController] [update] :Exit   ");
-		return json;
+		return obj;
 	}
-	
+
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		logger.info("[TruckController] [openAdd] : Enter");

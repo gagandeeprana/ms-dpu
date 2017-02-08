@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeanUtils;
@@ -65,6 +67,9 @@ public class DriverServiceImpl implements DriverService {
 	
 	@Autowired
 	TerminalDao terminalDao;
+	
+	@Autowired
+	SessionFactory sessionFactory;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
 
@@ -189,17 +194,21 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public List<DriverReq> getAllDriver() {
 		
+		Session session = null;
 		List<Driver> listOfDriver = null;
 		List<DriverReq> drivers = null;
 		try {
+			session = sessionFactory.openSession();
 			logger.info("[getAllDrivers]:  Service : Enter");
 
-			listOfDriver = driverDao.findAll();
+			listOfDriver = driverDao.findAll(session);
 			logger.info("[getAllDrivers]: Service: listOfDriver : "+ listOfDriver);
 			drivers = setDriverData(listOfDriver);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers ] Service: Exception :"
 					+ e.getMessage());
+		} finally{
+			session.close();
 		}
 		return drivers;
 	}

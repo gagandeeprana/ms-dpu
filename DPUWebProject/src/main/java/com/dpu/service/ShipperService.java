@@ -19,4 +19,6 @@ public interface ShipperService {
 	List<ShipperResponse> getShipperByCompanyName(String companyName);
 
 	Object update(Long id, ShipperResponse shipperResponse);
+	
+	List<ShipperResponse> getSpecificData();
 }

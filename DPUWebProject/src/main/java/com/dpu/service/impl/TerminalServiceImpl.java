@@ -5,12 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.ShipperDao;
 import com.dpu.dao.TerminalDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
@@ -20,6 +23,7 @@ import com.dpu.model.ShipperResponse;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
+import com.dpu.service.ShipperService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TerminalService;
 
@@ -36,22 +40,38 @@ public class TerminalServiceImpl implements TerminalService {
 	
 	@Autowired
 	ServiceService serviceService;
+	
+	@Autowired
+	ShipperService shipperService;
+
+	@Autowired
+	SessionFactory sessionFactory;
+	
+	@Autowired
+	ShipperDao shipperDao;
 
 	@Override
 	public List<TerminalResponse> getAllTerminals() {
 		
-		List<Terminal> terminalList = terminalDao.findAll();
+		Session session = null;
 		List<TerminalResponse> terminalRespList = new ArrayList<TerminalResponse>();
-		
-		if(terminalList != null && !terminalList.isEmpty()){
-			for (Terminal terminal : terminalList) {
-				TerminalResponse terminalResponseObj = new TerminalResponse();
-				terminalResponseObj.setTerminalName(terminal.getTerminalName());
-				terminalResponseObj.setFacility(terminal.getFacility());
-				terminalResponseObj.setLocation(terminal.getLocation());
-				terminalResponseObj.setTerminalId(terminal.getTerminalId());
-				terminalRespList.add(terminalResponseObj);
+		try{
+			session = sessionFactory.openSession();
+			List<Terminal> terminalList = terminalDao.findAll(session);
+			
+			if(terminalList != null && !terminalList.isEmpty()){
+				for (Terminal terminal : terminalList) {
+					TerminalResponse terminalResponseObj = new TerminalResponse();
+					terminalResponseObj.setTerminalName(terminal.getTerminalName());
+					terminalResponseObj.setFacility(terminal.getFacility());
+					terminalResponseObj.setLocation(terminal.getLocation());
+					terminalResponseObj.setTerminalId(terminal.getTerminalId());
+					terminalResponseObj.setShipperName(terminal.getShipper().getLocationName());
+					terminalRespList.add(terminalResponseObj);
+				}
 			}
+		} finally{
+			session.close();
 		}
 		
 		return terminalRespList;
@@ -71,6 +91,7 @@ public class TerminalServiceImpl implements TerminalService {
 		terminal.setLocation(terminalResponse.getLocation());
 		terminal.setFacility(terminalResponse.getFacility());
 		terminal.setAvailableServices(terminalResponse.getAvailableServices());
+		terminal.setShipper(shipperDao.findById(terminalResponse.getShipperId()));
 		terminal.setCreatedBy("Anuj Nayyar");
 		terminal.setCreatedOn(new Date());
 		terminal.setModifiedBy("Anuj Nayyar");
@@ -102,7 +123,7 @@ public class TerminalServiceImpl implements TerminalService {
 		
 		if(terminal != null){
 			terminalResp.setTerminalId(terminal.getTerminalId());
-			terminalResp.setStatusId(terminal.getStatus().getId());
+			//terminalResp.setStatusId(terminal.getStatus().getId());
 			terminalResp.setTerminalName(terminal.getTerminalName());
 			terminalResp.setLocation(terminal.getLocation());
 			terminalResp.setFacility(terminal.getFacility());
@@ -116,6 +137,7 @@ public class TerminalServiceImpl implements TerminalService {
 		
 		TerminalResponse tresponse = new TerminalResponse();
 		tresponse.setServiceList(serviceService.getServiceData());
+		tresponse.setShipperList(shipperService.getSpecificData());
 		return tresponse;
 	}
 

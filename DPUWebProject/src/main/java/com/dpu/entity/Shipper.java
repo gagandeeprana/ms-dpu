@@ -22,9 +22,8 @@ public class Shipper {
 	@GeneratedValue
 	private Long shipperId;
 
-	@ManyToOne
-	@JoinColumn(name = "company_id")
-	private Company company;
+	@Column(name = "location_name")
+	private String locationName;
 
 	@Column(name = "Address")
 	//@JsonProperty(value = "address")
@@ -118,12 +117,12 @@ public class Shipper {
 		this.shipperId = shipperId;
 	}
 
-	public Company getCompany() {
-		return company;
+	public String getLocationName() {
+		return locationName;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 
 	public String getAddress() {

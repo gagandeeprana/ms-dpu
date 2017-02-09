@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.dao.impl;
 
 import java.util.List;
@@ -14,10 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 
-/**
- * @author jagvir
- *
- */
 @Repository
 public class ServiceDaoImpl extends GenericDaoImpl<Service> implements ServiceDao {
 	@Autowired
@@ -43,6 +36,23 @@ public class ServiceDaoImpl extends GenericDaoImpl<Service> implements ServiceDa
 		}
 		logger.info("[ShipperDaoImpl] [find] : Exit ");
 		return returnList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Service> findAll(Session session) {
+
+		StringBuilder sb = new StringBuilder("select s from Service s join fetch s.status join fetch s.associationWith join fetch s.textField ");
+		Query query = session.createQuery(sb.toString());
+		return query.list();
+	}
+
+	@Override
+	public Service findById(Long id, Session session) {
+		StringBuilder sb = new StringBuilder("select s from Service s join fetch s.status join fetch s.associationWith join fetch s.textField where s.serviceId =:serviceId");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("serviceId", id);
+		return (Service) query.uniqueResult();
 	}
 
 }

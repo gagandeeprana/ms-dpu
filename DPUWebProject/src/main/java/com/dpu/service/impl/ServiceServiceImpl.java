@@ -4,6 +4,8 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -35,6 +37,9 @@ public class ServiceServiceImpl implements ServiceService {
 	
 	@Autowired
 	TypeService typeService;
+	
+	@Autowired
+	SessionFactory sessionFactory;
 	
 	@Override
 	public List<DPUService> add(DPUService dpuService) {
@@ -92,18 +97,28 @@ public class ServiceServiceImpl implements ServiceService {
 	@Override
 	public List<DPUService> getAll() {
 		
-		List<Service> serviceList = serviceDao.findAll();
+		Session session = null;
 		List<DPUService> servicesList = new ArrayList<DPUService>();
 		
-		if(serviceList != null && !serviceList.isEmpty()){
-			for (Service service : serviceList) {
-				DPUService serviceObj = new DPUService();
-				serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
-				serviceObj.setServiceName(service.getServiceName());
-				serviceObj.setServiceId(service.getServiceId());
-				serviceObj.setStatus(service.getStatus().getStatus());
-				serviceObj.setTextField(service.getTextField().getTypeName());
-				servicesList.add(serviceObj);
+		try{
+			
+			session = sessionFactory.openSession();
+			List<Service> serviceList = serviceDao.findAll(session);
+			
+			if(serviceList != null && !serviceList.isEmpty()){
+				for (Service service : serviceList) {
+					DPUService serviceObj = new DPUService();
+					serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
+					serviceObj.setServiceName(service.getServiceName());
+					serviceObj.setServiceId(service.getServiceId());
+					serviceObj.setStatus(service.getStatus().getStatus());
+					serviceObj.setTextField(service.getTextField().getTypeName());
+					servicesList.add(serviceObj);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
 			}
 		}
 		
@@ -113,23 +128,33 @@ public class ServiceServiceImpl implements ServiceService {
 	@Override
 	public DPUService get(Long id) {
 		
+		Session session = null; 
 		DPUService dpuService = new DPUService();
-		Service service = serviceDao.findById(id);
 		
-		if(service != null){
-			dpuService.setServiceId(service.getServiceId());
-			dpuService.setTextFieldId(service.getTextField().getTypeId());
-			dpuService.setStatusId(service.getStatus().getId());
-			dpuService.setAssociationWithId(service.getAssociationWith().getTypeId());
-			dpuService.setServiceName(service.getServiceName());
-			List<Status> statusList = statusService.getAll();
-			dpuService.setStatusList(statusList);
+		try{
 			
-			List<TypeResponse> textFieldList = typeService.getAll(2l);
-			dpuService.setTextFieldList(textFieldList);
+			session = sessionFactory.openSession();
+			Service service = serviceDao.findById(id, session);
 			
-			List<TypeResponse> associatedWithList = typeService.getAll(3l);
-			dpuService.setAssociatedWithList(associatedWithList);
+			if(service != null){
+				dpuService.setServiceId(service.getServiceId());
+				dpuService.setTextFieldId(service.getTextField().getTypeId());
+				dpuService.setStatusId(service.getStatus().getId());
+				dpuService.setAssociationWithId(service.getAssociationWith().getTypeId());
+				dpuService.setServiceName(service.getServiceName());
+				List<Status> statusList = statusService.getAll();
+				dpuService.setStatusList(statusList);
+				
+				List<TypeResponse> textFieldList = typeService.getAll(2l);
+				dpuService.setTextFieldList(textFieldList);
+				
+				List<TypeResponse> associatedWithList = typeService.getAll(3l);
+				dpuService.setAssociatedWithList(associatedWithList);
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		return dpuService;

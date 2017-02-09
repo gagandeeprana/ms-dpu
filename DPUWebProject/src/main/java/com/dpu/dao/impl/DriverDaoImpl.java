@@ -44,4 +44,14 @@ public class DriverDaoImpl extends GenericDaoImpl<Driver> implements DriverDao {
 		return driverList;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Driver> findAll(Session session) {
+		
+		StringBuilder sb = new StringBuilder(" select d from Driver d join fetch d.division join fetch d.terminal join fetch d.category join fetch d.role " )
+		.append(" join fetch d.status join fetch d.driverClass driverclass ");
+		Query query = session.createQuery(sb.toString());
+		return query.list();
+	}
+
 }

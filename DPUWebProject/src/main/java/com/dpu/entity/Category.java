@@ -5,6 +5,7 @@ package com.dpu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -34,7 +35,7 @@ public class Category {
 	//@JsonProperty(value = "name")
 	private String name;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
 	private Status status;
 
@@ -46,11 +47,11 @@ public class Category {
 	//@JsonProperty(value = "created_by")
 	private String createdBy;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "highlight_id")
 	private Type highLight;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id")
 	private Type type;
 	

@@ -1,6 +1,5 @@
 package com.dpu.entity;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,10 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -26,11 +22,6 @@ public class Terminal {
 	@Id
 	@Column(name = "terminal_id")
 	@GeneratedValue
-
-	//@JsonProperty(value = "terminal_id")
-
-	@JsonProperty(value = "terminal_id")
-
 	private Long terminalId;
 
 	@Column(name = "terminal_name")
@@ -56,7 +47,6 @@ public class Terminal {
 
 	@Column(name = "created_on")
 	//@JsonProperty(value = "created_on")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdOn;
 
 	@Column(name = "modified_by")
@@ -65,12 +55,15 @@ public class Terminal {
 
 	@Column(name = "modified_on")
 	//@JsonProperty(value = "modified_on")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedOn;
 		
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
 	private Status status;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "shipper_id")
+	private Shipper shipper;
 	
 
 	public Long getTerminalId() {
@@ -153,6 +146,13 @@ public class Terminal {
 		this.modifiedOn = modifiedOn;
 	}
 
+	public Shipper getShipper() {
+		return shipper;
+	}
+
+	public void setShipper(Shipper shipper) {
+		this.shipper = shipper;
+	}
 //	public Status getStatusmaster() {
 //		return statusmaster;
 //	}

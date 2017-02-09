@@ -5,6 +5,7 @@ package com.dpu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -38,17 +39,15 @@ public class Service {
 	//@JsonProperty(value = "service_response")
 	private Integer serviceResponse;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
 	private Status status;
 	
-	@ManyToOne
-	//@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "association_with")
 	private Type associationWith;
 	
-	@ManyToOne
-	//@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "text_field")
 	private Type textField;
 

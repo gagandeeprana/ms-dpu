@@ -1,5 +1,9 @@
 package com.dpu.dao;
 
+import java.util.List;
+
+import org.hibernate.Session;
+
 import com.dpu.entity.Terminal;
 
 /**
@@ -8,5 +12,7 @@ import com.dpu.entity.Terminal;
  */
 
 public interface TerminalDao extends GenericDao<Terminal> {
+
+	List<Terminal> findAll(Session session);
 
 }

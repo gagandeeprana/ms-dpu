@@ -6,7 +6,6 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -24,55 +23,76 @@ public class TerminalResponse {
 	private Long statusId;
 	private List<Status> statusList;
 	private List<DPUService> serviceList;
+	private Long shipperId;
+	private String shipperName;
+	
+
+	private List<ShipperResponse> shipperList;
 	
 	public Long getTerminalId() {
 		return terminalId;
 	}
+	
 	public void setTerminalId(Long terminalId) {
 		this.terminalId = terminalId;
 	}
+	
 	public String getTerminalName() {
 		return terminalName;
 	}
+	
 	public void setTerminalName(String terminalName) {
 		this.terminalName = terminalName;
 	}
+	
 	public String getFacility() {
 		return facility;
 	}
+	
 	public void setFacility(String facility) {
 		this.facility = facility;
 	}
+	
 	public String getLocation() {
 		return location;
 	}
+	
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
 	public String getAvailableServices() {
 		return availableServices;
 	}
+	
 	public void setAvailableServices(String availableServices) {
 		this.availableServices = availableServices;
 	}
+	
 	public String getCreatedBy() {
 		return createdBy;
 	}
+	
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+	
 	public Date getCreatedOn() {
 		return createdOn;
 	}
+	
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
+	
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
+	
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+	
 	public Date getModifiedOn() {
 		return modifiedOn;
 	}
@@ -103,4 +123,23 @@ public class TerminalResponse {
 	public void setServiceList(List<DPUService> serviceList) {
 		this.serviceList = serviceList;
 	}	
+	
+	public Long getShipperId() {
+		return shipperId;
+	}
+	public void setShipperId(Long shipperId) {
+		this.shipperId = shipperId;
+	}
+	public String getShipperName() {
+		return shipperName;
+	}
+	public void setShipperName(String shipperName) {
+		this.shipperName = shipperName;
+	}
+	public List<ShipperResponse> getShipperList() {
+		return shipperList;
+	}
+	public void setShipperList(List<ShipperResponse> shipperList) {
+		this.shipperList = shipperList;
+	}
 }

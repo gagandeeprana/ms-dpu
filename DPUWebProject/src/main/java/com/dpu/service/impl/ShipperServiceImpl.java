@@ -149,4 +149,23 @@ public class ShipperServiceImpl implements ShipperService {
 		return responses;
 	}
 
+	@Override
+	public List<ShipperResponse> getSpecificData() {
+		List<Object[]> shipperData = shipperDao.getSpecificData("Shipper","shipperId","locationName");
+		
+		List<ShipperResponse> categories = new ArrayList<ShipperResponse>();
+		if(shipperData != null && !shipperData.isEmpty()){
+			for (Object[] row : shipperData) {
+				ShipperResponse shipper = new ShipperResponse();
+				shipper.setShipperId((Long) row[0]);
+				shipper.setLocationName(String.valueOf(row[1]));
+				categories.add(shipper);
+			}
+		}
+		
+		return categories;
+	}
+	
+	
+
 }

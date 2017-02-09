@@ -5,12 +5,13 @@ package com.dpu.dao;
 
 import java.util.List;
 
-import com.dpu.entity.Category;
-import com.dpu.entity.CompanyAdditionalContacts;
+import org.hibernate.Session;
 
-/**
- * @author jagvir
- *
- */
+import com.dpu.entity.Category;
+
 public interface CategoryDao extends GenericDao<Category> {
+
+	List<Category> findAll(Session session);
+
+	Category findById(Long id, Session session);
 }

@@ -1,12 +1,11 @@
-/**
- * 
- */
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -25,10 +24,6 @@ import com.dpu.service.CategoryService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
 
-/**
- * @author jagvir
- *
- */
 @Component
 public class CategoryServiceImpl implements CategoryService {
 
@@ -42,6 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Autowired
 	TypeService typeService;
+	
+	@Autowired
+	SessionFactory sessionFactory;
 	
 	@Override
 	public List<CategoryReq> addCategory(CategoryReq categoryReq) {
@@ -110,18 +108,28 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<CategoryReq> getAll() {
 
+		Session session = null;
 		List<CategoryReq> categoriesList = new ArrayList<CategoryReq>();
-		List<Category> categories = categoryDao.findAll();
 		
-		if(categories != null && ! categories.isEmpty()){
-			for (Category category : categories) {
-				CategoryReq categoryReq = new CategoryReq();
-				categoryReq.setCategoryId(category.getCategoryId());
-				categoryReq.setName(category.getName());
-				categoryReq.setHighlightName(category.getHighLight().getTypeName());
-				categoryReq.setTypeName(category.getType().getTypeName());
-				categoryReq.setStatusName(category.getStatus().getStatus());
-				categoriesList.add(categoryReq);
+		try{
+			
+			session = sessionFactory.openSession();
+			List<Category> categories = categoryDao.findAll(session);
+			
+			if(categories != null && ! categories.isEmpty()){
+				for (Category category : categories) {
+					CategoryReq categoryReq = new CategoryReq();
+					categoryReq.setCategoryId(category.getCategoryId());
+					categoryReq.setName(category.getName());
+					categoryReq.setHighlightName(category.getHighLight().getTypeName());
+					categoryReq.setTypeName(category.getType().getTypeName());
+					categoryReq.setStatusName(category.getStatus().getStatus());
+					categoriesList.add(categoryReq);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
 			}
 		}
 		
@@ -131,25 +139,35 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryReq get(Long id) {
 		
-		Category category = categoryDao.findById(id);
+		Session session = null;
 		CategoryReq categoryReq = new CategoryReq();
 		
-		if(category != null){
+		try{
 			
-			categoryReq.setCategoryId(category.getCategoryId());
-			categoryReq.setName(category.getName());
-			categoryReq.setStatusId(category.getStatus().getId());
-			categoryReq.setTypeId(category.getType().getTypeId());
-			categoryReq.setHighlightId(category.getHighLight().getTypeId());
+			session = sessionFactory.openSession();
+			Category category = categoryDao.findById(id, session);
 			
-			List<Status> statusList = statusService.getAll();
-			categoryReq.setStatusList(statusList);
-			
-			List<TypeResponse> typeList = typeService.getAll(3l);
-			categoryReq.setTypeList(typeList);
-			
-			List<TypeResponse> highlightList = typeService.getAll(4l);
-			categoryReq.setHighlightList(highlightList);
+			if(category != null){
+				
+				categoryReq.setCategoryId(category.getCategoryId());
+				categoryReq.setName(category.getName());
+				categoryReq.setStatusId(category.getStatus().getId());
+				categoryReq.setTypeId(category.getType().getTypeId());
+				categoryReq.setHighlightId(category.getHighLight().getTypeId());
+				
+				List<Status> statusList = statusService.getAll();
+				categoryReq.setStatusList(statusList);
+				
+				List<TypeResponse> typeList = typeService.getAll(3l);
+				categoryReq.setTypeList(typeList);
+				
+				List<TypeResponse> highlightList = typeService.getAll(4l);
+				categoryReq.setHighlightList(highlightList);
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		return categoryReq;

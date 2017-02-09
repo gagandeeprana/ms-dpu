@@ -70,9 +70,10 @@ public class DivisionServiceImpl implements DivisionService {
 			division.setModifiedOn(new Date());
 			divisionDao.update(division);
 			return createSuccessObject(msg);
-		} else {
-			return null;
 		}
+		logger.info("[DivisionServiceImpl] [update] : Srvice: Exit");
+		return null;
+
 	}
 
 	@Override

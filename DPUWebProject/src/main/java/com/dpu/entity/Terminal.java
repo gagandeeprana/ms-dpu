@@ -1,6 +1,8 @@
 package com.dpu.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,11 +10,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.dpu.model.DPUService;
 
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -28,18 +34,9 @@ public class Terminal {
 	//@JsonProperty(value = "terminal_name")
 	private String terminalName;
 
-	@Column(name = "facility")
-	//@JsonProperty(value = "facility")
-	private String facility;
-
-	@Column(name = "location")
-	//@JsonProperty(value = "location")
-	private String location;
-	
-	@Column(name = "available_services")
-	//@JsonProperty(value = "available_services")
-	private String availableServices;
-
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "terminalservice", joinColumns = { @JoinColumn(name = "terminal_id")},inverseJoinColumns={@JoinColumn(name="service_id")})
+	private Set<Service> services = new HashSet<Service>();
 
 	@Column(name = "created_by")
 	//@JsonProperty(value = "created_by")
@@ -65,6 +62,13 @@ public class Terminal {
 	@JoinColumn(name = "shipper_id")
 	private Shipper shipper;
 	
+	public Set<Service> getServices() {
+		return services;
+	}
+
+	public void setServices(Set<Service> services) {
+		this.services = services;
+	}
 
 	public Long getTerminalId() {
 		return terminalId;
@@ -80,30 +84,6 @@ public class Terminal {
 
 	public void setTerminalName(String terminalName) {
 		this.terminalName = terminalName;
-	}
-
-	public String getFacility() {
-		return facility;
-	}
-
-	public void setFacility(String facility) {
-		this.facility = facility;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getAvailableServices() {
-		return availableServices;
-	}
-
-	public void setAvailableServices(String availableServices) {
-		this.availableServices = availableServices;
 	}
 
 	public String getCreatedBy() {

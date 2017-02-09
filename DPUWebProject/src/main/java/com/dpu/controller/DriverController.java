@@ -152,15 +152,13 @@ public class DriverController extends MessageProperties  {
 	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getDriverByDriverId(@PathVariable("driverId") Long driverId) {
 		logger.info("[getDriverByDriverCode] : Controller : Enter");
-		String json = null;
+		Object obj = null;
 		try {
-			DriverReq driver = driverService.getDriverByDriverCode(driverId);
-			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(driver);
+			obj = driverService.getDriverByDriverId(driverId);
 		} catch (Exception e) {
 			logger.error("[getDriverByDriverCode]:" + e);
 		}
-		return json;
+		return obj;
 	}
 	
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

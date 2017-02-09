@@ -54,4 +54,13 @@ public class DriverDaoImpl extends GenericDaoImpl<Driver> implements DriverDao {
 		return query.list();
 	}
 
+	@Override
+	public Driver findById(Long driverId, Session session) {
+		StringBuilder sb = new StringBuilder(" select d from Driver d join fetch d.division join fetch d.terminal join fetch d.category join fetch d.role " )
+		.append(" join fetch d.status join fetch d.driverClass driverclass where d.driverId =:driverId ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("driverId", driverId);
+		return (Driver) query.uniqueResult();
+	}
+
 }

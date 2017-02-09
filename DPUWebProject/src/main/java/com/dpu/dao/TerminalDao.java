@@ -13,6 +13,8 @@ import com.dpu.entity.Terminal;
 
 public interface TerminalDao extends GenericDao<Terminal> {
 
-	List<Terminal> findAll(Session session);
+	List<Terminal> findAll(String termianlName, Session session);
+
+	Terminal findById(Session session, Long terminalId);
 
 }

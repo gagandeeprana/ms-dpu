@@ -63,7 +63,7 @@ public class TerminalServiceImpl implements TerminalService {
 		List<TerminalResponse> terminalRespList = new ArrayList<TerminalResponse>();
 		try{
 			session = sessionFactory.openSession();
-			List<Terminal> terminalList = terminalDao.findAll(session);
+			List<Terminal> terminalList = terminalDao.findAll(null, session);
 			
 			if(terminalList != null && !terminalList.isEmpty()){
 				for (Terminal terminal : terminalList) {
@@ -130,15 +130,33 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public TerminalResponse getTerminal(Long id) {
-		TerminalResponse terminalResp = new TerminalResponse();
-		Terminal terminal = terminalDao.findById(id);
 		
-		if(terminal != null){
-			terminalResp.setTerminalId(terminal.getTerminalId());
-			//terminalResp.setStatusId(terminal.getStatus().getId());
-			terminalResp.setTerminalName(terminal.getTerminalName());
-			
-		}		
+		Session session = null;
+		TerminalResponse terminalResp = new TerminalResponse();
+		Terminal terminal = null;
+		try {
+			session = sessionFactory.openSession();
+			terminal = terminalDao.findById(session, id);
+			if(terminal != null){
+				terminalResp.setTerminalId(terminal.getTerminalId());
+				terminalResp.setTerminalName(terminal.getTerminalName());
+				terminalResp.setShipperId(terminal.getShipper().getShipperId());
+				terminalResp.setShipperList(shipperService.getAll());
+				Set<Service> services = terminal.getServices();
+				terminalResp.setServiceList(serviceService.getAll());
+				List<Long> serviceIds = new ArrayList<Long>();
+				for(Service service : services) {
+					serviceIds.add(service.getServiceId());
+				}
+				terminalResp.setServiceIds(serviceIds);
+			}		
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
 		return terminalResp;
 	}
 
@@ -172,8 +190,7 @@ public class TerminalServiceImpl implements TerminalService {
 		try {
 			session = sessionFactory.openSession();
 			if(terminalName != null && terminalName.length() > 0) {
-				Criterion criterion = Restrictions.like("terminalName", terminalName, MatchMode.ANYWHERE);
-				terminalList = terminalDao.find(criterion);
+				terminalList = terminalDao.findAll(terminalName, session);
 			}
 			
 			if(terminalList != null && !terminalList.isEmpty()){

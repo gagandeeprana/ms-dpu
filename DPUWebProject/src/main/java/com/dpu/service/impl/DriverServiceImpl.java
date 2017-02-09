@@ -193,26 +193,13 @@ public class DriverServiceImpl implements DriverService {
 
 	@Override
 	public List<DriverReq> getAllDriver() {
-<<<<<<< HEAD
-
-=======
-		
 		Session session = null;
->>>>>>> 19f3147c0dfc23c4ae911b3cf483c697116c10b3
 		List<Driver> listOfDriver = null;
 		List<DriverReq> drivers = null;
 		try {
 			session = sessionFactory.openSession();
 			logger.info("[getAllDrivers]:  Service : Enter");
-
-<<<<<<< HEAD
-			listOfDriver = driverDao.findAll();
-			logger.info("[getAllDrivers]: Service: listOfDriver : "
-					+ listOfDriver);
-=======
 			listOfDriver = driverDao.findAll(session);
-			logger.info("[getAllDrivers]: Service: listOfDriver : "+ listOfDriver);
->>>>>>> 19f3147c0dfc23c4ae911b3cf483c697116c10b3
 			drivers = setDriverData(listOfDriver);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers ] Service: Exception :"

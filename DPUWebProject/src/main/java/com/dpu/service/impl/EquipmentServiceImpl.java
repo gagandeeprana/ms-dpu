@@ -17,6 +17,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.CommonProperties;
+import com.dpu.constants.Iconstants;
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Equipment;
 import com.dpu.entity.Type;
@@ -44,8 +46,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Autowired
 	TypeService typeService;
 
-	private Object createSuccessObject(String msg) {
+	private Object createSuccessObject(String msg, long code) {
 		Success success = new Success();
+		success.setCode(code);
 		success.setMessage(msg);
 		success.setResultList(getAll(""));
 		return success;
@@ -58,12 +61,17 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		Session session = null;
 		Transaction tx = null;
-		String msg = "Equipment Added Successfully";
+		Equipment equipment = null;
+		// String msg = "Equipment Added Successfully";
+
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			equipmentDao.add(session, equipmentReq);
+			equipment = equipmentDao.add(session, equipmentReq);
+			if (equipment == null) {
+				return null;
+			}
 			if (tx != null) {
 				tx.commit();
 			}
@@ -74,6 +82,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			if (tx != null) {
 				tx.rollback();
 			}
+			return null;
 		} finally {
 			logger.info("EquipmentServiceImpl: add():  finally block");
 			if (session != null) {
@@ -83,7 +92,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		logger.info("EquipmentServiceImpl: add():  ENDS");
 
-		return createSuccessObject(msg);
+		return createSuccessObject(CommonProperties.Equipment_added_message,
+				Long.parseLong(CommonProperties.Equipment_added_code));
 	}
 
 	@Override
@@ -91,6 +101,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		logger.info("EquipmentServiceImpl: update():  Enter");
 		String msg = "Equipment Updated Successfully";
 		Equipment equipmentObj = equipmentDao.findById(id);
+		Equipment equipment = null;
 		if (equipmentObj != null) {
 			equipmentObj.setEquipmentName(equipmentReq.getEquipmentName());
 			equipmentObj.setDescription(equipmentReq.getDescription());
@@ -98,8 +109,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 			equipmentObj.setModifiedOn(new Date());
 			Type type = typeService.get(equipmentReq.getTypeId());
 			equipmentObj.setType(type);
-			equipmentDao.update(equipmentObj);
-			return createSuccessObject(msg);
+			equipment = equipmentDao.update(equipmentObj);
+			if (equipment == null) {
+				return null;
+			}
+			return createSuccessObject(
+					CommonProperties.Equipment_updated_message,
+					Long.parseLong(CommonProperties.Equipment_updated_code));
 		}
 		logger.info("EquipmentServiceImpl: update():  Exit");
 		return null;
@@ -113,9 +129,12 @@ public class EquipmentServiceImpl implements EquipmentService {
 		if (equipment != null) {
 			try {
 				equipmentDao.delete(equipment);
-				return createSuccessObject(msg);
+				return createSuccessObject(
+						CommonProperties.Equipment_deleted_message,
+						Long.parseLong(CommonProperties.Equipment_deleted_code));
 			} catch (Exception e) {
 				logger.error("EquipmentServiceImpl: delete(): Exception  : ", e);
+				return null;
 			}
 		}
 		logger.info("EquipmentServiceImpl: delete():  Exit");

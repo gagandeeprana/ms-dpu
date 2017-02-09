@@ -41,28 +41,28 @@ public class DriverServiceImpl implements DriverService {
 
 	@Autowired
 	DriverDao driverDao;
-	
+
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	TypeService typeService;
-	
+
 	@Autowired
 	CategoryService categoryService;
-	
+
 	@Autowired
 	DivisionService divisionService;
-	
+
 	@Autowired
 	TerminalService terminalService;
-	
+
 	@Autowired
 	CategoryDao categoryDao;
-	
+
 	@Autowired
 	DivisionDao divisionDao;
-	
+
 	@Autowired
 	TerminalDao terminalDao;
 
@@ -73,36 +73,35 @@ public class DriverServiceImpl implements DriverService {
 
 		logger.info("[addDriver]:Service:  Enter");
 		Driver driver = new Driver();
-		
+
 		try {
-			//boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
-//			if(!isDriverExist){
-					
-				BeanUtils.copyProperties(driverReq, driver);
-				driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
-				driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
-				driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
-				driver.setRole(typeService.get(driverReq.getRoleId()));
-				driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
-				driver.setStatus(statusService.get(driverReq.getStatusId()));
-				driverDao.save(driver);
-				//return getAllDriver();
-				return createSuccessObject();
-//			} else{
-//				String errorString = "This driver code is already exist";
-//				return errorString;
-//			}
-			
-			
+			// boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
+			// if(!isDriverExist){
+
+			BeanUtils.copyProperties(driverReq, driver);
+			driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
+			driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
+			driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
+			driver.setRole(typeService.get(driverReq.getRoleId()));
+			driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
+			driver.setStatus(statusService.get(driverReq.getStatusId()));
+			driverDao.save(driver);
+			// return getAllDriver();
+			return createSuccessObject();
+			// } else{
+			// String errorString = "This driver code is already exist";
+			// return errorString;
+			// }
+
 		} catch (Exception e) {
-			//return returnValue;
+			// return returnValue;
 		} finally {
-			logger.info("[addDriver]:Service:  returnValue : " );
+			logger.info("[addDriver]:Service:  returnValue : ");
 		}
 
 		return null;
 	}
-	
+
 	private Object createSuccessObject() {
 		Success success = new Success();
 		success.setMessage("Record Added Successfully");
@@ -124,27 +123,28 @@ public class DriverServiceImpl implements DriverService {
 		driver.setFaxNo(driverReq.getFaxNo());
 		driver.setCellular(driverReq.getCellular());
 		driver.setPager(driverReq.getPager());
-	/*	driver.setDivision(driverReq.getDivision());
-		driver.setTerminalId(driverReq.getTerminalId());
-		driver.setCatogoryId(driverReq.getCatogoryId());
-		driver.setRoleId(driverReq.getRoleId());
-		driver.setStatusId(driverReq.getStatusId());
-		driver.setDriverClassId(driverReq.getDriverClassId());*/
+		/*
+		 * driver.setDivision(driverReq.getDivision());
+		 * driver.setTerminalId(driverReq.getTerminalId());
+		 * driver.setCatogoryId(driverReq.getCatogoryId());
+		 * driver.setRoleId(driverReq.getRoleId());
+		 * driver.setStatusId(driverReq.getStatusId());
+		 * driver.setDriverClassId(driverReq.getDriverClassId());
+		 */
 		driver.setCreatedOn(new Date());
 		return driver;
 	}
 
 	@Override
 	public Object updateDriver(Long driverId, DriverReq driverReq) {
-		
+
 		logger.info("[updateDriver] : Srvice: Enter");
 		Driver driver = driverDao.findById(driverId);
 		List<DriverReq> driverList = new ArrayList<DriverReq>();
-		
 		if (driver != null) {
 			String[] ignoreProp = new String[1];
 			ignoreProp[0] = "driverId";
-			BeanUtils.copyProperties(driverReq, driver,ignoreProp);
+			BeanUtils.copyProperties(driverReq, driver, ignoreProp);
 			driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
 			driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
 			driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
@@ -161,10 +161,10 @@ public class DriverServiceImpl implements DriverService {
 
 	@Override
 	public Object deleteDriver(Long driverId) {
-		
+
 		logger.info("[deleteDriver] :driverCode : " + driverId);
 		Object obj = null;
-		
+
 		try {
 			Driver driver = driverDao.findById(driverId);
 
@@ -172,7 +172,7 @@ public class DriverServiceImpl implements DriverService {
 				driverDao.delete(driver);
 				logger.info("[deleteDriver] :Driver Deleted Successfully. : ");
 				obj = getAllDriver();
-			} else{
+			} else {
 				Failed failed = new Failed();
 				failed.setAuxiliary("Error");
 				failed.setCode(1234l);
@@ -188,14 +188,15 @@ public class DriverServiceImpl implements DriverService {
 
 	@Override
 	public List<DriverReq> getAllDriver() {
-		
+
 		List<Driver> listOfDriver = null;
 		List<DriverReq> drivers = null;
 		try {
 			logger.info("[getAllDrivers]:  Service : Enter");
 
 			listOfDriver = driverDao.findAll();
-			logger.info("[getAllDrivers]: Service: listOfDriver : "+ listOfDriver);
+			logger.info("[getAllDrivers]: Service: listOfDriver : "
+					+ listOfDriver);
 			drivers = setDriverData(listOfDriver);
 		} catch (Exception e) {
 			logger.error("[getAllDrivers ] Service: Exception :"
@@ -205,22 +206,25 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	private List<DriverReq> setDriverData(List<Driver> listOfDriver) {
-		
+
 		List<DriverReq> drivers = new ArrayList<DriverReq>();
-		if(listOfDriver != null && !listOfDriver.isEmpty()){
+		if (listOfDriver != null && !listOfDriver.isEmpty()) {
 			for (Driver driver : listOfDriver) {
 				DriverReq driverReq = new DriverReq();
 				BeanUtils.copyProperties(driver, driverReq);
 				driverReq.setCategoryName(driver.getCategory().getName());
-				driverReq.setTerminalName(driver.getTerminal().getTerminalName());
+				driverReq.setTerminalName(driver.getTerminal()
+						.getTerminalName());
 				driverReq.setStatusName(driver.getStatus().getStatus());
-				driverReq.setDivisionName(driver.getDivision().getDivisionName());
-				driverReq.setDriverClassName(driver.getDriverClass().getTypeName());
+				driverReq.setDivisionName(driver.getDivision()
+						.getDivisionName());
+				driverReq.setDriverClassName(driver.getDriverClass()
+						.getTypeName());
 				driverReq.setRoleName(driver.getRole().getTypeName());
 				drivers.add(driverReq);
 			}
 		}
-		
+
 		return drivers;
 	}
 
@@ -228,17 +232,18 @@ public class DriverServiceImpl implements DriverService {
 	public DriverReq getDriverByDriverCode(Long driverId) {
 
 		logger.info("[getDriverByDriverCode]:  Service : Enter");
-		/*Criterion getDriverByDriverCodecriteria = Restrictions.eqOrIsNull(
-				"driverId", driverId);
-		List<Driver> listOfDriver = driverDao
-				.find(getDriverByDriverCodecriteria);*/
+		/*
+		 * Criterion getDriverByDriverCodecriteria = Restrictions.eqOrIsNull(
+		 * "driverId", driverId); List<Driver> listOfDriver = driverDao
+		 * .find(getDriverByDriverCodecriteria);
+		 */
 		Driver driver = driverDao.findById(driverId);
 		DriverReq response = new DriverReq();
-		
+
 		if (driver != null) {
 			BeanUtils.copyProperties(driver, response);
 			response.setCategoryId(driver.getCategory().getCategoryId());
-			//driverReq.setTerminalName(driver.getTerminal().getTerminalName());
+			// driverReq.setTerminalName(driver.getTerminal().getTerminalName());
 			response.setStatusId(driver.getStatus().getId());
 			response.setDivisionId(driver.getDivision().getDivisionId());
 			response.setDriverClassId(driver.getDriverClass().getTypeId());
@@ -246,77 +251,78 @@ public class DriverServiceImpl implements DriverService {
 			response.setTerminalId(driver.getTerminal().getTerminalId());
 			List<Status> statusList = statusService.getAll();
 			response.setStatusList(statusList);
-			
+
 			List<TypeResponse> roleList = typeService.getAll(6l);
 			response.setRoleList(roleList);
-			
+
 			List<TypeResponse> driverClassList = typeService.getAll(5l);
 			response.setDriverClassList(driverClassList);
-			
+
 			List<CategoryReq> categoryList = categoryService.getAll();
 			response.setCategoryList(categoryList);
-			
+
 			List<DivisionReq> divisionList = divisionService.getAll("");
 			response.setDivisionList(divisionList);
-			
-			List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+
+			List<TerminalResponse> terminalList = terminalService
+					.getAllTerminals();
 			response.setTerminalList(terminalList);
-			
+
 		}
 		return response;
 	}
-	
-	public boolean isDriverExist(String driverCode){
+
+	public boolean isDriverExist(String driverCode) {
 		boolean isDriverExist = false;
-		
-		Criterion driverCriteria = Restrictions.eqOrIsNull("driverCode", driverCode);
+
+		Criterion driverCriteria = Restrictions.eqOrIsNull("driverCode",
+				driverCode);
 		List<Driver> drivers = driverDao.find(driverCriteria);
-		
-		if(drivers.size() == 0){
-			 
+
+		if (drivers.size() == 0) {
+
 			return isDriverExist;
 		}
-		
+
 		isDriverExist = true;
 		return isDriverExist;
-		
+
 	}
 
 	@Override
 	public DriverReq getOpenAdd() {
-		
+
 		DriverReq driver = new DriverReq();
-		
+
 		List<Status> statusList = statusService.getAll();
 		driver.setStatusList(statusList);
-		
+
 		List<TypeResponse> roleList = typeService.getAll(6l);
 		driver.setRoleList(roleList);
-		
+
 		List<TypeResponse> driverClassList = typeService.getAll(5l);
 		driver.setDriverClassList(driverClassList);
-		
+
 		List<CategoryReq> categoryList = categoryService.getAll();
 		driver.setCategoryList(categoryList);
-		
+
 		List<DivisionReq> divisionList = divisionService.getAll("");
 		driver.setDivisionList(divisionList);
-		
+
 		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
 		driver.setTerminalList(terminalList);
-		
-		
+
 		return driver;
 	}
 
 	@Override
 	public List<DriverReq> getDriverByDriverCodeOrName(String driverCodeOrName) {
-		
+
 		List<DriverReq> driverReqList = new ArrayList<DriverReq>();
-		List<Driver> driverList = driverDao.searchDriverByDriverCodeOrName(driverCodeOrName);
+		List<Driver> driverList = driverDao
+				.searchDriverByDriverCodeOrName(driverCodeOrName);
 		driverReqList = setDriverData(driverList);
 		return driverReqList;
 	}
-
 
 }

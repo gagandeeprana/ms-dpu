@@ -18,7 +18,7 @@ public interface DriverService {
 	
 	Object deleteDriver(Long driverId);
 
-	DriverReq getDriverByDriverCode(Long driverId);
+	Object getDriverByDriverId(Long driverId);
 
 	DriverReq getOpenAdd();
 

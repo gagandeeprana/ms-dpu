@@ -289,6 +289,9 @@ public class DriverServiceImpl implements DriverService {
 				List<TerminalResponse> terminalList = terminalService.getAllTerminals();
 				response.setTerminalList(terminalList);
 				obj = createSuccessObjectForParRecord(message,response);
+			} else{
+				message="Error while getting record";
+				obj = createFailedObject(message);
 			}
 		} catch(Exception e){
 			message="Error while getting record";

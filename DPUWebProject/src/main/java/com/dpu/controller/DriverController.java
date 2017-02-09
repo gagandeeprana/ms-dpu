@@ -131,10 +131,10 @@ public class DriverController extends MessageProperties  {
 		try {
 			Object result = driverService.updateDriver(driverId, driverReq);
 
-			if(result instanceof List<?>) {
+			if(result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_update_code), CommonProperties.Driver_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("[updateDriver]: Exception "+e);

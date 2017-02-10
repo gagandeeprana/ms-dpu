@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.constants.Iconstants;
-import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.model.TrailerRequest;
 import com.dpu.service.TrailerService;
 import com.dpu.util.MessageProperties;
@@ -71,13 +70,10 @@ public class TrailerController extends MessageProperties {
 		Object obj = null;
 		try {
 			Object response = trailerService.add(trailerRequest);
-			if (response instanceof List<?>) {
+			if (response instanceof Success) {
 				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(trailerUnableToAddCode),
-						trailerUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside TrailerController add() :" + e.getMessage());
@@ -96,23 +92,21 @@ public class TrailerController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long trailerId) {
 
+		logger.info("Inside TrailerController delete() starts");
 		Object obj = null;
 		try {
 
 			obj = trailerService.delete(trailerId);
-			
-			if (obj instanceof List<?>) {
-				obj = new ResponseEntity<Object>(obj,
-						HttpStatus.OK);
+			if (obj instanceof Success) {
+				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(trailerUnableToDeleteCode),
-						trailerUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TrailerController delete() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController delete() ends");
 		return obj;
 	}
 
@@ -126,20 +120,20 @@ public class TrailerController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long trailerId,@RequestBody TrailerRequest trailerRequest) {
 
+		logger.info("Inside TrailerController update() starts, trailerId :"+trailerId);
 		Object obj = null;
 		try {
 			Object response = trailerService.update(trailerId,trailerRequest);
-			if (response instanceof List<?>) {
+			if (response instanceof Success) {
 				obj = new ResponseEntity<Object>(response,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(trailerUnableToUpdateCode),
-						trailerUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TrailerController update() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController update() ends, trailerId :"+trailerId);
 		return obj;
 	}
 
@@ -151,18 +145,20 @@ public class TrailerController extends MessageProperties {
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("id") Long id) {
+		
+		logger.info("Inside TrailerController get() starts, trailerId :"+id);
 		String json = new String();
+		
 		try {
 			TrailerRequest trailerRequest = trailerService.get(id);
 			if (trailerRequest != null) {
-				if(trailerRequest != null) {
-					json = mapper.writeValueAsString(trailerRequest);
-				}
-				System.out.println(json);
+				json = mapper.writeValueAsString(trailerRequest);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TrailerController delete() :" + e.getMessage());
 		}
+		
+		logger.info("Inside TrailerController get() ends, trailerId :"+id);
 		return json;
 	}
 	
@@ -197,7 +193,7 @@ public class TrailerController extends MessageProperties {
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(trailerReq);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TrailerController openAdd() :" + e.getMessage());
 		}
 		logger.info(" Inside TrailerController openAdd() Ends ");
 		return json;

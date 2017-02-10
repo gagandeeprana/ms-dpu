@@ -223,26 +223,11 @@ public class DriverServiceImpl implements DriverService {
 
 		logger.info("Inside DriverServiceImpl getAllDriver() starts ");
 		Session session = null;
-
-		List<Driver> listOfDriver = null;
-
 		List<DriverReq> drivers = null;
 
 		try {
 			session = sessionFactory.openSession();
-
-			logger.info("[getAllDrivers]:  Service : Enter");
-
-			listOfDriver = driverDao.findAll();
-			logger.info("[getAllDrivers]: Service: listOfDriver : "
-					+ listOfDriver);
-
-			listOfDriver = driverDao.findAll(session);
-			logger.info("[getAllDrivers]: Service: listOfDriver : "
-					+ listOfDriver);
-
 			List<Driver> listOfDriver = driverDao.findAll(session);
-
 			drivers = setDriverData(listOfDriver);
 
 		} catch (Exception e) {

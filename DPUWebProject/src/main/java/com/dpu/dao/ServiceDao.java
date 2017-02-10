@@ -13,4 +13,6 @@ public interface ServiceDao extends GenericDao<Service>{
 	List<Service> findAll(Session session);
 
 	Service findById(Long id, Session session);
+
+	List<Service> getServiceByServiceName(Session session, String serviceName);
 }

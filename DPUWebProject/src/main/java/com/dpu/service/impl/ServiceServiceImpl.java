@@ -1,4 +1,3 @@
-
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
@@ -6,9 +5,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,17 +12,12 @@ import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.DPUService;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
 
-/**
- * @author jagvir
- *
- */
 @Component
 public class ServiceServiceImpl implements ServiceService {
 	@Autowired
@@ -180,22 +171,26 @@ public class ServiceServiceImpl implements ServiceService {
 	@Override
 	public List<DPUService> getServiceByServiceName(String serviceName) {
 		
-		List<Service> serviceList = null;
+		Session session = null;
 		List<DPUService> servicesList = new ArrayList<DPUService>();
-		if(serviceName != null && serviceName.length() > 0) {
-			Criterion criterion = Restrictions.like("serviceName", serviceName, MatchMode.ANYWHERE);
-			serviceList = serviceDao.find(criterion);
-		}
 		
-		if(serviceList != null && !serviceList.isEmpty()){
-			for (Service service : serviceList) {
-				DPUService serviceObj = new DPUService();
-				serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
-				serviceObj.setServiceName(service.getServiceName());
-				serviceObj.setServiceId(service.getServiceId());
-				serviceObj.setStatus(service.getStatus().getStatus());
-				serviceObj.setTextField(service.getTextField().getTypeName());
-				servicesList.add(serviceObj);
+		try{
+			session = sessionFactory.openSession();
+			List<Service> serviceList = serviceDao.getServiceByServiceName(session, serviceName);
+			if(serviceList != null && !serviceList.isEmpty()){
+				for (Service service : serviceList) {
+					DPUService serviceObj = new DPUService();
+					serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
+					serviceObj.setServiceName(service.getServiceName());
+					serviceObj.setServiceId(service.getServiceId());
+					serviceObj.setStatus(service.getStatus().getStatus());
+					serviceObj.setTextField(service.getTextField().getTypeName());
+					servicesList.add(serviceObj);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
 			}
 		}
 		

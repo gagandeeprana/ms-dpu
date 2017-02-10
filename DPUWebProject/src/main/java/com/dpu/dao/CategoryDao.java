@@ -14,4 +14,6 @@ public interface CategoryDao extends GenericDao<Category> {
 	List<Category> findAll(Session session);
 
 	Category findById(Long id, Session session);
+
+	List<Category> getCategoryByCategoryName(Session session, String categoryName);
 }

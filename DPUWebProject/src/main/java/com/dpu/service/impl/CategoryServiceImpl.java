@@ -6,19 +6,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
-import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
-import com.dpu.model.DPUService;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.StatusService;
@@ -193,23 +187,26 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<CategoryReq> getCategoryByCategoryName(String categoryName) {
 
-		List<Category> categoryList = null;
-		
-		if(categoryName != null && categoryName.length() > 0) {
-			Criterion criterion = Restrictions.like("name", categoryName, MatchMode.ANYWHERE);
-			categoryList = categoryDao.find(criterion);
-		}
+		Session session = null;
 		List<CategoryReq> categories = new ArrayList<CategoryReq>();
 		
-		if(categoryList != null && !categoryList.isEmpty()){
-			for (Category category : categoryList) {
-				CategoryReq categoryObj = new CategoryReq();
-				categoryObj.setCategoryId(category.getCategoryId());
-				categoryObj.setName(category.getName());
-				categoryObj.setHighlightName(category.getHighLight().getTypeName());
-				categoryObj.setTypeName(category.getType().getTypeName());
-				categoryObj.setStatusName(category.getStatus().getStatus());
-				categories.add(categoryObj);
+		try{
+			session = sessionFactory.openSession();
+			List<Category> categoryList = categoryDao.getCategoryByCategoryName(session, categoryName);
+			if(categoryList != null && !categoryList.isEmpty()){
+				for (Category category : categoryList) {
+					CategoryReq categoryObj = new CategoryReq();
+					categoryObj.setCategoryId(category.getCategoryId());
+					categoryObj.setName(category.getName());
+					categoryObj.setHighlightName(category.getHighLight().getTypeName());
+					categoryObj.setTypeName(category.getType().getTypeName());
+					categoryObj.setStatusName(category.getStatus().getStatus());
+					categories.add(categoryObj);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
 			}
 		}
 		

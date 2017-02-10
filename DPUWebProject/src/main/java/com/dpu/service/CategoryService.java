@@ -13,7 +13,7 @@ import com.dpu.model.CategoryReq;
  *
  */
 public interface CategoryService {
-	List<CategoryReq> addCategory(CategoryReq categoryReq);
+	Object addCategory(CategoryReq categoryReq);
 
 	List<CategoryReq> update(Long id, CategoryReq categoryReq);
 

@@ -8,11 +8,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.StatusService;
@@ -36,24 +39,38 @@ public class CategoryServiceImpl implements CategoryService {
 	SessionFactory sessionFactory;
 	
 	@Override
-	public List<CategoryReq> addCategory(CategoryReq categoryReq) {
-		logger.info("[addCategory]:Service:  Enter");
-
-		List<CategoryReq> returnList = new ArrayList<CategoryReq>();
+	public Object addCategory(CategoryReq categoryReq) {
+	
+		logger.info("Inside CategoryServiceImpl addCategory() starts ");
+		Object obj = null;
+		String message = "Record Added Successfully";
+		
 		try {
-
 			Category category = setCategoryValues(categoryReq);
 			categoryDao.save(category);
-			returnList = getAll();
+			obj = createSuccessObject(message);
 
 		} catch (Exception e) {
-			logger.info("[addCategory]:Exception:    : ", e);
-			System.out.println(e);
-		} finally {
-			logger.info("[addCategory]:Service:  returnValue : ");
+			logger.info("Exception inside CategoryServiceImpl addCategory() :"+e.getMessage());
+			message = "Error while inserting record";
+			obj = createFailedObject(message);
 		}
 		
-		return returnList;
+		logger.info("Inside CategoryServiceImpl addCategory() ends ");
+		return obj;
+	}
+	
+	private Object createSuccessObject(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAll());
+		return success;
+	}
+	
+	private Object createFailedObject(String errorMessage) {
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
 	}
 
 	private Category setCategoryValues(CategoryReq categoryReq) {

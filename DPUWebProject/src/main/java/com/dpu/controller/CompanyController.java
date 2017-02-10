@@ -141,4 +141,22 @@ public class CompanyController extends MessageProperties {
 		logger.info("[get] : Exit ");
 		return json;
 	}
+	
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+		
+		logger.info(" Inside CompanyController openAdd() Starts ");
+		String json = null;
+		
+		try {
+			CompanyResponse companyResponse = companyService.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(companyResponse);
+		} catch (Exception e) {
+			logger.error(" Exception inside CompanyController openAdd() :"+e.getMessage());
+		}
+		
+		logger.info(" Inside CompanyController openAdd() Ends ");
+		return json;
+	}
 }

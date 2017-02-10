@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.constants.Iconstants;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
 import com.dpu.util.MessageProperties;
 
@@ -70,13 +71,11 @@ public class CategoryController extends MessageProperties {
 		Object obj = null;
 		try {
 
-			List<CategoryReq> categoryList = categoryService.addCategory(categoryReq);
-
-			if (categoryList != null) {
-				obj = categoryList;
+			Object response = categoryService.addCategory(categoryReq);
+			if (response instanceof Success) {
+				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToAddCode),
-						categoryUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 			}
 
 		} catch (Exception e) {

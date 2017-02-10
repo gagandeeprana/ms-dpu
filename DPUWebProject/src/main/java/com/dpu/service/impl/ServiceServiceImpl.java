@@ -3,6 +3,7 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
 import com.dpu.service.StatusService;
@@ -32,15 +35,38 @@ public class ServiceServiceImpl implements ServiceService {
 	@Autowired
 	SessionFactory sessionFactory;
 	
+	Logger logger = Logger.getLogger(ServiceServiceImpl.class);
 	@Override
-	public List<DPUService> add(DPUService dpuService) {
+	public Object add(DPUService dpuService) {
 		
-		Service service = setServiceValues(dpuService);
-		serviceDao.save(service);
+		Object obj = null;
+		String message = "Record Added Successfully";
+		try {
+			Service service = setServiceValues(dpuService);
+			serviceDao.save(service);
+			obj = createSuccessObject(message);
+		} catch(Exception e){
+			logger.error("Exception inside DriverServiceImpl addDriver() :"+e.getMessage());
+			message = "Error while inserting record";
+			obj = createFailedObject(message);
+		}
 		
-		return getAll();
+		return obj;
+		
 	}
 
+	private Object createSuccessObject(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAll());
+		return success;
+	}
+	
+	private Object createFailedObject(String errorMessage) {
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
+	}
 	private Service setServiceValues(DPUService dpuService) {
 		Service service  = new Service();
 		service.setServiceName(dpuService.getServiceName());

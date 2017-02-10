@@ -3,15 +3,10 @@ package com.dpu.service;
 
 import java.util.List;
 
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.DPUService;
 
-/**
- * @author jagvir
- *
- */
 public interface ServiceService {
-	List<DPUService> add(DPUService dpuService);
+	Object add(DPUService dpuService);
 
 	List<DPUService> delete(Long id);
 

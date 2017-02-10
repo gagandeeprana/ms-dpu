@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.constants.Iconstants;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.ServiceService;
 import com.dpu.util.MessageProperties;
 
@@ -64,24 +65,22 @@ public class ServiceController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody DPUService dpuService) {
-		logger.info("[add] : Enter");
+		logger.info("Inside ServiceController add() starts");
 		Object obj = null;
 		try {
 			
 			//Service service = setServiceValues(dpuService);
-			List<DPUService> result = serviceService.add(dpuService);
-			if (result != null) {
-				obj = mapper.writeValueAsString(result);
+			Object result = serviceService.add(dpuService);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(serviceUnableToAddCode),
-						serviceUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ServiceController add() :"+e.getMessage());
 		}
-		logger.info("[add] : Exit");
+		
+		logger.info("Inside ServiceController add() ends");
 		return obj;
 	}
 

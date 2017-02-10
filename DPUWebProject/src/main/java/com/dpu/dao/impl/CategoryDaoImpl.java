@@ -32,4 +32,13 @@ public class CategoryDaoImpl extends GenericDaoImpl<Category> implements Categor
 		return (Category) query.uniqueResult();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Category> getCategoryByCategoryName(Session session, String categoryName) {
+		StringBuilder sb = new StringBuilder("select c from Category c join fetch c.status join fetch c.highLight join fetch c.type where c.name like :categoryName ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("categoryName", "%"+categoryName+"%");
+		return query.list();
+	}
+
 }

@@ -3,12 +3,16 @@
  */
 package com.dpu.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -50,6 +54,17 @@ public class Service {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "text_field")
 	private Type textField;
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "services")
+	private Set<Terminal> terminals = new HashSet<Terminal>();
+	
+	public Set<Terminal> getTerminals() {
+		return terminals;
+	}
+
+	public void setTerminals(Set<Terminal> terminals) {
+		this.terminals = terminals;
+	}
 
 	public Type getAssociationWith() {
 		return associationWith;

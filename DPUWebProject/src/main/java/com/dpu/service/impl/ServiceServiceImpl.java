@@ -1,14 +1,11 @@
-
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,17 +13,14 @@ import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.DPUService;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
 
-/**
- * @author jagvir
- *
- */
 @Component
 public class ServiceServiceImpl implements ServiceService {
 	@Autowired
@@ -41,15 +35,38 @@ public class ServiceServiceImpl implements ServiceService {
 	@Autowired
 	SessionFactory sessionFactory;
 	
+	Logger logger = Logger.getLogger(ServiceServiceImpl.class);
 	@Override
-	public List<DPUService> add(DPUService dpuService) {
+	public Object add(DPUService dpuService) {
 		
-		Service service = setServiceValues(dpuService);
-		serviceDao.save(service);
+		Object obj = null;
+		String message = "Record Added Successfully";
+		try {
+			Service service = setServiceValues(dpuService);
+			serviceDao.save(service);
+			obj = createSuccessObject(message);
+		} catch(Exception e){
+			logger.error("Exception inside DriverServiceImpl addDriver() :"+e.getMessage());
+			message = "Error while inserting record";
+			obj = createFailedObject(message);
+		}
 		
-		return getAll();
+		return obj;
+		
 	}
 
+	private Object createSuccessObject(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAll());
+		return success;
+	}
+	
+	private Object createFailedObject(String errorMessage) {
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
+	}
 	private Service setServiceValues(DPUService dpuService) {
 		Service service  = new Service();
 		service.setServiceName(dpuService.getServiceName());
@@ -180,22 +197,26 @@ public class ServiceServiceImpl implements ServiceService {
 	@Override
 	public List<DPUService> getServiceByServiceName(String serviceName) {
 		
-		List<Service> serviceList = null;
+		Session session = null;
 		List<DPUService> servicesList = new ArrayList<DPUService>();
-		if(serviceName != null && serviceName.length() > 0) {
-			Criterion criterion = Restrictions.like("serviceName", serviceName, MatchMode.ANYWHERE);
-			serviceList = serviceDao.find(criterion);
-		}
 		
-		if(serviceList != null && !serviceList.isEmpty()){
-			for (Service service : serviceList) {
-				DPUService serviceObj = new DPUService();
-				serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
-				serviceObj.setServiceName(service.getServiceName());
-				serviceObj.setServiceId(service.getServiceId());
-				serviceObj.setStatus(service.getStatus().getStatus());
-				serviceObj.setTextField(service.getTextField().getTypeName());
-				servicesList.add(serviceObj);
+		try{
+			session = sessionFactory.openSession();
+			List<Service> serviceList = serviceDao.getServiceByServiceName(session, serviceName);
+			if(serviceList != null && !serviceList.isEmpty()){
+				for (Service service : serviceList) {
+					DPUService serviceObj = new DPUService();
+					serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
+					serviceObj.setServiceName(service.getServiceName());
+					serviceObj.setServiceId(service.getServiceId());
+					serviceObj.setStatus(service.getStatus().getStatus());
+					serviceObj.setTextField(service.getTextField().getTypeName());
+					servicesList.add(serviceObj);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
 			}
 		}
 		

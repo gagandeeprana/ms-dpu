@@ -55,4 +55,13 @@ public class ServiceDaoImpl extends GenericDaoImpl<Service> implements ServiceDa
 		return (Service) query.uniqueResult();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Service> getServiceByServiceName(Session session, String serviceName) {
+		StringBuilder sb = new StringBuilder("select s from Service s join fetch s.status join fetch s.associationWith join fetch s.textField where s.serviceName like :serviceName ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("serviceName", "%"+serviceName+"%");
+		return query.list();
+	}
+
 }

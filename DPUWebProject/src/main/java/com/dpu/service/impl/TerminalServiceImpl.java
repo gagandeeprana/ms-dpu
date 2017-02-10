@@ -2,7 +2,9 @@ package com.dpu.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -13,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.ServiceDao;
 import com.dpu.dao.ShipperDao;
 import com.dpu.dao.TerminalDao;
 import com.dpu.entity.Service;
@@ -49,7 +52,10 @@ public class TerminalServiceImpl implements TerminalService {
 	
 	@Autowired
 	ShipperDao shipperDao;
-
+	
+	@Autowired
+	ServiceDao serviceDao;
+	
 	@Override
 	public List<TerminalResponse> getAllTerminals() {
 		
@@ -57,14 +63,12 @@ public class TerminalServiceImpl implements TerminalService {
 		List<TerminalResponse> terminalRespList = new ArrayList<TerminalResponse>();
 		try{
 			session = sessionFactory.openSession();
-			List<Terminal> terminalList = terminalDao.findAll(session);
+			List<Terminal> terminalList = terminalDao.findAll(null, session);
 			
 			if(terminalList != null && !terminalList.isEmpty()){
 				for (Terminal terminal : terminalList) {
 					TerminalResponse terminalResponseObj = new TerminalResponse();
 					terminalResponseObj.setTerminalName(terminal.getTerminalName());
-					terminalResponseObj.setFacility(terminal.getFacility());
-					terminalResponseObj.setLocation(terminal.getLocation());
 					terminalResponseObj.setTerminalId(terminal.getTerminalId());
 					terminalResponseObj.setShipperName(terminal.getShipper().getLocationName());
 					terminalRespList.add(terminalResponseObj);
@@ -88,9 +92,17 @@ public class TerminalServiceImpl implements TerminalService {
 		Terminal terminal  = new Terminal();
 		terminal.setTerminalName(terminalResponse.getTerminalName());
 		Status status = statusService.get(terminalResponse.getStatusId());
-		terminal.setLocation(terminalResponse.getLocation());
-		terminal.setFacility(terminalResponse.getFacility());
-		terminal.setAvailableServices(terminalResponse.getAvailableServices());
+		Set<Service> services = new HashSet<Service>();
+		if(terminalResponse.getServiceIds() != null && terminalResponse.getServiceIds().size() > 0) {
+			for(int i=0;i<terminalResponse.getServiceIds().size();i++) {
+				Long serviceId = terminalResponse.getServiceIds().get(i);
+				Service service = serviceDao.findById(serviceId);
+				if(service != null) {
+					services.add(service);
+				}
+			}
+		}
+		terminal.setServices(services);
 		terminal.setShipper(shipperDao.findById(terminalResponse.getShipperId()));
 		terminal.setCreatedBy("Anuj Nayyar");
 		terminal.setCreatedOn(new Date());
@@ -118,17 +130,33 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public TerminalResponse getTerminal(Long id) {
-		TerminalResponse terminalResp = new TerminalResponse();
-		Terminal terminal = terminalDao.findById(id);
 		
-		if(terminal != null){
-			terminalResp.setTerminalId(terminal.getTerminalId());
-			//terminalResp.setStatusId(terminal.getStatus().getId());
-			terminalResp.setTerminalName(terminal.getTerminalName());
-			terminalResp.setLocation(terminal.getLocation());
-			terminalResp.setFacility(terminal.getFacility());
-			
-		}		
+		Session session = null;
+		TerminalResponse terminalResp = new TerminalResponse();
+		Terminal terminal = null;
+		try {
+			session = sessionFactory.openSession();
+			terminal = terminalDao.findById(session, id);
+			if(terminal != null){
+				terminalResp.setTerminalId(terminal.getTerminalId());
+				terminalResp.setTerminalName(terminal.getTerminalName());
+				terminalResp.setShipperId(terminal.getShipper().getShipperId());
+				terminalResp.setShipperList(shipperService.getAll());
+				Set<Service> services = terminal.getServices();
+				terminalResp.setServiceList(serviceService.getAll());
+				List<Long> serviceIds = new ArrayList<Long>();
+				for(Service service : services) {
+					serviceIds.add(service.getServiceId());
+				}
+				terminalResp.setServiceIds(serviceIds);
+			}		
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
 		return terminalResp;
 	}
 
@@ -147,8 +175,7 @@ public class TerminalServiceImpl implements TerminalService {
 			Terminal terminal= terminalDao.findById(id);
 			terminal.setTerminalName(terminalResponse.getTerminalName());
 			Status status = statusService.get(terminalResponse.getStatusId());
-			terminal.setFacility(terminalResponse.getFacility());
-			terminal.setAvailableServices(terminalResponse.getAvailableServices());
+//			terminal.setAvailableServices(terminalResponse.getAvailableServices());
 			terminal.setModifiedOn(new Date());
 			terminal.setStatus(status);
 			terminalDao.update(terminal);
@@ -157,23 +184,30 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public List<TerminalResponse> getTerminalByTerminalName(String terminalName) {
+		Session session = null;
 		List<Terminal> terminalList = null;
-		if(terminalName != null && terminalName.length() > 0) {
-			Criterion criterion = Restrictions.like("terminalName", terminalName, MatchMode.ANYWHERE);
-			terminalList = terminalDao.find(criterion);
-		}
 		List<TerminalResponse> termList = new ArrayList<TerminalResponse>();
-		
-		if(terminalList != null && !terminalList.isEmpty()){
-			for (Terminal terminal: terminalList) {
-				TerminalResponse terminalObj = new TerminalResponse();
-				terminalObj.setTerminalId(terminal.getTerminalId());
-				terminalObj.setStatusId(terminal.getStatus().getId());
-				terminalObj.setTerminalName(terminal.getTerminalName());
-				terminalObj.setLocation(terminal.getLocation());
-				terminalObj.setFacility(terminal.getFacility());
-				terminalObj.setStatus(terminal.getStatus().getStatus());
-				termList.add(terminalObj);
+		try {
+			session = sessionFactory.openSession();
+			if(terminalName != null && terminalName.length() > 0) {
+				terminalList = terminalDao.findAll(terminalName, session);
+			}
+			
+			if(terminalList != null && !terminalList.isEmpty()){
+				for (Terminal terminal: terminalList) {
+					TerminalResponse terminalObj = new TerminalResponse();
+					terminalObj.setTerminalId(terminal.getTerminalId());
+					terminalObj.setStatusId(terminal.getStatus().getId());
+					terminalObj.setTerminalName(terminal.getTerminalName());
+					terminalObj.setStatus(terminal.getStatus().getStatus());
+					termList.add(terminalObj);
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			if(session != null) {
+				session.close();
 			}
 		}
 		

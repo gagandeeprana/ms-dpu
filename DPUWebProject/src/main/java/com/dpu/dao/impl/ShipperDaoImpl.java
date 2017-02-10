@@ -7,6 +7,7 @@ package com.dpu.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
@@ -48,6 +49,22 @@ public class ShipperDaoImpl extends GenericDaoImpl<Shipper> implements ShipperDa
 			}
 		}
 		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Shipper> findAll(Session session) {
+		StringBuilder sb = new StringBuilder(" select s from Shipper s join fetch s.status " );
+		Query query = session.createQuery(sb.toString());
+		return query.list();
+	}
+
+	@Override
+	public Shipper findById(Long id, Session session) {
+		StringBuilder sb = new StringBuilder(" select s from Shipper s join fetch s.status where s.shipperId =:shipperId " );
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("shipperId", id);
+		return (Shipper) query.uniqueResult();
 	}
 
 //	Logger logger = Logger.getLogger(ShipperDaoImpl.class);

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +34,9 @@ public class ShipperServiceImpl implements ShipperService {
 	
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	SessionFactory sessionFactory;
 
 	@Override
 	public Object add(ShipperResponse shipperResponse) {
@@ -83,16 +88,24 @@ public class ShipperServiceImpl implements ShipperService {
 	@Override
 	public List<ShipperResponse> getAll() {
 		
-		List<Shipper> shipperlist = shipperDao.findAll();
+		Session session = null;
 		List<ShipperResponse> responses = new ArrayList<ShipperResponse>();
-		
-		if(shipperlist != null && ! shipperlist.isEmpty()){
-			for (Shipper shipper : shipperlist) {
-				ShipperResponse shipperResponse = new ShipperResponse();
-				BeanUtils.copyProperties(shipper, shipperResponse);
-				/*shipperResponse.setCompany(shipper.getCompany().getName());*/
-				shipperResponse.setStatus(shipper.getStatus().getStatus());
-				responses.add(shipperResponse);
+		try{
+			session = sessionFactory.openSession();
+			List<Shipper> shipperlist = shipperDao.findAll(session);
+			
+			if(shipperlist != null && ! shipperlist.isEmpty()){
+				for (Shipper shipper : shipperlist) {
+					ShipperResponse shipperResponse = new ShipperResponse();
+					BeanUtils.copyProperties(shipper, shipperResponse);
+					/*shipperResponse.setCompany(shipper.getCompany().getName());*/
+					shipperResponse.setStatus(shipper.getStatus().getStatus());
+					responses.add(shipperResponse);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
 			}
 		}
 		
@@ -102,15 +115,24 @@ public class ShipperServiceImpl implements ShipperService {
 	@Override
 	public ShipperResponse get(Long id) {
 		
-		Shipper shipper = shipperDao.findById(id);
+		Session session = null;
 		ShipperResponse response = new ShipperResponse();
-		if(shipper != null){
-			BeanUtils.copyProperties(shipper, response);
-		/*	response.setCompanyId(shipper.getCompany().getCompanyId());*/
-			response.setStatusId(shipper.getStatus().getId());
-			/*response.setCompanyList(companyService.getCompanyData());*/
-			List<Status> statusList = statusService.getAll();
-			response.setStatusList(statusList);
+		
+		try{
+			session = sessionFactory.openSession();
+			Shipper shipper = shipperDao.findById(id,session);
+			if(shipper != null){
+				BeanUtils.copyProperties(shipper, response);
+				/*	response.setCompanyId(shipper.getCompany().getCompanyId());*/
+				response.setStatusId(shipper.getStatus().getId());
+				/*response.setCompanyList(companyService.getCompanyData());*/
+				List<Status> statusList = statusService.getAll();
+				response.setStatusList(statusList);
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		return response;

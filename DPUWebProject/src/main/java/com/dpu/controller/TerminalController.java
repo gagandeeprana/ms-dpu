@@ -74,7 +74,7 @@ public class TerminalController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-		}
+		}	
 		logger.info("[addTerminal] : Exit");
 		return obj;
 	}

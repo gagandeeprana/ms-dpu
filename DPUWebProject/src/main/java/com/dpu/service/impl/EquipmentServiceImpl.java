@@ -23,6 +23,7 @@ import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Equipment;
 import com.dpu.entity.Type;
 import com.dpu.model.EquipmentReq;
+import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.EquipmentService;
@@ -54,6 +55,14 @@ public class EquipmentServiceImpl implements EquipmentService {
 		return success;
 	}
 
+	private Object createFailedObject(String msg, long code) {
+		Failed failed = new Failed();
+		failed.setCode(code);
+		failed.setMessage(msg);
+		failed.setResultList(getAll(""));
+		return failed;
+	}
+
 	@Override
 	public Object add(EquipmentReq equipmentReq) {
 
@@ -70,7 +79,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			tx = session.beginTransaction();
 			equipment = equipmentDao.add(session, equipmentReq);
 			if (equipment == null) {
-				return null;
+				return createFailedObject(
+						CommonProperties.Equipment_unable_to_add_message,
+						Long.parseLong(CommonProperties.Equipment_unable_to_add_code));
 			}
 			if (tx != null) {
 				tx.commit();
@@ -82,7 +93,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			if (tx != null) {
 				tx.rollback();
 			}
-			return null;
+			return createFailedObject(
+					CommonProperties.Equipment_unable_to_add_message,
+					Long.parseLong(CommonProperties.Equipment_unable_to_add_code));
 		} finally {
 			logger.info("EquipmentServiceImpl: add():  finally block");
 			if (session != null) {

@@ -31,6 +31,9 @@ public class Failed {
 	@JsonProperty("params")
 	private Object parms;
 
+	private Object resultList;
+	
+
 	/**
 	 * Instantiates a new failed.
 	 */
@@ -117,6 +120,13 @@ public class Failed {
 		return auxiliary;
 	}
 
+	public Object getResultList() {
+		return resultList;
+	}
+	
+	public void setResultList(Object resultList) {
+		this.resultList = resultList;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

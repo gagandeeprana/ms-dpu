@@ -90,24 +90,26 @@ public class EquipmentController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Equipment_unable_to_add_code),
-									CommonProperties.Equipment_unable_to_add_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+					// } else {
+					// obj = new ResponseEntity<Object>(
+					// new Failed(
+					// Integer.parseInt(CommonProperties.Equipment_unable_to_add_code),
+					// CommonProperties.Equipment_unable_to_add_message,
+					// Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+					// }
+					// } else {
+					// obj = new ResponseEntity<Object>(new Failed(
+					// Integer.parseInt(equipmentUnableToAddCode),
+					// equipmentUnableToAddMessage, Iconstants.ERROR),
+					// HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(equipmentUnableToAddCode),
-						equipmentUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(equipmentUnableToAddCode),
-					equipmentUnableToAddMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+
 			logger.fatal("EquipmentController: add(): Exception: "
 					+ e.getMessage());
 		}

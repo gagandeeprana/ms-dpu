@@ -46,8 +46,9 @@ public class CompanyBillingLocation {
     @Column(name = "ar_us")
     private String arUS;
 
-    @Column(name = "status")
-    private int status;
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "status_id")
+	private Status status;
 
     @Column(name = "contact")
     private String contact;
@@ -152,11 +153,11 @@ public class CompanyBillingLocation {
 		this.arUS = arUS;
 	}
 
-	public int getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 

@@ -34,7 +34,8 @@ public class BillingLocation {
 	private String arUS;
 
 	//@JsonProperty( "status")
-	private int status;
+	private Long statusId;
+	private String status;
 
 	//@JsonProperty( "contact")
 	private String contact;
@@ -135,11 +136,19 @@ public class BillingLocation {
 		this.arUS = arUS;
 	}
 
-	public int getStatus() {
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

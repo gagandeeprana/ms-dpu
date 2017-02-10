@@ -48,8 +48,9 @@ public class CompanyAdditionalContacts {
 	@Column(name = "cellular")
 	private String cellular;
 
-	@Column(name = "status")
-	private int status;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "status_id")
+	private Status status;
 
 	@Column(name = "email")
 	private String email;
@@ -125,16 +126,16 @@ public class CompanyAdditionalContacts {
 		this.cellular = cellular;
 	}
 
-	public int getStatus() {
+	public String getEmail() {
+		return email;
+	}
+
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Status status) {
 		this.status = status;
-	}
-
-	public String getEmail() {
-		return email;
 	}
 
 	public void setEmail(String email) {

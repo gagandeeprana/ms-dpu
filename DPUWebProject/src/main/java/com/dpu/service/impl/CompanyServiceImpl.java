@@ -87,7 +87,7 @@ public class CompanyServiceImpl implements CompanyService{
 		companyAdditionalContact.setPhone(additionalContact.getPhone());
 		companyAdditionalContact.setPosition(additionalContact.getPosition());
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
-		companyAdditionalContact.setStatus(additionalContact.getStatus());
+		//companyAdditionalContact.setStatus(additionalContact.getStatus());
 		return companyAdditionalContact;
 	}
 
@@ -109,7 +109,7 @@ public class CompanyServiceImpl implements CompanyService{
 		comBillingLocation.setPosition(billingLocation.getPosition());
 		comBillingLocation.setPrefix(billingLocation.getPrefix());
 		comBillingLocation.setProvinceState(billingLocation.getProvinceState());
-		comBillingLocation.setStatus(billingLocation.getStatus());
+		//comBillingLocation.setStatus(billingLocation.getStatus());
 		comBillingLocation.setTollfree(billingLocation.getTollfree());
 		comBillingLocation.setUnitNo(billingLocation.getUnitNo());
 		comBillingLocation.setZip(billingLocation.getZip());

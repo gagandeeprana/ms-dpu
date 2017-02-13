@@ -20,6 +20,7 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
+import com.dpu.service.OrderService;
 import com.dpu.util.MessageProperties;
 
 
@@ -31,6 +32,9 @@ public class OrderController extends MessageProperties {
 
 	@Autowired
 	CategoryService categoryService;
+	
+	@Autowired
+	OrderService orderService;
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -169,25 +173,25 @@ public class OrderController extends MessageProperties {
 	}
 
 	/**
-	 * this method is used when we click on add button on category screen to send master data
-	 * @return master data for add category
+	 * this method is used when we click on add button on Order screen to send master data
+	 * @return master data for add Order
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
-		logger.info(" Inside CategoryController openAdd() Starts ");
+		logger.info(" Inside OrderController openAdd() Starts ");
 		String json = null;
 		
 		try {
-			CategoryReq CategoryReq = categoryService.getOpenAdd();
+			CategoryReq CategoryReq = orderService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(CategoryReq);
 		} catch (Exception e) {
-			logger.error(" Exception inside CategoryController openAdd() :"+e.getMessage());
+			logger.error(" Exception inside OrderController openAdd() :"+e.getMessage());
 		}
 		
-		logger.info(" Inside CategoryController openAdd() Ends ");
+		logger.info(" Inside OrderController openAdd() Ends ");
 		return json;
 	}
 	

@@ -20,5 +20,7 @@ public interface CompanyService {
 	CompanyResponse get(Long id);
 
 	Object update(Long id, CompanyResponse companyResponse);
+
+	CompanyResponse getOpenAdd();
 	
 }

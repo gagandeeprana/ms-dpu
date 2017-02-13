@@ -32,7 +32,24 @@ public class AdditionalContacts {
 	private String cellular;
 
 	//@JsonProperty("status")
-	private int status;
+	private Long statusId;
+	private String status;
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	//@JsonProperty("email")
 	private String email;
@@ -101,13 +118,6 @@ public class AdditionalContacts {
 		this.cellular = cellular;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
 
 	public String getEmail() {
 		return email;

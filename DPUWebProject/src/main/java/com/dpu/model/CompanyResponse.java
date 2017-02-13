@@ -7,6 +7,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.dpu.entity.Status;
+
 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class CompanyResponse implements Serializable{
@@ -77,6 +79,16 @@ public class CompanyResponse implements Serializable{
 	
 	private List<AdditionalContacts> additionalContacts;
 	
+	private List<Status> statusList;
+	
+	public List<Status> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<Status> statusList) {
+		this.statusList = statusList;
+	}
+
 	public List<BillingLocation> getBillingLocations() {
 		return billingLocations;
 	}

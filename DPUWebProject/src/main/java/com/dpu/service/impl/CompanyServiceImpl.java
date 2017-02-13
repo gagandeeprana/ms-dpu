@@ -17,12 +17,14 @@ import com.dpu.dao.CompanyDao;
 import com.dpu.entity.Company;
 import com.dpu.entity.CompanyAdditionalContacts;
 import com.dpu.entity.CompanyBillingLocation;
+import com.dpu.entity.Status;
 import com.dpu.model.AdditionalContacts;
 import com.dpu.model.BillingLocation;
 import com.dpu.model.CompanyResponse;
 import com.dpu.service.CompanyAdditionalContactsService;
 import com.dpu.service.CompanyBillingLocationService;
 import com.dpu.service.CompanyService;
+import com.dpu.service.StatusService;
 
 @Component
 public class CompanyServiceImpl implements CompanyService{
@@ -44,6 +46,9 @@ public class CompanyServiceImpl implements CompanyService{
 	
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	StatusService statusService;
 	
 	@Override
 	public Company addCompanyData(CompanyResponse companyResponse) {
@@ -82,7 +87,7 @@ public class CompanyServiceImpl implements CompanyService{
 		companyAdditionalContact.setPhone(additionalContact.getPhone());
 		companyAdditionalContact.setPosition(additionalContact.getPosition());
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
-		companyAdditionalContact.setStatus(additionalContact.getStatus());
+		//companyAdditionalContact.setStatus(additionalContact.getStatus());
 		return companyAdditionalContact;
 	}
 
@@ -104,7 +109,7 @@ public class CompanyServiceImpl implements CompanyService{
 		comBillingLocation.setPosition(billingLocation.getPosition());
 		comBillingLocation.setPrefix(billingLocation.getPrefix());
 		comBillingLocation.setProvinceState(billingLocation.getProvinceState());
-		comBillingLocation.setStatus(billingLocation.getStatus());
+		//comBillingLocation.setStatus(billingLocation.getStatus());
 		comBillingLocation.setTollfree(billingLocation.getTollfree());
 		comBillingLocation.setUnitNo(billingLocation.getUnitNo());
 		comBillingLocation.setZip(billingLocation.getZip());
@@ -318,5 +323,15 @@ public class CompanyServiceImpl implements CompanyService{
 		}
 		
 		return obj;
+	}
+
+	@Override
+	public CompanyResponse getOpenAdd() {
+		CompanyResponse companyResponse = new CompanyResponse();
+		
+		List<Status> statusList = statusService.getAll();
+		companyResponse.setStatusList(statusList);
+		
+		return companyResponse;
 	}
 }

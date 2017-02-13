@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,72 +35,133 @@ public class Order implements Serializable {
 	@Column(name = "order_id")
 	private Long id;
 
-	@Column(unique = true, name = "driver_code")
-	private String driverCode;
-
-
-
-	@Column(name = "unit")
-	private String unit;
-
-	@Column(name = "city")
-	private String city;
-
-	@Column(name = "province")
-	private String pvs;
-
-	@Column(name = "postal_code")
-	private String postalCode;
-
-	@Column(name = "email")
-	private String email;
-
-	@Column(name = "home")
-	private String home;
-
-	@Column(name = "fax_no")
-	private String faxNo;
-
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
 	private Company company;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "billing_location_id")
 	private CompanyBillingLocation billingLocation;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "contact_id")
 	private CompanyAdditionalContacts contact;
 	
-	@ManyToOne
-	@JoinColumn(name = "shipper_id")
-	private Shipper shipper;
-
-	@ManyToOne
-	@JoinColumn(name = "consine_id")
-	private Shipper consine;
-
-	/*@ManyToOne
-	@JoinColumn(name = "functional_id")
-	private Long functional;*/
-	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "temperature_id")
 	private Type temperature;
 	
 	@Column(name = "temperature_value")
 	private Double temperatureValue;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "temperature_type")
 	private Type temperatureType;
 	
-	@ManyToOne
+	@Column(name = "rate")
+	private Double rate;
+	
+	@Column(name = "po_no")
+	private Long poNo;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id")
 	private Type currency;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public CompanyBillingLocation getBillingLocation() {
+		return billingLocation;
+	}
+
+	public void setBillingLocation(CompanyBillingLocation billingLocation) {
+		this.billingLocation = billingLocation;
+	}
+
+	public CompanyAdditionalContacts getContact() {
+		return contact;
+	}
+
+	public void setContact(CompanyAdditionalContacts contact) {
+		this.contact = contact;
+	}
+
+	public Type getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(Type temperature) {
+		this.temperature = temperature;
+	}
+
+	public Double getTemperatureValue() {
+		return temperatureValue;
+	}
+
+	public void setTemperatureValue(Double temperatureValue) {
+		this.temperatureValue = temperatureValue;
+	}
+
+	public Type getTemperatureType() {
+		return temperatureType;
+	}
+
+	public void setTemperatureType(Type temperatureType) {
+		this.temperatureType = temperatureType;
+	}
+
+	public Double getRate() {
+		return rate;
+	}
+
+	public void setRate(Double rate) {
+		this.rate = rate;
+	}
+
+	public Long getPoNo() {
+		return poNo;
+	}
+
+	public void setPoNo(Long poNo) {
+		this.poNo = poNo;
+	}
+
+	public Type getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Type currency) {
+		this.currency = currency;
+	}
 	
+	
+	/*@ManyToOne
+	@JoinColumn(name = "shipper_id")
+	private Shipper shipper;
+
 	@ManyToOne
+	@JoinColumn(name = "consine_id")
+	private Shipper consine;*/
+
+	/*@ManyToOne
+	@JoinColumn(name = "functional_id")
+	private Long functional;*/
+	
+	/*@ManyToOne
 	@JoinColumn(name = "pickup")
 	private Type pickUp;
 	
@@ -107,14 +169,8 @@ public class Order implements Serializable {
 	@JoinColumn(name = "delivery")
 	private Type delivery;
 	
-	@Column(name = "rate")
-	private Double rate;
-	
 	@Column(name = "probil")
 	private Long probilNo;
-	
-	@Column(name = "po_no")
-	private Long poNo;
 	
 	@Column(name = "pickup_no")
 	private String pickUpNo;
@@ -127,7 +183,7 @@ public class Order implements Serializable {
 
 	@Column(name = "created_on")
 //	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdOn;
+	private Date createdOn;*/
 
 
 }

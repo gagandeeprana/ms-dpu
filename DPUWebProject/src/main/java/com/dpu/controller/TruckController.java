@@ -70,26 +70,15 @@ public class TruckController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(new Failed(
-							Integer.parseInt("1234"),
-							"this truck code is already present",
-							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(
-						new Failed(
-								Integer.parseInt(CommonProperties.Truck_unable_to_add_code),
-								CommonProperties.Truck_unable_to_add_message,
-								Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
 			logger.fatal("[TruckController]: add(): Exception: ", e);
-			obj = new ResponseEntity<Object>(
-					new Failed(
-							Integer.parseInt(CommonProperties.Truck_unable_to_add_code),
-							CommonProperties.Truck_unable_to_add_message,
-							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+
 		}
 
 		logger.info("[TruckController]: add(): ENDS");
@@ -138,25 +127,15 @@ public class TruckController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Truck_unable_to_delete_code),
-									CommonProperties.Truck_unable_to_delete_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(truckUnableToDeleteCode),
-						truckUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside TruckController deleteTruck() :", e);
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(truckUnableToDeleteCode),
-					truckUnableToDeleteMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+
 		}
 		logger.info("[deleteTruck] : controller : Exit ");
 		return obj;
@@ -176,21 +155,15 @@ public class TruckController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Truck_unable_to_update_code),
-									CommonProperties.Truck_unable_to_update_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (Exception e) {
 			logger.error("EquipmentController : update " + e);
-			obj = new ResponseEntity<Object>(
-					new Failed(
-							Integer.parseInt(CommonProperties.Truck_unable_to_update_code),
-							CommonProperties.Truck_unable_to_update_message,
-							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+
 		}
 		logger.info("[TruckController] [update] :Exit   ");
 		return obj;

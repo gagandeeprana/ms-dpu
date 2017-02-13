@@ -100,26 +100,16 @@ public class DivisionController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Division_unable_to_add_code),
-									CommonProperties.Division_unable_to_add_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(divisionUnableToAddCode),
-						divisionUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
 			logger.fatal("DivisionController: add(): Exception: "
 					+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(divisionUnableToAddCode),
-					divisionUnableToAddMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+
 		}
 
 		logger.info("DivisionController: add(): ENDS");
@@ -152,25 +142,15 @@ public class DivisionController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Division_unable_to_delete_code),
-									CommonProperties.Division_unable_to_delete_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(divisionUnableToDeleteCode),
-						divisionUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
 			logger.info("Exception in delete of DivisionController ", e);
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(divisionUnableToDeleteCode),
-					divisionUnableToDeleteMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+
 		}
 		logger.info("[delete] : Exit : ");
 		return obj;
@@ -189,24 +169,14 @@ public class DivisionController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Division_unable_to_update_code),
-									CommonProperties.Division_unable_to_update_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(divisionUnableToUpdateCode),
-						divisionUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(divisionUnableToUpdateCode),
-					divisionUnableToUpdateMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+
 			logger.error("EquipmentController : update " + e);
 		}
 		logger.info("[DivisionController] [update] :Exit   ");

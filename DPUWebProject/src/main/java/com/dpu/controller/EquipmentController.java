@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.common.CommonProperties;
-import com.dpu.constants.Iconstants;
 import com.dpu.model.EquipmentReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -90,18 +88,6 @@ public class EquipmentController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-					// } else {
-					// obj = new ResponseEntity<Object>(
-					// new Failed(
-					// Integer.parseInt(CommonProperties.Equipment_unable_to_add_code),
-					// CommonProperties.Equipment_unable_to_add_message,
-					// Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-					// }
-					// } else {
-					// obj = new ResponseEntity<Object>(new Failed(
-					// Integer.parseInt(equipmentUnableToAddCode),
-					// equipmentUnableToAddMessage, Iconstants.ERROR),
-					// HttpStatus.BAD_REQUEST);
 				}
 				if (result instanceof Failed) {
 					obj = new ResponseEntity<Object>(result,
@@ -123,35 +109,20 @@ public class EquipmentController extends MessageProperties {
 	public Object delete(@PathVariable("id") Long id) {
 		logger.info("[delete] :Enter : Id : " + id);
 		Object obj = null;
-		// boolean result = false;
 		try {
-			/*
-			 * Equipment equipment = null;//equipmentService.get(id); if
-			 * (equipment != null) {
-			 */
 			Object result = equipmentService.delete(id);
-			/* } */
+
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Equipment_unable_to_delete_code),
-									CommonProperties.Equipment_unable_to_delete_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(equipmentUnableToDeleteCode),
-						equipmentUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(equipmentUnableToDeleteCode),
-					equipmentUnableToDeleteMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+
 			logger.error("EquipmentController : delete " + e);
 		}
 		logger.info("[delete] :Exit ");
@@ -170,25 +141,14 @@ public class EquipmentController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else {
-					obj = new ResponseEntity<Object>(
-							new Failed(
-									Integer.parseInt(CommonProperties.Equipment_unable_to_update_code),
-									CommonProperties.Equipment_unable_to_update_message,
-									Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 				}
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(equipmentUnableToUpdateCode),
-						equipmentUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 
 		} catch (Exception e) {
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(equipmentUnableToUpdateCode),
-					equipmentUnableToUpdateMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
 			logger.error("EquipmentController : update " + e);
 		}
 		logger.info("[update] :Exit   ");

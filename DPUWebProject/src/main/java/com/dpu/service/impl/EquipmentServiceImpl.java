@@ -112,7 +112,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public Object update(Long id, EquipmentReq equipmentReq) {
 		logger.info("EquipmentServiceImpl: update():  Enter");
-		String msg = "Equipment Updated Successfully";
+		// String msg = "Equipment Updated Successfully";
 		Equipment equipmentObj = equipmentDao.findById(id);
 		Equipment equipment = null;
 		if (equipmentObj != null) {
@@ -124,20 +124,24 @@ public class EquipmentServiceImpl implements EquipmentService {
 			equipmentObj.setType(type);
 			equipment = equipmentDao.update(equipmentObj);
 			if (equipment == null) {
-				return null;
+				return createFailedObject(
+						CommonProperties.Equipment_unable_to_update_message,
+						Long.parseLong(CommonProperties.Equipment_unable_to_update_code));
 			}
 			return createSuccessObject(
 					CommonProperties.Equipment_updated_message,
 					Long.parseLong(CommonProperties.Equipment_updated_code));
 		}
 		logger.info("EquipmentServiceImpl: update():  Exit");
-		return null;
+		return createFailedObject(
+				CommonProperties.Equipment_unable_to_update_message,
+				Long.parseLong(CommonProperties.Equipment_unable_to_update_code));
 	}
 
 	@Override
 	public Object delete(Long id) {
 		logger.info("EquipmentServiceImpl: delete():  Enter");
-		String msg = "Equipment Deleted Successfully";
+		// String msg = "Equipment Deleted Successfully";
 		Equipment equipment = equipmentDao.findById(id);
 		if (equipment != null) {
 			try {
@@ -147,11 +151,15 @@ public class EquipmentServiceImpl implements EquipmentService {
 						Long.parseLong(CommonProperties.Equipment_deleted_code));
 			} catch (Exception e) {
 				logger.error("EquipmentServiceImpl: delete(): Exception  : ", e);
-				return null;
+				return createFailedObject(
+						CommonProperties.Equipment_unable_to_delete_message,
+						Long.parseLong(CommonProperties.Equipment_unable_to_delete_code));
 			}
 		}
 		logger.info("EquipmentServiceImpl: delete():  Exit");
-		return null;
+		return createFailedObject(
+				CommonProperties.Equipment_unable_to_delete_message,
+				Long.parseLong(CommonProperties.Equipment_unable_to_delete_code));
 	}
 
 	@Override

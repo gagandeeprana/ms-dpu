@@ -17,10 +17,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.CommonProperties;
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
 import com.dpu.entity.Status;
 import com.dpu.model.DivisionReq;
+import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.DivisionService;
 import com.dpu.service.StatusService;
@@ -43,11 +45,20 @@ public class DivisionServiceImpl implements DivisionService {
 	@Autowired
 	StatusService statusService;
 
-	private Object createSuccessObject(String msg) {
+	private Object createSuccessObject(String msg, long code) {
 		Success success = new Success();
+		success.setCode(code);
 		success.setMessage(msg);
 		success.setResultList(getAll(""));
 		return success;
+	}
+
+	private Object createFailedObject(String msg, long code) {
+		Failed failed = new Failed();
+		failed.setCode(code);
+		failed.setMessage(msg);
+		failed.setResultList(getAll(""));
+		return failed;
 	}
 
 	@Override
@@ -55,6 +66,7 @@ public class DivisionServiceImpl implements DivisionService {
 		logger.info("[DivisionServiceImpl] [update] : Srvice: Enter");
 		Division division = divisionDao.findById(id);
 		String msg = "Division Updated Successfully";
+		Division divisionObj = null;
 		if (division != null) {
 			division.setDivisionCode(divisionReq.getDivisionCode());
 			division.setDivisionName(divisionReq.getDivisionName());
@@ -68,11 +80,20 @@ public class DivisionServiceImpl implements DivisionService {
 			division.setStatus(status);
 			division.setModifiedBy("jagvir");
 			division.setModifiedOn(new Date());
-			divisionDao.update(division);
-			return createSuccessObject(msg);
+			divisionObj = divisionDao.update(division);
+			if (divisionObj == null) {
+				return createFailedObject(
+						CommonProperties.Division_unable_to_update_message,
+						Long.parseLong(CommonProperties.Division_unable_to_update_code));
+			}
+			return createSuccessObject(
+					CommonProperties.Division_updated_message,
+					Long.parseLong(CommonProperties.Division_updated_code));
 		}
 		logger.info("[DivisionServiceImpl] [update] : Srvice: Exit");
-		return null;
+		return createFailedObject(
+				CommonProperties.Division_unable_to_update_message,
+				Long.parseLong(CommonProperties.Division_unable_to_update_code));
 
 	}
 
@@ -83,13 +104,20 @@ public class DivisionServiceImpl implements DivisionService {
 		if (division != null) {
 			try {
 				divisionDao.delete(division);
-				return createSuccessObject(msg);
+				return createSuccessObject(
+						CommonProperties.Division_deleted_message,
+						Long.parseLong(CommonProperties.Division_deleted_code));
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				logger.error("DivisionServiceImpl: delete(): Exception  : ", e);
+				return createFailedObject(
+						CommonProperties.Division_unable_to_delete_message,
+						Long.parseLong(CommonProperties.Division_unable_to_delete_code));
 			}
 		}
-
-		return null;
+		logger.info("DivisionServiceImpl: delete():  Exit");
+		return createFailedObject(
+				CommonProperties.Division_unable_to_delete_message,
+				Long.parseLong(CommonProperties.Division_unable_to_delete_code));
 	}
 
 	@Override
@@ -154,12 +182,17 @@ public class DivisionServiceImpl implements DivisionService {
 		String msg = "Division Added Successfully";
 		Session session = null;
 		Transaction tx = null;
-
+		Division division = null;
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			divisionDao.add(session, divisionReq);
+			division = divisionDao.add(session, divisionReq);
+			if (division == null) {
+				return createFailedObject(
+						CommonProperties.Division_unable_to_add_message,
+						Long.parseLong(CommonProperties.Division_unable_to_add_code));
+			}
 			if (tx != null) {
 				tx.commit();
 			}
@@ -179,7 +212,8 @@ public class DivisionServiceImpl implements DivisionService {
 
 		logger.info("DivisionServiceImpl: add():  ENDS");
 
-		return createSuccessObject(msg);
+		return createSuccessObject(CommonProperties.Division_added_message,
+				Long.parseLong(CommonProperties.Division_added_code));
 
 	}
 

@@ -14,12 +14,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dpu.constants.Iconstants;
+import com.dpu.common.CommonProperties;
 import com.dpu.dao.TruckDao;
 import com.dpu.entity.Status;
 import com.dpu.entity.Truck;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.DivisionReq;
+import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TruckResponse;
@@ -57,11 +58,20 @@ public class TruckServiceImpl implements TruckService {
 
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
-	private Object createSuccessObject(String msg) {
+	private Object createSuccessObject(String msg, long code) {
 		Success success = new Success();
+		success.setCode(code);
 		success.setMessage(msg);
 		success.setResultList(getAllTrucks(""));
 		return success;
+	}
+
+	private Object createFailedObject(String msg, long code) {
+		Failed failed = new Failed();
+		failed.setCode(code);
+		failed.setMessage(msg);
+		failed.setResultList(getAllTrucks(""));
+		return failed;
 	}
 
 	@Override
@@ -69,6 +79,7 @@ public class TruckServiceImpl implements TruckService {
 		logger.info("[TruckServiceImpl] [update] : Enter ");
 		String msg = "Truck Update Successfully";
 		Truck truck = truckDao.findById(id);
+		Truck truckObj = null;
 		if (truck != null) {
 			truck.setUnitNo(truckResponse.getUnitNo());
 			truck.setOwner(truckResponse.getOwner());
@@ -86,11 +97,20 @@ public class TruckServiceImpl implements TruckService {
 
 			truck.setFinance(truckResponse.getFinance());
 
-			truckDao.update(truck);
+			truckObj = truckDao.update(truck);
+			if (truckObj == null) {
+				return createFailedObject(
+						CommonProperties.Truck_unable_to_update_message,
+						Long.parseLong(CommonProperties.Truck_unable_to_update_code));
+			}
+			return createSuccessObject(CommonProperties.Truck_updated_message,
+					Long.parseLong(CommonProperties.Equipment_updated_code));
 
 		}
 		logger.info("[TruckServiceImpl] [get] : Exit ");
-		return createSuccessObject(msg);
+		return createFailedObject(
+				CommonProperties.Truck_unable_to_update_message,
+				Long.parseLong(CommonProperties.Truck_unable_to_update_code));
 	}
 
 	@Override
@@ -101,13 +121,20 @@ public class TruckServiceImpl implements TruckService {
 		if (truck != null) {
 			try {
 				truckDao.delete(truck);
-				return createSuccessObject(msg);
+				return createSuccessObject(
+						CommonProperties.Truck_deleted_message,
+						Long.parseLong(CommonProperties.Truck_deleted_code));
 			} catch (Exception e) {
 				logger.error("[TruckServiceImpl] [delete] : ", e);
+				return createFailedObject(
+						CommonProperties.Truck_unable_to_delete_message,
+						Long.parseLong(CommonProperties.Truck_unable_to_delete_code));
 			}
 		}
 		logger.info("[TruckServiceImpl] [get] : Exit ");
-		return null;
+		return createFailedObject(
+				CommonProperties.Truck_unable_to_delete_message,
+				Long.parseLong(CommonProperties.Truck_unable_to_delete_code));
 	}
 
 	@Override
@@ -209,11 +236,17 @@ public class TruckServiceImpl implements TruckService {
 		String msg = "Truck Added Successfuly";
 		Session session = null;
 		Transaction tx = null;
+		Truck truck = null;
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			truckDao.add(session, truckResponse);
+			truck = truckDao.add(session, truckResponse);
+			if (truck == null) {
+				return createFailedObject(
+						CommonProperties.Truck_unable_to_add_message,
+						Long.parseLong(CommonProperties.Truck_unable_to_add_code));
+			}
 			if (tx != null) {
 				tx.commit();
 			}
@@ -231,7 +264,8 @@ public class TruckServiceImpl implements TruckService {
 
 		logger.info("TruckServiceImpl: add():  ENDS");
 
-		return createSuccessObject(msg);
+		return createSuccessObject(CommonProperties.Truck_added_message,
+				Long.parseLong(CommonProperties.Truck_added_code));
 
 	}
 

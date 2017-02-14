@@ -22,7 +22,9 @@ import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Terminal;
 import com.dpu.model.DPUService;
+import com.dpu.model.Failed;
 import com.dpu.model.ShipperResponse;
+import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
@@ -82,10 +84,16 @@ public class TerminalServiceImpl implements TerminalService {
 	}
 
 	@Override
-	public List<TerminalResponse> addTerminal(TerminalResponse terminalResponse) {
-		Terminal terminal= setServiceValues(terminalResponse);
-		terminalDao.save(terminal);
-		return getAllTerminals();
+	public Object addTerminal(TerminalResponse terminalResponse) {
+		Object obj = null;
+		try {
+			Terminal terminal= setServiceValues(terminalResponse);
+			terminalDao.save(terminal);
+			obj = createSuccessObject("Terminal Added Successfully");
+		} catch (Exception e) {
+			obj = createFailedObject("Error while adding");
+		}
+		return obj;
 	}
 
 	private Terminal setServiceValues(TerminalResponse terminalResponse) {
@@ -104,28 +112,26 @@ public class TerminalServiceImpl implements TerminalService {
 		}
 		terminal.setServices(services);
 		terminal.setShipper(shipperDao.findById(terminalResponse.getShipperId()));
-		terminal.setCreatedBy("Anuj Nayyar");
-		terminal.setCreatedOn(new Date());
-		terminal.setModifiedBy("Anuj Nayyar");
+		terminal.setModifiedBy("gagan");
 		terminal.setModifiedOn(new Date());
 		terminal.setStatus(status);
 		return terminal;
 	}
 
 	@Override
-	public List<TerminalResponse> deleteTerminal(Long id) {
-		List<TerminalResponse> terminalResp = null;
-		
+	public Object deleteTerminal(Long id) {
+
 		Terminal terminal= terminalDao.findById(id);
+		Object obj = null;
 		try {
 			if(terminal != null){
 				terminalDao.delete(terminal);
 			}
-			terminalResp = getAllTerminals();
+			obj = createSuccessObject("Terminal Deleted Successfully");
 		} catch (Exception e) {
-			terminalResp = null;
+			obj = createFailedObject("Error while deleting");
 		}
-		return terminalResp;
+		return obj;
 	}
 
 	@Override
@@ -170,16 +176,32 @@ public class TerminalServiceImpl implements TerminalService {
 	}
 
 	@Override
-	public List<TerminalResponse> updateTerminal(Long id,
-			TerminalResponse terminalResponse) {
-			Terminal terminal= terminalDao.findById(id);
-			terminal.setTerminalName(terminalResponse.getTerminalName());
-			Status status = statusService.get(terminalResponse.getStatusId());
-//			terminal.setAvailableServices(terminalResponse.getAvailableServices());
-			terminal.setModifiedOn(new Date());
-			terminal.setStatus(status);
+	public Object updateTerminal(Long id, TerminalResponse terminalResponse) {
+		
+		Object obj = null;
+		try {
+			Terminal terminal= setServiceValues(terminalResponse);
+			terminal.setTerminalId(id);
 			terminalDao.update(terminal);
-			return getAllTerminals();
+			obj = createSuccessObject("Terminal Updated Successfully");
+		} catch (Exception e) {
+			obj = createFailedObject("Error while updating");
+		}
+		
+		return obj;
+	}
+	
+	private Object createSuccessObject(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAllTerminals());
+		return success;
+	}
+	
+	private Object createFailedObject(String errorMessage) {
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
 	}
 
 	@Override
@@ -197,9 +219,8 @@ public class TerminalServiceImpl implements TerminalService {
 				for (Terminal terminal: terminalList) {
 					TerminalResponse terminalObj = new TerminalResponse();
 					terminalObj.setTerminalId(terminal.getTerminalId());
-					terminalObj.setStatusId(terminal.getStatus().getId());
 					terminalObj.setTerminalName(terminal.getTerminalName());
-					terminalObj.setStatus(terminal.getStatus().getStatus());
+					terminalObj.setShipperName(terminal.getShipper().getLocationName());
 					termList.add(terminalObj);
 				}
 			}

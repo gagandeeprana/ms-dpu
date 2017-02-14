@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.constants.Iconstants;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
 import com.dpu.service.TerminalService;
 import com.dpu.util.MessageProperties;
@@ -61,16 +62,11 @@ public class TerminalController extends MessageProperties {
 		logger.info("[addTerminal] : Enter");
 		Object obj = null;
 		try {
-			
-			//Service service = setServiceValues(dpuService);
-			List<TerminalResponse> result = terminalService.addTerminal(terminalResp);
-			if (result != null) {
-				obj = mapper.writeValueAsString(result);
+			Object response = terminalService.addTerminal(terminalResp);
+			if (response instanceof Success) {
+				obj = new ResponseEntity<Object>(response,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(terminalUnableToAddCode),
-						terminalUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -86,16 +82,11 @@ public class TerminalController extends MessageProperties {
 		logger.info("[delete] : Enter : Id : "+id);
 		Object obj = null;
 		try {
-			List<TerminalResponse> terminalResponse = null;
-			terminalResponse = terminalService.deleteTerminal(id);
-		
-			if (terminalResponse != null) {
-				obj = terminalResponse;
+			Object response = terminalService.deleteTerminal(id);
+			if (response instanceof Success) {
+				obj = new ResponseEntity<Object>(response,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(terminalUnableToDeleteCode),
-						terminalUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -110,15 +101,11 @@ public class TerminalController extends MessageProperties {
 		logger.info("[update] : Enter : Id : "+id);
 		Object obj = null;
 		try {
-			//service.setServiceId(id);
-			List<TerminalResponse> terminalResponse = terminalService.updateTerminal(id, terminalRes);
-			if (terminalResponse != null) {
-				obj = terminalResponse;
+			Object response = terminalService.updateTerminal(id, terminalRes);
+			if (response instanceof Success) {
+				obj = new ResponseEntity<Object>(response,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(terminalUnableToUpdateCode),
-						terminalUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			System.out.println(e);

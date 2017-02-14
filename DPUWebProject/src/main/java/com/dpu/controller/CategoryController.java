@@ -1,4 +1,3 @@
-
 package com.dpu.controller;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
 import com.dpu.util.MessageProperties;
 
-
 @RestController
 @RequestMapping(value = "category")
 public class CategoryController extends MessageProperties {
@@ -36,15 +34,16 @@ public class CategoryController extends MessageProperties {
 
 	/**
 	 * this method is used to get all categories
+	 * 
 	 * @return List<Categories>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		
+
 		logger.info("Inside CategoryController getAll() Starts ");
 		String json = null;
-		
+
 		try {
 			List<CategoryReq> responses = categoryService.getAll();
 			if (responses != null && !responses.isEmpty()) {
@@ -52,7 +51,8 @@ public class CategoryController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getAll()"+e.getMessage());
+			logger.error("Exception inside CategoryController getAll()"
+					+ e.getMessage());
 		}
 		logger.info("Inside CategoryController getAll() Ends, json :" + json);
 		return json;
@@ -60,6 +60,7 @@ public class CategoryController extends MessageProperties {
 
 	/**
 	 * this method is used to add the category
+	 * 
 	 * @param categoryReq
 	 * @return List<category>
 	 * @author lakhvir.bansal
@@ -71,15 +72,20 @@ public class CategoryController extends MessageProperties {
 		Object obj = null;
 		try {
 
-			Object response = categoryService.addCategory(categoryReq);
-			if (response instanceof Success) {
-				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
-			} else {
-				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
+			Object result = categoryService.addCategory(categoryReq);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController add() :"+e.getMessage());
+			logger.error("Exception inside CategoryController add() :"
+					+ e.getMessage());
 		}
 		logger.info("Inside CategoryController add() Ends");
 		return obj;
@@ -87,28 +93,32 @@ public class CategoryController extends MessageProperties {
 
 	/**
 	 * this method is used to delete the category based on categoryId
+	 * 
 	 * @param id
 	 * @return List<category>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
-		
+
 		logger.info("Inside CategoryController delete() Starts, id is :" + id);
 		Object obj = null;
-		
+
 		try {
-			List<CategoryReq> categoryReq = null;
-			categoryReq = categoryService.delete(id);
-			
-			if (categoryReq != null && categoryReq.size() > 0) {
-				obj = categoryReq;
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToDeleteCode),
-						categoryUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+
+			Object result = categoryService.delete(id);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController delete() :"+e.getMessage());
+			logger.error("Exception inside CategoryController delete() :"
+					+ e.getMessage());
 		}
 		logger.info("Inside CategoryController delete() Ends, id is :" + id);
 		return obj;
@@ -117,122 +127,142 @@ public class CategoryController extends MessageProperties {
 
 	/**
 	 * this method is used to update the categoryData based on categoryID
+	 * 
 	 * @param id
 	 * @param categoryReq
 	 * @return List<Categories>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id, @RequestBody CategoryReq categoryReq) {
+	public Object update(@PathVariable("id") Long id,
+			@RequestBody CategoryReq categoryReq) {
 		logger.info("Inside CategoryController update() Starts, id is :" + id);
 		Object obj = null;
 		try {
-			List<CategoryReq> response = categoryService.update(id, categoryReq);
-			if (response != null) {
-				obj = response;
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToUpdateCode),
-						categoryUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			Object result = categoryService.update(id, categoryReq);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController update() :"+e.getMessage());
+			logger.error("Exception inside CategoryController update() :"
+					+ e.getMessage());
 		}
-		
+
 		logger.info("Inside CategoryController update() Ends, id is :" + id);
 		return obj;
 	}
 
 	/**
 	 * this method is used to get category data based on categoryId
+	 * 
 	 * @param id
 	 * @return categorydata
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getCategoryById(@PathVariable("categoryId") Long id) {
-		
-		logger.info("Inside CategoryController getCategoryById() Starts, Id:" + id);
+
+		logger.info("Inside CategoryController getCategoryById() Starts, Id:"
+				+ id);
 		String json = null;
-		
+
 		try {
-			
+
 			CategoryReq categoryReq = categoryService.get(id);
 
 			if (categoryReq != null) {
 				json = mapper.writeValueAsString(categoryReq);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getCategoryById() :" + e.getMessage());
+			logger.error("Exception inside CategoryController getCategoryById() :"
+					+ e.getMessage());
 		}
-		
-		logger.info("Inside CategoryController getCategoryById() Ends, Id:" + id);
+
+		logger.info("Inside CategoryController getCategoryById() Ends, Id:"
+				+ id);
 		return json;
 	}
 
 	/**
-	 * this method is used when we click on add button on category screen to send master data
+	 * this method is used when we click on add button on category screen to
+	 * send master data
+	 * 
 	 * @return master data for add category
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
-		
+
 		logger.info(" Inside CategoryController openAdd() Starts ");
 		String json = null;
-		
+
 		try {
 			CategoryReq CategoryReq = categoryService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(CategoryReq);
 		} catch (Exception e) {
-			logger.error(" Exception inside CategoryController openAdd() :"+e.getMessage());
+			logger.error(" Exception inside CategoryController openAdd() :"
+					+ e.getMessage());
 		}
-		
+
 		logger.info(" Inside CategoryController openAdd() Ends ");
 		return json;
 	}
-	
+
 	/**
 	 * this method is used to get category based on category name
+	 * 
 	 * @param categoryName
 	 * @return List<category>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{categoryName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchCategory(@PathVariable("categoryName") String categoryName) {
-		
-		logger.info("Inside CategoryController searchCategory() Starts, categoryName :"+categoryName);
+	public Object searchCategory(
+			@PathVariable("categoryName") String categoryName) {
+
+		logger.info("Inside CategoryController searchCategory() Starts, categoryName :"
+				+ categoryName);
 		String json = new String();
-		
+
 		try {
-			List<CategoryReq> categoryList = categoryService.getCategoryByCategoryName(categoryName);
-			if(categoryList != null && categoryList.size() > 0) {
+			List<CategoryReq> categoryList = categoryService
+					.getCategoryByCategoryName(categoryName);
+			if (categoryList != null && categoryList.size() > 0) {
 				json = mapper.writeValueAsString(categoryList);
 			}
 		} catch (Exception e) {
 			logger.error(e);
-			logger.error("Exception inside CategoryController searchCategory() is :" + e.getMessage());
+			logger.error("Exception inside CategoryController searchCategory() is :"
+					+ e.getMessage());
 		}
-		
-		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :"+categoryName);
+
+		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :"
+				+ categoryName);
 		return json;
 	}
-	
+
 	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
-		
+
 		logger.info("Inside CategoryController searchCategory() Starts");
 		String json = new String();
-		
+
 		try {
 			List<CategoryReq> categoryList = categoryService.getSpecificData();
-			if(categoryList != null && categoryList.size() > 0) {
+			if (categoryList != null && categoryList.size() > 0) {
 				json = mapper.writeValueAsString(categoryList);
 			}
 		} catch (Exception e) {
 			logger.error(e);
-			logger.error("Exception inside CategoryController searchCategory() is :" + e.getMessage());
+			logger.error("Exception inside CategoryController searchCategory() is :"
+					+ e.getMessage());
 		}
-		
+
 		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :");
 		return json;
 	}

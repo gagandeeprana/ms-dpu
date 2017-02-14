@@ -15,9 +15,9 @@ import com.dpu.model.CategoryReq;
 public interface CategoryService {
 	Object addCategory(CategoryReq categoryReq);
 
-	List<CategoryReq> update(Long id, CategoryReq categoryReq);
+	Object update(Long id, CategoryReq categoryReq);
 
-	List<CategoryReq> delete(Long id);
+	Object delete(Long id);
 
 	List<CategoryReq> getAll();
 

@@ -116,7 +116,6 @@ public class TruckServiceImpl implements TruckService {
 	@Override
 	public Object delete(Long id) {
 		logger.info("[TruckServiceImpl] [delete] : Enter ");
-		String msg = "Truck Deleted Successfully";
 		Truck truck = truckDao.findById(id);
 		if (truck != null) {
 			try {

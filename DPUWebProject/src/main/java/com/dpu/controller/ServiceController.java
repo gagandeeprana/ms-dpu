@@ -31,9 +31,9 @@ import com.dpu.util.MessageProperties;
 @RestController
 @RequestMapping(value = "service")
 public class ServiceController extends MessageProperties {
-	
+
 	Logger logger = Logger.getLogger(ServiceController.class);
-	
+
 	@Autowired
 	ServiceService serviceService;
 
@@ -45,16 +45,16 @@ public class ServiceController extends MessageProperties {
 		String json = null;
 		try {
 			List<DPUService> lstServices = serviceService.getAll();
-			if(lstServices != null) {
-				/*List<DPUService> responses = new ArrayList<DPUService>();
-				for(Service service : lstServices) {
-					DPUService response = new DPUService();
-					BeanUtils.copyProperties(response, service);
-					responses.add(response);
-				}*/
-				/*if(responses != null && !responses.isEmpty()) {*/
-					json = mapper.writeValueAsString(lstServices);
-				/*}*/
+			if (lstServices != null) {
+				/*
+				 * List<DPUService> responses = new ArrayList<DPUService>();
+				 * for(Service service : lstServices) { DPUService response =
+				 * new DPUService(); BeanUtils.copyProperties(response,
+				 * service); responses.add(response); }
+				 */
+				/* if(responses != null && !responses.isEmpty()) { */
+				json = mapper.writeValueAsString(lstServices);
+				/* } */
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -68,39 +68,43 @@ public class ServiceController extends MessageProperties {
 		logger.info("Inside ServiceController add() starts");
 		Object obj = null;
 		try {
-			
-			//Service service = setServiceValues(dpuService);
+
 			Object result = serviceService.add(dpuService);
-			if (result instanceof Success) {
-				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-			} else {
-				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside ServiceController add() :"+e.getMessage());
+			logger.error("Exception inside ServiceController add() :"
+					+ e.getMessage());
 		}
-		
+
 		logger.info("Inside ServiceController add() ends");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
-		logger.info("[delete] : Enter : Id : "+id);
+		logger.info("[delete] : Enter : Id : " + id);
 		Object obj = null;
 		try {
-			List<DPUService> response = null;
-			//serviceService.get(id);
-			/*if (service != null) {*/
-			response = serviceService.delete(id);
-		/*	}*/
-			if (response != null) {
-				obj = response;
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(serviceUnableToDeleteCode),
-						serviceUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+			Object result = null;
+			// serviceService.get(id);
+			/* if (service != null) { */
+			result = serviceService.delete(id);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -113,18 +117,19 @@ public class ServiceController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id,
 			@RequestBody DPUService dpuService) {
-		logger.info("[update] : Enter : Id : "+id);
+		logger.info("[update] : Enter : Id : " + id);
 		Object obj = null;
 		try {
-			//service.setServiceId(id);
-			List<DPUService> response = serviceService.update(id, dpuService);
-			if (response != null) {
-				obj = response;
-			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(serviceUnableToUpdateCode),
-						serviceUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+			// service.setServiceId(id);
+			Object result = serviceService.update(id, dpuService);
+			if (result != null) {
+				if (result instanceof Success) {
+					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+				}
+				if (result instanceof Failed) {
+					obj = new ResponseEntity<Object>(result,
+							HttpStatus.BAD_REQUEST);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -135,20 +140,20 @@ public class ServiceController extends MessageProperties {
 
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("categoryId") Long id) {
-		logger.info("[get] : Enter : Id : "+id);
+		logger.info("[get] : Enter : Id : " + id);
 		String json = null;
 		try {
 			DPUService dpuService = serviceService.get(id);
-			//Service service = serviceService.get(id);
+			// Service service = serviceService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(dpuService);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		logger.info("[get] : Exit " );
+		logger.info("[get] : Exit ");
 		return json;
 	}
-	
+
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		logger.info(" Inside ServiceController openAdd() Starts ");
@@ -163,21 +168,26 @@ public class ServiceController extends MessageProperties {
 		logger.info(" Inside ServiceController openAdd() Ends ");
 		return json;
 	}
-	
+
 	@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchService(@PathVariable("equipmentname") String serviceName) {
-		logger.info("Inside ServiceController searchService() Starts, serviceName :"+serviceName);
+	public Object searchService(
+			@PathVariable("equipmentname") String serviceName) {
+		logger.info("Inside ServiceController searchService() Starts, serviceName :"
+				+ serviceName);
 		String json = new String();
 		try {
-			List<DPUService> serviceList = serviceService.getServiceByServiceName(serviceName);
-			if(serviceList != null && serviceList.size() > 0) {
+			List<DPUService> serviceList = serviceService
+					.getServiceByServiceName(serviceName);
+			if (serviceList != null && serviceList.size() > 0) {
 				json = mapper.writeValueAsString(serviceList);
 			}
 		} catch (Exception e) {
 			logger.error(e);
-			logger.error("Exception inside ServiceController searchService() is :" + e);
+			logger.error("Exception inside ServiceController searchService() is :"
+					+ e);
 		}
-		logger.info(" Inside ServiceController searchService() Starts, serviceName :"+serviceName);
+		logger.info(" Inside ServiceController searchService() Starts, serviceName :"
+				+ serviceName);
 		return json;
 	}
 

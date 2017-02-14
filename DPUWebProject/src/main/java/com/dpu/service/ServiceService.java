@@ -8,7 +8,7 @@ import com.dpu.model.DPUService;
 public interface ServiceService {
 	Object add(DPUService dpuService);
 
-	List<DPUService> delete(Long id);
+	Object delete(Long id);
 
 	List<DPUService> getAll();
 
@@ -16,7 +16,7 @@ public interface ServiceService {
 
 	DPUService getOpenAdd();
 
-	List<DPUService> update(Long id, DPUService dpuService);
+	Object update(Long id, DPUService dpuService);
 
 	List<DPUService> getServiceByServiceName(String serviceName);
 	

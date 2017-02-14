@@ -9,9 +9,11 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.CommonProperties;
 import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
+import com.dpu.entity.Truck;
 import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
@@ -28,47 +30,71 @@ public class ServiceServiceImpl implements ServiceService {
 
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	TypeService typeService;
-	
+
 	@Autowired
 	SessionFactory sessionFactory;
-	
-	Logger logger = Logger.getLogger(ServiceServiceImpl.class);
-	@Override
-	public Object add(DPUService dpuService) {
-		
-		Object obj = null;
-		String message = "Record Added Successfully";
-		try {
-			Service service = setServiceValues(dpuService);
-			serviceDao.save(service);
-			obj = createSuccessObject(message);
-		} catch(Exception e){
-			logger.error("Exception inside DriverServiceImpl addDriver() :"+e.getMessage());
-			message = "Error while inserting record";
-			obj = createFailedObject(message);
-		}
-		
-		return obj;
-		
-	}
 
-	private Object createSuccessObject(String message) {
+	Logger logger = Logger.getLogger(ServiceServiceImpl.class);
+
+	private Object createSuccessObject(String msg, long code) {
 		Success success = new Success();
-		success.setMessage(message);
+		success.setCode(code);
+		success.setMessage(msg);
 		success.setResultList(getAll());
 		return success;
 	}
-	
+
+	private Object createFailedObject(String msg, long code) {
+		Failed failed = new Failed();
+		failed.setCode(code);
+		failed.setMessage(msg);
+		failed.setResultList(getAll());
+		return failed;
+	}
+
+	@Override
+	public Object add(DPUService dpuService) {
+
+		Object obj = null;
+		Service serviceObj = null;
+		try {
+			Service service = setServiceValues(dpuService);
+			serviceObj = serviceDao.save(service);
+			if (serviceObj == null) {
+				return createFailedObject(
+						CommonProperties.service_unable_to_add_message,
+						Long.parseLong(CommonProperties.service_unable_to_add_code));
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside DriverServiceImpl addDriver() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.service_unable_to_add_message,
+					Long.parseLong(CommonProperties.service_unable_to_add_code));
+		}
+
+		return createSuccessObject(CommonProperties.service_added_message,
+				Long.parseLong(CommonProperties.service_added_code));
+	}
+
+	// private Object createSuccessObject(String message) {
+	// Success success = new Success();
+	// success.setMessage(message);
+	// success.setResultList(getAll());
+	// return success;
+	// }
+
 	private Object createFailedObject(String errorMessage) {
 		Failed failed = new Failed();
 		failed.setMessage(errorMessage);
 		return failed;
 	}
+
 	private Service setServiceValues(DPUService dpuService) {
-		Service service  = new Service();
+		Service service = new Service();
 		service.setServiceName(dpuService.getServiceName());
 		Status status = statusService.get(dpuService.getStatusId());
 		Type textField = typeService.get(dpuService.getTextFieldId());
@@ -78,102 +104,129 @@ public class ServiceServiceImpl implements ServiceService {
 		service.setStatus(status);
 		return service;
 	}
-	
+
 	@Override
-	public List<DPUService> update(Long id, DPUService dpuService) {
-		//Service service  = new Service();
-		Service service = serviceDao.findById(id);
-		//service.setServiceId(id);
-		service.setServiceName(dpuService.getServiceName());
-		Status status = statusService.get(dpuService.getStatusId());
-		Type textField = typeService.get(dpuService.getTextFieldId());
-		service.setTextField(textField);
-		Type associateWith = typeService.get(dpuService.getAssociationWithId());
-		service.setAssociationWith(associateWith);
-		service.setStatus(status);
-		serviceDao.update(service);
-		return getAll();
+	public Object update(Long id, DPUService dpuService) {
+		logger.info("[ServiceServiceImpl] [update] : Enter ");
+		Service service = null;
+		service = serviceDao.findById(id);
+		Service service2 = null;
+		if (service != null) {
+
+			service.setServiceName(dpuService.getServiceName());
+			Status status = statusService.get(dpuService.getStatusId());
+			Type textField = typeService.get(dpuService.getTextFieldId());
+			service.setTextField(textField);
+			Type associateWith = typeService.get(dpuService
+					.getAssociationWithId());
+			service.setAssociationWith(associateWith);
+			service.setStatus(status);
+			service2 = serviceDao.update(service);
+			if (service2 == null) {
+				return createFailedObject(
+						CommonProperties.service_unable_to_update_message,
+						Long.parseLong(CommonProperties.service_unable_to_update_code));
+			}
+			return createSuccessObject(
+					CommonProperties.service_updated_message,
+					Long.parseLong(CommonProperties.service_updated_code));
+
+		}
+		logger.info("[ServiceServiceImpl] [update] : Exit ");
+		return createFailedObject(
+				CommonProperties.service_unable_to_update_message,
+				Long.parseLong(CommonProperties.service_unable_to_update_code));
 	}
 
 	@Override
-	public List<DPUService> delete(Long id) {
-		List<DPUService> response = null;
-		
+	public Object delete(Long id) {
+		logger.info("[ServiceServiceImpl] [delete] : Enter ");
 		Service service = serviceDao.findById(id);
-		try {
-			if(service != null){
+		if (service != null) {
+			try {
 				serviceDao.delete(service);
+				return createSuccessObject(
+						CommonProperties.service_deleted_message,
+						Long.parseLong(CommonProperties.service_deleted_code));
+			} catch (Exception e) {
+				logger.error("[ServiceServiceImpl] [delete] : ", e);
+				return createFailedObject(
+						CommonProperties.service_unable_to_delete_message,
+						Long.parseLong(CommonProperties.service_unable_to_delete_code));
 			}
-			response = getAll();
-		} catch (Exception e) {
-			response = null;
 		}
-		return response;
+		logger.info("[ServiceServiceImpl] [delete] : Exit ");
+		return createFailedObject(
+				CommonProperties.service_unable_to_delete_message,
+				Long.parseLong(CommonProperties.service_unable_to_delete_code));
 	}
 
 	@Override
 	public List<DPUService> getAll() {
-		
+
 		Session session = null;
 		List<DPUService> servicesList = new ArrayList<DPUService>();
-		
-		try{
-			
+
+		try {
+
 			session = sessionFactory.openSession();
 			List<Service> serviceList = serviceDao.findAll(session);
-			
-			if(serviceList != null && !serviceList.isEmpty()){
+
+			if (serviceList != null && !serviceList.isEmpty()) {
 				for (Service service : serviceList) {
 					DPUService serviceObj = new DPUService();
-					serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
+					serviceObj.setAssociationWith(service.getAssociationWith()
+							.getTypeName());
 					serviceObj.setServiceName(service.getServiceName());
 					serviceObj.setServiceId(service.getServiceId());
 					serviceObj.setStatus(service.getStatus().getStatus());
-					serviceObj.setTextField(service.getTextField().getTypeName());
+					serviceObj.setTextField(service.getTextField()
+							.getTypeName());
 					servicesList.add(serviceObj);
 				}
 			}
-		} finally{
-			if(session != null){
+		} finally {
+			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		return servicesList;
 	}
 
 	@Override
 	public DPUService get(Long id) {
-		
-		Session session = null; 
+
+		Session session = null;
 		DPUService dpuService = new DPUService();
-		
-		try{
-			
+
+		try {
+
 			session = sessionFactory.openSession();
 			Service service = serviceDao.findById(id, session);
-			
-			if(service != null){
+
+			if (service != null) {
 				dpuService.setServiceId(service.getServiceId());
 				dpuService.setTextFieldId(service.getTextField().getTypeId());
 				dpuService.setStatusId(service.getStatus().getId());
-				dpuService.setAssociationWithId(service.getAssociationWith().getTypeId());
+				dpuService.setAssociationWithId(service.getAssociationWith()
+						.getTypeId());
 				dpuService.setServiceName(service.getServiceName());
 				List<Status> statusList = statusService.getAll();
 				dpuService.setStatusList(statusList);
-				
+
 				List<TypeResponse> textFieldList = typeService.getAll(2l);
 				dpuService.setTextFieldList(textFieldList);
-				
+
 				List<TypeResponse> associatedWithList = typeService.getAll(3l);
 				dpuService.setAssociatedWithList(associatedWithList);
 			}
-		} finally{
-			if(session != null){
+		} finally {
+			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		return dpuService;
 	}
 
@@ -181,55 +234,58 @@ public class ServiceServiceImpl implements ServiceService {
 	public DPUService getOpenAdd() {
 
 		DPUService service = new DPUService();
-		
+
 		List<Status> statusList = statusService.getAll();
 		service.setStatusList(statusList);
-		
+
 		List<TypeResponse> textFieldList = typeService.getAll(2l);
 		service.setTextFieldList(textFieldList);
-		
+
 		List<TypeResponse> associatedWithList = typeService.getAll(3l);
 		service.setAssociatedWithList(associatedWithList);
-		
+
 		return service;
 	}
 
 	@Override
 	public List<DPUService> getServiceByServiceName(String serviceName) {
-		
+
 		Session session = null;
 		List<DPUService> servicesList = new ArrayList<DPUService>();
-		
-		try{
+
+		try {
 			session = sessionFactory.openSession();
-			List<Service> serviceList = serviceDao.getServiceByServiceName(session, serviceName);
-			if(serviceList != null && !serviceList.isEmpty()){
+			List<Service> serviceList = serviceDao.getServiceByServiceName(
+					session, serviceName);
+			if (serviceList != null && !serviceList.isEmpty()) {
 				for (Service service : serviceList) {
 					DPUService serviceObj = new DPUService();
-					serviceObj.setAssociationWith(service.getAssociationWith().getTypeName());
+					serviceObj.setAssociationWith(service.getAssociationWith()
+							.getTypeName());
 					serviceObj.setServiceName(service.getServiceName());
 					serviceObj.setServiceId(service.getServiceId());
 					serviceObj.setStatus(service.getStatus().getStatus());
-					serviceObj.setTextField(service.getTextField().getTypeName());
+					serviceObj.setTextField(service.getTextField()
+							.getTypeName());
 					servicesList.add(serviceObj);
 				}
 			}
-		} finally{
-			if(session != null){
+		} finally {
+			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		return servicesList;
 	}
 
 	@Override
 	public List<DPUService> getServiceData() {
-		
+
 		List<Object[]> serviceData = serviceDao.getServiceData();
 		List<DPUService> returnServ = new ArrayList<DPUService>();
-		
-		if(serviceData != null && !serviceData.isEmpty()){
+
+		if (serviceData != null && !serviceData.isEmpty()) {
 			for (Object[] row : serviceData) {
 				DPUService res = new DPUService();
 				res.setServiceId(Long.valueOf(String.valueOf(row[0])));
@@ -237,7 +293,7 @@ public class ServiceServiceImpl implements ServiceService {
 				returnServ.add(res);
 			}
 		}
-		
+
 		return returnServ;
 	}
 }

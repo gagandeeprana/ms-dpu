@@ -81,5 +81,19 @@ public class CommonProperties {
 		public static final String Equipment_updated_message = prop.getProperty("equipment_updated_message");
 		public static final String Equipment_unable_to_update_code = prop.getProperty("equipment_unable_to_update_code");
 		public static final String Equipment_unable_to_update_message = prop.getProperty("equipment_unable_to_update_message");
+		
+		// messages for service module
+		public static final String service_added_message = prop.getProperty("equipment_added_message");
+		public static final String service_added_code = prop.getProperty("equipment_added_code");
+		public static final String service_unable_to_add_code = prop.getProperty("equipment_unable_to_add_code");
+		public static final String service_unable_to_add_message = prop.getProperty("equipment_unable_to_add_message");
+		public static final String service_deleted_code = prop.getProperty("equipment_deleted_code");
+		public static final String service_deleted_message = prop.getProperty("equipment_deleted_message");
+		public static final String service_unable_to_delete_code = prop.getProperty("equipment_unable_to_delete_code");
+		public static final String service_unable_to_delete_message = prop.getProperty("equipment_unable_to_delete_message");
+		public static final String service_updated_code = prop.getProperty("equipment_updated_code");
+		public static final String service_updated_message = prop.getProperty("equipment_updated_message");
+		public static final String service_unable_to_update_code = prop.getProperty("equipment_unable_to_update_code");
+		public static final String service_unable_to_update_message = prop.getProperty("equipment_unable_to_update_message");
 
 }

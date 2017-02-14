@@ -23,4 +23,6 @@ public interface CompanyService {
 
 	CompanyResponse getOpenAdd();
 	
+	CompanyResponse getCompanyBillingLocationAndContacts(Long companyId);
+	
 }

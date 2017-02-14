@@ -334,4 +334,49 @@ public class CompanyServiceImpl implements CompanyService{
 		
 		return companyResponse;
 	}
+
+	@Override
+	public CompanyResponse getCompanyBillingLocationAndContacts(Long companyId) {
+		CompanyResponse companyResponse = new CompanyResponse();
+		Session session = null;
+		
+		try{
+			Company company = companyDao.findById(companyId);
+			if(company != null){
+				session = sessionFactory.openSession();
+				List<Object[]> billingLocationData = companyDao.getBillingLocations(company.getCompanyId(), session);
+				if(billingLocationData != null && !billingLocationData.isEmpty()){
+					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
+					for (Object[] row : billingLocationData) {
+						BillingLocation billingLocation = new BillingLocation();
+						billingLocation.setBillingLocationId(Long.parseLong(String.valueOf(row[0])));
+						billingLocation.setName(String.valueOf(row[1]));
+						billingLocations.add(billingLocation);
+					}
+					
+					companyResponse.setBillingLocations(billingLocations);
+				}
+				
+				List<Object[]> additionalContacts = companyDao.getAdditionalContacts(company.getCompanyId(), session);
+				if(additionalContacts != null && !additionalContacts.isEmpty()){
+					List<AdditionalContacts> additionalContactList = new ArrayList<AdditionalContacts>();
+					for (Object[] row : additionalContacts) {
+						AdditionalContacts additionalContact = new AdditionalContacts();
+						additionalContact.setAdditionalContactId(Long.parseLong(String.valueOf(row[0])));
+						additionalContact.setCustomerName(String.valueOf(row[1]));
+						additionalContactList.add(additionalContact);
+					}
+					
+					companyResponse.setAdditionalContacts(additionalContactList);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		
+		return companyResponse;
+	}
 }

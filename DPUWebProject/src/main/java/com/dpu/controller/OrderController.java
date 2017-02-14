@@ -1,4 +1,3 @@
-
 package com.dpu.controller;
 
 import java.util.List;
@@ -17,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.CategoryReq;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
+import com.dpu.model.OrderModel;
 import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
 import com.dpu.service.OrderService;
@@ -39,14 +40,14 @@ public class OrderController extends MessageProperties {
 	ObjectMapper mapper = new ObjectMapper();
 
 	/**
-	 * this method is used to get all categories
-	 * @return List<Categories>
+	 * this method is used to get all probils data
+	 * @return List<probils>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 		
-		logger.info("Inside CategoryController getAll() Starts ");
+		logger.info("Inside OrderController getAll() Starts ");
 		String json = null;
 		
 		try {
@@ -56,26 +57,26 @@ public class OrderController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getAll()"+e.getMessage());
+			logger.error("Exception inside OrderController getAll()"+e.getMessage());
 		}
-		logger.info("Inside CategoryController getAll() Ends, json :" + json);
+		logger.info("Inside OrderController getAll() Ends, json :" + json);
 		return json;
 	}
 
 	/**
-	 * this method is used to add the category
-	 * @param categoryReq
-	 * @return List<category>
+	 * this method is used to add the Order
+	 * @param orderModel
+	 * @return List<probils>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody CategoryReq categoryReq) {
+	public Object add(@RequestBody OrderModel orderModel) {
 
-		logger.info("Inside CategoryController add() starts ");
+		logger.info("Inside OrderController add() starts ");
 		Object obj = null;
 		try {
 
-			Object response = categoryService.addCategory(categoryReq);
+			Object response = orderService.addOrder(orderModel);
 			if (response instanceof Success) {
 				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
@@ -103,7 +104,7 @@ public class OrderController extends MessageProperties {
 		
 		try {
 			List<CategoryReq> categoryReq = null;
-			categoryReq = categoryService.delete(id);
+			//categoryReq = categoryService.delete(id);
 			
 			if (categoryReq != null && categoryReq.size() > 0) {
 				obj = categoryReq;
@@ -130,7 +131,8 @@ public class OrderController extends MessageProperties {
 		logger.info("Inside CategoryController update() Starts, id is :" + id);
 		Object obj = null;
 		try {
-			List<CategoryReq> response = categoryService.update(id, categoryReq);
+			List<CategoryReq> response = null;
+					//categoryService.update(id, categoryReq);
 			if (response != null) {
 				obj = response;
 			} else {
@@ -184,14 +186,38 @@ public class OrderController extends MessageProperties {
 		String json = null;
 		
 		try {
-			CategoryReq CategoryReq = orderService.getOpenAdd();
+			OrderModel orderModel = orderService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(CategoryReq);
+			json = mapper.writeValueAsString(orderModel);
 		} catch (Exception e) {
 			logger.error(" Exception inside OrderController openAdd() :"+e.getMessage());
 		}
 		
 		logger.info(" Inside OrderController openAdd() Ends ");
+		return json;
+	}
+	
+	/**
+	 * this method is used to get the specific company billingLocations and contacts
+	 * @param companyId
+	 * @return company related billingaccounts and contacts
+	 * @author lakhvir.bansal
+	 */
+	@RequestMapping(value = "/{companyId}/getData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getCompanyData(@PathVariable("companyId") Long companyId) {
+		
+		logger.info(" Inside OrderController getCompanyData() Starts ");
+		String json = null;
+		
+		try {
+			CompanyResponse companyResponse = orderService.getCompanyData(companyId);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(companyResponse);
+		} catch (Exception e) {
+			logger.error(" Exception inside OrderController getCompanyData() :"+e.getMessage());
+		}
+		
+		logger.info(" Inside OrderController getCompanyData() Ends ");
 		return json;
 	}
 	

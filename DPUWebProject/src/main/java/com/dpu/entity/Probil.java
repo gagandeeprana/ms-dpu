@@ -64,10 +64,10 @@ public class Probil implements Serializable {
 	private Date deliverScheduledTime;
 	
 	@Column(name = "pickup_mab_date")
-	private Date pichupMABDate;
+	private Date pickupMABDate;
 	
 	@Column(name = "pickup_mab_time")
-	private Date pichupMABTime;
+	private Date pickupMABTime;
 	
 	@Column(name = "delivery_mab_date")
 	private Date deliveryMABDate;
@@ -163,22 +163,6 @@ public class Probil implements Serializable {
 		this.deliverScheduledTime = deliverScheduledTime;
 	}
 
-	public Date getPichupMABDate() {
-		return pichupMABDate;
-	}
-
-	public void setPichupMABDate(Date pichupMABDate) {
-		this.pichupMABDate = pichupMABDate;
-	}
-
-	public Date getPichupMABTime() {
-		return pichupMABTime;
-	}
-
-	public void setPichupMABTime(Date pichupMABTime) {
-		this.pichupMABTime = pichupMABTime;
-	}
-
 	public Date getDeliveryMABDate() {
 		return deliveryMABDate;
 	}
@@ -193,6 +177,22 @@ public class Probil implements Serializable {
 
 	public void setDeliveryMABTime(Date deliveryMABTime) {
 		this.deliveryMABTime = deliveryMABTime;
+	}
+
+	public Date getPickupMABDate() {
+		return pickupMABDate;
+	}
+
+	public void setPickupMABDate(Date pickupMABDate) {
+		this.pickupMABDate = pickupMABDate;
+	}
+
+	public Date getPickupMABTime() {
+		return pickupMABTime;
+	}
+
+	public void setPickupMABTime(Date pickupMABTime) {
+		this.pickupMABTime = pickupMABTime;
 	}
 
 }

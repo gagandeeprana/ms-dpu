@@ -27,9 +27,6 @@ public class OrderPickupDropNo implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "orderpickupdelivery_id")
 	private Long id;
-	
-	@Column(name = "probil_no")
-	private Long probilNo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "probil_id")
@@ -47,14 +44,6 @@ public class OrderPickupDropNo implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getProbilNo() {
-		return probilNo;
-	}
-
-	public void setProbilNo(Long probilNo) {
-		this.probilNo = probilNo;
 	}
 
 	public Probil getProbil() {

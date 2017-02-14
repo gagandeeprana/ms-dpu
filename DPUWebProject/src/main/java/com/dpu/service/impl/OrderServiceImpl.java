@@ -15,10 +15,15 @@ import com.dpu.entity.Category;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
+import com.dpu.model.OrderModel;
+import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
+import com.dpu.service.CompanyService;
 import com.dpu.service.OrderService;
+import com.dpu.service.ShipperService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
 
@@ -42,7 +47,13 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	OrderDao orderDao;
 	
-	@Override
+	@Autowired
+	CompanyService companyService;
+	
+	@Autowired
+	ShipperService shipperService;
+	
+/*	@Override
 	public Object addCategory(CategoryReq categoryReq) {
 	
 		logger.info("Inside CategoryServiceImpl addCategory() starts ");
@@ -62,6 +73,12 @@ public class OrderServiceImpl implements OrderService {
 		
 		logger.info("Inside CategoryServiceImpl addCategory() ends ");
 		return obj;
+	}*/
+	
+	@Override
+	public Object addOrder(OrderModel orderModel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	private Object createSuccessObject(String message) {
@@ -189,20 +206,35 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public CategoryReq getOpenAdd() {
+	public OrderModel getOpenAdd() {
 
-		CategoryReq categoryReq = new CategoryReq();
+		OrderModel order = new OrderModel();
 		
+		@SuppressWarnings("unused")
 		List<Status> statusList = statusService.getAll();
-		categoryReq.setStatusList(statusList);
 		
-		List<TypeResponse> typeList = typeService.getAll(3l);
-		categoryReq.setTypeList(typeList);
+		List<TypeResponse> temperatureList = typeService.getAll(12l);
+		order.setTemperatureList(temperatureList);
 		
-		List<TypeResponse> highlightList = typeService.getAll(4l);
-		categoryReq.setHighlightList(highlightList);
+		List<TypeResponse> temperatureTypeList = typeService.getAll(13l);
+		order.setTemperatureTypeList(temperatureTypeList);
 		
-		return categoryReq;
+		List<CompanyResponse> companyData = companyService.getCompanyData();
+		order.setCompanyList(companyData);
+		
+		List<TypeResponse> currencyList = typeService.getAll(9l);
+		order.setCurrencyList(currencyList);
+		
+		List<ShipperResponse> shipperConsineeList = shipperService.getSpecificData();
+		order.setShipperConsineeList(shipperConsineeList);
+		
+		List<TypeResponse> pickUpTypes = typeService.getAll(10l);
+		order.setPickupList(pickUpTypes);
+		
+		List<TypeResponse> deliveryTypes = typeService.getAll(11l);
+		order.setDeliveryList(deliveryTypes);
+		
+		return order;
 	}
 
 	@Override
@@ -256,6 +288,14 @@ public class OrderServiceImpl implements OrderService {
 		
 		return categories;
 	}
+
+	@Override
+	public CompanyResponse getCompanyData(Long companyId) {
+		CompanyResponse companyResponse = companyService.getCompanyBillingLocationAndContacts(companyId);
+		return companyResponse;
+	}
+
+	
 
 	
 }

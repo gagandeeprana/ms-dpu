@@ -99,7 +99,7 @@ public class DivisionServiceImpl implements DivisionService {
 
 	@Override
 	public Object delete(Long id) {
-		String msg = "Division Deleted Successfully";
+		logger.info("[DivisionServiceImpl] [delete] : Srvice: Enter");
 		Division division = divisionDao.findById(id);
 		if (division != null) {
 			try {
@@ -114,7 +114,7 @@ public class DivisionServiceImpl implements DivisionService {
 						Long.parseLong(CommonProperties.Division_unable_to_delete_code));
 			}
 		}
-		logger.info("DivisionServiceImpl: delete():  Exit");
+		logger.info("[DivisionServiceImpl] [delete] : Service :  Exit");
 		return createFailedObject(
 				CommonProperties.Division_unable_to_delete_message,
 				Long.parseLong(CommonProperties.Division_unable_to_delete_code));

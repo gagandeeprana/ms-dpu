@@ -2,6 +2,8 @@ package com.dpu.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.dpu.entity.CompanyAdditionalContacts;
 
 public interface CompanyAdditionalContactsService {
@@ -12,8 +14,8 @@ public interface CompanyAdditionalContactsService {
 	
 	boolean delete(Long additionalContactId);
 	
-	List<CompanyAdditionalContacts> getAll(Long companyId);
-	
 	CompanyAdditionalContacts get(Long id);
+
+	List<CompanyAdditionalContacts> getAll(Long id, Session session);
 	
 }

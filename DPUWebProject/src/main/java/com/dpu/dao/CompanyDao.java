@@ -26,5 +26,13 @@ public interface CompanyDao extends GenericDao<Company>{
 	List<Object[]> getBillingLocations(Long companyId, Session session);
 
 	List<Object[]> getAdditionalContacts(Long companyId, Session session);
+
+	Company findById(Long id, Session session);
+
+	Company insertCompanyData(Company company, Session session);
+
+	void deleteCompany(Company company, Session session);
+
+	List<Company> getCompaniesByCompanyName(String companyName, Session session);
 	
 }

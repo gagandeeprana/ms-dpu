@@ -7,7 +7,7 @@ import com.dpu.model.CompanyResponse;
 
 public interface CompanyService {
 
-	Company addCompanyData(CompanyResponse companyResponse);
+	Object addCompanyData(CompanyResponse companyResponse);
 	
 	Company update(Company company);
 	
@@ -24,5 +24,7 @@ public interface CompanyService {
 	CompanyResponse getOpenAdd();
 	
 	CompanyResponse getCompanyBillingLocationAndContacts(Long companyId);
+
+	List<CompanyResponse> getCompanyByCompanyName(String companyName);
 	
 }

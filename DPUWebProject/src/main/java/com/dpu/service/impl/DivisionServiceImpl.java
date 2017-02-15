@@ -64,10 +64,10 @@ public class DivisionServiceImpl implements DivisionService {
 	@Override
 	public Object update(Long id, DivisionReq divisionReq) {
 		logger.info("[DivisionServiceImpl] [update] : Srvice: Enter");
-		Division division = divisionDao.findById(id);
-		String msg = "Division Updated Successfully";
-		Division divisionObj = null;
-		if (division != null) {
+		Division division = null;
+		try {
+			division = divisionDao.findById(id);
+			// if (division != null) {
 			division.setDivisionCode(divisionReq.getDivisionCode());
 			division.setDivisionName(divisionReq.getDivisionName());
 			division.setFedral(divisionReq.getFedral());
@@ -80,44 +80,42 @@ public class DivisionServiceImpl implements DivisionService {
 			division.setStatus(status);
 			division.setModifiedBy("jagvir");
 			division.setModifiedOn(new Date());
-			divisionObj = divisionDao.update(division);
-			if (divisionObj == null) {
-				return createFailedObject(
-						CommonProperties.Division_unable_to_update_message,
-						Long.parseLong(CommonProperties.Division_unable_to_update_code));
-			}
-			return createSuccessObject(
-					CommonProperties.Division_updated_message,
-					Long.parseLong(CommonProperties.Division_updated_code));
+			divisionDao.update(division);
+
+			// }
+		} catch (Exception e) {
+			logger.info("Exception inside DivisionServiceImpl update() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.Division_unable_to_update_message,
+					Long.parseLong(CommonProperties.Division_unable_to_update_code));
 		}
+
 		logger.info("[DivisionServiceImpl] [update] : Srvice: Exit");
-		return createFailedObject(
-				CommonProperties.Division_unable_to_update_message,
-				Long.parseLong(CommonProperties.Division_unable_to_update_code));
+
+		return createSuccessObject(CommonProperties.Division_updated_message,
+				Long.parseLong(CommonProperties.Division_updated_code));
 
 	}
 
 	@Override
 	public Object delete(Long id) {
-		String msg = "Division Deleted Successfully";
-		Division division = divisionDao.findById(id);
-		if (division != null) {
-			try {
-				divisionDao.delete(division);
-				return createSuccessObject(
-						CommonProperties.Division_deleted_message,
-						Long.parseLong(CommonProperties.Division_deleted_code));
-			} catch (Exception e) {
-				logger.error("DivisionServiceImpl: delete(): Exception  : ", e);
-				return createFailedObject(
-						CommonProperties.Division_unable_to_delete_message,
-						Long.parseLong(CommonProperties.Division_unable_to_delete_code));
-			}
+		logger.info("[DivisionServiceImpl] [delete] : Srvice: Enter");
+		Division division = null;
+		try {
+			division = divisionDao.findById(id);
+			divisionDao.delete(division);
+
+		} catch (Exception e) {
+			logger.info("Exception inside DivisionServiceImpl delete() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.Division_unable_to_delete_message,
+					Long.parseLong(CommonProperties.Division_unable_to_delete_code));
 		}
-		logger.info("DivisionServiceImpl: delete():  Exit");
-		return createFailedObject(
-				CommonProperties.Division_unable_to_delete_message,
-				Long.parseLong(CommonProperties.Division_unable_to_delete_code));
+		logger.info("[DivisionServiceImpl] [delete] : Service :  Exit");
+		return createSuccessObject(CommonProperties.Division_deleted_message,
+				Long.parseLong(CommonProperties.Division_deleted_code));
 	}
 
 	@Override
@@ -179,30 +177,27 @@ public class DivisionServiceImpl implements DivisionService {
 	@Override
 	public Object add(DivisionReq divisionReq) {
 		logger.info("DivisionServiceImpl: add():  STARTS");
-		String msg = "Division Added Successfully";
 		Session session = null;
 		Transaction tx = null;
-		Division division = null;
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			division = divisionDao.add(session, divisionReq);
-			if (division == null) {
-				return createFailedObject(
-						CommonProperties.Division_unable_to_add_message,
-						Long.parseLong(CommonProperties.Division_unable_to_add_code));
-			}
+			divisionDao.add(session, divisionReq);
 			if (tx != null) {
 				tx.commit();
 			}
 
 		} catch (Exception e) {
-			logger.fatal("DivisionServiceImpl: add(): Exception: "
-					+ e.getMessage());
 			if (tx != null) {
 				tx.rollback();
 			}
+			logger.info("Exception inside DivisionServiceImpl add() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.Division_unable_to_add_message,
+					Long.parseLong(CommonProperties.Division_unable_to_add_code));
+
 		} finally {
 			logger.info("DivisionServiceImpl: add():  finally block");
 			if (session != null) {

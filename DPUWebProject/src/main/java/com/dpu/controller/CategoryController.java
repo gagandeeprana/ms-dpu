@@ -68,26 +68,23 @@ public class CategoryController extends MessageProperties {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody CategoryReq categoryReq) {
 
-		logger.info("Inside CategoryController add() starts ");
+		logger.info("[CategoryController] [add] : Srvice: Enter");
 		Object obj = null;
 		try {
 
 			Object result = categoryService.addCategory(categoryReq);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 
 		} catch (Exception e) {
 			logger.error("Exception inside CategoryController add() :"
 					+ e.getMessage());
 		}
-		logger.info("Inside CategoryController add() Ends");
+		logger.info("[CategoryController] [add] : Srvice: Exit");
 		return obj;
 	}
 
@@ -100,27 +97,25 @@ public class CategoryController extends MessageProperties {
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
-
+		logger.info("[CategoryController] [delete] : Srvice: Enter");
 		logger.info("Inside CategoryController delete() Starts, id is :" + id);
 		Object obj = null;
 
 		try {
 
 			Object result = categoryService.delete(id);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside CategoryController delete() :"
 					+ e.getMessage());
 		}
 		logger.info("Inside CategoryController delete() Ends, id is :" + id);
+		logger.info("[CategoryController] [delete] : Srvice: Exit");
 		return obj;
 
 	}
@@ -135,18 +130,16 @@ public class CategoryController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id,
 			@RequestBody CategoryReq categoryReq) {
+		logger.info("[CategoryController] [update] : Srvice: Enter");
 		logger.info("Inside CategoryController update() Starts, id is :" + id);
 		Object obj = null;
 		try {
 			Object result = categoryService.update(id, categoryReq);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside CategoryController update() :"
@@ -154,6 +147,7 @@ public class CategoryController extends MessageProperties {
 		}
 
 		logger.info("Inside CategoryController update() Ends, id is :" + id);
+		logger.info("[CategoryController] [update] : Srvice: Exit");
 		return obj;
 	}
 
@@ -166,7 +160,7 @@ public class CategoryController extends MessageProperties {
 	 */
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getCategoryById(@PathVariable("categoryId") Long id) {
-
+		logger.info("[CategoryController] [getCategoryById] : Srvice: Enter");
 		logger.info("Inside CategoryController getCategoryById() Starts, Id:"
 				+ id);
 		String json = null;
@@ -185,6 +179,7 @@ public class CategoryController extends MessageProperties {
 
 		logger.info("Inside CategoryController getCategoryById() Ends, Id:"
 				+ id);
+		logger.info("[CategoryController] [getCategoryById] : Srvice: Exit");
 		return json;
 	}
 
@@ -197,8 +192,8 @@ public class CategoryController extends MessageProperties {
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
+		logger.info("[CategoryController] [openAdd] : Srvice: Enter");
 
-		logger.info(" Inside CategoryController openAdd() Starts ");
 		String json = null;
 
 		try {
@@ -210,7 +205,7 @@ public class CategoryController extends MessageProperties {
 					+ e.getMessage());
 		}
 
-		logger.info(" Inside CategoryController openAdd() Ends ");
+		logger.info("[CategoryController] [openAdd] : Srvice: Exit");
 		return json;
 	}
 
@@ -224,7 +219,7 @@ public class CategoryController extends MessageProperties {
 	@RequestMapping(value = "/{categoryName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchCategory(
 			@PathVariable("categoryName") String categoryName) {
-
+		logger.info("[CategoryController] [searchCategory] : Srvice: Enter");
 		logger.info("Inside CategoryController searchCategory() Starts, categoryName :"
 				+ categoryName);
 		String json = new String();
@@ -243,13 +238,14 @@ public class CategoryController extends MessageProperties {
 
 		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :"
 				+ categoryName);
+		logger.info("[CategoryController] [searchCategory] : Srvice: Exit");
 		return json;
 	}
 
 	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
 
-		logger.info("Inside CategoryController searchCategory() Starts");
+		logger.info("[CategoryController] [getSpecificData] : Srvice: Enter");
 		String json = new String();
 
 		try {
@@ -264,6 +260,7 @@ public class CategoryController extends MessageProperties {
 		}
 
 		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :");
+		logger.info("[CategoryController] [getSpecificData] : Srvice: Exit");
 		return json;
 	}
 }

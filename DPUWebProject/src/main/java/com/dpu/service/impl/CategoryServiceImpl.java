@@ -59,30 +59,27 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Object addCategory(CategoryReq categoryReq) {
 
-		logger.info("Inside CategoryServiceImpl addCategory() starts ");
-		Object obj = null;
+		logger.info("[CategoryServiceImpl] [addCategory] : Srvice: Enter");
 		Category category = null;
 		try {
 			category = setCategoryValues(categoryReq);
-			category = categoryDao.save(category);
-			if (category == null) {
-				return createFailedObject(
-						CommonProperties.category_unable_to_add_message,
-						Long.parseLong(CommonProperties.category_unable_to_add_code));
-			}
+			categoryDao.save(category);
 
 		} catch (Exception e) {
 			logger.info("Exception inside CategoryServiceImpl addCategory() :"
 					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.category_unable_to_add_message,
+					Long.parseLong(CommonProperties.category_unable_to_add_code));
 
 		}
-
-		logger.info("Inside CategoryServiceImpl addCategory() ends ");
+		logger.info("[CategoryServiceImpl] [addCategory] : Srvice: Exit");
 		return createSuccessObject(CommonProperties.category_added_message,
 				Long.parseLong(CommonProperties.category_added_code));
 	}
 
 	private Category setCategoryValues(CategoryReq categoryReq) {
+		logger.info("[CategoryServiceImpl] [setCategoryValues] : Srvice: Enter");
 		Category category = new Category();
 		category.setName(categoryReq.getName());
 		Status status = statusService.get(categoryReq.getStatusId());
@@ -91,14 +88,17 @@ public class CategoryServiceImpl implements CategoryService {
 		Type type = typeService.get(categoryReq.getTypeId());
 		category.setType(type);
 		category.setStatus(status);
+		logger.info("[CategoryServiceImpl] [setCategoryValues] : Srvice: Exit");
 		return category;
 	}
 
 	@Override
 	public Object update(Long id, CategoryReq categoryReq) {
+		logger.info("[CategoryServiceImpl] [update] : Srvice: Enter");
 		Category category = null;
-		category = categoryDao.findById(id);
-		if (category != null) {
+		try {
+			category = categoryDao.findById(id);
+			// if (category != null) {
 
 			category.setName(categoryReq.getName());
 
@@ -112,46 +112,44 @@ public class CategoryServiceImpl implements CategoryService {
 			category.setType(type);
 
 			category = categoryDao.update(category);
-			if (category == null) {
-				return createFailedObject(
-						CommonProperties.category_unable_to_update_message,
-						Long.parseLong(CommonProperties.category_unable_to_update_code));
-			}
-			return createSuccessObject(
-					CommonProperties.category_updated_message,
-					Long.parseLong(CommonProperties.category_updated_code));
+			// }
+
+		} catch (Exception e) {
+			logger.info("Exception inside CategoryServiceImpl updateCategory() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.category_unable_to_update_message,
+					Long.parseLong(CommonProperties.category_unable_to_update_code));
 		}
+		logger.info("[CategoryServiceImpl] [update] : Srvice: Exit");
 		return createSuccessObject(CommonProperties.category_updated_message,
 				Long.parseLong(CommonProperties.category_updated_code));
 	}
 
 	@Override
 	public Object delete(Long id) {
-
-		logger.info("[CategoryServiceImpl] [delete] : Enter ");
-		Category category = categoryDao.findById(id);
-		if (category != null) {
-			try {
-				categoryDao.delete(category);
-				return createSuccessObject(
-						CommonProperties.category_deleted_message,
-						Long.parseLong(CommonProperties.category_deleted_code));
-			} catch (Exception e) {
-				logger.error("[CategoryServiceImpl] [delete] : ", e);
-				return createFailedObject(
-						CommonProperties.category_unable_to_delete_message,
-						Long.parseLong(CommonProperties.category_unable_to_delete_code));
-			}
+		logger.info("[CategoryServiceImpl] [delete] : Srvice: Enter");
+		Category category = null;
+		try {
+			category = categoryDao.findById(id);
+			categoryDao.delete(category);
+		} catch (Exception e) {
+			logger.info("Exception inside CategoryServiceImpl delete() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.category_deleted_message,
+					Long.parseLong(CommonProperties.category_deleted_code));
 		}
-		logger.info("[CategoryServiceImpl] [get] : Exit ");
+		logger.info("[CategoryServiceImpl] [delete] : Service :  Exit");
 		return createFailedObject(
 				CommonProperties.category_unable_to_delete_message,
 				Long.parseLong(CommonProperties.category_unable_to_delete_code));
+
 	}
 
 	@Override
 	public List<CategoryReq> getAll() {
-
+		logger.info("[CategoryServiceImpl] [getAll] : Srvice: Enter");
 		Session session = null;
 		List<CategoryReq> categoriesList = new ArrayList<CategoryReq>();
 
@@ -177,13 +175,13 @@ public class CategoryServiceImpl implements CategoryService {
 				session.close();
 			}
 		}
-
+		logger.info("[CategoryServiceImpl] [getAll] : Srvice: Exit");
 		return categoriesList;
 	}
 
 	@Override
 	public CategoryReq get(Long id) {
-
+		logger.info("[CategoryServiceImpl] [get] : Srvice: Enter");
 		Session session = null;
 		CategoryReq categoryReq = new CategoryReq();
 
@@ -214,13 +212,13 @@ public class CategoryServiceImpl implements CategoryService {
 				session.close();
 			}
 		}
-
+		logger.info("[CategoryServiceImpl] [get] : Srvice: Exit");
 		return categoryReq;
 	}
 
 	@Override
 	public CategoryReq getOpenAdd() {
-
+		logger.info("[CategoryServiceImpl] [getOpenAdd] : Srvice: Enter");
 		CategoryReq categoryReq = new CategoryReq();
 
 		List<Status> statusList = statusService.getAll();
@@ -231,13 +229,13 @@ public class CategoryServiceImpl implements CategoryService {
 
 		List<TypeResponse> highlightList = typeService.getAll(4l);
 		categoryReq.setHighlightList(highlightList);
-
+		logger.info("[CategoryServiceImpl] [getOpenAdd] : Srvice: Exit");
 		return categoryReq;
 	}
 
 	@Override
 	public List<CategoryReq> getCategoryByCategoryName(String categoryName) {
-
+		logger.info("[CategoryServiceImpl] [getCategoryByCategoryName] : Srvice: Enter");
 		Session session = null;
 		List<CategoryReq> categories = new ArrayList<CategoryReq>();
 
@@ -262,7 +260,7 @@ public class CategoryServiceImpl implements CategoryService {
 				session.close();
 			}
 		}
-
+		logger.info("[CategoryServiceImpl] [getCategoryByCategoryName] : Srvice: Exit");
 		return categories;
 	}
 

@@ -33,25 +33,8 @@ public class AdditionalContacts {
 
 	//@JsonProperty("status")
 	private Long statusId;
-	private String status;
+	private String statusName;
 
-	public Long getStatusId() {
-		return statusId;
-	}
-
-	public void setStatusId(Long statusId) {
-		this.statusId = statusId;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	//@JsonProperty("email")
 	private String email;
 
 	public Long getAdditionalContactId() {
@@ -127,4 +110,19 @@ public class AdditionalContacts {
 		this.email = email;
 	}
 
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
 }

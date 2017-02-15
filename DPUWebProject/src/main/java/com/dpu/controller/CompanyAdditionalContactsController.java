@@ -41,7 +41,8 @@ public class CompanyAdditionalContactsController extends MessageProperties {
 		logger.info("[getAll] : Enter");
 		String json = null;
 		try {
-			List<CompanyAdditionalContacts> lstCompanyAdditionalContacts = companyAdditionalContactsService.getAll(companyId);
+			List<CompanyAdditionalContacts> lstCompanyAdditionalContacts = null;
+			//companyAdditionalContactsService.getAll(companyId);
 			List<AdditionalContacts> lstAdditionalContacts = new ArrayList<AdditionalContacts>();
 			for(CompanyAdditionalContacts cac : lstCompanyAdditionalContacts) {
 				AdditionalContacts contact = new AdditionalContacts();

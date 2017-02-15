@@ -41,7 +41,8 @@ public class CompanyBillingLocationController extends MessageProperties {
 		logger.info("[getAll] : Enter : ");
 		String json = null;
 		try {
-			List<CompanyBillingLocation> lstCompanyBillingLocations = companyBillingLocationService.getAll(companyId);
+			List<CompanyBillingLocation> lstCompanyBillingLocations = null;
+					//companyBillingLocationService.getAll(companyId);
 			List<BillingLocation> lstBillingLocations = new ArrayList<BillingLocation>();
 			for(CompanyBillingLocation cbl : lstCompanyBillingLocations) {
 				BillingLocation location = new BillingLocation();

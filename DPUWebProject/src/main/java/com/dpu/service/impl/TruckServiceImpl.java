@@ -77,10 +77,10 @@ public class TruckServiceImpl implements TruckService {
 	@Override
 	public Object update(Long id, TruckResponse truckResponse) {
 		logger.info("[TruckServiceImpl] [update] : Enter ");
-		String msg = "Truck Update Successfully";
-		Truck truck = truckDao.findById(id);
-		Truck truckObj = null;
-		if (truck != null) {
+		Truck truck = null;
+		try {
+			truck = truckDao.findById(id);
+			// if (truck != null) {
 			truck.setUnitNo(truckResponse.getUnitNo());
 			truck.setOwner(truckResponse.getOwner());
 			truck.setoOName(truckResponse.getoOName());
@@ -97,43 +97,37 @@ public class TruckServiceImpl implements TruckService {
 
 			truck.setFinance(truckResponse.getFinance());
 
-			truckObj = truckDao.update(truck);
-			if (truckObj == null) {
-				return createFailedObject(
-						CommonProperties.Truck_unable_to_update_message,
-						Long.parseLong(CommonProperties.Truck_unable_to_update_code));
-			}
-			return createSuccessObject(CommonProperties.Truck_updated_message,
-					Long.parseLong(CommonProperties.Equipment_updated_code));
-
+			truckDao.update(truck);
+			// }
+		} catch (Exception e) {
+			logger.info("Exception inside TruckServiceImpl update() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.Truck_unable_to_update_message,
+					Long.parseLong(CommonProperties.Truck_unable_to_update_code));
 		}
+
 		logger.info("[TruckServiceImpl] [get] : Exit ");
-		return createFailedObject(
-				CommonProperties.Truck_unable_to_update_message,
-				Long.parseLong(CommonProperties.Truck_unable_to_update_code));
+		return createSuccessObject(CommonProperties.Truck_updated_message,
+				Long.parseLong(CommonProperties.Equipment_updated_code));
 	}
 
 	@Override
 	public Object delete(Long id) {
 		logger.info("[TruckServiceImpl] [delete] : Enter ");
-		Truck truck = truckDao.findById(id);
-		if (truck != null) {
-			try {
-				truckDao.delete(truck);
-				return createSuccessObject(
-						CommonProperties.Truck_deleted_message,
-						Long.parseLong(CommonProperties.Truck_deleted_code));
-			} catch (Exception e) {
-				logger.error("[TruckServiceImpl] [delete] : ", e);
-				return createFailedObject(
-						CommonProperties.Truck_unable_to_delete_message,
-						Long.parseLong(CommonProperties.Truck_unable_to_delete_code));
-			}
+		Truck truck = null;
+		try {
+			truck = truckDao.findById(id);
+			truckDao.delete(truck);
+		} catch (Exception e) {
+			logger.error("[TruckServiceImpl] [delete] : ", e);
+			return createFailedObject(
+					CommonProperties.Truck_unable_to_delete_message,
+					Long.parseLong(CommonProperties.Truck_unable_to_delete_code));
 		}
 		logger.info("[TruckServiceImpl] [get] : Exit ");
-		return createFailedObject(
-				CommonProperties.Truck_unable_to_delete_message,
-				Long.parseLong(CommonProperties.Truck_unable_to_delete_code));
+		return createSuccessObject(CommonProperties.Truck_deleted_message,
+				Long.parseLong(CommonProperties.Truck_deleted_code));
 	}
 
 	@Override
@@ -232,20 +226,12 @@ public class TruckServiceImpl implements TruckService {
 	@Override
 	public Object add(TruckResponse truckResponse) {
 		logger.info("TruckServiceImpl: add():  STARTS");
-		String msg = "Truck Added Successfuly";
 		Session session = null;
 		Transaction tx = null;
-		Truck truck = null;
 		try {
-
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			truck = truckDao.add(session, truckResponse);
-			if (truck == null) {
-				return createFailedObject(
-						CommonProperties.Truck_unable_to_add_message,
-						Long.parseLong(CommonProperties.Truck_unable_to_add_code));
-			}
+			truckDao.add(session, truckResponse);
 			if (tx != null) {
 				tx.commit();
 			}
@@ -254,6 +240,9 @@ public class TruckServiceImpl implements TruckService {
 			if (tx != null) {
 				tx.rollback();
 			}
+			return createFailedObject(
+					CommonProperties.Truck_unable_to_add_message,
+					Long.parseLong(CommonProperties.Truck_unable_to_add_code));
 		} finally {
 			logger.info("TruckServiceImpl: add():  finally block");
 			if (session != null) {

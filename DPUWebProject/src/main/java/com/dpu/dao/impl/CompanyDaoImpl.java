@@ -17,12 +17,16 @@ import com.dpu.entity.CompanyBillingLocation;
 import com.dpu.model.AdditionalContacts;
 import com.dpu.model.BillingLocation;
 import com.dpu.model.CompanyResponse;
+import com.dpu.service.StatusService;
 
 @Repository
 public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	StatusService statusService;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -62,6 +66,7 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 				CompanyBillingLocation companyBillingLocation = new CompanyBillingLocation();
 				BeanUtils.copyProperties(billingLocation, companyBillingLocation);
 				companyBillingLocation.setCompany(company);
+				companyBillingLocation.setStatus(statusService.get(billingLocation.getStatusId()));
 				session.saveOrUpdate(companyBillingLocation);
 			}
 		}
@@ -73,6 +78,7 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 				CompanyAdditionalContacts comAdditionalContacts = new CompanyAdditionalContacts();
 				BeanUtils.copyProperties(additionalContacts, comAdditionalContacts);
 				comAdditionalContacts.setCompany(company);
+				comAdditionalContacts.setStatus(statusService.get(additionalContacts.getStatusId()));
 				session.saveOrUpdate(comAdditionalContacts);
 			}
 		}
@@ -81,6 +87,7 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> getBillingLocations(Long companyId, Session session) {
+		@SuppressWarnings("unused")
 		Long maxVal = getMaxProbilNo(session);
 		List<Object[]> returnList = null;
 		Query query = session.createSQLQuery(" select billing_location_id,name from billinglocationmaster where company_id =:companyId ");
@@ -107,6 +114,35 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 		query.setParameter("companyId", companyId);
 		returnList = query.list();
 		return returnList;
+	}
+
+	@Override
+	public Company findById(Long companyId, Session session) {
+		StringBuilder sb = new StringBuilder(" select c from Company c where c.companyId =:companyId ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("companyId", companyId);
+		return (Company) query.uniqueResult();
+	}
+
+	@Override
+	public Company insertCompanyData(Company company, Session session) {
+		session.save(company);
+		return company;
+	}
+
+	@Override
+	public void deleteCompany(Company company, Session session) {
+		session.delete(company);
+	}
+
+	@Override
+	public List<Company> getCompaniesByCompanyName(String companyName, Session session) {
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("select c from Company c where c.name like :companyName ");
+		Query query = session.createQuery(builder.toString());
+		query.setParameter("companyName", "%"+companyName+"%");
+		return query.list();
 	}
 
 }

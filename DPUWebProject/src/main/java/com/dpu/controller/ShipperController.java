@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dpu.constants.Iconstants;
 import com.dpu.model.Failed;
 import com.dpu.model.ShipperResponse;
+import com.dpu.model.Success;
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
 
@@ -67,13 +68,10 @@ public class ShipperController extends MessageProperties {
 		
 		try {
 			Object response = shipperService.add(shipperResponse);
-			if (response instanceof List<?>) {
+			if (response instanceof Success) {
 				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(shipperUnableToAddCode),
-						shipperUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside ShipperController add() :"+e.getMessage());
@@ -97,15 +95,12 @@ public class ShipperController extends MessageProperties {
 
 		try {
 
-			obj = shipperService.delete(id);
+			Object response = shipperService.delete(id);
 			
-			if (obj instanceof List<?>) {
-				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
+			if (response instanceof Success) {
+				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(shipperUnableToDeleteCode),
-						shipperUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside ShipperController delete() :"+e.getMessage());
@@ -127,13 +122,10 @@ public class ShipperController extends MessageProperties {
 		Object obj = null;
 		try {
 			Object response = shipperService.update(id, shipperResponse);
-			if (response != null) {
+			if (response instanceof Success) {
 				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(shipperUnableToUpdateCode),
-						shipperUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside ShipperController update :"+e.getMessage());

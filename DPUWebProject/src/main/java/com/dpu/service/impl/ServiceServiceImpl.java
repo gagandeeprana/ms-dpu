@@ -13,7 +13,6 @@ import com.dpu.common.CommonProperties;
 import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
-import com.dpu.entity.Truck;
 import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
@@ -59,38 +58,15 @@ public class ServiceServiceImpl implements ServiceService {
 	public Object add(DPUService dpuService) {
 
 		Object obj = null;
-		Service serviceObj = null;
 		try {
 			Service service = setServiceValues(dpuService);
-			serviceObj = serviceDao.save(service);
-			if (serviceObj == null) {
-				return createFailedObject(
-						CommonProperties.service_unable_to_add_message,
-						Long.parseLong(CommonProperties.service_unable_to_add_code));
-			}
+			serviceDao.save(service);
+			obj = createSuccessObject(CommonProperties.service_added_message, Long.parseLong(CommonProperties.service_added_code));
 		} catch (Exception e) {
-			logger.error("Exception inside DriverServiceImpl addDriver() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.service_unable_to_add_message,
-					Long.parseLong(CommonProperties.service_unable_to_add_code));
+			logger.error("Exception inside DriverServiceImpl addDriver() :" + e.getMessage());
+			obj = createFailedObject(CommonProperties.service_unable_to_add_message, Long.parseLong(CommonProperties.service_unable_to_add_code));
 		}
-
-		return createSuccessObject(CommonProperties.service_added_message,
-				Long.parseLong(CommonProperties.service_added_code));
-	}
-
-	// private Object createSuccessObject(String message) {
-	// Success success = new Success();
-	// success.setMessage(message);
-	// success.setResultList(getAll());
-	// return success;
-	// }
-
-	private Object createFailedObject(String errorMessage) {
-		Failed failed = new Failed();
-		failed.setMessage(errorMessage);
-		return failed;
+		return obj;
 	}
 
 	private Service setServiceValues(DPUService dpuService) {
@@ -107,58 +83,49 @@ public class ServiceServiceImpl implements ServiceService {
 
 	@Override
 	public Object update(Long id, DPUService dpuService) {
-		logger.info("[ServiceServiceImpl] [update] : Enter ");
-		Service service = null;
-		service = serviceDao.findById(id);
-		Service service2 = null;
-		if (service != null) {
-
-			service.setServiceName(dpuService.getServiceName());
-			Status status = statusService.get(dpuService.getStatusId());
-			Type textField = typeService.get(dpuService.getTextFieldId());
-			service.setTextField(textField);
-			Type associateWith = typeService.get(dpuService
-					.getAssociationWithId());
-			service.setAssociationWith(associateWith);
-			service.setStatus(status);
-			service2 = serviceDao.update(service);
-			if (service2 == null) {
-				return createFailedObject(
-						CommonProperties.service_unable_to_update_message,
-						Long.parseLong(CommonProperties.service_unable_to_update_code));
+		Object obj = null;
+		try {
+			logger.info("[ServiceServiceImpl] [update] : Enter ");
+			Service service = null;
+			service = serviceDao.findById(id);
+			if (service != null) {
+				service.setServiceName(dpuService.getServiceName());
+				Status status = statusService.get(dpuService.getStatusId());
+				Type textField = typeService.get(dpuService.getTextFieldId());
+				service.setTextField(textField);
+				Type associateWith = typeService.get(dpuService .getAssociationWithId());
+				service.setAssociationWith(associateWith);
+				service.setStatus(status);
+				serviceDao.update(service);
+				obj = createSuccessObject(CommonProperties.service_updated_message, Long.parseLong(CommonProperties.service_updated_code));
 			}
-			return createSuccessObject(
-					CommonProperties.service_updated_message,
-					Long.parseLong(CommonProperties.service_updated_code));
-
+		} catch (Exception e) {
+			obj = createFailedObject(CommonProperties.service_unable_to_update_message, Long.parseLong(CommonProperties.service_unable_to_update_code));
 		}
+		
 		logger.info("[ServiceServiceImpl] [update] : Exit ");
-		return createFailedObject(
-				CommonProperties.service_unable_to_update_message,
-				Long.parseLong(CommonProperties.service_unable_to_update_code));
+		
+		return obj;
 	}
 
 	@Override
 	public Object delete(Long id) {
 		logger.info("[ServiceServiceImpl] [delete] : Enter ");
+		
+		Object obj = null;
 		Service service = serviceDao.findById(id);
 		if (service != null) {
 			try {
 				serviceDao.delete(service);
-				return createSuccessObject(
-						CommonProperties.service_deleted_message,
-						Long.parseLong(CommonProperties.service_deleted_code));
+				obj = createSuccessObject(CommonProperties.service_deleted_message, Long.parseLong(CommonProperties.service_deleted_code));
 			} catch (Exception e) {
 				logger.error("[ServiceServiceImpl] [delete] : ", e);
-				return createFailedObject(
-						CommonProperties.service_unable_to_delete_message,
-						Long.parseLong(CommonProperties.service_unable_to_delete_code));
+				obj = createFailedObject(CommonProperties.service_unable_to_delete_message, Long.parseLong(CommonProperties.service_unable_to_delete_code));
 			}
 		}
 		logger.info("[ServiceServiceImpl] [delete] : Exit ");
-		return createFailedObject(
-				CommonProperties.service_unable_to_delete_message,
-				Long.parseLong(CommonProperties.service_unable_to_delete_code));
+
+		return obj;
 	}
 
 	@Override

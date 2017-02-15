@@ -73,10 +73,8 @@ public class ServiceController extends MessageProperties {
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
+				} else {
+					obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (Exception e) {
@@ -94,16 +92,12 @@ public class ServiceController extends MessageProperties {
 		Object obj = null;
 		try {
 			Object result = null;
-			// serviceService.get(id);
-			/* if (service != null) { */
 			result = serviceService.delete(id);
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
+				} else {
+					obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (Exception e) {
@@ -120,15 +114,12 @@ public class ServiceController extends MessageProperties {
 		logger.info("[update] : Enter : Id : " + id);
 		Object obj = null;
 		try {
-			// service.setServiceId(id);
 			Object result = serviceService.update(id, dpuService);
 			if (result != null) {
 				if (result instanceof Success) {
 					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
+				} else {
+					obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (Exception e) {

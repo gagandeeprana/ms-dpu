@@ -53,7 +53,7 @@ public class DivisionController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllDivisions() {
-		logger.info("[getAllDivisions] : Enter ");
+		logger.info("[DivisionController] [getAllDivisions] : Srvice: Enter");
 		String json = null;
 		try {
 			List<DivisionReq> lstDivisionReqs = divisionService.getAll("");
@@ -63,16 +63,17 @@ public class DivisionController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 			logger.error(e);
-			logger.error("DivisionController : getAll " + e);
+			logger.info("Exception inside DivisionController getAllDiviion() :"
+					+ e.getMessage());
 		}
-		logger.info("[getAll] :Exit");
+		logger.info("[DivisionController] [getAllDivisions] : Srvice: Enter");
 		return json;
 	}
 
 	@RequestMapping(value = "/{divisionname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllDivision(
 			@PathVariable("divisionname") String divisionName) {
-		logger.info("[getAllDivision]: Enter");
+		logger.info("[DivisionController] [getAllDivisions] : Srvice: Enter");
 		String json = new String();
 		try {
 			List<DivisionReq> lstDivisions = divisionService
@@ -83,37 +84,33 @@ public class DivisionController extends MessageProperties {
 		} catch (Exception e) {
 			System.out.println(e);
 			logger.error(e);
-			logger.error("DivisionController : getAllDivision " + e);
+			logger.info("Exception inside DivisionController getAllDivision() :"
+					+ e.getMessage());
 		}
-		logger.info("[getAllDivision] :Exit");
+		logger.info("[DivisionController] [getAllDivisions] : Srvice: Exit");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object addDivision(@RequestBody DivisionReq divisionReq) {
-		logger.info("[DivisionController] : addDivision");
+		logger.info("[DivisionController] [addDivision] : Srvice: Enter");
 		Object obj = null;
 		try {
 
 			Object result = divisionService.add(divisionReq);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
 			}
 		} catch (Exception e) {
-			logger.fatal("DivisionController: add(): Exception: "
+			logger.info("Exception inside DivisionController addDivision() :"
 					+ e.getMessage());
 
 		}
 
-		logger.info("DivisionController: add(): ENDS");
-
+		logger.info("[DivisionController] [getAllDivisions] : Srvice: Exit");
 		return obj;
 
 	}
@@ -135,24 +132,22 @@ public class DivisionController extends MessageProperties {
 	//
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
+		logger.info("[DivisionController] [delete] : Srvice: Enter");
 		logger.info("[delete] : Enter  : Id : " + id);
 		Object obj = null;
 		try {
 			Object result = divisionService.delete(id);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
-		} catch (Exception e) {
-			logger.info("Exception in delete of DivisionController ", e);
 
+		} catch (Exception e) {
+			logger.info("Exception inside DivisionController delete() :"
+					+ e.getMessage());
 		}
-		logger.info("[delete] : Exit : ");
+		logger.info("[DivisionController] [delete] : Srvice: Exit");
 		return obj;
 
 	}
@@ -161,30 +156,29 @@ public class DivisionController extends MessageProperties {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id,
 			@RequestBody DivisionReq divisionReq) {
+		logger.info("[DivisionController] [update] : Srvice: Enter");
 		logger.info("[DivisionController] [update] :Enter :ID:  " + id);
 		Object obj = null;
 		try {
 			divisionReq.setDivisionId(id);
 			Object result = divisionService.update(id, divisionReq);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
-
-			logger.error("EquipmentController : update " + e);
+			logger.info("Exception inside DivisionController update() :"
+					+ e.getMessage());
 		}
-		logger.info("[DivisionController] [update] :Exit   ");
+		logger.info("[DivisionController] [update] : Srvice: Exit");
 		return obj;
 	}
 
 	@RequestMapping(value = "/{divisionId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("divisionId") Long id) {
+		logger.info("[DivisionController] [get] : Srvice: Enter");
 		logger.info("[get] : Enter : ID : " + id);
 		String json = null;
 		try {
@@ -195,9 +189,10 @@ public class DivisionController extends MessageProperties {
 				System.out.println(json);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside DivisionController get() :"
+					+ e.getMessage());
 		}
-		logger.info("[get] : Exit  ");
+		logger.info("[DivisionController] [get] : Srvice: Exit");
 		return json;
 	}
 

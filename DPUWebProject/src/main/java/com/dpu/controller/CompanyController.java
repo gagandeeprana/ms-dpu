@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -30,14 +29,17 @@ public class CompanyController extends MessageProperties {
 	
 	@Autowired
 	CompanyService companyService;
-	
-	
 
 	ObjectMapper mapper = new ObjectMapper();
-
+	
+	/**
+	 * this method is used to get all the companies
+	 * @return all companies
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		logger.info("[getAll] : Enter");
+		logger.info("CompanyController getAll() starts");
 		String json = new String();
 		try {
 			
@@ -48,87 +50,114 @@ public class CompanyController extends MessageProperties {
 			}
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside CompanyController getAll() :"+e.getMessage());
 		}
-		logger.info("[getAll] : Exit");
+		logger.info("CompanyController getAll() ends");
 		return json;
 	}
 
+	/**
+	 * this method is used to add company
+	 * @param companyResponse
+	 * @return all companies data
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody CompanyResponse companyResponse) {
-		logger.info("[add] : Enter");
+		
+		logger.info("CompanyController add() starts");
 		Object obj = null;
 		try {
-			//System.out.println(new ObjectMapper().writeValueAsString(companyResponse));
+			obj = companyService.addCompanyData(companyResponse);
 			
-			Company response = companyService.addCompanyData(companyResponse);
-			if (response != null) {
-				obj = new ResponseEntity<Object>(new Success(
-						Integer.parseInt(companyAddedCode),
-						companyAddedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			if (obj instanceof Success) {
+				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToAddCode),
-						companyUnableToAddMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj, HttpStatus.BAD_REQUEST);
 			}
+			
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside CompanyController add() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(companyUnableToAddCode),
+					companyUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[add] : Exit");
+		
+		logger.info("CompanyController add() Ends");
 		return obj;
 	}
 
+	/**
+	 * this method is used to delete the company
+	 * @param companyId
+	 * @return List<Company>
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long companyId) {
-		logger.info("[delete] : Enter : ID : ");
+
+		logger.info(" CompanyController delete() starts ");
 		Object obj = null;
 
 		try {
 			
 			obj = companyService.delete(companyId);
-			if (obj instanceof List<?>) {
+			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToDeleteCode),
-						companyUnableToDeleteMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside CompanyController delete() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(companyUnableToDeleteCode),
+					companyUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[delete] : Exit");
+
+		logger.info(" CompanyController delete() ends ");
 		return obj;
 	}
 
+	/**
+	 * this method is used to update the record
+	 * @param id
+	 * @param companyResponse
+	 * @return List<Company>
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id, @RequestBody CompanyResponse companyResponse) {
-		logger.info("[update] : Enter : ID : "+id);
+		
+		logger.info(" CompanyController delete() starts, companyId :"+id);
 		Object obj = null;
 		try {
-			//company.setCompanyId(id);
-			
 			obj = companyService.update(id, companyResponse);
-			if (obj instanceof List<?>) {
+			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(
-						Integer.parseInt(companyUnableToUpdateCode),
-						companyUnableToUpdateMessage, Iconstants.ERROR),
-						HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside CompanyController update() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(
+					Integer.parseInt(companyUnableToUpdateCode),
+					companyUnableToUpdateMessage, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[update] : Exit : ID : ");
+		logger.info(" CompanyController delete() ends, companyId :"+id);
 		return obj;
 	}
 
+	/**
+	 * this method is used to get the particular company Data
+	 * @param id
+	 * @return particular company details
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("id") Long id) {
 		
-		logger.info("[get] : Enter : ID : "+id);
+		logger.info(" CompanyController get() starts, companyId :"+id);
 		String json = new String();
 		try {
 			CompanyResponse companyResponse = companyService.get(id);
@@ -136,12 +165,18 @@ public class CompanyController extends MessageProperties {
 				json = mapper.writeValueAsString(companyResponse);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside CompanyController get() :"+e.getMessage());
 		}
-		logger.info("[get] : Exit ");
+
+		logger.info(" CompanyController get() ends, companyId :"+id);
 		return json;
 	}
 	
+	/**
+	 * this method is used when we click on add button on company screen
+	 * @return master data for company
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
@@ -157,6 +192,30 @@ public class CompanyController extends MessageProperties {
 		}
 		
 		logger.info(" Inside CompanyController openAdd() Ends ");
+		return json;
+	}
+	
+	/**
+	 * this method is used to searchCompany based on company name
+	 * @param companyName
+	 * @return List<Companies>
+	 */
+	@RequestMapping(value = "/{companyName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchCompany(@PathVariable("companyName") String companyName) {
+		
+		logger.info("Inside CompanyController searchCompany() Starts, companyName :"+companyName);
+		String json = new String();
+		
+		try {
+			List<CompanyResponse> companyList = companyService.getCompanyByCompanyName(companyName);
+			if(companyList != null && companyList.size() > 0) {
+				json = mapper.writeValueAsString(companyList);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside CompanyController searchCompany() is :" + e.getMessage());
+		}
+		
+		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"+companyName);
 		return json;
 	}
 }

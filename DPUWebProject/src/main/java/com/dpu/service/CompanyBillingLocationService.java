@@ -2,6 +2,8 @@ package com.dpu.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.dpu.entity.CompanyBillingLocation;
 
 public interface CompanyBillingLocationService {
@@ -12,8 +14,8 @@ public interface CompanyBillingLocationService {
 	
 	boolean delete(Long id);
 	
-	List<CompanyBillingLocation> getAll(Long companyId);
-	
 	CompanyBillingLocation get(Long id);
+
+	List<CompanyBillingLocation> getAll(Long id, Session session);
 	
 }

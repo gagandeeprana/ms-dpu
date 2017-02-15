@@ -2,8 +2,7 @@ package com.dpu.service.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,13 +42,9 @@ public class CompanyBillingLocationServiceImpl implements CompanyBillingLocation
 	}
 
 	@Override
-	public List<CompanyBillingLocation> getAll(Long companyId) {
-		try {
-			Criterion criterion = Restrictions.eq("company.companyId", companyId);
-			return companyBillingLocationDao.find(criterion);
-		} catch (Exception e) {
-		}
-		return null;
+	public List<CompanyBillingLocation> getAll(Long companyId, Session session) {
+		List<CompanyBillingLocation> billingLocations = companyBillingLocationDao.getBillingLocationsByCompanyId(companyId,session);
+		return billingLocations;
 	}
 
 	@Override

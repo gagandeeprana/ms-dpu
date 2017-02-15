@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -21,6 +22,8 @@ import com.dpu.entity.Status;
 import com.dpu.model.AdditionalContacts;
 import com.dpu.model.BillingLocation;
 import com.dpu.model.CompanyResponse;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.CompanyAdditionalContactsService;
 import com.dpu.service.CompanyBillingLocationService;
 import com.dpu.service.CompanyService;
@@ -50,29 +53,70 @@ public class CompanyServiceImpl implements CompanyService{
 	@Autowired
 	StatusService statusService;
 	
+	Logger logger = Logger.getLogger(CompanyServiceImpl.class);
+	
 	@Override
-	public Company addCompanyData(CompanyResponse companyResponse) {
+	public Object addCompanyData(CompanyResponse companyResponse) {
 		
-		Company company = setCompanyValues(companyResponse);
-		company = companyDao.save(company);
-		List<BillingLocation> billingLocations = companyResponse.getBillingLocations();
+		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
+		String message = "Record Added Successfully";
+		Session session = null;
+		Transaction tx = null;
 		
-		if(billingLocations != null && !billingLocations.isEmpty()){
-			for (BillingLocation billingLocation : billingLocations) {
-				CompanyBillingLocation comBillingLocation = setBillingData(billingLocation, company);
-				companyBillingLocationDao.save(comBillingLocation);
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Company company = setCompanyValues(companyResponse);
+			company = companyDao.insertCompanyData(company,session);
+			
+			List<BillingLocation> billingLocations = companyResponse.getBillingLocations();
+			if(billingLocations != null && !billingLocations.isEmpty()){
+				for (BillingLocation billingLocation : billingLocations) {
+					CompanyBillingLocation comBillingLocation = setBillingData(billingLocation, company);
+					companyBillingLocationDao.insertBillingLocation(comBillingLocation, session);
+				}
+			}
+			
+			List<AdditionalContacts> additionalContacts = companyResponse.getAdditionalContacts();
+			if(additionalContacts != null && !additionalContacts.isEmpty()){
+				for (AdditionalContacts additionalContact : additionalContacts) {
+					CompanyAdditionalContacts comAdditionalContact = setAdditionalContactData(additionalContact, company);
+					companyAdditionalContactsDao.insertAdditionalContacts(comAdditionalContact, session);
+				}
+			}
+			
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+			
+			logger.error("Exception inside CompanyServiceImpl addCompanyData() :"+ e.getMessage());
+			message = "Error while inserting record";
+			return createFailedObject(message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
 			}
 		}
 		
-		List<AdditionalContacts> additionalContacts = companyResponse.getAdditionalContacts();
-		
-		if(additionalContacts != null && !additionalContacts.isEmpty()){
-			for (AdditionalContacts additionalContact : additionalContacts) {
-				CompanyAdditionalContacts comAdditionalContact = setAdditionalContactData(additionalContact, company);
-				companyAdditionalContactsDao.save(comAdditionalContact);
-			}
-		}
-		return company;
+		logger.info("Inside CompanyServiceImpl addCompanyData() ends");
+		return createSuccessObject(message);
+	}
+	
+	private Object createFailedObject(String errorMessage) {
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
+	}
+
+	private Object createSuccessObject(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAll());
+		return success;
 	}
 	
 	private CompanyAdditionalContacts setAdditionalContactData( AdditionalContacts additionalContact, Company company) {
@@ -87,7 +131,7 @@ public class CompanyServiceImpl implements CompanyService{
 		companyAdditionalContact.setPhone(additionalContact.getPhone());
 		companyAdditionalContact.setPosition(additionalContact.getPosition());
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
-		//companyAdditionalContact.setStatus(additionalContact.getStatus());
+		companyAdditionalContact.setStatus(statusService.get(additionalContact.getStatusId()));
 		return companyAdditionalContact;
 	}
 
@@ -109,7 +153,7 @@ public class CompanyServiceImpl implements CompanyService{
 		comBillingLocation.setPosition(billingLocation.getPosition());
 		comBillingLocation.setPrefix(billingLocation.getPrefix());
 		comBillingLocation.setProvinceState(billingLocation.getProvinceState());
-		//comBillingLocation.setStatus(billingLocation.getStatus());
+		comBillingLocation.setStatus(statusService.get(billingLocation.getStatusId()));
 		comBillingLocation.setTollfree(billingLocation.getTollfree());
 		comBillingLocation.setUnitNo(billingLocation.getUnitNo());
 		comBillingLocation.setZip(billingLocation.getZip());
@@ -117,7 +161,6 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	private Company setCompanyValues(CompanyResponse companyResponse) {
-		//logger.info("[setCompanyValues] : Enter");
 		Company company = new Company();
 		company.setName(companyResponse.getName());
 		company.setContact(companyResponse.getContact());
@@ -137,7 +180,6 @@ public class CompanyServiceImpl implements CompanyService{
 		company.setWebsite(companyResponse.getWebsite());
 		company.setCellular(companyResponse.getCellular());
 		company.setPager(companyResponse.getPager());
-		//logger.info("[setCompanyValues] : Exit");
 		return company;
 	}
 
@@ -149,26 +191,52 @@ public class CompanyServiceImpl implements CompanyService{
 	@Override
 	public Object delete(Long companyId) {
 			
-		Company company = companyDao.findById(companyId);
+		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
+		String message = "Record Deleted Successfully";
+		Session session = null;
+		Transaction tx = null;
 		
-		if(company != null){
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Company company = companyDao.findById(companyId, session);
 			
-			List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(companyId);
-			if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
-				for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
-					companyBillingLocationDao.delete(companyBillingLocation);
+			if(company != null){
+				
+				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(companyId, session);
+				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
+					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
+						companyBillingLocationDao.deleteBillingLocation(companyBillingLocation,session);
+					}
 				}
+				
+				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(companyId, session);
+				if(comAddContacts != null && !comAddContacts.isEmpty()){
+					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
+						companyAdditionalContactsDao.deleteAdditionalContact(companyAdditionalContacts, session);
+					}
+				}
+				companyDao.deleteCompany(company, session);
+			} else{
+				message = "unable to delete record";
+				return createFailedObject(message);
+			}
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
 			}
 			
-			List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(companyId);
-			if(comAddContacts != null && !comAddContacts.isEmpty()){
-				for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
-					companyAdditionalContactsDao.delete(companyAdditionalContacts);
-				}
+			message = "unable to delete record";
+			return createFailedObject(message);
+		} finally{
+			if(tx != null){
+				tx.commit();
 			}
-			companyDao.delete(company);
+			if(session != null){
+				session.close();
+			}
 		}
-		return getAll();
+		return createSuccessObject(message);
 	}
 
 	@Override
@@ -208,43 +276,58 @@ public class CompanyServiceImpl implements CompanyService{
 
 	@Override
 	public CompanyResponse get(Long id) {
-		Company company = companyDao.findById(id);
+		
+		Session session = null;
 		CompanyResponse response = new CompanyResponse();
-		if (company != null) {
-			setCompanyData(company,response);
-			//BeanUtils.copyProperties(response, company);
-			List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(id);
+		try{
+			session = sessionFactory.openSession();
+			Company company = companyDao.findById(id, session);
 			
-			if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
-				List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
-				for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
-					BillingLocation location = new BillingLocation();
-					try {
-						BeanUtils.copyProperties(location, companyBillingLocation);
-					} catch (IllegalAccessException | InvocationTargetException e) {
-						e.printStackTrace();
+			if (company != null) {
+				setCompanyData(company,response);
+				//BeanUtils.copyProperties(response, company);
+				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(id, session);
+				
+				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
+					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
+					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
+						BillingLocation location = new BillingLocation();
+						try {
+							BeanUtils.copyProperties(location, companyBillingLocation);
+							location.setStatusId(companyBillingLocation.getStatus().getId());
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+						billingLocations.add(location);
 					}
-					billingLocations.add(location);
-				}
-				response.setBillingLocations(billingLocations);
-			}
-			
-			List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(id);
-			
-			if(comAddContacts != null && !comAddContacts.isEmpty()){
-				List<AdditionalContacts> addContacts = new ArrayList<AdditionalContacts>();
-				for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
-					AdditionalContacts addContact = new AdditionalContacts();
-					try {
-						BeanUtils.copyProperties(addContact, companyAdditionalContacts);
-					} catch (IllegalAccessException | InvocationTargetException e) {
-						e.printStackTrace();
-					}
-					
-					addContacts.add(addContact);
+					response.setBillingLocations(billingLocations);
 				}
 				
-				response.setAdditionalContacts(addContacts);
+				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(id, session);
+				
+				if(comAddContacts != null && !comAddContacts.isEmpty()){
+					List<AdditionalContacts> addContacts = new ArrayList<AdditionalContacts>();
+					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
+						AdditionalContacts addContact = new AdditionalContacts();
+						try {
+							BeanUtils.copyProperties(addContact, companyAdditionalContacts);
+							addContact.setStatusId(companyAdditionalContacts.getStatus().getId());
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+						
+						addContacts.add(addContact);
+					}
+					
+					response.setAdditionalContacts(addContacts);
+				}
+				
+				List<Status> statusList = statusService.getAll();
+				response.setStatusList(statusList);
+			}
+		}finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 		
@@ -301,6 +384,7 @@ public class CompanyServiceImpl implements CompanyService{
 		Session session = null;
 		Transaction tx = null;
 		Object obj = null;
+		String message ="Records updated successfully";
 		try{
 			if(company != null){
 				session = sessionFactory.openSession();
@@ -308,11 +392,16 @@ public class CompanyServiceImpl implements CompanyService{
 				
 				companyDao.updateData(company, companyResponse,session);
 				obj = getAll();
+			} else{
+				message ="Error while updating record.";
+				return createFailedObject(message);
 			}
 		} catch(Exception e){
 			if(tx != null){
 				tx.rollback();
 			}
+			message ="Error while updating record.";
+			return createFailedObject(message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -378,5 +467,28 @@ public class CompanyServiceImpl implements CompanyService{
 		
 		
 		return companyResponse;
+	}
+
+	@Override
+	public List<CompanyResponse> getCompanyByCompanyName(String companyName) {
+		Session session = null;
+		List<CompanyResponse> response = new ArrayList<CompanyResponse>();
+		try{
+			
+			session = sessionFactory.openSession();
+			List<Company> companyList = companyDao.getCompaniesByCompanyName(companyName, session);
+			if(companyList != null && !companyList.isEmpty()){
+				for (Company company : companyList) {
+					CompanyResponse companyResponse = new CompanyResponse();
+					org.springframework.beans.BeanUtils.copyProperties(company, companyResponse);
+					response.add(companyResponse);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		return response;
 	}
 }

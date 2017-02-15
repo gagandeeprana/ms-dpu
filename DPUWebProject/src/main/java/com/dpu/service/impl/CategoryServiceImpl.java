@@ -94,25 +94,25 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Object update(Long id, CategoryReq categoryReq) {
-		logger.info("[CategoryServiceImpl] [update] : Srvice: Enter");		
+		logger.info("[CategoryServiceImpl] [update] : Srvice: Enter");
 		Category category = null;
 		try {
 			category = categoryDao.findById(id);
-			if (category != null) {
+			// if (category != null) {
 
-				category.setName(categoryReq.getName());
+			category.setName(categoryReq.getName());
 
-				Status status = statusService.get(categoryReq.getStatusId());
-				category.setStatus(status);
+			Status status = statusService.get(categoryReq.getStatusId());
+			category.setStatus(status);
 
-				Type highlight = typeService.get(categoryReq.getHighlightId());
-				category.setHighLight(highlight);
+			Type highlight = typeService.get(categoryReq.getHighlightId());
+			category.setHighLight(highlight);
 
-				Type type = typeService.get(categoryReq.getTypeId());
-				category.setType(type);
+			Type type = typeService.get(categoryReq.getTypeId());
+			category.setType(type);
 
-				category = categoryDao.update(category);
-			}
+			category = categoryDao.update(category);
+			// }
 
 		} catch (Exception e) {
 			logger.info("Exception inside CategoryServiceImpl updateCategory() :"
@@ -132,9 +132,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Category category = null;
 		try {
 			category = categoryDao.findById(id);
-			if (category != null) {
-				categoryDao.delete(category);
-			}
+			categoryDao.delete(category);
 		} catch (Exception e) {
 			logger.info("Exception inside CategoryServiceImpl delete() :"
 					+ e.getMessage());

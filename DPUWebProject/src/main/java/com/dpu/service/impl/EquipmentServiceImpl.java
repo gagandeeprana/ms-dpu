@@ -67,22 +67,14 @@ public class EquipmentServiceImpl implements EquipmentService {
 	public Object add(EquipmentReq equipmentReq) {
 
 		logger.info("EquipmentServiceImpl: add():  STARTS");
-
 		Session session = null;
 		Transaction tx = null;
-		Equipment equipment = null;
-		// String msg = "Equipment Added Successfully";
 
 		try {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			equipment = equipmentDao.add(session, equipmentReq);
-			if (equipment == null) {
-				return createFailedObject(
-						CommonProperties.Equipment_unable_to_add_message,
-						Long.parseLong(CommonProperties.Equipment_unable_to_add_code));
-			}
+			equipmentDao.add(session, equipmentReq);
 			if (tx != null) {
 				tx.commit();
 			}
@@ -112,54 +104,50 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public Object update(Long id, EquipmentReq equipmentReq) {
 		logger.info("EquipmentServiceImpl: update():  Enter");
-		// String msg = "Equipment Updated Successfully";
-		Equipment equipmentObj = equipmentDao.findById(id);
-		Equipment equipment = null;
-		if (equipmentObj != null) {
+		Equipment equipmentObj = null;
+		try {
+			equipmentObj = equipmentDao.findById(id);
+			// if (equipmentObj != null) {
 			equipmentObj.setEquipmentName(equipmentReq.getEquipmentName());
 			equipmentObj.setDescription(equipmentReq.getDescription());
 			equipmentObj.setModifiedBy("gagan");
 			equipmentObj.setModifiedOn(new Date());
 			Type type = typeService.get(equipmentReq.getTypeId());
 			equipmentObj.setType(type);
-			equipment = equipmentDao.update(equipmentObj);
-			if (equipment == null) {
-				return createFailedObject(
-						CommonProperties.Equipment_unable_to_update_message,
-						Long.parseLong(CommonProperties.Equipment_unable_to_update_code));
-			}
-			return createSuccessObject(
-					CommonProperties.Equipment_updated_message,
-					Long.parseLong(CommonProperties.Equipment_updated_code));
+			equipmentDao.update(equipmentObj);
+			// }
+
+		} catch (Exception e) {
+
+			logger.info("Exception inside DivisionServiceImpl update() :"
+					+ e.getMessage());
+			return createFailedObject(
+					CommonProperties.Equipment_unable_to_update_message,
+					Long.parseLong(CommonProperties.Equipment_unable_to_update_code));
 		}
 		logger.info("EquipmentServiceImpl: update():  Exit");
-		return createFailedObject(
-				CommonProperties.Equipment_unable_to_update_message,
-				Long.parseLong(CommonProperties.Equipment_unable_to_update_code));
+		return createSuccessObject(CommonProperties.Equipment_updated_message,
+				Long.parseLong(CommonProperties.Equipment_updated_code));
 	}
 
 	@Override
 	public Object delete(Long id) {
 		logger.info("EquipmentServiceImpl: delete():  Enter");
-		// String msg = "Equipment Deleted Successfully";
-		Equipment equipment = equipmentDao.findById(id);
-		if (equipment != null) {
-			try {
-				equipmentDao.delete(equipment);
-				return createSuccessObject(
-						CommonProperties.Equipment_deleted_message,
-						Long.parseLong(CommonProperties.Equipment_deleted_code));
-			} catch (Exception e) {
-				logger.error("EquipmentServiceImpl: delete(): Exception  : ", e);
-				return createFailedObject(
-						CommonProperties.Equipment_unable_to_delete_message,
-						Long.parseLong(CommonProperties.Equipment_unable_to_delete_code));
-			}
+		Equipment equipment = null;
+		try {
+			equipment = equipmentDao.findById(id);
+			equipmentDao.delete(equipment);
+
+		} catch (Exception e) {
+			logger.error("EquipmentServiceImpl: delete(): Exception  : ", e);
+			return createFailedObject(
+					CommonProperties.Equipment_unable_to_delete_message,
+					Long.parseLong(CommonProperties.Equipment_unable_to_delete_code));
+
 		}
 		logger.info("EquipmentServiceImpl: delete():  Exit");
-		return createFailedObject(
-				CommonProperties.Equipment_unable_to_delete_message,
-				Long.parseLong(CommonProperties.Equipment_unable_to_delete_code));
+		return createSuccessObject(CommonProperties.Equipment_deleted_message,
+				Long.parseLong(CommonProperties.Equipment_deleted_code));
 	}
 
 	@Override

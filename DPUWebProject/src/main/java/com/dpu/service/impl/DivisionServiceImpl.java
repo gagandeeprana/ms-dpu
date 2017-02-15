@@ -67,22 +67,22 @@ public class DivisionServiceImpl implements DivisionService {
 		Division division = null;
 		try {
 			division = divisionDao.findById(id);
-			if (division != null) {
-				division.setDivisionCode(divisionReq.getDivisionCode());
-				division.setDivisionName(divisionReq.getDivisionName());
-				division.setFedral(divisionReq.getFedral());
-				division.setProvincial(divisionReq.getProvincial());
-				division.setSCAC(divisionReq.getScac());
-				division.setCarrierCode(divisionReq.getCarrierCode());
-				division.setContractPrefix(divisionReq.getContractPrefix());
-				division.setInvoicePrefix(divisionReq.getInvoicePrefix());
-				Status status = statusService.get(divisionReq.getStatusId());
-				division.setStatus(status);
-				division.setModifiedBy("jagvir");
-				division.setModifiedOn(new Date());
-				divisionDao.update(division);
+			// if (division != null) {
+			division.setDivisionCode(divisionReq.getDivisionCode());
+			division.setDivisionName(divisionReq.getDivisionName());
+			division.setFedral(divisionReq.getFedral());
+			division.setProvincial(divisionReq.getProvincial());
+			division.setSCAC(divisionReq.getScac());
+			division.setCarrierCode(divisionReq.getCarrierCode());
+			division.setContractPrefix(divisionReq.getContractPrefix());
+			division.setInvoicePrefix(divisionReq.getInvoicePrefix());
+			Status status = statusService.get(divisionReq.getStatusId());
+			division.setStatus(status);
+			division.setModifiedBy("jagvir");
+			division.setModifiedOn(new Date());
+			divisionDao.update(division);
 
-			}
+			// }
 		} catch (Exception e) {
 			logger.info("Exception inside DivisionServiceImpl update() :"
 					+ e.getMessage());
@@ -104,9 +104,8 @@ public class DivisionServiceImpl implements DivisionService {
 		Division division = null;
 		try {
 			division = divisionDao.findById(id);
-			if (division != null) {
-				divisionDao.delete(division);
-			}
+			divisionDao.delete(division);
+
 		} catch (Exception e) {
 			logger.info("Exception inside DivisionServiceImpl delete() :"
 					+ e.getMessage());

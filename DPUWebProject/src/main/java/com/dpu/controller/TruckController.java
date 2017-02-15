@@ -66,15 +66,11 @@ public class TruckController extends MessageProperties {
 		try {
 
 			Object result = truckService.add(truckResponse);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
 			}
 		} catch (Exception e) {
 			logger.fatal("[TruckController]: add(): Exception: ", e);
@@ -124,15 +120,12 @@ public class TruckController extends MessageProperties {
 		Object obj = null;
 		try {
 			Object result = truckService.delete(id);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
+
 		} catch (Exception e) {
 			logger.error("Exception inside TruckController deleteTruck() :", e);
 
@@ -152,15 +145,12 @@ public class TruckController extends MessageProperties {
 		try {
 			truckResponse.setTruckId(id);
 			Object result = truckService.update(id, truckResponse);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
+
 		} catch (Exception e) {
 			logger.error("EquipmentController : update " + e);
 

@@ -85,14 +85,11 @@ public class EquipmentController extends MessageProperties {
 
 			Object result = equipmentService.add(equipmentReq);
 
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
 
@@ -112,14 +109,11 @@ public class EquipmentController extends MessageProperties {
 		try {
 			Object result = equipmentService.delete(id);
 
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
 
@@ -138,14 +132,10 @@ public class EquipmentController extends MessageProperties {
 		try {
 			equipmentReq.setEquipmentId(id);
 			Object result = equipmentService.update(id, equipmentReq);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 
 		} catch (Exception e) {

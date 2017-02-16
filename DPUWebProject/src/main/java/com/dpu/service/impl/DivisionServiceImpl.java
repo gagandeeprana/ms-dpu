@@ -26,6 +26,7 @@ import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.DivisionService;
 import com.dpu.service.StatusService;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 /**
  * @author jagvir
@@ -84,7 +85,7 @@ public class DivisionServiceImpl implements DivisionService {
 
 			// }
 		} catch (Exception e) {
-			logger.info("Exception inside DivisionServiceImpl update() :"
+			logger.error("Exception inside DivisionServiceImpl update() :"
 					+ e.getMessage());
 			return createFailedObject(
 					CommonProperties.Division_unable_to_update_message,
@@ -107,7 +108,12 @@ public class DivisionServiceImpl implements DivisionService {
 			divisionDao.delete(division);
 
 		} catch (Exception e) {
-			logger.info("Exception inside DivisionServiceImpl delete() :"
+			if (e instanceof MySQLIntegrityConstraintViolationException) {
+				return createFailedObject(
+						CommonProperties.Division_unable_to_delete_message,
+						Long.parseLong(CommonProperties.Division_unable_to_delete_code));
+			}
+			logger.error("Exception inside DivisionServiceImpl delete() :"
 					+ e.getMessage());
 			return createFailedObject(
 					CommonProperties.Division_unable_to_delete_message,
@@ -192,7 +198,7 @@ public class DivisionServiceImpl implements DivisionService {
 			if (tx != null) {
 				tx.rollback();
 			}
-			logger.info("Exception inside DivisionServiceImpl add() :"
+			logger.error("Exception inside DivisionServiceImpl add() :"
 					+ e.getMessage());
 			return createFailedObject(
 					CommonProperties.Division_unable_to_add_message,

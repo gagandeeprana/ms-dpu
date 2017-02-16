@@ -70,15 +70,13 @@ public class ServiceController extends MessageProperties {
 		try {
 
 			Object result = serviceService.add(dpuService);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
+
 		} catch (Exception e) {
 			logger.error("Exception inside ServiceController add() :"
 					+ e.getMessage());
@@ -97,14 +95,12 @@ public class ServiceController extends MessageProperties {
 			// serviceService.get(id);
 			/* if (service != null) { */
 			result = serviceService.delete(id);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -122,14 +118,12 @@ public class ServiceController extends MessageProperties {
 		try {
 			// service.setServiceId(id);
 			Object result = serviceService.update(id, dpuService);
-			if (result != null) {
-				if (result instanceof Success) {
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				}
-				if (result instanceof Failed) {
-					obj = new ResponseEntity<Object>(result,
-							HttpStatus.BAD_REQUEST);
-				}
+
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
 			}
 		} catch (Exception e) {
 			System.out.println(e);

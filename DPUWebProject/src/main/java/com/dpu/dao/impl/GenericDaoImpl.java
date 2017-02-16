@@ -281,17 +281,19 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 	public void delete(T entity) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
-		try {
-			tx = session.beginTransaction();
-			session.delete(entity);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-			logger.error("[delete]" + e.getCause());
-		} finally {
-			if (session != null) {
-				session.close();
-			}
+
+		tx = session.beginTransaction();
+		System.out.println("11111111111");
+		session.delete(entity);
+		System.out.println("2222222222222");
+		tx.commit();
+
+		System.out.println("3333333333");
+		tx.rollback();
+		// logger.error("[delete]" + e.getCause());
+		if (session != null) {
+			session.close();
+
 		}
 	}
 
@@ -415,17 +417,21 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public List<Object[]> getSpecificData(String tableName, String firstColumn, String secondColumn) {
+	public List<Object[]> getSpecificData(String tableName, String firstColumn,
+			String secondColumn) {
 
 		List<Object[]> data = null;
 		Session session = sessionFactory.openSession();
 		try {
-			Query query = session.createQuery(" select "+firstColumn+" , "+secondColumn+" from "+tableName);
-			/*query.setParameter("firstColumn", firstColumn);
-			query.setParameter("secondColumn", secondColumn);*/
-			/*query.setParameter("tableName", tableName);*/
+			Query query = session.createQuery(" select " + firstColumn + " , "
+					+ secondColumn + " from " + tableName);
+			/*
+			 * query.setParameter("firstColumn", firstColumn);
+			 * query.setParameter("secondColumn", secondColumn);
+			 */
+			/* query.setParameter("tableName", tableName); */
 			data = query.list();
-			
+
 		} catch (Exception e) {
 			logger.error("[save]" + e);
 		} finally {

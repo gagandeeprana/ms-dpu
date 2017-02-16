@@ -128,23 +128,22 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Object delete(Long id) {
+		
 		logger.info("[CategoryServiceImpl] [delete] : Srvice: Enter");
-		Category category = null;
+		
+		Object obj = null;
 		try {
-			category = categoryDao.findById(id);
+			Category category = categoryDao.findById(id);
 			categoryDao.delete(category);
+			obj = createSuccessObject(CommonProperties.category_deleted_message, Long.parseLong(CommonProperties.category_unable_to_delete_code));
 		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl delete() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.category_deleted_message,
-					Long.parseLong(CommonProperties.category_deleted_code));
+			logger.info("Exception inside CategoryServiceImpl delete() : " + e.getMessage());
+			obj = createFailedObject(CommonProperties.category_unable_to_delete_message, Long.parseLong(CommonProperties.category_deleted_code));
 		}
+		
 		logger.info("[CategoryServiceImpl] [delete] : Service :  Exit");
-		return createFailedObject(
-				CommonProperties.category_unable_to_delete_message,
-				Long.parseLong(CommonProperties.category_unable_to_delete_code));
 
+		return obj;
 	}
 
 	@Override

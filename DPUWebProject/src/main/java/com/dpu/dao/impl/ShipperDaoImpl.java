@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.ShipperDao;
 import com.dpu.entity.Shipper;
+import com.dpu.entity.Trailer;
 
 /**
  * @author jagvir
@@ -30,25 +31,11 @@ public class ShipperDaoImpl extends GenericDaoImpl<Shipper> implements ShipperDa
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Shipper> findByCompanyName(String companyName) {
-		Session session = null;
-		List<Shipper> list = null;
-		try{
-			session = sessionFactory.openSession();
-			Criteria c2 = session.createCriteria(Shipper.class);
-			Criteria c3 = c2.createCriteria("company");
-			
-			c3.add(Restrictions.like("name", companyName, MatchMode.ANYWHERE));
-			list = c2.list();
-			
-		} catch(Exception e){
-			
-		} finally{
-			if(session != null){
-				session.close();
-			}
-		}
-		return list;
+	public List<Shipper> findByLoactionName(String locationName, Session session) {
+		StringBuilder sb = new StringBuilder(" select t from Shipper t where t.locationName =:locationname");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("locationname", locationName);
+		return query.list();
 	}
 
 	@SuppressWarnings("unchecked")

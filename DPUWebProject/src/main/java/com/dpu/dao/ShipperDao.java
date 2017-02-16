@@ -8,11 +8,11 @@ import com.dpu.entity.Shipper;
 
 public interface ShipperDao extends GenericDao<Shipper>{
 
-	List<Shipper> findByCompanyName(String companyName);
-
 	List<Shipper> findAll(Session session);
 
 	Shipper findById(Long id, Session session);
+
+	List<Shipper> findByLoactionName(String locationName, Session session);
 
 //	boolean add(Shipper shipper);
 //

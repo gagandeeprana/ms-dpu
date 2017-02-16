@@ -14,7 +14,9 @@ import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
 import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
+import com.dpu.model.Failed;
 import com.dpu.model.ShipperResponse;
+import com.dpu.model.Success;
 import com.dpu.service.CompanyService;
 import com.dpu.service.ShipperService;
 import com.dpu.service.StatusService;
@@ -40,13 +42,30 @@ public class ShipperServiceImpl implements ShipperService {
 
 	@Override
 	public Object add(ShipperResponse shipperResponse) {
+		Object obj = null;
+		try {
+			Shipper shipper = new Shipper();
+			BeanUtils.copyProperties(shipperResponse, shipper);
+			shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
+			shipperDao.save(shipper);
+			obj = createSuccessObject("Shipper Added Successfully");
+		} catch (Exception e) {
+			obj = createFailedObject("Error while adding shipper");
+		}
+		return obj;
+	}
 	
-		Shipper shipper = new Shipper();
-		BeanUtils.copyProperties(shipperResponse, shipper);
-		/*shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));*/
-		shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
-		shipperDao.save(shipper);
-		return getAll();
+	private Object createSuccessObject(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAll());
+		return success;
+	}
+	
+	private Object createFailedObject(String errorMessage) {
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
 	}
 
 	@Override
@@ -59,13 +78,13 @@ public class ShipperServiceImpl implements ShipperService {
 				String[] ignoreProp = new String[1];
 				ignoreProp[0] = "shipperId";
 				BeanUtils.copyProperties(shipperResponse, shipper, ignoreProp);
-				/*shipper.setCompany(companyDao.findById(shipperResponse.getCompanyId()));*/
 				shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
 				shipperDao.update(shipper);
-				obj = getAll();
+				obj = createSuccessObject("Shipper Updated Successfully");
 			}
 		} catch(Exception e){
 			logger.error("Exception inside ShipperServiceImpl update() :"+e.getMessage());
+			obj = createFailedObject("Error while updating shipper");
 		}
 		return obj;
 	}
@@ -79,8 +98,9 @@ public class ShipperServiceImpl implements ShipperService {
 			if(shipper != null){
 				shipperDao.delete(shipper);
 			}
-			 obj = getAll();
+			 obj = createSuccessObject("Shipper deleted successfully");
 		} catch (Exception e) {
+			obj = createFailedObject("Error while deleting Shipper");
 		}
 		return obj;
 	}
@@ -151,23 +171,31 @@ public class ShipperServiceImpl implements ShipperService {
 	@Override
 	public List<ShipperResponse> getShipperByCompanyName(String companyName) {
 		
+		Session session = null;
 		List<Shipper> shipperList = null;
 		List<ShipperResponse> responses = new ArrayList<ShipperResponse>();
-		
-		if(companyName != null && companyName.length() > 0) {
-			shipperList = shipperDao.findByCompanyName(companyName);
-		}
-		
-		if(shipperList != null && ! shipperList.isEmpty()){
-			for (Shipper shipper : shipperList) {
-				ShipperResponse shipperResponse = new ShipperResponse();
-				BeanUtils.copyProperties(shipper, shipperResponse);
-				/*shipperResponse.setCompany(shipper.getCompany().getName());*/
-				shipperResponse.setStatus(shipper.getStatus().getStatus());
-				responses.add(shipperResponse);
+		try {
+			session = sessionFactory.openSession();
+			if(companyName != null && companyName.length() > 0) {
+				shipperList = shipperDao.findByLoactionName(companyName, session);
+			}
+			
+			if(shipperList != null && ! shipperList.isEmpty()){
+				for (Shipper shipper : shipperList) {
+					ShipperResponse shipperResponse = new ShipperResponse();
+					BeanUtils.copyProperties(shipper, shipperResponse);
+					/*shipperResponse.setCompany(shipper.getCompany().getName());*/
+					shipperResponse.setStatus(shipper.getStatus().getStatus());
+					responses.add(shipperResponse);
+				}
+			}
+		} catch (Exception e) {
+
+		} finally {
+			if(session != null) {
+				session.close();
 			}
 		}
-		
 		return responses;
 	}
 

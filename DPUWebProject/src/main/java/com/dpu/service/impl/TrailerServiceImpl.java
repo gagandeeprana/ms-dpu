@@ -70,7 +70,7 @@ public class TrailerServiceImpl implements TrailerService{
 		
 		logger.info("Inside TrailerServiceImpl add() starts");
 		Object obj = null;
-		String message = "Record Added Successfully";
+		String message = "Trailer added successfully";
 		
 		try{
 			Trailer trailer = new Trailer();
@@ -84,7 +84,7 @@ public class TrailerServiceImpl implements TrailerService{
 			obj = createSuccessObject(message);
 		} catch (Exception e) {
 			logger.error("Exception inside TrailerServiceImpl add() :"+e.getMessage());
-			message = "Error while inserting record";
+			message = "Error while inserting trailer";
 			obj = createFailedObject(message);
 		} 
 
@@ -103,12 +103,13 @@ public class TrailerServiceImpl implements TrailerService{
 		failed.setMessage(errorMessage);
 		return failed;
 	}
+	
 	@Override
 	public Object update(Long trailerId, TrailerRequest trailerRequest) {
 		
 		logger.info("Inside TrailerServiceImpl update() Starts, trailerId :"+ trailerId);
 		Object obj = null;
-		String message = "Record Updated Successfully";
+		String message = "Trailer updated successfully";
 		try{
 			Trailer trailer = trailerdao.findById(trailerId);
 			
@@ -124,7 +125,7 @@ public class TrailerServiceImpl implements TrailerService{
 				trailerdao.update(trailer);
 				obj = createSuccessObject(message);
 			} else{
-				message = "Error while updating record";
+				message = "Error while updating trailer";
 				obj = createFailedObject(message);
 			}
 			 
@@ -143,14 +144,14 @@ public class TrailerServiceImpl implements TrailerService{
 		
 		logger.info("Inside TrailerServiceImpl delete() starts, trailerId :"+ trailerId);
 		Object obj = null;
-		String message = "Record Deleted Successfully";
+		String message = "Trailer deleted successfully";
 		try {
 			Trailer trailer = trailerdao.findById(trailerId);
 			if(trailer != null){
 				trailerdao.delete(trailer);
 				obj = createSuccessObject(message);
 			} else{
-				message = "Error while Deleting Record";
+				message = "Error while deleting trailer";
 				obj = createFailedObject(message);
 			}
 			

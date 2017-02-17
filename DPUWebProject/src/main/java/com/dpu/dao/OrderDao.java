@@ -8,10 +8,11 @@ import java.util.List;
 import org.hibernate.Session;
 
 import com.dpu.entity.Category;
+import com.dpu.entity.Order;
 
 public interface OrderDao extends GenericDao<Category> {
 
-	List<Category> findAll(Session session);
+	List<Order> findAll(Session session);
 
 	Category findById(Long id, Session session);
 

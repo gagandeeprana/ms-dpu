@@ -13,7 +13,7 @@ public interface OrderService {
 
 	List<CategoryReq> delete(Long id);
 
-	List<CategoryReq> getAll();
+	List<OrderModel> getAllOrders();
 
 	OrderModel getOpenAdd();
 

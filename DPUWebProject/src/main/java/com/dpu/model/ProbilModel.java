@@ -51,6 +51,15 @@ public class ProbilModel implements Serializable{
 
 	private List<OrderPickUpDeliveryModel> OrderPickUpDeliveryList;
 	
+	// for fetching probils
+	private String companyName;
+	
+	private String billingLocationName;
+	
+	private String contactName;
+	
+	private String temperatureType;
+	
 	public Long getId() {
 		return id;
 	}

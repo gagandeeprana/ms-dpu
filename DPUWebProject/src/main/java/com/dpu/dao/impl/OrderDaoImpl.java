@@ -8,15 +8,17 @@ import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.OrderDao;
 import com.dpu.entity.Category;
+import com.dpu.entity.Order;
 
 @Repository
 public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Category> findAll(Session session) {
+	public List<Order> findAll(Session session) {
 		
-		StringBuilder sb = new StringBuilder("select c from Category c join fetch c.status join fetch c.highLight join fetch c.type ");
+		StringBuilder sb = new StringBuilder("select o from Order o join fetch o.company join fetch o.billingLocation join fetch o.contact ")
+		.append(" join fetch o.temperature join fetch o.temperatureType join fetch o.currency ");
 		Query query = session.createQuery(sb.toString());
 		return query.list();
 	}

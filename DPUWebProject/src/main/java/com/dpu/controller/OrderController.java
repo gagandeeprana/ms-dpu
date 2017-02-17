@@ -51,7 +51,7 @@ public class OrderController extends MessageProperties {
 		String json = null;
 		
 		try {
-			List<CategoryReq> responses = categoryService.getAll();
+			List<OrderModel> responses = orderService.getAllOrders();
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}

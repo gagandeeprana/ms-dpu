@@ -6,18 +6,22 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.OrderDao;
 import com.dpu.entity.Category;
+import com.dpu.entity.Order;
+import com.dpu.entity.Probil;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
+import com.dpu.model.ProbilModel;
 import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
@@ -84,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
 	private Object createSuccessObject(String message) {
 		Success success = new Success();
 		success.setMessage(message);
-		success.setResultList(getAll());
+		success.setResultList(null);//getAll()
 		return success;
 	}
 	
@@ -122,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
 		category.setType(type);
 		
 		categoryDao.update(category);
-		return getAll();
+		return null;//getAll();
 	}
 
 	@Override
@@ -132,32 +136,48 @@ public class OrderServiceImpl implements OrderService {
 		List<CategoryReq> returnList = new ArrayList<CategoryReq>();
 		if(category != null){
 			categoryDao.delete(category);
-			returnList = getAll();
+			//returnList = getAll();
 		}
 		return returnList;
 	}
 
 	@Override
-	public List<CategoryReq> getAll() {
+	public List<OrderModel> getAllOrders() {
 
 		Session session = null;
-		List<CategoryReq> categoriesList = new ArrayList<CategoryReq>();
+		List<OrderModel> allOrders = new ArrayList<OrderModel>();
 		
 		try{
 			
 			session = sessionFactory.openSession();
-			List<Category> categories = categoryDao.findAll(session);
+			List<Order> orders = orderDao.findAll(session);
 			
-			if(categories != null && ! categories.isEmpty()){
-				for (Category category : categories) {
+			if(orders != null && ! orders.isEmpty()){
+				for (Order order : orders) {
+					OrderModel orderModel = new OrderModel();
+					BeanUtils.copyProperties(order, orderModel);
+					orderModel.setCompanyName(order.getCompany().getName());
+					orderModel.setBillingLocationName(order.getBillingLocation().getName());
+					orderModel.setContactName(order.getContact().getCustomerName());
+					orderModel.setTemperatureName(order.getTemperature().getTypeName());
+					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
+					
+					List<Probil> probilList = order.getProbils();
+					List<ProbilModel> probils = new ArrayList<ProbilModel>();
+					for (Probil probil : probilList) {
+						
+					}
+					
+				}
+				/*for (Category category : categories) {
 					CategoryReq categoryReq = new CategoryReq();
 					categoryReq.setCategoryId(category.getCategoryId());
 					categoryReq.setName(category.getName());
 					categoryReq.setHighlightName(category.getHighLight().getTypeName());
 					categoryReq.setTypeName(category.getType().getTypeName());
 					categoryReq.setStatusName(category.getStatus().getStatus());
-					categoriesList.add(categoryReq);
-				}
+					//categoriesList.add(categoryReq);
+				}*/
 			}
 		} finally{
 			if(session != null){
@@ -165,7 +185,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		
-		return categoriesList;
+		return allOrders;
 	}
 
 	@Override

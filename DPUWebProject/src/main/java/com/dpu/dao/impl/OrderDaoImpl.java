@@ -40,4 +40,10 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		return query.list();
 	}
 
+	@Override
+	public void saveOrder(Session session, Order order) {
+		session.save(order);
+		
+	}
+
 }

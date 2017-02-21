@@ -33,7 +33,7 @@ public class ProbilModel implements Serializable{
 	private Long deliveryId;
 	private List<TypeResponse> deliveryList;
 	
-	private Date pickupScheduledDate;
+	/*private Date pickupScheduledDate;
 	
 	private Date pickupScheduledTime;
 	
@@ -47,7 +47,23 @@ public class ProbilModel implements Serializable{
 	
 	private Date deliveryMABDate;
 	
-	private Date deliveryMABTime;
+	private Date deliveryMABTime;*/
+	
+	private String pickupScheduledDate;
+	
+	private String pickupScheduledTime;
+	
+	private String deliverScheduledDate;
+	
+	private String deliverScheduledTime;
+	
+	private String pickupMABDate;
+	
+	private String pickupMABTime;
+	
+	private String deliveryMABDate;
+	
+	private String deliveryMABTime;
 
 	private List<OrderPickUpDeliveryModel> OrderPickUpDeliveryList;
 	
@@ -172,70 +188,6 @@ public class ProbilModel implements Serializable{
 		this.deliveryList = deliveryList;
 	}
 
-	public Date getPickupScheduledDate() {
-		return pickupScheduledDate;
-	}
-
-	public void setPickupScheduledDate(Date pickupScheduledDate) {
-		this.pickupScheduledDate = pickupScheduledDate;
-	}
-
-	public Date getPickupScheduledTime() {
-		return pickupScheduledTime;
-	}
-
-	public void setPickupScheduledTime(Date pickupScheduledTime) {
-		this.pickupScheduledTime = pickupScheduledTime;
-	}
-
-	public Date getDeliverScheduledDate() {
-		return deliverScheduledDate;
-	}
-
-	public void setDeliverScheduledDate(Date deliverScheduledDate) {
-		this.deliverScheduledDate = deliverScheduledDate;
-	}
-
-	public Date getDeliverScheduledTime() {
-		return deliverScheduledTime;
-	}
-
-	public void setDeliverScheduledTime(Date deliverScheduledTime) {
-		this.deliverScheduledTime = deliverScheduledTime;
-	}
-
-	public Date getPickupMABDate() {
-		return pickupMABDate;
-	}
-
-	public void setPickupMABDate(Date pickupMABDate) {
-		this.pickupMABDate = pickupMABDate;
-	}
-
-	public Date getPickupMABTime() {
-		return pickupMABTime;
-	}
-
-	public void setPickupMABTime(Date pickupMABTime) {
-		this.pickupMABTime = pickupMABTime;
-	}
-
-	public Date getDeliveryMABDate() {
-		return deliveryMABDate;
-	}
-
-	public void setDeliveryMABDate(Date deliveryMABDate) {
-		this.deliveryMABDate = deliveryMABDate;
-	}
-
-	public Date getDeliveryMABTime() {
-		return deliveryMABTime;
-	}
-
-	public void setDeliveryMABTime(Date deliveryMABTime) {
-		this.deliveryMABTime = deliveryMABTime;
-	}
-
 	public List<OrderPickUpDeliveryModel> getOrderPickUpDeliveryList() {
 		return OrderPickUpDeliveryList;
 	}
@@ -243,6 +195,74 @@ public class ProbilModel implements Serializable{
 	public void setOrderPickUpDeliveryList(
 			List<OrderPickUpDeliveryModel> orderPickUpDeliveryList) {
 		OrderPickUpDeliveryList = orderPickUpDeliveryList;
+	}
+
+	public String getPickupScheduledDate() {
+		return pickupScheduledDate;
+	}
+
+	public void setPickupScheduledDate(String pickupScheduledDate) {
+		this.pickupScheduledDate = pickupScheduledDate;
+	}
+
+	public String getDeliverScheduledDate() {
+		return deliverScheduledDate;
+	}
+
+	public void setDeliverScheduledDate(String deliverScheduledDate) {
+		this.deliverScheduledDate = deliverScheduledDate;
+	}
+
+	public String getPickupMABDate() {
+		return pickupMABDate;
+	}
+
+	public void setPickupMABDate(String pickupMABDate) {
+		this.pickupMABDate = pickupMABDate;
+	}
+
+	public String getDeliveryMABDate() {
+		return deliveryMABDate;
+	}
+
+	public void setDeliveryMABDate(String deliveryMABDate) {
+		this.deliveryMABDate = deliveryMABDate;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public String getPickupScheduledTime() {
+		return pickupScheduledTime;
+	}
+
+	public void setPickupScheduledTime(String pickupScheduledTime) {
+		this.pickupScheduledTime = pickupScheduledTime;
+	}
+
+	public String getDeliverScheduledTime() {
+		return deliverScheduledTime;
+	}
+
+	public void setDeliverScheduledTime(String deliverScheduledTime) {
+		this.deliverScheduledTime = deliverScheduledTime;
+	}
+
+	public String getPickupMABTime() {
+		return pickupMABTime;
+	}
+
+	public void setPickupMABTime(String pickupMABTime) {
+		this.pickupMABTime = pickupMABTime;
+	}
+
+	public String getDeliveryMABTime() {
+		return deliveryMABTime;
+	}
+
+	public void setDeliveryMABTime(String deliveryMABTime) {
+		this.deliveryMABTime = deliveryMABTime;
 	}
 
 	

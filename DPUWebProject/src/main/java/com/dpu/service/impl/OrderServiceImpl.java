@@ -1,11 +1,14 @@
 package com.dpu.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,8 +16,12 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.OrderDao;
 import com.dpu.entity.Category;
+import com.dpu.entity.Company;
+import com.dpu.entity.CompanyAdditionalContacts;
+import com.dpu.entity.CompanyBillingLocation;
 import com.dpu.entity.Order;
 import com.dpu.entity.Probil;
+import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
@@ -81,7 +88,60 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public Object addOrder(OrderModel orderModel) {
-		// TODO Auto-generated method stub
+		logger.info("Inside CategoryServiceImpl addCategory() starts ");
+		Object obj = null;
+		String message = "Record Added Successfully";
+		Session session = null;
+		Transaction tx = null;
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Company company = (Company) session.get(Company.class, orderModel.getCompanyId());
+			CompanyBillingLocation billingLocation = (CompanyBillingLocation) session.get(CompanyBillingLocation.class, orderModel.getBillingLocationId());
+			CompanyAdditionalContacts additionalContacts = (CompanyAdditionalContacts) session.get(CompanyAdditionalContacts.class, orderModel.getContactId());
+			Type temp = (Type) session.get(Type.class, orderModel.getTemperatureId());
+			Type tempType = (Type) session.get(Type.class, orderModel.getTemperatureTypeId());
+			
+			Order order = new Order();
+			BeanUtils.copyProperties(orderModel, order);
+			order.setCompany(company);
+			order.setBillingLocation(billingLocation);
+			order.setContact(additionalContacts);
+			order.setTemperature(temp);
+			order.setTemperatureType(tempType);
+			orderDao.saveOrder(session, order);
+			
+			List<ProbilModel> probils = orderModel.getProbilList();
+			if(probils != null && !probils.isEmpty()){
+				for (ProbilModel probilModel : probils) {
+					Probil probil = new Probil();
+					BeanUtils.copyProperties(probilModel, probil);
+					Shipper shipper = (Shipper) session.get(Shipper.class, probilModel.getShipperId());
+					Shipper consinee = (Shipper) session.get(Shipper.class, probilModel.getConsineeId());
+					Type pickUp = (Type) session.get(Type.class, probilModel.getPickupId());
+					Type delivery = (Type) session.get(Type.class, probilModel.getDeliveryId());
+					
+					probil.setConsine(consinee);
+					probil.setShipper(shipper);
+					probil.setPickUp(pickUp);
+					probil.setDelivery(delivery);
+					
+					//orderDao
+				}
+			}
+			
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+		} finally{
+			if(tx != null){
+				tx.commit();
+			} 
+			if(session != null){
+				session.close();
+			}
+		}
 		return null;
 	}
 	
@@ -166,18 +226,43 @@ public class OrderServiceImpl implements OrderService {
 					List<ProbilModel> probils = new ArrayList<ProbilModel>();
 					for (Probil probil : probilList) {
 						
+						Date d = probil.getPickupScheduledDate();
+								System.out.println("the date is "+d);
+						ProbilModel probilModel = new ProbilModel();
+						BeanUtils.copyProperties(probil, probilModel);
+						probilModel.setConsineeName(probil.getConsine().getLocationName());
+						probilModel.setShipperName(probil.getShipper().getLocationName());
+						probilModel.setPickupName(probil.getPickUp().getTypeName());
+						probilModel.setDeliveryName(probil.getDelivery().getTypeName());
+						
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						String pickUpScheduledDate = sdf.format(probil.getPickupScheduledDate());
+						String deliverScheduledDate = sdf.format(probil.getDeliverScheduledDate());
+						String pickUpMABDate = sdf.format(probil.getPickupMABDate());
+						String deliverMABDate = sdf.format(probil.getDeliveryMABDate());
+						
+						probilModel.setPickupScheduledDate(pickUpScheduledDate);
+						probilModel.setPickupMABDate(pickUpMABDate);
+						probilModel.setDeliverScheduledDate(deliverScheduledDate);
+						probilModel.setDeliveryMABDate(deliverMABDate);
+						
+						SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
+						String pickUpScheduledTime = localDateFormat.format(probil.getPickupScheduledTime());
+						String pickUpMABTime = localDateFormat.format(probil.getPickupMABTime());
+						String deliverScheduledTime = localDateFormat.format(probil.getDeliverScheduledTime());
+						String deliverMABTime =  localDateFormat.format(probil.getDeliveryMABTime());
+						
+						probilModel.setPickupScheduledTime(pickUpScheduledTime);
+						probilModel.setPickupMABTime(pickUpMABTime);
+						probilModel.setDeliverScheduledTime(deliverScheduledTime);
+						probilModel.setDeliveryMABTime(deliverMABTime);
+						probils.add(probilModel);
 					}
 					
+					orderModel.setProbilList(probils);
+					
+					allOrders.add(orderModel);
 				}
-				/*for (Category category : categories) {
-					CategoryReq categoryReq = new CategoryReq();
-					categoryReq.setCategoryId(category.getCategoryId());
-					categoryReq.setName(category.getName());
-					categoryReq.setHighlightName(category.getHighLight().getTypeName());
-					categoryReq.setTypeName(category.getType().getTypeName());
-					categoryReq.setStatusName(category.getStatus().getStatus());
-					//categoriesList.add(categoryReq);
-				}*/
 			}
 		} finally{
 			if(session != null){

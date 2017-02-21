@@ -17,4 +17,6 @@ public interface OrderDao extends GenericDao<Category> {
 	Category findById(Long id, Session session);
 
 	List<Category> getCategoryByCategoryName(Session session, String categoryName);
+
+	void saveOrder(Session session, Order order);
 }

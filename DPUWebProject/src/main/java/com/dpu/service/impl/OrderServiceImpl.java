@@ -2,6 +2,7 @@ package com.dpu.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -125,8 +126,30 @@ public class OrderServiceImpl implements OrderService {
 					probil.setShipper(shipper);
 					probil.setPickUp(pickUp);
 					probil.setDelivery(delivery);
+					probil.setOrder(order);
 					
-					//orderDao
+					String pickUpScheduledDate = probilModel.getPickupScheduledDate();
+					String pickUpMabDate = probilModel.getPickupMABDate();
+					String deliveryScheduledDate = probilModel.getDeliverScheduledDate();
+					String deliveryMabData = probilModel.getDeliveryMABDate();
+					
+					probil.setPickupScheduledDate(changeStringToDate(pickUpScheduledDate));
+					probil.setPickupMABDate(changeStringToDate(pickUpMabDate));
+					probil.setDeliverScheduledDate(changeStringToDate(deliveryScheduledDate));
+					probil.setDeliveryMABDate(changeStringToDate(deliveryMabData));
+					
+					String pickUpScheduledTime = probilModel.getPickupScheduledTime();
+					String pickUpMabTime = probilModel.getPickupMABTime();
+					String deliveryScheduledTime = probilModel.getDeliverScheduledTime();
+					String deliveryMabTime = probilModel.getDeliveryMABTime();
+					
+					probil.setDeliverScheduledTime(changeStringToTime(deliveryScheduledTime));
+					probil.setDeliveryMABTime(changeStringToTime(deliveryMabTime));
+					probil.setPickupScheduledTime(changeStringToTime(pickUpScheduledTime));
+					probil.setPickupMABTime(changeStringToTime(pickUpMabTime));
+					
+					orderDao.saveProbil(session, probil);
+					
 				}
 			}
 			
@@ -134,6 +157,8 @@ public class OrderServiceImpl implements OrderService {
 			if(tx != null){
 				tx.rollback();
 			}
+			message="error while inserting record";
+			return createFailedObject(message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -142,13 +167,31 @@ public class OrderServiceImpl implements OrderService {
 				session.close();
 			}
 		}
-		return null;
+		return createSuccessObject(message);
 	}
 	
+	private Date changeStringToTime(String timeVal) {
+		String[] stArr = timeVal.split("-");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(stArr[0]));
+		cal.set(Calendar.MINUTE,Integer.parseInt(stArr[1]));
+		cal.set(Calendar.SECOND,Integer.parseInt(stArr[2]));
+		Date date = cal.getTime();
+		return date;
+	}
+
+	private Date changeStringToDate(String dateVal) {
+		String[] stArr = dateVal.split("-");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Integer.parseInt(stArr[0]), Integer.parseInt(stArr[1]), Integer.parseInt(stArr[2]));
+		Date date = cal.getTime();
+		return date;
+}
+
 	private Object createSuccessObject(String message) {
 		Success success = new Success();
 		success.setMessage(message);
-		success.setResultList(null);//getAll()
+		success.setResultList(getAllOrders());
 		return success;
 	}
 	

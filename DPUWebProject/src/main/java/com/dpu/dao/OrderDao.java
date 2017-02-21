@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import com.dpu.entity.Category;
 import com.dpu.entity.Order;
+import com.dpu.entity.Probil;
 
 public interface OrderDao extends GenericDao<Category> {
 
@@ -19,4 +20,6 @@ public interface OrderDao extends GenericDao<Category> {
 	List<Category> getCategoryByCategoryName(Session session, String categoryName);
 
 	void saveOrder(Session session, Order order);
+
+	void saveProbil(Session session, Probil probil);
 }

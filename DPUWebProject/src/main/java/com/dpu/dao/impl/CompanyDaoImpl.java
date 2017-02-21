@@ -87,23 +87,11 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> getBillingLocations(Long companyId, Session session) {
-		@SuppressWarnings("unused")
-		Long maxVal = getMaxProbilNo(session);
 		List<Object[]> returnList = null;
 		Query query = session.createSQLQuery(" select billing_location_id,name from billinglocationmaster where company_id =:companyId ");
 		query.setParameter("companyId", companyId);
 		returnList = query.list();
 		return returnList;
-	}
-
-	private Long getMaxProbilNo(Session session) {
-		Long returnVal = 0l;
-		Long maxVal = (Long) session.createQuery(" select max(probil.probilNo) from Probil probil ").uniqueResult();
-		if(maxVal != null){
-			returnVal = maxVal;
-		}
-		System.out.println("the max probil no is :"+maxVal);
-		return returnVal;
 	}
 
 	@SuppressWarnings("unchecked")

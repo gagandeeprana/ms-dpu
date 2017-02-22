@@ -21,6 +21,7 @@ import com.dpu.entity.Company;
 import com.dpu.entity.CompanyAdditionalContacts;
 import com.dpu.entity.CompanyBillingLocation;
 import com.dpu.entity.Order;
+import com.dpu.entity.OrderPickupDropNo;
 import com.dpu.entity.Probil;
 import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
@@ -29,6 +30,7 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
+import com.dpu.model.OrderPickUpDeliveryModel;
 import com.dpu.model.ProbilModel;
 import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
@@ -89,8 +91,8 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public Object addOrder(OrderModel orderModel) {
-		logger.info("Inside CategoryServiceImpl addCategory() starts ");
-		Object obj = null;
+		
+		logger.info("Inside OrderServiceImpl addOrder() starts ");
 		String message = "Record Added Successfully";
 		Session session = null;
 		Transaction tx = null;
@@ -102,6 +104,7 @@ public class OrderServiceImpl implements OrderService {
 			CompanyAdditionalContacts additionalContacts = (CompanyAdditionalContacts) session.get(CompanyAdditionalContacts.class, orderModel.getContactId());
 			Type temp = (Type) session.get(Type.class, orderModel.getTemperatureId());
 			Type tempType = (Type) session.get(Type.class, orderModel.getTemperatureTypeId());
+			Type currency = (Type) session.get(Type.class, orderModel.getCurrencyId());
 			
 			Order order = new Order();
 			BeanUtils.copyProperties(orderModel, order);
@@ -110,12 +113,15 @@ public class OrderServiceImpl implements OrderService {
 			order.setContact(additionalContacts);
 			order.setTemperature(temp);
 			order.setTemperatureType(tempType);
+			order.setCurrency(currency);
 			orderDao.saveOrder(session, order);
 			
 			List<ProbilModel> probils = orderModel.getProbilList();
 			if(probils != null && !probils.isEmpty()){
 				for (ProbilModel probilModel : probils) {
 					Probil probil = new Probil();
+					Long maxProbilNo = orderDao.getMaxProbilNo(session);
+					
 					BeanUtils.copyProperties(probilModel, probil);
 					Shipper shipper = (Shipper) session.get(Shipper.class, probilModel.getShipperId());
 					Shipper consinee = (Shipper) session.get(Shipper.class, probilModel.getConsineeId());
@@ -127,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
 					probil.setPickUp(pickUp);
 					probil.setDelivery(delivery);
 					probil.setOrder(order);
+					probil.setProbilNo(maxProbilNo+1);
 					
 					String pickUpScheduledDate = probilModel.getPickupScheduledDate();
 					String pickUpMabDate = probilModel.getPickupMABDate();
@@ -150,6 +157,19 @@ public class OrderServiceImpl implements OrderService {
 					
 					orderDao.saveProbil(session, probil);
 					
+					List<OrderPickUpDeliveryModel> orderPickUpDeliveryList = probilModel.getOrderPickUpDeliveryList();
+					
+					if(orderPickUpDeliveryList != null && !orderPickUpDeliveryList.isEmpty()){
+						
+						for (OrderPickUpDeliveryModel orderPickUpDeliveryModel : orderPickUpDeliveryList) {
+							OrderPickupDropNo pickUpDropNo = new OrderPickupDropNo();
+							BeanUtils.copyProperties(orderPickUpDeliveryModel, pickUpDropNo);
+							pickUpDropNo.setProbil(probil);
+							
+							orderDao.savePickUpDrop(session, pickUpDropNo);
+						}
+					}
+					
 				}
 			}
 			
@@ -171,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	private Date changeStringToTime(String timeVal) {
-		String[] stArr = timeVal.split("-");
+		String[] stArr = timeVal.split(":");
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(stArr[0]));
 		cal.set(Calendar.MINUTE,Integer.parseInt(stArr[1]));
@@ -201,18 +221,6 @@ public class OrderServiceImpl implements OrderService {
 		return failed;
 	}
 
-	private Category setCategoryValues(CategoryReq categoryReq) {
-		Category category = new Category();
-		category.setName(categoryReq.getName());
-		Status status = statusService.get(categoryReq.getStatusId());
-		Type highlight = typeService.get(categoryReq.getHighlightId());
-		category.setHighLight(highlight);
-		Type type = typeService.get(categoryReq.getTypeId());
-		category.setType(type);
-		category.setStatus(status);
-		return category;
-	}
-	
 	@Override
 	public List<CategoryReq> update(Long id, CategoryReq categoryReq) {
 		
@@ -264,6 +272,7 @@ public class OrderServiceImpl implements OrderService {
 					orderModel.setContactName(order.getContact().getCustomerName());
 					orderModel.setTemperatureName(order.getTemperature().getTypeName());
 					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
+					orderModel.setCurrencyName(order.getCurrency().getTypeName());
 					
 					List<Probil> probilList = order.getProbils();
 					List<ProbilModel> probils = new ArrayList<ProbilModel>();

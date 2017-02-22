@@ -3,6 +3,7 @@ package com.dpu.dao.impl;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,9 +29,13 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 	@Autowired
 	StatusService statusService;
 	
+	Logger logger = Logger.getLogger(CompanyDaoImpl.class);
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> getCompanyData() {
+		
+		logger.info("CompanyDaoImpl getCompanyData() Ends");
 		Session session = null;
 		List<Object[]> returnList = null;
 		try {
@@ -40,13 +45,14 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements CompanyDa
 			returnList = query.list();
 
 		} catch (Exception e) {
-			logger.error("[find ]" + e.getCause());
+			logger.error("Exception inside CompanyDaoImpl getCompanyData :" + e.getCause());
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		logger.info("[DivisionDaoImpl] [find] : Exit ");
+		
+		logger.info("CompanyDaoImpl getCompanyData() Ends");
 		return returnList;
 	}
 

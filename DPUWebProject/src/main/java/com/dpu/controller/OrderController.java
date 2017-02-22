@@ -84,16 +84,16 @@ public class OrderController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController add() :"+e.getMessage());
+			logger.error("Exception inside OrderController add() :"+e.getMessage());
 		}
-		logger.info("Inside CategoryController add() Ends");
+		logger.info("Inside OrderController add() Ends");
 		return obj;
 	}
 
 	/**
-	 * this method is used to delete the category based on categoryId
+	 * this method is used to delete the particular probil
 	 * @param id
-	 * @return List<category>
+	 * @return List<Order>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)

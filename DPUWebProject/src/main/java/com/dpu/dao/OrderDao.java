@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import com.dpu.entity.Category;
 import com.dpu.entity.Order;
+import com.dpu.entity.OrderPickupDropNo;
 import com.dpu.entity.Probil;
 
 public interface OrderDao extends GenericDao<Category> {
@@ -22,4 +23,9 @@ public interface OrderDao extends GenericDao<Category> {
 	void saveOrder(Session session, Order order);
 
 	void saveProbil(Session session, Probil probil);
+
+	void savePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo);
+
+	Long getMaxProbilNo(Session session);
+
 }

@@ -36,7 +36,7 @@ public class OrderPickupDropNo implements Serializable {
 	private String pickupDeliveryNo;
 	
 	@Column(name = "type")
-	private Long type;
+	private Long typeId;
 	
 	public Long getId() {
 		return id;
@@ -62,12 +62,12 @@ public class OrderPickupDropNo implements Serializable {
 		this.pickupDeliveryNo = pickupDeliveryNo;
 	}
 
-	public Long getType() {
-		return type;
+	public Long getTypeId() {
+		return typeId;
 	}
 
-	public void setType(Long type) {
-		this.type = type;
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
 	}
 
 }

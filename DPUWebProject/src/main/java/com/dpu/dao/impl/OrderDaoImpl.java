@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.dpu.dao.OrderDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Order;
+import com.dpu.entity.OrderPickupDropNo;
 import com.dpu.entity.Probil;
 
 @Repository
@@ -53,8 +54,8 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		
 	}
 	
-	@SuppressWarnings("unused")
-	private Long getMaxProbilNo(Session session) {
+	@Override
+	public Long getMaxProbilNo(Session session) {
 		Long returnVal = 0l;
 		Long maxVal = (Long) session.createQuery(" select max(probil.probilNo) from Probil probil ").uniqueResult();
 		if(maxVal != null){
@@ -62,6 +63,11 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		}
 		System.out.println("the max probil no is :"+maxVal);
 		return returnVal;
+	}
+
+	@Override
+	public void savePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo) {
+		session.save(pickUpDropNo);
 	}
 
 }

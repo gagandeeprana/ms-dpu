@@ -67,28 +67,86 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	ShipperService shipperService;
 	
-/*	@Override
-	public Object addCategory(CategoryReq categoryReq) {
-	
-		logger.info("Inside CategoryServiceImpl addCategory() starts ");
-		Object obj = null;
-		String message = "Record Added Successfully";
+	private Order addOrder(OrderModel orderModel, Session session) {
+		Company company = (Company) session.get(Company.class, orderModel.getCompanyId());
+		CompanyBillingLocation billingLocation = (CompanyBillingLocation) session.get(CompanyBillingLocation.class, orderModel.getBillingLocationId());
+		CompanyAdditionalContacts additionalContacts = (CompanyAdditionalContacts) session.get(CompanyAdditionalContacts.class, orderModel.getContactId());
+		Type temp = (Type) session.get(Type.class, orderModel.getTemperatureId());
+		Type tempType = (Type) session.get(Type.class, orderModel.getTemperatureTypeId());
+		Type currency = (Type) session.get(Type.class, orderModel.getCurrencyId());
 		
-		try {
-			Category category = setCategoryValues(categoryReq);
-			categoryDao.save(category);
-			obj = createSuccessObject(message);
-
-		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl addCategory() :"+e.getMessage());
-			message = "Error while inserting record";
-			obj = createFailedObject(message);
+		Order order = new Order();
+		BeanUtils.copyProperties(orderModel, order);
+		order.setCompany(company);
+		order.setBillingLocation(billingLocation);
+		order.setContact(additionalContacts);
+		order.setTemperature(temp);
+		order.setTemperatureType(tempType);
+		order.setCurrency(currency);
+		orderDao.saveOrder(session, order);
+		return order;
+		
+	}
+	
+	private void addProbil(ProbilModel probilModel, Order order, Session session) {
+		
+		Probil probil = new Probil();
+		Long maxProbilNo = orderDao.getMaxProbilNo(session);
+		
+		BeanUtils.copyProperties(probilModel, probil);
+		Shipper shipper = (Shipper) session.get(Shipper.class, probilModel.getShipperId());
+		Shipper consinee = (Shipper) session.get(Shipper.class, probilModel.getConsineeId());
+		Type pickUp = (Type) session.get(Type.class, probilModel.getPickupId());
+		Type delivery = (Type) session.get(Type.class, probilModel.getDeliveryId());
+		
+		probil.setConsine(consinee);
+		probil.setShipper(shipper);
+		probil.setPickUp(pickUp);
+		probil.setDelivery(delivery);
+		probil.setOrder(order);
+		probil.setProbilNo(maxProbilNo+1);
+		
+		String pickUpScheduledDate = probilModel.getPickupScheduledDate();
+		String pickUpMabDate = probilModel.getPickupMABDate();
+		String deliveryScheduledDate = probilModel.getDeliverScheduledDate();
+		String deliveryMabData = probilModel.getDeliveryMABDate();
+		
+		probil.setPickupScheduledDate(changeStringToDate(pickUpScheduledDate));
+		probil.setPickupMABDate(changeStringToDate(pickUpMabDate));
+		probil.setDeliverScheduledDate(changeStringToDate(deliveryScheduledDate));
+		probil.setDeliveryMABDate(changeStringToDate(deliveryMabData));
+		
+		String pickUpScheduledTime = probilModel.getPickupScheduledTime();
+		String pickUpMabTime = probilModel.getPickupMABTime();
+		String deliveryScheduledTime = probilModel.getDeliverScheduledTime();
+		String deliveryMabTime = probilModel.getDeliveryMABTime();
+		
+		probil.setDeliverScheduledTime(changeStringToTime(deliveryScheduledTime));
+		probil.setDeliveryMABTime(changeStringToTime(deliveryMabTime));
+		probil.setPickupScheduledTime(changeStringToTime(pickUpScheduledTime));
+		probil.setPickupMABTime(changeStringToTime(pickUpMabTime));
+		
+		orderDao.saveProbil(session, probil);
+		
+		addPickUpDelivery(probilModel, probil, session);
+	}
+	
+	private void addPickUpDelivery(ProbilModel probilModel, Probil probil, Session session) {
+		List<OrderPickUpDeliveryModel> orderPickUpDeliveryList = probilModel.getOrderPickUpDeliveryList();
+		
+		if(orderPickUpDeliveryList != null && !orderPickUpDeliveryList.isEmpty()){
+			
+			for (OrderPickUpDeliveryModel orderPickUpDeliveryModel : orderPickUpDeliveryList) {
+				OrderPickupDropNo pickUpDropNo = new OrderPickupDropNo();
+				BeanUtils.copyProperties(orderPickUpDeliveryModel, pickUpDropNo);
+				pickUpDropNo.setProbil(probil);
+				
+				orderDao.savePickUpDrop(session, pickUpDropNo);
+			}
 		}
 		
-		logger.info("Inside CategoryServiceImpl addCategory() ends ");
-		return obj;
-	}*/
-	
+	}
+
 	@Override
 	public Object addOrder(OrderModel orderModel) {
 		
@@ -99,77 +157,14 @@ public class OrderServiceImpl implements OrderService {
 		try{
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Company company = (Company) session.get(Company.class, orderModel.getCompanyId());
-			CompanyBillingLocation billingLocation = (CompanyBillingLocation) session.get(CompanyBillingLocation.class, orderModel.getBillingLocationId());
-			CompanyAdditionalContacts additionalContacts = (CompanyAdditionalContacts) session.get(CompanyAdditionalContacts.class, orderModel.getContactId());
-			Type temp = (Type) session.get(Type.class, orderModel.getTemperatureId());
-			Type tempType = (Type) session.get(Type.class, orderModel.getTemperatureTypeId());
-			Type currency = (Type) session.get(Type.class, orderModel.getCurrencyId());
 			
-			Order order = new Order();
-			BeanUtils.copyProperties(orderModel, order);
-			order.setCompany(company);
-			order.setBillingLocation(billingLocation);
-			order.setContact(additionalContacts);
-			order.setTemperature(temp);
-			order.setTemperatureType(tempType);
-			order.setCurrency(currency);
-			orderDao.saveOrder(session, order);
+			Order order = addOrder(orderModel, session);
 			
 			List<ProbilModel> probils = orderModel.getProbilList();
+			
 			if(probils != null && !probils.isEmpty()){
 				for (ProbilModel probilModel : probils) {
-					Probil probil = new Probil();
-					Long maxProbilNo = orderDao.getMaxProbilNo(session);
-					
-					BeanUtils.copyProperties(probilModel, probil);
-					Shipper shipper = (Shipper) session.get(Shipper.class, probilModel.getShipperId());
-					Shipper consinee = (Shipper) session.get(Shipper.class, probilModel.getConsineeId());
-					Type pickUp = (Type) session.get(Type.class, probilModel.getPickupId());
-					Type delivery = (Type) session.get(Type.class, probilModel.getDeliveryId());
-					
-					probil.setConsine(consinee);
-					probil.setShipper(shipper);
-					probil.setPickUp(pickUp);
-					probil.setDelivery(delivery);
-					probil.setOrder(order);
-					probil.setProbilNo(maxProbilNo+1);
-					
-					String pickUpScheduledDate = probilModel.getPickupScheduledDate();
-					String pickUpMabDate = probilModel.getPickupMABDate();
-					String deliveryScheduledDate = probilModel.getDeliverScheduledDate();
-					String deliveryMabData = probilModel.getDeliveryMABDate();
-					
-					probil.setPickupScheduledDate(changeStringToDate(pickUpScheduledDate));
-					probil.setPickupMABDate(changeStringToDate(pickUpMabDate));
-					probil.setDeliverScheduledDate(changeStringToDate(deliveryScheduledDate));
-					probil.setDeliveryMABDate(changeStringToDate(deliveryMabData));
-					
-					String pickUpScheduledTime = probilModel.getPickupScheduledTime();
-					String pickUpMabTime = probilModel.getPickupMABTime();
-					String deliveryScheduledTime = probilModel.getDeliverScheduledTime();
-					String deliveryMabTime = probilModel.getDeliveryMABTime();
-					
-					probil.setDeliverScheduledTime(changeStringToTime(deliveryScheduledTime));
-					probil.setDeliveryMABTime(changeStringToTime(deliveryMabTime));
-					probil.setPickupScheduledTime(changeStringToTime(pickUpScheduledTime));
-					probil.setPickupMABTime(changeStringToTime(pickUpMabTime));
-					
-					orderDao.saveProbil(session, probil);
-					
-					List<OrderPickUpDeliveryModel> orderPickUpDeliveryList = probilModel.getOrderPickUpDeliveryList();
-					
-					if(orderPickUpDeliveryList != null && !orderPickUpDeliveryList.isEmpty()){
-						
-						for (OrderPickUpDeliveryModel orderPickUpDeliveryModel : orderPickUpDeliveryList) {
-							OrderPickupDropNo pickUpDropNo = new OrderPickupDropNo();
-							BeanUtils.copyProperties(orderPickUpDeliveryModel, pickUpDropNo);
-							pickUpDropNo.setProbil(probil);
-							
-							orderDao.savePickUpDrop(session, pickUpDropNo);
-						}
-					}
-					
+					addProbil(probilModel, order, session);
 				}
 			}
 			
@@ -190,6 +185,8 @@ public class OrderServiceImpl implements OrderService {
 		return createSuccessObject(message);
 	}
 	
+	
+
 	private Date changeStringToTime(String timeVal) {
 		String[] stArr = timeVal.split(":");
 		Calendar cal = Calendar.getInstance();

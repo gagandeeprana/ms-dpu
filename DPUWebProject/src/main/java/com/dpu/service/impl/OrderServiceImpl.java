@@ -238,17 +238,47 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<CategoryReq> delete(Long id) {
-		
-		Category category = categoryDao.findById(id);
-		List<CategoryReq> returnList = new ArrayList<CategoryReq>();
-		if(category != null){
-			categoryDao.delete(category);
-			//returnList = getAll();
-		}
-		return returnList;
-	}
+	public Object deleteProbil(Long probilId) {
 
+		logger.info("Inside OrderServiceImpl deleteProbil() starts, probilId :"+ probilId);
+		String message = "Record Deleted Successfully";
+		Session session = null;
+		Transaction tx = null;
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Probil probil = (Probil) session.get(Probil.class, probilId);
+			if(probil != null){
+				List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
+				if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
+					for (OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
+						session.delete(orderPickupDropNo);
+					}
+				}
+				
+				session.delete(probil);
+			} else{
+				message = "Error while deleting record.";
+				return createFailedObject(message);
+			}
+		}catch(Exception e){
+			logger.error("Exception Inside OrderServiceImpl deleteProbil() :"+ e.getMessage());
+			if(tx != null){
+				tx.rollback();
+			}
+			message = "Error while deleting record.";
+			return createFailedObject(message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
+		}
+		logger.info("Inside OrderServiceImpl deleteProbil() ends, probilId :"+ probilId);
+		return createSuccessObject(message);
+	}
 	@Override
 	public List<OrderModel> getAllOrders() {
 
@@ -322,7 +352,7 @@ public class OrderServiceImpl implements OrderService {
 		return allOrders;
 	}
 
-	@Override
+/*	@Override
 	public CategoryReq get(Long id) {
 		
 		Session session = null;
@@ -357,8 +387,34 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		return categoryReq;
-	}
+	}*/
 
+	@Override
+	public ProbilModel getProbilByProbilId(Long probilId) {
+		
+		ProbilModel probilModel = new ProbilModel();
+		Session session = null;
+		try{
+			session = sessionFactory.openSession();
+			Probil probil = (Probil) session.get(Probil.class, probilId);
+			if(probil != null){
+				List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
+				if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
+					for (OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
+						//session.delete(orderPickupDropNo);
+					}
+				}
+				
+				//session.delete(probil);
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		logger.info("Inside OrderServiceImpl deleteProbil() ends, probilId :"+ probilId);
+		return probilModel;
+	}
 	@Override
 	public OrderModel getOpenAdd() {
 
@@ -451,5 +507,4 @@ public class OrderServiceImpl implements OrderService {
 
 	
 
-	
 }

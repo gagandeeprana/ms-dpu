@@ -73,7 +73,7 @@ public class DriverServiceImpl implements DriverService {
 
 		logger.info("Inside DriverServiceImpl addDriver() starts");
 		Object obj = null;
-		String message = "Record Added Successfully";
+		String message = "Driver Added Successfully";
 		try {
 			// boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
 			// if(!isDriverExist){
@@ -95,7 +95,7 @@ public class DriverServiceImpl implements DriverService {
 		} catch (Exception e) {
 			logger.error("Exception inside DriverServiceImpl addDriver() :"
 					+ e.getMessage());
-			message = "Error while inserting record";
+			message = "Error while inserting driver";
 			obj = createFailedObject(message);
 		}
 
@@ -149,7 +149,7 @@ public class DriverServiceImpl implements DriverService {
 		logger.info("Inside DriverServiceImpl updateDriver() Starts, driverId :"
 				+ driverId);
 		Object obj = null;
-		String message = "Record Updated Successfully";
+		String message = "Driver Updated Successfully";
 
 		try {
 			Driver driver = driverDao.findById(driverId);
@@ -171,7 +171,7 @@ public class DriverServiceImpl implements DriverService {
 				driverDao.update(driver);
 				obj = createSuccessObject(message);
 			} else {
-				message = "Error while updating record";
+				message = "Error while updating driver";
 				obj = createFailedObject(message);
 			}
 
@@ -193,7 +193,7 @@ public class DriverServiceImpl implements DriverService {
 		logger.info("Inside DriverServiceImpl deleteDriver() starts, driverId :"
 				+ driverId);
 		Object obj = null;
-		String message = "Record Deleted Successfully";
+		String message = "Driver Deleted Successfully";
 
 		try {
 			Driver driver = driverDao.findById(driverId);
@@ -202,7 +202,7 @@ public class DriverServiceImpl implements DriverService {
 				driverDao.delete(driver);
 				obj = createSuccessObject(message);
 			} else {
-				message = "Error while Deleting Record";
+				message = "Error while deleting driver";
 				obj = createFailedObject(message);
 			}
 		} catch (Exception e) {
@@ -273,7 +273,7 @@ public class DriverServiceImpl implements DriverService {
 				+ driverId);
 		Session session = null;
 		Object obj = null;
-		String message = "Record data get Successfully";
+		String message = "Driver data get Successfully";
 
 		try {
 			session = sessionFactory.openSession();

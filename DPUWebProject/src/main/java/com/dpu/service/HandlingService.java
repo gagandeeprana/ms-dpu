@@ -1,20 +1,10 @@
-/**
- * 
- */
 package com.dpu.service;
 
 import java.util.List;
-
-import com.dpu.entity.Category;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.HandlingModel;
 
-/**
- * @author jagvir
- *
- */
 public interface HandlingService {
-	Object update(Long id, CategoryReq categoryReq);
+	Object update(Long id, HandlingModel handlingModel);
 
 	Object delete(Long id);
 
@@ -22,14 +12,12 @@ public interface HandlingService {
 
 	HandlingModel getOpenAdd();
 
-	CategoryReq get(Long id);
-
-	List<CategoryReq> getCategoryByCategoryName(String categoryName);
+	HandlingModel get(Long id);
 	
-	Category getCategory(Long categoryId);
-
-	List<CategoryReq> getSpecificData();
+	List<HandlingModel> getSpecificData();
 
 	Object addHandling(HandlingModel handlingModel);
+
+	List<HandlingModel> getHandlingByHandlingName(String handlingName);
 
 }

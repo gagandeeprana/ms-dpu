@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.Failed;
 import com.dpu.model.HandlingModel;
 import com.dpu.model.Success;
@@ -118,20 +117,18 @@ public class HandlingController extends MessageProperties {
 	}
 
 	/**
-	 * this method is used to update the categoryData based on categoryID
-	 * 
-	 * @param id
-	 * @param categoryReq
+	 * this method is used to update the handling based on handlingID
+	 * @param handlingId
+	 * @param handlingModel
 	 * @return List<Categories>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id,
-			@RequestBody CategoryReq categoryReq) {
-		logger.info("[CategoryController] [update] : Srvice: Enter");
-		logger.info("Inside CategoryController update() Starts, id is :" + id);
+	public Object update(@PathVariable("id") Long handlingId, @RequestBody HandlingModel handlingModel) {
+
+		logger.info("Inside HandlingController update() Starts, handlingId is :" + handlingId);
 		Object obj = null;
 		try {
-			Object result = handlingService.update(id, categoryReq);
+			Object result = handlingService.update(handlingId, handlingModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -139,52 +136,45 @@ public class HandlingController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController update() :"
-					+ e.getMessage());
+			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,"Error while updating record.", Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside CategoryController update() Ends, id is :" + id);
-		logger.info("[CategoryController] [update] : Srvice: Exit");
+		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);
 		return obj;
 	}
 
 	/**
-	 * this method is used to get category data based on categoryId
-	 * 
-	 * @param id
-	 * @return categorydata
+	 * this method is used to get Handling data based on handlingId
+	 * @param handlingId
+	 * @return handlingData
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getCategoryById(@PathVariable("categoryId") Long id) {
-		logger.info("[CategoryController] [getCategoryById] : Srvice: Enter");
-		logger.info("Inside CategoryController getCategoryById() Starts, Id:"
-				+ id);
+	@RequestMapping(value = "/{handlingId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getHandlingById(@PathVariable("handlingId") Long handlingId) {
+		
+		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ handlingId);
 		String json = null;
 
 		try {
 
-			CategoryReq categoryReq = handlingService.get(id);
+			HandlingModel handlingModel = handlingService.get(handlingId);
 
-			if (categoryReq != null) {
-				json = mapper.writeValueAsString(categoryReq);
+			if (handlingModel != null) {
+				json = mapper.writeValueAsString(handlingModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getCategoryById() :"
-					+ e.getMessage());
+			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside CategoryController getCategoryById() Ends, Id:"
-				+ id);
-		logger.info("[CategoryController] [getCategoryById] : Srvice: Exit");
+		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ handlingId);
 		return json;
 	}
 
 	/**
-	 * this method is used when we click on add button on category screen to
+	 * this method is used when we click on add button on handling screen
 	 * send master data
-	 * 
-	 * @return master data for add category
+	 * @return master data for add handling
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -198,7 +188,7 @@ public class HandlingController extends MessageProperties {
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(model);
 		} catch (Exception e) {
-			logger.error(" Exception inside CategoryController openAdd() :"+ e.getMessage());
+			logger.error(" Exception inside HandlingController openAdd() :"+ e.getMessage());
 		}
 
 		logger.info("Inside HandlingController openAdd() ends ");
@@ -206,57 +196,53 @@ public class HandlingController extends MessageProperties {
 	}
 
 	/**
-	 * this method is used to get category based on category name
-	 * 
-	 * @param categoryName
-	 * @return List<category>
+	 * this method is used to get handling data based on handling name
+	 * @param handlingName
+	 * @return List<Handling>
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{categoryName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchCategory(
-			@PathVariable("categoryName") String categoryName) {
-		logger.info("[CategoryController] [searchCategory] : Srvice: Enter");
-		logger.info("Inside CategoryController searchCategory() Starts, categoryName :"
-				+ categoryName);
+	@RequestMapping(value = "/{handlingName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchHandling(@PathVariable("handlingName") String handlingName) {
+
+		logger.info("Inside HandlingController searchHandling() Starts, handlingName :"+ handlingName);
 		String json = new String();
 
 		try {
-			List<CategoryReq> categoryList = handlingService
-					.getCategoryByCategoryName(categoryName);
-			if (categoryList != null && categoryList.size() > 0) {
-				json = mapper.writeValueAsString(categoryList);
+			List<HandlingModel> handlingList = handlingService.getHandlingByHandlingName(handlingName);
+			if (handlingList != null && handlingList.size() > 0) {
+				json = mapper.writeValueAsString(handlingList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside CategoryController searchCategory() is :"
-					+ e.getMessage());
+			logger.error("Exception inside HandlingController searchHandling() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :"
-				+ categoryName);
-		logger.info("[CategoryController] [searchCategory] : Srvice: Exit");
+		logger.info(" Inside HandlingController searchHandling() Ends, handlingName :"+ handlingName);
 		return json;
 	}
 
+	/**
+	 * this method is used to get specific handling data (id and name)
+	 * @return handlingId and name
+	 * @author lakhvir.bansal
+	 */
+	
 	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
 
-		logger.info("[CategoryController] [getSpecificData] : Srvice: Enter");
+		logger.info("Inside HandlingController getSpecificData() Starts ");
 		String json = new String();
 
 		try {
-			List<CategoryReq> categoryList = handlingService.getSpecificData();
-			if (categoryList != null && categoryList.size() > 0) {
-				json = mapper.writeValueAsString(categoryList);
+			List<HandlingModel> handlingList = handlingService.getSpecificData();
+			if (handlingList != null && handlingList.size() > 0) {
+				json = mapper.writeValueAsString(handlingList);
 			}
 		} catch (Exception e) {
 			logger.error(e);
-			logger.error("Exception inside CategoryController searchCategory() is :"
-					+ e.getMessage());
+			logger.error("Exception inside HandlingController getSpecificData() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :");
-		logger.info("[CategoryController] [getSpecificData] : Srvice: Exit");
+		logger.info("Inside HandlingController getSpecificData() Ends ");
 		return json;
 	}
 }

@@ -6,26 +6,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dpu.common.CommonProperties;
-import com.dpu.dao.CategoryDao;
 import com.dpu.dao.HandlingDao;
-import com.dpu.entity.Category;
 import com.dpu.entity.Handling;
 import com.dpu.entity.Status;
-import com.dpu.entity.Truck;
-import com.dpu.entity.Type;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.Failed;
 import com.dpu.model.HandlingModel;
 import com.dpu.model.Success;
-import com.dpu.model.TypeResponse;
-import com.dpu.service.CategoryService;
 import com.dpu.service.HandlingService;
 import com.dpu.service.StatusService;
-import com.dpu.service.TypeService;
 
 @Component
 public class HandlingServiceImpl implements HandlingService {
@@ -39,9 +31,6 @@ public class HandlingServiceImpl implements HandlingService {
 	StatusService statusService;
 
 	@Autowired
-	TypeService typeService;
-
-	@Autowired
 	SessionFactory sessionFactory;
 	
 	@Override
@@ -52,7 +41,6 @@ public class HandlingServiceImpl implements HandlingService {
 		List<HandlingModel> handlingList = new ArrayList<HandlingModel>();
 
 		try {
-
 			session = sessionFactory.openSession();
 			List<Handling> handlings = handlingDao.findAll(session);
 
@@ -120,101 +108,102 @@ public class HandlingServiceImpl implements HandlingService {
 	}
 
 	@Override
-	public Object update(Long id, CategoryReq categoryReq) {
-		logger.info("[CategoryServiceImpl] [update] : Srvice: Enter");
-		Category category = null;
+	public Object update(Long id, HandlingModel handlingModel) {
+
+		logger.info("HandlingServiceImpl update() starts.");
+		String message ="Record updated successfully.";
 		try {
-			//category = categoryDao.findById(id);
-			// if (category != null) {
-
-			category.setName(categoryReq.getName());
-
-			Status status = statusService.get(categoryReq.getStatusId());
-			category.setStatus(status);
-
-			Type highlight = typeService.get(categoryReq.getHighlightId());
-			category.setHighLight(highlight);
-
-			Type type = typeService.get(categoryReq.getTypeId());
-			category.setType(type);
-
-			//category = categoryDao.update(category);
-			// }
+			Handling handling = handlingDao.findById(id);
+			
+			if (handling != null) {
+				handling.setName(handlingModel.getName());
+				Status status = statusService.get(handlingModel.getStatusId());
+				handling.setStatus(status);
+				handlingDao.update(handling);
+			} else{
+				message ="Error while updating record";
+				return createFailedObject(message);
+			}
 
 		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl updateCategory() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.category_unable_to_update_message);
+			logger.info("Exception inside HandlingServiceImpl update() :"+ e.getMessage());
+			return createFailedObject("Error while updating record");
 		}
-		logger.info("[CategoryServiceImpl] [update] : Srvice: Exit");
-		return createSuccessObject(CommonProperties.category_updated_message);
+		
+		logger.info("HandlingServiceImpl update() ends.");
+		return createSuccessObject(message);
 	}
 
 	@Override
 	public Object delete(Long id) {
 		
 		logger.info("HandlingServiceImpl delete() starts.");
-		Object obj = null;
+		Session session = null;
+		Transaction tx = null;
 		String message ="Record deleted successfully.";
 		
 		try {
-			Handling handling = handlingDao.findById(id);
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Handling handling = (Handling) session.get(Handling.class, id);
 			if(handling != null){
-				handlingDao.delete(handling);
-				obj = createSuccessObject(message);
+				session.delete(handling);
 			} else{
 				message ="Error while deleting record";
 				return createFailedObject(message);
 			}
 			
 		} catch (Exception e) {
+			if(tx != null){
+				tx.rollback();
+			}
 			logger.info("Exception inside HandlingServiceImpl delete() : " + e.getMessage());
 			message ="Error while deleting record";
 			return createFailedObject(message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		logger.info("HandlingServiceImpl delete() ends.");
-		return obj;
+		return createSuccessObject(message);
 	}
 
 
 
 	@Override
-	public CategoryReq get(Long id) {
-		logger.info("[CategoryServiceImpl] [get] : Srvice: Enter");
+	public HandlingModel get(Long id) {
+		
+		logger.info("HandlingServiceImpl get() starts.");
 		Session session = null;
-		CategoryReq categoryReq = new CategoryReq();
+		HandlingModel handlingModel = new HandlingModel();
 
 		try {
 
 			session = sessionFactory.openSession();
-			Category category =null;// categoryDao.findById(id, session);
+			Handling handling = handlingDao.findById(id, session);
 
-			if (category != null) {
+			if (handling != null) {
 
-				categoryReq.setCategoryId(category.getCategoryId());
-				categoryReq.setName(category.getName());
-				categoryReq.setStatusId(category.getStatus().getId());
-				categoryReq.setTypeId(category.getType().getTypeId());
-				categoryReq.setHighlightId(category.getHighLight().getTypeId());
+				handlingModel.setId(handling.getId());
+				handlingModel.setName(handling.getName());
+				handlingModel.setStatusId(handling.getStatus().getId());
 
 				List<Status> statusList = statusService.getAll();
-				categoryReq.setStatusList(statusList);
-
-				List<TypeResponse> typeList = typeService.getAll(3l);
-				categoryReq.setTypeList(typeList);
-
-				List<TypeResponse> highlightList = typeService.getAll(4l);
-				categoryReq.setHighlightList(highlightList);
+				handlingModel.setStatusList(statusList);
 			}
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		logger.info("[CategoryServiceImpl] [get] : Srvice: Exit");
-		return categoryReq;
+		
+		logger.info("HandlingServiceImpl get() ends.");
+		return handlingModel;
 	}
 
 	@Override
@@ -230,25 +219,22 @@ public class HandlingServiceImpl implements HandlingService {
 	}
 
 	@Override
-	public List<CategoryReq> getCategoryByCategoryName(String categoryName) {
-		logger.info("[CategoryServiceImpl] [getCategoryByCategoryName] : Srvice: Enter");
+	public List<HandlingModel> getHandlingByHandlingName(String handlingName) {
+		
+		logger.info("HandlingServiceImpl getHandlingByHandlingName() starts ");
 		Session session = null;
-		List<CategoryReq> categories = new ArrayList<CategoryReq>();
+		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Category> categoryList = null;//categoryDao
-					//.getCategoryByCategoryName(session, categoryName);
-			if (categoryList != null && !categoryList.isEmpty()) {
-				for (Category category : categoryList) {
-					CategoryReq categoryObj = new CategoryReq();
-					categoryObj.setCategoryId(category.getCategoryId());
-					categoryObj.setName(category.getName());
-					categoryObj.setHighlightName(category.getHighLight()
-							.getTypeName());
-					categoryObj.setTypeName(category.getType().getTypeName());
-					categoryObj.setStatusName(category.getStatus().getStatus());
-					categories.add(categoryObj);
+			List<Handling> handlingList = handlingDao.getHandlingByHandlingName(session, handlingName);
+			if (handlingList != null && !handlingList.isEmpty()) {
+				for (Handling handling : handlingList) {
+					HandlingModel handlingObj = new HandlingModel();
+					handlingObj.setId(handling.getId());
+					handlingObj.setName(handling.getName());
+					handlingObj.setStatusName(handling.getStatus().getStatus());
+					handlings.add(handlingObj);
 				}
 			}
 		} finally {
@@ -256,32 +242,26 @@ public class HandlingServiceImpl implements HandlingService {
 				session.close();
 			}
 		}
-		logger.info("[CategoryServiceImpl] [getCategoryByCategoryName] : Srvice: Exit");
-		return categories;
+		
+		logger.info("HandlingServiceImpl getHandlingByHandlingName() ends ");
+		return handlings;
 	}
 
 	@Override
-	public Category getCategory(Long categoryId) {
-		Category category = null;//categoryDao.findById(categoryId);
-		return category;
-	}
+	public List<HandlingModel> getSpecificData() {
+		List<Object[]> handlingData = handlingDao.getSpecificData("Handling","id", "name");
 
-	@Override
-	public List<CategoryReq> getSpecificData() {
-		List<Object[]> categoryData = null;//categoryDao.getSpecificData("Category",
-				//"categoryId", "name");
-
-		List<CategoryReq> categories = new ArrayList<CategoryReq>();
-		if (categoryData != null && !categoryData.isEmpty()) {
-			for (Object[] row : categoryData) {
-				CategoryReq categoryObj = new CategoryReq();
-				categoryObj.setCategoryId((Long) row[0]);
-				categoryObj.setName(String.valueOf(row[1]));
-				categories.add(categoryObj);
+		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
+		if (handlingData != null && !handlingData.isEmpty()) {
+			for (Object[] row : handlingData) {
+				HandlingModel handlingObj = new HandlingModel();
+				handlingObj.setId((Long) row[0]);
+				handlingObj.setName(String.valueOf(row[1]));
+				handlings.add(handlingObj);
 			}
 		}
 
-		return categories;
+		return handlings;
 	}
 
 }

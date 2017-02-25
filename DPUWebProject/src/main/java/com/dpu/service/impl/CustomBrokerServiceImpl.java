@@ -49,27 +49,15 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 
 	@Override
 	public Object add(CustomBrokerResponse customBrokerReponse) {
-		CustomBroker customBroker = null;
-		try {
-			customBroker = setCustomBrokerValues(customBrokerReponse);
+	try {
+			CustomBroker customBroker = setCustomBrokerValues(customBrokerReponse);
 			customBrokerDao.save(customBroker);
 
 		} catch (Exception e) {
-			logger.error("Exception inside CustomBrokerServiceImpl add() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.custombroker_unable_to_add_message,
-					Long.parseLong(CommonProperties.custombroker_unable_to_add_code));
+			logger.error("Exception inside CustomBrokerServiceImpl add() :"	+ e.getMessage());
+			return createFailedObject(CommonProperties.custombroker_unable_to_add_message,Long.parseLong(CommonProperties.custombroker_unable_to_add_code));
 		}
-
-		return createSuccessObject(CommonProperties.custombroker_added_message,
-				Long.parseLong(CommonProperties.custombroker_added_code));
-	}
-
-	private Object createFailedObject(String errorMessage) {
-		Failed failed = new Failed();
-		failed.setMessage(errorMessage);
-		return failed;
+	return createSuccessObject(CommonProperties.custombroker_added_message,Long.parseLong(CommonProperties.custombroker_added_code));
 	}
 
 	private CustomBroker setCustomBrokerValues(CustomBrokerResponse customBrokerReponse) {
@@ -96,15 +84,11 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			customBrokerDao.update(customBroker);
 			
 		} catch (Exception e) {
-			logger.error("Exception inside CustomBrokerServiceImpl update() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.custombroker_unable_to_update_message,
-					Long.parseLong(CommonProperties.custombroker_unable_to_update_code));
+			logger.error("Exception inside CustomBrokerServiceImpl update() :"+ e.getMessage());
+			return createFailedObject(CommonProperties.custombroker_unable_to_update_message,Long.parseLong(CommonProperties.custombroker_unable_to_update_code));
 		}
 		logger.info("[CustomBrokerServiceImpl] [update] : Exit ");
-		return createSuccessObject(CommonProperties.custombroker_updated_message,
-				Long.parseLong(CommonProperties.custombroker_unable_to_update_code));
+		return createSuccessObject(CommonProperties.custombroker_updated_message,Long.parseLong(CommonProperties.custombroker_unable_to_update_code));
 	}
 
 	@Override
@@ -117,15 +101,11 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			customBrokerDao.delete(customBroker);
 
 		} catch (Exception e) {
-			logger.error("Exception inside CustomBrokerServiceImpl delete() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.custombroker_unable_to_delete_message,
-					Long.parseLong(CommonProperties.custombroker_unable_to_delete_code));
+			logger.error("Exception inside CustomBrokerServiceImpl delete() :"+ e.getMessage());
+			return createFailedObject(CommonProperties.custombroker_unable_to_delete_message,Long.parseLong(CommonProperties.custombroker_unable_to_delete_code));
 		}
 		logger.info("[CustomBrokerServiceImpl] [delete] : Service :  Exit");
-		return createSuccessObject(CommonProperties.custombroker_deleted_message,
-				Long.parseLong(CommonProperties.custombroker_deleted_code));
+		return createSuccessObject(CommonProperties.custombroker_deleted_message,Long.parseLong(CommonProperties.custombroker_deleted_code));
 
 	}
 
@@ -134,7 +114,6 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 
 		Session session = null;
 		List<CustomBrokerResponse> customBrokerResponseList = new ArrayList<CustomBrokerResponse>();
-
 		try {
 
 			session = sessionFactory.openSession();
@@ -160,7 +139,6 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
-
 		return customBrokerResponseList;
 	}
 
@@ -171,7 +149,6 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 		CustomBrokerResponse customBrokerResponseObj = new CustomBrokerResponse();
 
 		try {
-
 			session = sessionFactory.openSession();
 			CustomBroker customBroker= customBrokerDao.findById(id, session);
 
@@ -184,26 +161,21 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());
 				//customBrokerResponseObj.setStatus(customBroker.getStatus().getStatus());
 				customBrokerResponseObj.setEmail(customBroker.getEmail());
-				customBrokerResponseObj.setWebsite(customBroker.getWebsite());
-				
+				customBrokerResponseObj.setWebsite(customBroker.getWebsite());		
 			}
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-
 		return customBrokerResponseObj;
 	}
 
 	@Override
 	public CustomBrokerResponse getOpenAdd() {
-
 		CustomBrokerResponse customBrokerResponse = new CustomBrokerResponse();
-
 		List<Status> statusList = statusService.getAll();
-		customBrokerResponse.setStatusList(statusList);
-	
+		customBrokerResponse.setStatusList(statusList);	
 		return customBrokerResponse;
 	}
 
@@ -217,8 +189,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			session = sessionFactory.openSession();
 			if(customBrokerName != null && customBrokerName.length() > 0) {
 				customBrokerList = customBrokerDao.findAll(customBrokerName, session);
-			}
-			
+			}		
 			if (customBrokerList != null && !customBrokerList.isEmpty()) {
 				for (CustomBroker customBroker : customBrokerList) {
 					CustomBrokerResponse customBrokerResponseObj = new CustomBrokerResponse();
@@ -239,7 +210,6 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
-
 		return customBrokerResponseList;
 	}
 

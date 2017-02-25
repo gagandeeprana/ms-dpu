@@ -166,6 +166,7 @@ public class TruckServiceImpl implements TruckService {
 
 			List<DivisionReq> lstDivision = divisionService.getAll("");
 			truckResponse.setDivisionList(lstDivision);
+			
 			List<TypeResponse> truckTypeList = typeService.getAll(8l);
 			truckResponse.setTruckTypeList(truckTypeList);
 

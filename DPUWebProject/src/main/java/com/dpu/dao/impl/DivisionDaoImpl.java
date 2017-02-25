@@ -79,11 +79,9 @@ public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
 	public void deleteDivision(Division division) {
 		logger.info("[DivisionDaoImpl] [deleteDivision] : Srvice: Enter");
 		Session session = sessionFactory.openSession();
-		Transaction tx = null;
-		tx = session.beginTransaction();
+		Transaction tx = session.beginTransaction();
 		session.delete(division);
 		tx.commit();
-		tx.rollback();
 		if (session != null) {
 			session.close();
 		}

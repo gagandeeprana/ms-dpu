@@ -286,8 +286,8 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 			tx = session.beginTransaction();
 			session.delete(entity);
 			tx.commit();
-			tx.rollback();
 		} catch (Exception e) {
+			tx.rollback();
 			logger.error("[GenericDaoImpl] [Delete]" + e);
 		} finally {
 			if (session != null) {

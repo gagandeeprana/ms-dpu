@@ -19,6 +19,7 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
+import com.dpu.model.ProbilModel;
 import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
 import com.dpu.service.OrderService;
@@ -84,38 +85,38 @@ public class OrderController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController add() :"+e.getMessage());
+			logger.error("Exception inside OrderController add() :"+e.getMessage());
 		}
-		logger.info("Inside CategoryController add() Ends");
+		logger.info("Inside OrderController add() Ends");
 		return obj;
 	}
 
 	/**
-	 * this method is used to delete the category based on categoryId
+	 * this method is used to delete the particular probil
 	 * @param id
-	 * @return List<category>
+	 * @return List<Order>
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long id) {
+	@RequestMapping(value = "/probil/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteProbil(@PathVariable("id") Long probilId) {
 		
-		logger.info("Inside CategoryController delete() Starts, id is :" + id);
+		logger.info("Inside OrderController deleteProbil() Starts, probilId is :" + probilId);
 		Object obj = null;
 		
 		try {
-			List<CategoryReq> categoryReq = null;
-			//categoryReq = categoryService.delete(id);
+			Object result = orderService.deleteProbil(probilId);
 			
-			if (categoryReq != null && categoryReq.size() > 0) {
-				obj = categoryReq;
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToDeleteCode),
-						categoryUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController delete() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToDeleteCode),
+					categoryUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside OrderController deleteProbil() :"+e.getMessage());
 		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + id);
+		logger.info("Inside OrderController deleteProbil() Ends, probilId is :" + probilId);
 		return obj;
 
 	}
@@ -148,29 +149,29 @@ public class OrderController extends MessageProperties {
 	}
 
 	/**
-	 * this method is used to get category data based on categoryId
-	 * @param id
-	 * @return categorydata
+	 * this method is used to get probil data based on probilId
+	 * @param probilid
+	 * @return probilData
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getCategoryById(@PathVariable("categoryId") Long id) {
+	public Object getProbilById(@PathVariable("categoryId") Long probilId) {
 		
-		logger.info("Inside CategoryController getCategoryById() Starts, Id:" + id);
+		logger.info("Inside CategoryController getCategoryById() Starts, probilId:" + probilId);
 		String json = null;
 		
 		try {
 			
-			CategoryReq categoryReq = categoryService.get(id);
+			ProbilModel probilModel = orderService.getProbilByProbilId(probilId);
 
-			if (categoryReq != null) {
-				json = mapper.writeValueAsString(categoryReq);
+			if (probilModel != null) {
+				json = mapper.writeValueAsString(probilModel);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside CategoryController getCategoryById() :" + e.getMessage());
 		}
 		
-		logger.info("Inside CategoryController getCategoryById() Ends, Id:" + id);
+		logger.info("Inside CategoryController getCategoryById() Ends, probilId:" + probilId);
 		return json;
 	}
 

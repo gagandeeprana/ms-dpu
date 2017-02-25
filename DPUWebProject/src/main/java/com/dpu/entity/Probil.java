@@ -1,6 +1,7 @@
 package com.dpu.entity;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -74,6 +76,10 @@ public class Probil implements Serializable {
 	
 	@Column(name = "delivery_mab_time")
 	private Date deliveryMABTime;
+	
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = OrderPickupDropNo.class)
+	@JoinColumn(name = "probil_id", referencedColumnName = "probil_id")
+	private List<OrderPickupDropNo> orderPickupDropNos;
 	
 	public Long getId() {
 		return id;
@@ -193,6 +199,14 @@ public class Probil implements Serializable {
 
 	public void setPickupMABTime(Date pickupMABTime) {
 		this.pickupMABTime = pickupMABTime;
+	}
+
+	public List<OrderPickupDropNo> getOrderPickupDropNos() {
+		return orderPickupDropNos;
+	}
+
+	public void setOrderPickupDropNos(List<OrderPickupDropNo> orderPickupDropNos) {
+		this.orderPickupDropNos = orderPickupDropNos;
 	}
 
 }

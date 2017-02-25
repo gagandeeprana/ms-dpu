@@ -6,18 +6,15 @@ import com.dpu.entity.Category;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.OrderModel;
+import com.dpu.model.ProbilModel;
 public interface OrderService {
 	/*Object addCategory(CategoryReq categoryReq);*/
 
 	List<CategoryReq> update(Long id, CategoryReq categoryReq);
 
-	List<CategoryReq> delete(Long id);
-
 	List<OrderModel> getAllOrders();
 
 	OrderModel getOpenAdd();
-
-	CategoryReq get(Long id);
 
 	List<CategoryReq> getCategoryByCategoryName(String categoryName);
 	
@@ -28,5 +25,9 @@ public interface OrderService {
 	CompanyResponse getCompanyData(Long companyId);
 
 	Object addOrder(OrderModel orderModel);
+
+	Object deleteProbil(Long probilId);
+
+	ProbilModel getProbilByProbilId(Long probilId);
 
 }

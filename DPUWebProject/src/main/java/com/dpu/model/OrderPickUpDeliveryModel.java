@@ -15,7 +15,7 @@ public class OrderPickUpDeliveryModel implements Serializable{
 	
 	private String pickupDeliveryNo;
 	
-	private String typeName;
+	private Long typeId;
 
 	public Long getId() {
 		return id;
@@ -33,13 +33,14 @@ public class OrderPickUpDeliveryModel implements Serializable{
 		this.pickupDeliveryNo = pickupDeliveryNo;
 	}
 
-	public String getTypeName() {
-		return typeName;
+	public Long getTypeId() {
+		return typeId;
 	}
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
 	}
+
 
 	
 }

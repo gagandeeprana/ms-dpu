@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.common.CommonProperties;
+import com.dpu.dao.DivisionDao;
+import com.dpu.dao.TerminalDao;
 import com.dpu.dao.TruckDao;
+import com.dpu.dao.TypeDao;
 import com.dpu.entity.Status;
 import com.dpu.entity.Truck;
 import com.dpu.model.CategoryReq;
@@ -56,6 +59,15 @@ public class TruckServiceImpl implements TruckService {
 	@Autowired
 	TypeService typeService;
 
+	@Autowired
+	DivisionDao divisionDao;
+
+	@Autowired
+	TerminalDao terminalDao;
+
+	@Autowired
+	TypeDao typeDao;
+
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
 	private Object createSuccessObject(String msg, long code) {
@@ -86,14 +98,16 @@ public class TruckServiceImpl implements TruckService {
 			truck.setoOName(truckResponse.getoOName());
 			truck.setCategory(categoryService.getCategory(truckResponse
 					.getCategoryId()));
-			// truck.setDivision(divisionService.get(truckResponse.getDivisionId()));
-			// truck.setTerminal(terminalService.getTerminal(truckResponse.getTerminalId()));
+			truck.setDivision(divisionDao.findById(truckResponse
+					.getDivisionId()));
+			truck.setTerminal(terminalDao.findById(truckResponse
+					.getTerminalId()));
 			truck.setStatus(statusService.get(truckResponse.getStatusId()));
 			truck.setUsage(truckResponse.getTruchUsage());
 
 			truck.setType(typeService.get(truckResponse.getTruckTypeId()));
 
-			// truck.setTruckType(truckResponse.getTruckType().get);
+			truck.setType(typeDao.findById(truckResponse.getTruckTypeId()));
 
 			truck.setFinance(truckResponse.getFinance());
 
@@ -166,7 +180,7 @@ public class TruckServiceImpl implements TruckService {
 
 			List<DivisionReq> lstDivision = divisionService.getAll("");
 			truckResponse.setDivisionList(lstDivision);
-			
+
 			List<TypeResponse> truckTypeList = typeService.getAll(8l);
 			truckResponse.setTruckTypeList(truckTypeList);
 

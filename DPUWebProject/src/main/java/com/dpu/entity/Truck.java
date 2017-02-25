@@ -51,9 +51,6 @@ public class Truck implements Serializable {
 	@Column(name = "owner")
 	private String owner;
 
-	// @Column(name = "truck_type")
-	// private String truckType;
-
 	@Column(name = "finance")
 	private String finance;
 

@@ -105,7 +105,7 @@ public class DivisionServiceImpl implements DivisionService {
 		Division division = null;
 		try {
 			division = divisionDao.findById(id);
-			divisionDao.delete(division);
+			divisionDao.deleteDivision(division);
 
 		} catch (Exception e) {
 			if (e instanceof MySQLIntegrityConstraintViolationException) {

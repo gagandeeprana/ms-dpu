@@ -15,4 +15,6 @@ import com.dpu.model.DivisionReq;
 public interface DivisionDao extends GenericDao<Division> {
 
 	Division add(Session session, DivisionReq divisionReq);
+
+	void deleteDivision(Division division);
 }

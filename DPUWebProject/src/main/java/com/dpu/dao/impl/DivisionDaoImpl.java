@@ -6,6 +6,7 @@ package com.dpu.dao.impl;
 import java.util.Date;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -62,8 +63,8 @@ public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
 		division.setCarrierCode(divisionReq.getCarrierCode());
 		division.setContractPrefix(divisionReq.getContractPrefix());
 		division.setInvoicePrefix(divisionReq.getInvoicePrefix());
-//		Status status = statusService.get(divisionReq.getStatusId());
-//		division.setStatus(status);
+		// Status status = statusService.get(divisionReq.getStatusId());
+		// division.setStatus(status);
 		division.setCreatedBy("jagvir");
 		division.setCreatedOn(new Date());
 		division.setModifiedBy("jagvir");
@@ -72,6 +73,21 @@ public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
 		logger.info("DivisionDaoImpl: setDivisionValues(): ENDS");
 
 		return division;
+	}
+
+	@Override
+	public void deleteDivision(Division division) {
+		logger.info("[DivisionDaoImpl] [deleteDivision] : Srvice: Enter");
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		tx = session.beginTransaction();
+		session.delete(division);
+		tx.commit();
+		tx.rollback();
+		if (session != null) {
+			session.close();
+		}
+		logger.info("[DivisionDaoImpl] [deleteDivision] : Srvice: Exit");
 	}
 
 }

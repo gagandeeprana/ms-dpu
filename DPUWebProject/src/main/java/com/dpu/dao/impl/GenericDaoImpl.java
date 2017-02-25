@@ -279,21 +279,21 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 	}
 
 	public void delete(T entity) {
+		logger.info("[GenericDaoImpl] [delete]  : Enter");
 		Session session = sessionFactory.openSession();
 		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.delete(entity);
+			tx.commit();
+			tx.rollback();
+		} catch (Exception e) {
+			logger.error("[GenericDaoImpl] [Delete]" + e);
+		} finally {
+			if (session != null) {
+				session.close();
 
-		tx = session.beginTransaction();
-		System.out.println("11111111111");
-		session.delete(entity);
-		System.out.println("2222222222222");
-		tx.commit();
-
-		System.out.println("3333333333");
-		tx.rollback();
-		// logger.error("[delete]" + e.getCause());
-		if (session != null) {
-			session.close();
-
+			}
 		}
 	}
 

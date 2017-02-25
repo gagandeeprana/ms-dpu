@@ -109,5 +109,19 @@ public class CommonProperties {
 		public static final String category_updated_message = prop.getProperty("category_updated_message");
 		public static final String category_unable_to_update_code = prop.getProperty("equipment_unable_to_update_code");
 		public static final String category_unable_to_update_message = prop.getProperty("category_unable_to_update_message");
+		
+		// messages for custombroker module
+		public static final String custombroker_added_message = prop.getProperty("custombroker_added_message");
+		public static final String custombroker_added_code = prop.getProperty("custombroker_added_code");
+		public static final String custombroker_unable_to_add_code = prop.getProperty("custombroker_unable_to_add_code");
+		public static final String custombroker_unable_to_add_message = prop.getProperty("custombroker_unable_to_add_message");
+		public static final String custombroker_deleted_code = prop.getProperty("custombroker_deleted_code");
+		public static final String custombroker_deleted_message = prop.getProperty("custombroker_deleted_message");
+		public static final String custombroker_unable_to_delete_code = prop.getProperty("custombroker_unable_to_delete_code");
+		public static final String custombroker_unable_to_delete_message = prop.getProperty("custombroker_unable_to_delete_message");
+		public static final String custombroker_updated_code = prop.getProperty("custombroker_updated_code");
+		public static final String custombroker_updated_message = prop.getProperty("custombroker_updated_message");
+		public static final String custombroker_unable_to_update_code = prop.getProperty("custombroker_unable_to_update_code");
+		public static final String custombroker_unable_to_update_message = prop.getProperty("custombroker_unable_to_update_message");
 
 }

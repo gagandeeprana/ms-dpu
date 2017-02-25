@@ -356,4 +356,42 @@ public class MessageProperties {
 	@Value("${terminal_unable_to_update_message}")
 	public String terminalUnableToUpdateMessage;
 	
+	//CustomBroker Module Messages
+	
+		@Value("${custombroker_added_code}")
+		public String custombrokerAddedCode;
+
+		@Value("${custombroker_added_message}")
+		public String custombrokerAddedMessage;
+
+		@Value("${custombroker_unable_to_add_code}")
+		public String custombrokerUnableToAddCode;
+		
+		@Value("${custombroker_unable_to_add_message}")
+		public String custombrokerUnableToAddMessage;
+
+		@Value("${custombroker_deleted_code}")
+		public String custombrokerDeletedCode;
+
+		@Value("${custombroker_deleted_message}")
+		public String custombrokerDeletedMessage;
+
+		@Value("${custombroker_unable_to_delete_code}")
+		public String custombrokerUnableToDeleteCode;
+
+		@Value("${custombroker_unable_to_delete_message}")
+		public String custombrokerUnableToDeleteMessage;
+
+		@Value("${custombroker_updated_code}")
+		public String custombrokerUpdateCode;
+
+		@Value("${custombroker_updated_message}")
+		public String custombrokerUpdateMessage;
+
+		@Value("${custombroker_unable_to_update_code}")
+		public String custombrokerUnableToUpdateCode;
+
+		@Value("${custombroker_unable_to_update_message}")
+		public String custombrokerUnableToUpdateMessage;
+	
 }

@@ -45,7 +45,7 @@ public class CustomBrokerController extends MessageProperties {
 				json = mapper.writeValueAsString(lstcustomBrokerResp);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside CustomBrokerController getAll() :"+ e.getMessage());
 		}
 		logger.info("[getAll] : Exit");
 		return json;
@@ -66,8 +66,7 @@ public class CustomBrokerController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside CustomBrokerController add() :"
-					+ e.getMessage());
+			logger.error("Exception inside CustomBrokerController add() :"+ e.getMessage());
 		}
 
 		logger.info("Inside CustomBrokerController add() ends");
@@ -89,7 +88,7 @@ public class CustomBrokerController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside CustomBrokerController delete() :"+ e.getMessage());
 		}
 		logger.info("[delete] : Exit:   ");
 		return obj;
@@ -111,7 +110,7 @@ public class CustomBrokerController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside CustomBrokerController update() :"+ e.getMessage());
 		}
 		logger.info("[update] : Exit");
 		return obj;
@@ -126,7 +125,7 @@ public class CustomBrokerController extends MessageProperties {
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(customBrokerResp);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside CustomBrokerController getById() :"+ e.getMessage());
 		}
 		logger.info("[get] : Exit ");
 		return json;
@@ -141,7 +140,7 @@ public class CustomBrokerController extends MessageProperties {
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(customBrokerResp);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside CustomBrokerController openAdd() :"+ e.getMessage());
 		}
 		logger.info(" Inside CustomBrokerController openAdd() Ends ");
 		return json;
@@ -149,8 +148,7 @@ public class CustomBrokerController extends MessageProperties {
 
 	@RequestMapping(value = "/{custombrokername}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchService(@PathVariable("custombrokername") String customBrokerName) {
-		logger.info("Inside CustomBrokerController searchCustomBroker() Starts, customBrokerName :"
-				+ customBrokerName);
+		logger.info("Inside CustomBrokerController searchCustomBroker() Starts, customBrokerName :"	+ customBrokerName);
 		String json = new String();
 		try {
 			List<CustomBrokerResponse> customBrokerRespList = customBrokerService.getCustomBrokerByCustomBrokerName(customBrokerName);
@@ -158,12 +156,9 @@ public class CustomBrokerController extends MessageProperties {
 				json = mapper.writeValueAsString(customBrokerRespList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside CustomBrokerController searchService() is :"
-					+ e);
+			logger.error("Exception inside CustomBrokerController searchService() is :"	+ e.getMessage());
 		}
-		logger.info(" Inside CustomBrokerController customBrokerName() Starts, customBrokerName :"
-				+ customBrokerName);
+		logger.info(" Inside CustomBrokerController customBrokerName() Starts, customBrokerName :"+ customBrokerName);
 		return json;
 	}
 }

@@ -1,23 +1,29 @@
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.CustomBrokerDao;
 import com.dpu.entity.CustomBroker;
+import com.dpu.entity.CustomBrokerType;
 import com.dpu.entity.Status;
 import com.dpu.model.CustomBrokerResponse;
+import com.dpu.model.CustomBrokerTypeModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.CustomBrokerService;
 import com.dpu.service.StatusService;
+import com.dpu.service.TypeService;
 @Component
 public class CustomBrokerServiceImpl implements CustomBrokerService {
 	@Autowired
@@ -28,6 +34,9 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	TypeService typeService;
 
 	Logger logger = Logger.getLogger(CustomBrokerServiceImpl.class);
 
@@ -63,14 +72,14 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 	private CustomBroker setCustomBrokerValues(CustomBrokerResponse customBrokerReponse) {
 		CustomBroker customBroker = new CustomBroker();
 		customBroker.setCustomBrokerName(customBrokerReponse.getCustomBrokerName());
-		customBroker.setContactName(customBrokerReponse.getContactName());
+		/*customBroker.setContactName(customBrokerReponse.getContactName());
 		customBroker.setPhone(customBrokerReponse.getPhone());
 		customBroker.setExtention(customBrokerReponse.getExtention());
-		customBroker.setFaxNumber(customBrokerReponse.getFaxNumber());
-		Status status = statusService.get(customBrokerReponse.getStatusId());
-		customBroker.setStatus(status);
+		customBroker.setFaxNumber(customBrokerReponse.getFaxNumber());*/
+		//Status status = statusService.get(customBrokerReponse.getStatusId());
+		/*customBroker.setStatus(status);
 		customBroker.setEmail(customBrokerReponse.getEmail());
-		customBroker.setWebsite(customBrokerReponse.getWebsite());
+		customBroker.setWebsite(customBrokerReponse.getWebsite());*/
 		return customBroker;
 	}
 
@@ -124,13 +133,13 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 					CustomBrokerResponse customBrokerResponseObj = new CustomBrokerResponse();
 					customBrokerResponseObj.setCustomBrokerId(customBroker.getCustomBrokerId());
 					customBrokerResponseObj.setCustomBrokerName(customBroker.getCustomBrokerName());
-					customBrokerResponseObj.setContactName(customBroker.getContactName());
+				/*	customBrokerResponseObj.setContactName(customBroker.getContactName());
 					customBrokerResponseObj.setPhone(customBroker.getPhone());
 					customBrokerResponseObj.setExtention(customBroker.getExtention());
-					customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());
+					customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());*/
 					//customBrokerResponseObj.setStatus(customBroker.getStatus().getStatus());
-					customBrokerResponseObj.setEmail(customBroker.getEmail());
-					customBrokerResponseObj.setWebsite(customBroker.getWebsite());
+				/*	customBrokerResponseObj.setEmail(customBroker.getEmail());
+					customBrokerResponseObj.setWebsite(customBroker.getWebsite());*/
 					customBrokerResponseList.add(customBrokerResponseObj);
 				}
 			}
@@ -155,13 +164,44 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			if (customBroker != null) {
 				customBrokerResponseObj.setCustomBrokerId(customBroker.getCustomBrokerId());
 				customBrokerResponseObj.setCustomBrokerName(customBroker.getCustomBrokerName());
-				customBrokerResponseObj.setContactName(customBroker.getContactName());
+				
+				List<CustomBrokerType> customBrokerTypeList = customBroker.getCustomerBrokerTypes();
+				if(customBrokerTypeList != null && !customBrokerTypeList.isEmpty()){
+					
+					List<CustomBrokerTypeModel> customBrokerTypes = new ArrayList<CustomBrokerTypeModel>();
+					for (CustomBrokerType customBrokerType : customBrokerTypeList) {
+						CustomBrokerTypeModel customBrokerTypeModel = new CustomBrokerTypeModel();
+						BeanUtils.copyProperties(customBrokerType, customBrokerTypeModel);
+						customBrokerTypeModel.setOperationId(customBrokerType.getOperation().getTypeId());
+						customBrokerTypeModel.setStatusId(customBrokerType.getStatus().getId());
+						customBrokerTypeModel.setTimeZoneId(customBrokerType.getTimeZone().getTypeId());
+						
+						customBrokerTypes.add(customBrokerTypeModel);
+						
+					}
+					
+					customBrokerResponseObj.setCustomBrokerTypes(customBrokerTypes);
+				}
+				
+				
+				List<Status> statusList = statusService.getAll();
+				customBrokerResponseObj.setStatusList(statusList);	
+				
+				List<TypeResponse> operationList = typeService.getAll(15l);
+				customBrokerResponseObj.setOperationList(operationList);
+				
+				List<TypeResponse> timeZoneList = typeService.getAll(16l);
+				customBrokerResponseObj.setTimeZoneList(timeZoneList);
+				
+				List<TypeResponse> typeList = typeService.getAll(14l);
+				customBrokerResponseObj.setTypeList(typeList);
+				/*customBrokerResponseObj.setContactName(customBroker.getContactName());
 				customBrokerResponseObj.setPhone(customBroker.getPhone());
 				customBrokerResponseObj.setExtention(customBroker.getExtention());
-				customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());
+				customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());*/
 				//customBrokerResponseObj.setStatus(customBroker.getStatus().getStatus());
-				customBrokerResponseObj.setEmail(customBroker.getEmail());
-				customBrokerResponseObj.setWebsite(customBroker.getWebsite());		
+			/*	customBrokerResponseObj.setEmail(customBroker.getEmail());
+				customBrokerResponseObj.setWebsite(customBroker.getWebsite());	*/	
 			}
 		} finally {
 			if (session != null) {
@@ -176,6 +216,16 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 		CustomBrokerResponse customBrokerResponse = new CustomBrokerResponse();
 		List<Status> statusList = statusService.getAll();
 		customBrokerResponse.setStatusList(statusList);	
+		
+		List<TypeResponse> operationList = typeService.getAll(15l);
+		customBrokerResponse.setOperationList(operationList);
+		
+		List<TypeResponse> timeZoneList = typeService.getAll(16l);
+		customBrokerResponse.setTimeZoneList(timeZoneList);
+		
+		List<TypeResponse> typeList = typeService.getAll(14l);
+		customBrokerResponse.setTypeList(typeList);
+		
 		return customBrokerResponse;
 	}
 
@@ -195,13 +245,13 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 					CustomBrokerResponse customBrokerResponseObj = new CustomBrokerResponse();
 					customBrokerResponseObj.setCustomBrokerId(customBroker.getCustomBrokerId());
 					customBrokerResponseObj.setCustomBrokerName(customBroker.getCustomBrokerName());
-					customBrokerResponseObj.setContactName(customBroker.getContactName());
+					/*customBrokerResponseObj.setContactName(customBroker.getContactName());
 					customBrokerResponseObj.setPhone(customBroker.getPhone());
 					customBrokerResponseObj.setExtention(customBroker.getExtention());
-					customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());
+					customBrokerResponseObj.setFaxNumber(customBroker.getFaxNumber());*/
 					//customBrokerResponseObj.setStatus(customBroker.getStatus().getStatus());
-					customBrokerResponseObj.setEmail(customBroker.getEmail());
-					customBrokerResponseObj.setWebsite(customBroker.getWebsite());
+				/*	customBrokerResponseObj.setEmail(customBroker.getEmail());
+					customBrokerResponseObj.setWebsite(customBroker.getWebsite());*/
 					customBrokerResponseList.add(customBrokerResponseObj);
 				}
 			}

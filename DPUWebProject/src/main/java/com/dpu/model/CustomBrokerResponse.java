@@ -12,15 +12,27 @@ public class CustomBrokerResponse {
 	
 	private Long customBrokerId;
 	private String customBrokerName;
-	private String contactName;
+	
+	private List<TypeResponse> typeList;
+	private Long typeId;
+	/*private String contactName;
 	private String phone;
 	private String extention;
 	private String faxNumber;
 	private String status;
 	private Long statusId;
-	private List<Status> statusList;
+	
 	private String email;
-	private String website;
+	private String website;*/
+	
+	private List<CustomBrokerTypeModel> customBrokerTypes;
+	
+	private List<TypeResponse> operationList;
+	
+	private List<TypeResponse> timeZoneList;
+	
+	private List<Status> statusList;
+	
 	
 	
 	public Long getCustomBrokerId() {
@@ -37,77 +49,41 @@ public class CustomBrokerResponse {
 	public void setCustomBrokerName(String customBrokerName) {
 		this.customBrokerName = customBrokerName;
 	}
-	
-	
-	public String getContactName() {
-		return contactName;
+	public List<TypeResponse> getTypeList() {
+		return typeList;
 	}
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
+	public void setTypeList(List<TypeResponse> typeList) {
+		this.typeList = typeList;
 	}
-	
-	
-	public String getPhone() {
-		return phone;
+	public Long getTypeId() {
+		return typeId;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
 	}
-	
-	
-	public String getExtention() {
-		return extention;
+	public List<CustomBrokerTypeModel> getCustomBrokerTypes() {
+		return customBrokerTypes;
 	}
-	public void setExtention(String extention) {
-		this.extention = extention;
+	public void setCustomBrokerTypes(List<CustomBrokerTypeModel> customBrokerTypes) {
+		this.customBrokerTypes = customBrokerTypes;
 	}
-	
-	
-	public String getFaxNumber() {
-		return faxNumber;
+	public List<TypeResponse> getOperationList() {
+		return operationList;
 	}
-	public void setFaxNumber(String faxNumber) {
-		this.faxNumber = faxNumber;
+	public void setOperationList(List<TypeResponse> operationList) {
+		this.operationList = operationList;
 	}
-	
-	
-	public String getStatus() {
-		return status;
+	public List<TypeResponse> getTimeZoneList() {
+		return timeZoneList;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setTimeZoneList(List<TypeResponse> timeZoneList) {
+		this.timeZoneList = timeZoneList;
 	}
-	
-	
-	public Long getStatusId() {
-		return statusId;
-	}
-	public void setStatusId(Long statusId) {
-		this.statusId = statusId;
-	}
-	
-	
 	public List<Status> getStatusList() {
 		return statusList;
 	}
 	public void setStatusList(List<Status> statusList) {
 		this.statusList = statusList;
-	}
-	
-	
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	
-	public String getWebsite() {
-		return website;
-	}
-	public void setWebsite(String website) {
-		this.website = website;
 	}
 	
 }

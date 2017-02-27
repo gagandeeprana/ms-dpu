@@ -1,5 +1,7 @@
 package com.dpu.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -27,7 +30,7 @@ public class CustomBroker {
 	@Column(name = "custom_broker")
 	private String customBrokerName;
 	
-	@Column(name = "contact_name")
+	/*@Column(name = "contact_name")
 	private String contactName;
 	
 	@Column(name = "phone")
@@ -41,13 +44,21 @@ public class CustomBroker {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "status_id")
-	private Status status;
+	private Status status;*/
 	
-	@Column(name = "email")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "type_id")
+	private Type type;
+	
+	/*@Column(name = "email")
 	private String email;
 	
 	@Column(name = "website")
-	private String website;
+	private String website;*/
+	
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = CustomBrokerType.class)
+	@JoinColumn(name = "custom_broker_id", referencedColumnName = "custom_broker_id")
+	private List<CustomBrokerType> customerBrokerTypes;
 
 	public Long getCustomBrokerId() {
 		return customBrokerId;
@@ -65,7 +76,23 @@ public class CustomBroker {
 		this.customBrokerName = customBrokerName;
 	}
 
-	public String getContactName() {
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public List<CustomBrokerType> getCustomerBrokerTypes() {
+		return customerBrokerTypes;
+	}
+
+	public void setCustomerBrokerTypes(List<CustomBrokerType> customerBrokerTypes) {
+		this.customerBrokerTypes = customerBrokerTypes;
+	}
+
+	/*public String getContactName() {
 		return contactName;
 	}
 
@@ -119,7 +146,7 @@ public class CustomBroker {
 
 	public void setWebsite(String website) {
 		this.website = website;
-	}
+	}*/
 
 	
 	

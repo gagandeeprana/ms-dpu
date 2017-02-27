@@ -27,7 +27,7 @@ public class CustomBrokerDaoImpl extends GenericDaoImpl<CustomBroker> implements
 	@Override
 	public List<CustomBroker> findAll(String customBrokerName, Session session) {
 		
-		StringBuilder queryAppender = new StringBuilder("select c from CustomBroker c join fetch c.status ");
+		StringBuilder queryAppender = new StringBuilder("select c from CustomBroker c "); //join fetch c.status
 		if(customBrokerName != null) {
 			queryAppender.append(" where c.customBrokerName like '%" + customBrokerName + "%'");
 		}
@@ -39,7 +39,7 @@ public class CustomBrokerDaoImpl extends GenericDaoImpl<CustomBroker> implements
 	@Override
 	public CustomBroker findById(Long customBrokerId,Session session) {
 		
-		StringBuilder queryAppender = new StringBuilder("select c from CustomBroker c join fetch c.status where c.customBrokerId =:customBrokerId");
+		StringBuilder queryAppender = new StringBuilder("select c from CustomBroker c  where c.customBrokerId =:customBrokerId");//join fetch c.status
 		Query query = session.createQuery(queryAppender.toString());
 		query.setParameter("customBrokerId", customBrokerId);
 		List<CustomBroker> customBrokerList = query.list();

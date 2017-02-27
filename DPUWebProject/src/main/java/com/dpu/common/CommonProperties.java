@@ -109,6 +109,10 @@ public class CommonProperties {
 		public static final String category_updated_message = prop.getProperty("category_updated_message");
 		public static final String category_unable_to_update_code = prop.getProperty("equipment_unable_to_update_code");
 		public static final String category_unable_to_update_message = prop.getProperty("category_unable_to_update_message");
+		public static final String category_already_used_code = prop.getProperty("category_already_used_code");
+		public static final String category_already_used_message = prop.getProperty("category_already_used_message");
+		
+		
 		
 		// messages for custombroker module
 		public static final String custombroker_added_message = prop.getProperty("custombroker_added_message");

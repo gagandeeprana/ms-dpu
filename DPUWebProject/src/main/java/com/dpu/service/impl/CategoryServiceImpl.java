@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,6 @@ import com.dpu.common.CommonProperties;
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Status;
-import com.dpu.entity.Truck;
 import com.dpu.entity.Type;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.Failed;
@@ -49,6 +49,15 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	private Object createFailedObject(String msg, long code) {
+		Failed failed = new Failed();
+		failed.setCode(code);
+		failed.setMessage(msg);
+		failed.setResultList(getAll());
+		return failed;
+	}
+
+	public Object createAlreadyExistObject(String msg, long code) {
+		System.out.println("wwwwwwwwwwwwww" + msg + " " + code);
 		Failed failed = new Failed();
 		failed.setCode(code);
 		failed.setMessage(msg);
@@ -128,19 +137,31 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Object delete(Long id) {
-		
+
 		logger.info("[CategoryServiceImpl] [delete] : Srvice: Enter");
-		
+
 		Object obj = null;
 		try {
 			Category category = categoryDao.findById(id);
-			categoryDao.delete(category);
-			obj = createSuccessObject(CommonProperties.category_deleted_message, Long.parseLong(CommonProperties.category_unable_to_delete_code));
+			categoryDao.deleteCategory(category);
+			obj = createSuccessObject(
+					CommonProperties.category_deleted_message,
+					Long.parseLong(CommonProperties.category_unable_to_delete_code));
+		} catch (ConstraintViolationException em) {
+			logger.info("Exception inside CategoryServiceImpl delete() : "
+					+ em.getMessage());
+			obj = createFailedObject(
+					CommonProperties.category_already_used_message,
+					Long.parseLong(CommonProperties.category_already_used_code));
+
 		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl delete() : " + e.getMessage());
-			obj = createFailedObject(CommonProperties.category_unable_to_delete_message, Long.parseLong(CommonProperties.category_deleted_code));
+			logger.info("Exception inside CategoryServiceImpl delete() : "
+					+ e.getMessage());
+			obj = createFailedObject(
+					CommonProperties.category_unable_to_delete_message,
+					Long.parseLong(CommonProperties.category_deleted_code));
 		}
-		
+
 		logger.info("[CategoryServiceImpl] [delete] : Service :  Exit");
 
 		return obj;

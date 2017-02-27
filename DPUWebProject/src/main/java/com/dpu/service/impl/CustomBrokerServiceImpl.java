@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import com.dpu.dao.CustomBrokerDao;
 import com.dpu.entity.CustomBroker;
 import com.dpu.entity.CustomBrokerType;
 import com.dpu.entity.Status;
+import com.dpu.entity.Type;
 import com.dpu.model.CustomBrokerResponse;
 import com.dpu.model.CustomBrokerTypeModel;
 import com.dpu.model.Failed;
@@ -58,15 +60,66 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 
 	@Override
 	public Object add(CustomBrokerResponse customBrokerReponse) {
-	try {
-			CustomBroker customBroker = setCustomBrokerValues(customBrokerReponse);
-			customBrokerDao.save(customBroker);
+		
+		logger.info("Inside CustomBrokerServiceImpl add() starts ");
+		Session session = null;
+		Transaction tx = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			CustomBroker customBroker = addCustomBroker(customBrokerReponse, session);
+			
+			List<CustomBrokerTypeModel> customBrokerTypes = customBrokerReponse.getCustomBrokerTypes();
+			if(customBrokerTypes != null && !customBrokerTypes.isEmpty()){
+				for (CustomBrokerTypeModel customBrokerTypeModel : customBrokerTypes) {
+					addCustomBrokerType(customBrokerTypeModel, customBroker, session);
+				}
+			}
 
 		} catch (Exception e) {
 			logger.error("Exception inside CustomBrokerServiceImpl add() :"	+ e.getMessage());
+			if(tx != null){
+				tx.rollback();
+			}
 			return createFailedObject(CommonProperties.custombroker_unable_to_add_message,Long.parseLong(CommonProperties.custombroker_unable_to_add_code));
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
 		}
-	return createSuccessObject(CommonProperties.custombroker_added_message,Long.parseLong(CommonProperties.custombroker_added_code));
+//	return createSuccessObject(CommonProperties.custombroker_added_message,Long.parseLong(CommonProperties.custombroker_added_code));
+		return createSuccessObject("Record inserted successfully",0l);
+	}
+
+	private void addCustomBrokerType(CustomBrokerTypeModel customBrokerTypeModel, CustomBroker customBroker, Session session) {
+	
+		CustomBrokerType customBrokerType = new CustomBrokerType();
+		BeanUtils.copyProperties(customBrokerTypeModel, customBrokerType);
+		Type operation = (Type) session.get(Type.class,customBrokerTypeModel.getOperationId());
+		Type timeZone = (Type) session.get(Type.class, customBrokerTypeModel.getTimeZoneId());
+		Type type =  (Type) session.get(Type.class, customBrokerTypeModel.getTypeId());
+		Status status = (Status) session.get(Status.class, customBrokerTypeModel.getStatusId());
+		
+		customBrokerType.setCustomBroker(customBroker);
+		customBrokerType.setStatus(status);
+		customBrokerType.setOperation(operation);
+		customBrokerType.setTimeZone(timeZone);
+		customBrokerType.setType(type);
+		session.save(customBrokerType);
+	}
+
+	private CustomBroker addCustomBroker(CustomBrokerResponse customBrokerReponse, Session session) {
+		CustomBroker customBroker = new CustomBroker();
+		Type type = (Type) session.get(Type.class, customBrokerReponse.getTypeId());
+		customBroker.setType(type);
+		customBroker.setCustomBrokerName(customBrokerReponse.getCustomBrokerName());
+		session.save(customBroker);
+		return customBroker;
+
 	}
 
 	private CustomBroker setCustomBrokerValues(CustomBrokerResponse customBrokerReponse) {
@@ -164,6 +217,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			if (customBroker != null) {
 				customBrokerResponseObj.setCustomBrokerId(customBroker.getCustomBrokerId());
 				customBrokerResponseObj.setCustomBrokerName(customBroker.getCustomBrokerName());
+				customBrokerResponseObj.setTypeId(customBroker.getType().getTypeId());
 				
 				List<CustomBrokerType> customBrokerTypeList = customBroker.getCustomerBrokerTypes();
 				if(customBrokerTypeList != null && !customBrokerTypeList.isEmpty()){

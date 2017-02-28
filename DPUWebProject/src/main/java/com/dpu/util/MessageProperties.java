@@ -168,6 +168,12 @@ public class MessageProperties {
 
 	@Value("${division_unable_to_update_message}")
 	public String divisionUnableToUpdateMessage;
+	
+	@Value("${division_already_used_code}")
+	public String divisionAlreadyUsedCode;
+
+	@Value("${division_already_used_message}")
+	public String divisionAlreadyUsedMessage;
 
 	/**
 	 * Service Module Messages

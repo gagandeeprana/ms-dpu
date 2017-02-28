@@ -53,8 +53,7 @@ public class CategoryDaoImpl extends GenericDaoImpl<Category> implements
 	@Override
 	public void deleteCategory(Category category) {
 		logger.info("[CategoryDaoImpl] [deleteCategory] : Srvice: Enter");
-		Session session = null;
-		session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		session.delete(category);
 		tx.commit();

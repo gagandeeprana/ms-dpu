@@ -82,14 +82,14 @@ public class HandlingServiceImpl implements HandlingService {
 
 		logger.info("HandlingServiceImpl addHandling() starts ");
 		Handling handling = null;
-		String message ="Record inserted successfully";
+		String message ="Handling inserted successfully";
 		try {
 			handling = setHandlingValues(handlingModel);
 			handlingDao.save(handling);
 
 		} catch (Exception e) {
 			logger.info("Exception inside HandlingServiceImpl addHandling() :"+ e.getMessage());
-			message ="error while inserting record";
+			message ="error while inserting Handling";
 			return createFailedObject(message);
 
 		}
@@ -111,7 +111,7 @@ public class HandlingServiceImpl implements HandlingService {
 	public Object update(Long id, HandlingModel handlingModel) {
 
 		logger.info("HandlingServiceImpl update() starts.");
-		String message ="Record updated successfully.";
+		String message ="Handling updated successfully.";
 		try {
 			Handling handling = handlingDao.findById(id);
 			
@@ -121,7 +121,7 @@ public class HandlingServiceImpl implements HandlingService {
 				handling.setStatus(status);
 				handlingDao.update(handling);
 			} else{
-				message ="Error while updating record";
+				message ="Error while updating Handling";
 				return createFailedObject(message);
 			}
 
@@ -140,7 +140,7 @@ public class HandlingServiceImpl implements HandlingService {
 		logger.info("HandlingServiceImpl delete() starts.");
 		Session session = null;
 		Transaction tx = null;
-		String message ="Record deleted successfully.";
+		String message ="Handling deleted successfully.";
 		
 		try {
 			session = sessionFactory.openSession();
@@ -149,7 +149,7 @@ public class HandlingServiceImpl implements HandlingService {
 			if(handling != null){
 				session.delete(handling);
 			} else{
-				message ="Error while deleting record";
+				message ="Error while deleting Handling";
 				return createFailedObject(message);
 			}
 			

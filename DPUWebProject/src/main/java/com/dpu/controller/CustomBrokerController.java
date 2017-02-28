@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.model.CustomBrokerResponse;
-import com.dpu.model.DPUService;
 import com.dpu.model.Success;
 import com.dpu.service.CustomBrokerService;
 import com.dpu.util.MessageProperties;
@@ -96,8 +95,7 @@ public class CustomBrokerController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id,
-			@RequestBody CustomBrokerResponse customBrokerResp) {
+	public Object update(@PathVariable("id") Long id, @RequestBody CustomBrokerResponse customBrokerResp) {
 		logger.info("[update] : Enter : Id : " + id);
 		Object obj = null;
 		try {
@@ -147,7 +145,7 @@ public class CustomBrokerController extends MessageProperties {
 	}
 
 	@RequestMapping(value = "/{custombrokername}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchService(@PathVariable("custombrokername") String customBrokerName) {
+	public Object searchCustomBroker(@PathVariable("custombrokername") String customBrokerName) {
 		logger.info("Inside CustomBrokerController searchCustomBroker() Starts, customBrokerName :"	+ customBrokerName);
 		String json = new String();
 		try {
@@ -156,7 +154,7 @@ public class CustomBrokerController extends MessageProperties {
 				json = mapper.writeValueAsString(customBrokerRespList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CustomBrokerController searchService() is :"	+ e.getMessage());
+			logger.error("Exception inside CustomBrokerController searchCustomBroker() is :"	+ e.getMessage());
 		}
 		logger.info(" Inside CustomBrokerController customBrokerName() Starts, customBrokerName :"+ customBrokerName);
 		return json;

@@ -67,6 +67,8 @@ public class CommonProperties {
 		public static final String Division_updated_message = prop.getProperty("division_updated_message");
 		public static final String Division_unable_to_update_code = prop.getProperty("division_unable_to_update_code");
 		public static final String Division_unable_to_update_message = prop.getProperty("division_unable_to_update_message");
+		public static final String Division_already_used_code = prop.getProperty("division_already_used_code");
+		public static final String Division_already_used_message = prop.getProperty("division_already_used_message");
 
 		// messages for equipment module
 		public static final String Equipment_added_message = prop.getProperty("equipment_added_message");

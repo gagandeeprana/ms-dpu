@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +56,14 @@ public class DivisionServiceImpl implements DivisionService {
 	}
 
 	private Object createFailedObject(String msg, long code) {
+		Failed failed = new Failed();
+		failed.setCode(code);
+		failed.setMessage(msg);
+		failed.setResultList(getAll(""));
+		return failed;
+	}
+
+	public Object createAlreadyExistObject(String msg, long code) {
 		Failed failed = new Failed();
 		failed.setCode(code);
 		failed.setMessage(msg);
@@ -107,12 +116,14 @@ public class DivisionServiceImpl implements DivisionService {
 			division = divisionDao.findById(id);
 			divisionDao.deleteDivision(division);
 
+		} catch (ConstraintViolationException em) {
+			logger.info("Exception inside DivisionServiceImpl delete() : "
+					+ em.getMessage());
+			return createAlreadyExistObject(
+					CommonProperties.Division_already_used_message,
+					Long.parseLong(CommonProperties.Division_already_used_code));
+
 		} catch (Exception e) {
-			if (e instanceof MySQLIntegrityConstraintViolationException) {
-				return createFailedObject(
-						CommonProperties.Division_unable_to_delete_message,
-						Long.parseLong(CommonProperties.Division_unable_to_delete_code));
-			}
 			logger.error("Exception inside DivisionServiceImpl delete() :"
 					+ e.getMessage());
 			return createFailedObject(

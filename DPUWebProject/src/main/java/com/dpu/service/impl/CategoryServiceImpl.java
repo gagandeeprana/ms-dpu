@@ -57,7 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	public Object createAlreadyExistObject(String msg, long code) {
-		System.out.println("wwwwwwwwwwwwww" + msg + " " + code);
 		Failed failed = new Failed();
 		failed.setCode(code);
 		failed.setMessage(msg);

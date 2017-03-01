@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.controller;
 
 import java.util.List;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
@@ -39,34 +37,40 @@ public class ServiceController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
+	/**
+	 * this method is used to get All services
+	 * @return List<Services>
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		logger.info("[getAll] : Enter");
+		
+		logger.info("ServiceController getAll() starts ");
 		String json = null;
+		
 		try {
 			List<DPUService> lstServices = serviceService.getAll();
 			if (lstServices != null) {
-				/*
-				 * List<DPUService> responses = new ArrayList<DPUService>();
-				 * for(Service service : lstServices) { DPUService response =
-				 * new DPUService(); BeanUtils.copyProperties(response,
-				 * service); responses.add(response); }
-				 */
-				/* if(responses != null && !responses.isEmpty()) { */
 				json = mapper.writeValueAsString(lstServices);
-				/* } */
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ServiceController getAll() :"+ e.getMessage());
 		}
-		logger.info("[getAll] : Exit");
+		
+		logger.info("ServiceController getAll() ends ");
 		return json;
 	}
 
+	/**
+	 * this method is used to add the service
+	 * @param dpuService
+	 * @return  List<Services>
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody DPUService dpuService) {
+		
 		logger.info("Inside ServiceController add() starts");
 		Object obj = null;
+		
 		try {
 
 			Object result = serviceService.add(dpuService);
@@ -78,22 +82,26 @@ public class ServiceController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside ServiceController add() :"
-					+ e.getMessage());
+			logger.error("Exception inside ServiceController add() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,CommonProperties.service_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info("Inside ServiceController add() ends");
 		return obj;
 	}
 
+	/**
+	 * this method is used to delete the particular service
+	 * @param id
+	 * @return  List<Services>
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
-		logger.info("[delete] : Enter : Id : " + id);
+		
+		logger.info("Inside ServiceController delete() starts, serviceId :"+id);
 		Object obj = null;
 		try {
 			Object result = null;
-			// serviceService.get(id);
-			/* if (service != null) { */
 			result = serviceService.delete(id);
 
 			if (result instanceof Success) {
@@ -103,20 +111,28 @@ public class ServiceController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ServiceController delete() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,CommonProperties.service_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[delete] : Exit:   ");
+		
+		logger.info("Inside ServiceController delete() ends, serviceId :"+id);
 		return obj;
 
 	}
 
+	/**
+	 * this method is used to update the particular service
+	 * @param id
+	 * @param dpuService
+	 * @return  List<Services>
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id,
-			@RequestBody DPUService dpuService) {
-		logger.info("[update] : Enter : Id : " + id);
+	public Object update(@PathVariable("id") Long id, @RequestBody DPUService dpuService) {
+		
+		logger.info("Inside ServiceController update() starts, serviceId :"+id);
 		Object obj = null;
+		
 		try {
-			// service.setServiceId(id);
 			Object result = serviceService.update(id, dpuService);
 
 			if (result instanceof Success) {
@@ -126,62 +142,80 @@ public class ServiceController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ServiceController update() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,CommonProperties.service_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[update] : Exit");
+		
+		logger.info("Inside ServiceController update() ends, serviceId :"+id);
 		return obj;
 	}
 
-	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object get(@PathVariable("categoryId") Long id) {
-		logger.info("[get] : Enter : Id : " + id);
+	/**
+	 * this method is used to get the particular service
+	 * @param id
+	 * @return  List<Services>
+	 */
+	@RequestMapping(value = "/{serviceId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object get(@PathVariable("serviceId") Long id) {
+		
+		logger.info("Inside ServiceController get() starts, serviceId :"+id);
 		String json = null;
+		
 		try {
 			DPUService dpuService = serviceService.get(id);
-			// Service service = serviceService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(dpuService);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ServiceController get() :"+ e.getMessage());
 		}
-		logger.info("[get] : Exit ");
+		
+		logger.info("Inside ServiceController get() ends, serviceId :"+id);
 		return json;
 	}
 
+	/**
+	 * this method is used when we click on add button in service 
+	 * @return masterdata for service
+	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
+		
 		logger.info(" Inside ServiceController openAdd() Starts ");
 		String json = null;
+		
 		try {
 			DPUService dpuService = serviceService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(dpuService);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside ServiceController openAdd() :"+ e.getMessage());
 		}
+		
 		logger.info(" Inside ServiceController openAdd() Ends ");
 		return json;
 	}
 
-	@RequestMapping(value = "/{equipmentname}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchService(
-			@PathVariable("equipmentname") String serviceName) {
-		logger.info("Inside ServiceController searchService() Starts, serviceName :"
-				+ serviceName);
+	/**
+	 * this method is used to search service based on service name
+	 * @param serviceName
+	 * @return  List<Services>
+	 */
+	@RequestMapping(value = "/{serviceName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchService(@PathVariable("serviceName") String serviceName) {
+		
+		logger.info("Inside ServiceController searchService() Starts, serviceName :"+ serviceName);
 		String json = new String();
+		
 		try {
-			List<DPUService> serviceList = serviceService
-					.getServiceByServiceName(serviceName);
+			List<DPUService> serviceList = serviceService.getServiceByServiceName(serviceName);
 			if (serviceList != null && serviceList.size() > 0) {
 				json = mapper.writeValueAsString(serviceList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside ServiceController searchService() is :"
-					+ e);
+			logger.error("Exception inside ServiceController searchService() is :"+ e.getMessage());
 		}
-		logger.info(" Inside ServiceController searchService() Starts, serviceName :"
-				+ serviceName);
+		
+		logger.info(" Inside ServiceController searchService() Ends, serviceName :"+ serviceName);
 		return json;
 	}
 

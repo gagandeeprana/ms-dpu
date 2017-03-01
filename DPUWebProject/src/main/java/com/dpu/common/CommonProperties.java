@@ -125,6 +125,7 @@ public class CommonProperties {
 		public static final String custombroker_deleted_message = prop.getProperty("custombroker_deleted_message");
 		public static final String custombroker_unable_to_delete_code = prop.getProperty("custombroker_unable_to_delete_code");
 		public static final String custombroker_unable_to_delete_message = prop.getProperty("custombroker_unable_to_delete_message");
+		public static final String custombroker_dependent_message =  prop.getProperty("custombroker_dependent_message");
 		public static final String custombroker_updated_code = prop.getProperty("custombroker_updated_code");
 		public static final String custombroker_updated_message = prop.getProperty("custombroker_updated_message");
 		public static final String custombroker_unable_to_update_code = prop.getProperty("custombroker_unable_to_update_code");

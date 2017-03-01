@@ -48,7 +48,7 @@ public class CustomBrokerDaoImpl extends GenericDaoImpl<CustomBroker> implements
 		}
 		return null;
 	}
-
+/*
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CustomBroker> getCustomBrokerByCustomBrokerName(Session session, String customBrokerName) {
@@ -56,6 +56,6 @@ public class CustomBrokerDaoImpl extends GenericDaoImpl<CustomBroker> implements
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("customBrokerName", "%"+customBrokerName+"%");
 		return query.list();
-	}
+	}*/
 
 }

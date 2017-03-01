@@ -51,8 +51,7 @@ public class Failed {
 	 *            the auxiliary
 	 */
 	public Failed(int code, String message, String auxiliary) {
-		this.code = ErrorCodeConstants.getCodeValue(code);
-		// this.code = code;
+		this.code = code;
 		this.message = message;
 		this.auxiliary = auxiliary;
 	}
@@ -68,8 +67,7 @@ public class Failed {
 	 *            the auxiliary
 	 */
 	public void setFailed(int code, String message, String auxiliary) {
-		this.code = ErrorCodeConstants.getCodeValue(code);
-		// this.code = code;
+		this.code = code;
 		this.message = message;
 		this.auxiliary = auxiliary;
 	}
@@ -90,7 +88,7 @@ public class Failed {
 	 */
 	public void setCode(long code) {
 		// this.code = code;
-		this.code = ErrorCodeConstants.getCodeValue(Integer.valueOf(String.valueOf(code)));
+		this.code = Integer.valueOf(String.valueOf(code));
 	}
 
 	/*

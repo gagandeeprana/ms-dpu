@@ -11,5 +11,5 @@ public interface CustomBrokerDao extends GenericDao<CustomBroker>{
 
 	CustomBroker findById(Long id, Session session);
 
-	List<CustomBroker> getCustomBrokerByCustomBrokerName(Session session, String customBrokerName);
+	//List<CustomBroker> getCustomBrokerByCustomBrokerName(Session session, String customBrokerName);
 }

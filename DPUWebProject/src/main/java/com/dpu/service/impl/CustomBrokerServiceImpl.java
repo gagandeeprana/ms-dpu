@@ -82,7 +82,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			if(tx != null){
 				tx.rollback();
 			}
-			return createFailedObject(CommonProperties.custombroker_unable_to_add_message,Long.parseLong(CommonProperties.custombroker_unable_to_add_code));
+			return createFailedObject(CommonProperties.custombroker_unable_to_add_message,0l);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -91,8 +91,9 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
-//	return createSuccessObject(CommonProperties.custombroker_added_message,Long.parseLong(CommonProperties.custombroker_added_code));
-		return createSuccessObject("Record inserted successfully",0l);
+		
+		logger.info("Inside CustomBrokerServiceImpl add() ends ");
+		return createSuccessObject(CommonProperties.custombroker_added_message,0l);
 	}
 
 	private void addCustomBrokerType(CustomBrokerTypeModel customBrokerTypeModel, CustomBroker customBroker, Session session) {
@@ -125,7 +126,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 	@Override
 	public Object update(Long id, CustomBrokerResponse customBrokerReponse) {
 		
-		logger.info("[CustomBrokerServiceImpl] [update] : Enter ");
+		logger.info("Inside CustomBrokerServiceImpl update() starts ");
 		Session session = null;
 		Transaction tx = null;
 	
@@ -173,7 +174,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 			if(tx != null){
 				tx.rollback();
 			}
-			return createFailedObject(CommonProperties.custombroker_unable_to_update_message,Long.parseLong(CommonProperties.custombroker_unable_to_update_code));
+			return createFailedObject(CommonProperties.custombroker_unable_to_update_message,0l);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -182,9 +183,9 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
-		logger.info("[CustomBrokerServiceImpl] [update] : Exit ");
-		//return createSuccessObject(CommonProperties.custombroker_updated_message,Long.parseLong(CommonProperties.custombroker_unable_to_update_code));
-		return createSuccessObject("Record updated successfully",0l);
+		
+		logger.info("Inside CustomBrokerServiceImpl update() ends ");
+		return createSuccessObject(CommonProperties.custombroker_updated_message,0l);
 	}
 
 	private void updateCustomBrokerType(CustomBrokerTypeModel customBrokerTypeModel, CustomBrokerType customBrokerType, Session session) {
@@ -204,10 +205,12 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 	
 	@Override
 	public Object delete(Long id) {
-		logger.info("[CustomBrokerServiceImpl] [delete] : Enter ");
+		
+		logger.info("Inside CustomBrokerServiceImpl delete() starts ");
 		CustomBroker customBroker = null;
 		Session session = null;
 		Transaction tx = null;
+		
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -230,9 +233,9 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				tx.rollback();
 			}
 			if(e instanceof ConstraintViolationException){
-				return createFailedObject("custom broker is not able to delete it is dependent on some other things", 0l);
+				return createFailedObject(CommonProperties.custombroker_dependent_message, 0l);
 			}
-			return createFailedObject(CommonProperties.custombroker_unable_to_delete_message,Long.parseLong(CommonProperties.custombroker_unable_to_delete_code));
+			return createFailedObject(CommonProperties.custombroker_unable_to_delete_message,0l);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -241,14 +244,15 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
-		logger.info("[CustomBrokerServiceImpl] [delete] : Service :  Exit");
-		//return createSuccessObject(CommonProperties.custombroker_deleted_message,Long.parseLong(CommonProperties.custombroker_deleted_code));
-		return createSuccessObject("Record deleted successfully.",0l);
+		
+		logger.info("Inside CustomBrokerServiceImpl delete() ends ");
+		return createSuccessObject(CommonProperties.custombroker_deleted_message,0l);
 	}
 
 	@Override
 	public List<CustomBrokerResponse> getAll() {
 
+		logger.info("Inside CustomBrokerServiceImpl getAll() starts ");
 		Session session = null;
 		List<CustomBrokerResponse> customBrokerResponseList = new ArrayList<CustomBrokerResponse>();
 		try {
@@ -269,12 +273,15 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
+		
+		logger.info("Inside CustomBrokerServiceImpl getAll() ends ");
 		return customBrokerResponseList;
 	}
 
 	@Override
 	public CustomBrokerResponse get(Long id) {
 
+		logger.info("Inside CustomBrokerServiceImpl get() starts ");
 		Session session = null;
 		CustomBrokerResponse customBrokerResponseObj = new CustomBrokerResponse();
 
@@ -323,11 +330,15 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
+		
+		logger.info("Inside CustomBrokerServiceImpl get() ends ");
 		return customBrokerResponseObj;
 	}
 
 	@Override
 	public CustomBrokerResponse getOpenAdd() {
+		
+		logger.info("Inside CustomBrokerServiceImpl getOpenAdd() starts ");
 		CustomBrokerResponse customBrokerResponse = new CustomBrokerResponse();
 		List<Status> statusList = statusService.getAll();
 		customBrokerResponse.setStatusList(statusList);	
@@ -341,12 +352,14 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 		List<TypeResponse> typeList = typeService.getAll(14l);
 		customBrokerResponse.setTypeList(typeList);
 		
+		logger.info("Inside CustomBrokerServiceImpl getOpenAdd() ends ");
 		return customBrokerResponse;
 	}
 
 	@Override
 	public List<CustomBrokerResponse> getCustomBrokerByCustomBrokerName(String customBrokerName) {
 
+		logger.info("Inside CustomBrokerServiceImpl getCustomBrokerByCustomBrokerName() starts ");
 		Session session = null;
 		List<CustomBrokerResponse> customBrokerResponseList = new ArrayList<CustomBrokerResponse>();
 		List<CustomBroker> customBrokerList =null;
@@ -368,6 +381,8 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
+		
+		logger.info("Inside CustomBrokerServiceImpl getCustomBrokerByCustomBrokerName() ends ");
 		return customBrokerResponseList;
 	}
 

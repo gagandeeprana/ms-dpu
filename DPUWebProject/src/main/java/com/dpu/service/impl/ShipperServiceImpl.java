@@ -110,18 +110,16 @@ public class ShipperServiceImpl implements ShipperService {
 
 	@Override
 	public Object delete(Long shipperId) {
-
 		Object obj = null;
 		try {
 			Shipper shipper = shipperDao.findById(shipperId);
 			shipperDao.deleteShipper(shipper);
 			obj = createSuccessObject("Shipper deleted successfully",
 					Long.parseLong("1028"));
-		}catch (ConstraintViolationException em) {
+		} catch (ConstraintViolationException em) {
 			logger.info("Exception inside ShipperServiceImpl delete() : "
 					+ em.getMessage());
-			obj = createFailedObject(
-					"Shipper already in Use ",
+			obj = createFailedObject("Shipper already in Use ",
 					Long.parseLong("1056"));
 
 		} catch (Exception e) {

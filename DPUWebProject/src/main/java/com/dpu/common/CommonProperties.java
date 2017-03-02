@@ -97,6 +97,7 @@ public class CommonProperties {
 		public static final String service_updated_message = prop.getProperty("service_updated_message");
 		public static final String service_unable_to_update_code = prop.getProperty("equipment_unable_to_update_code");
 		public static final String service_unable_to_update_message = prop.getProperty("service_unable_to_update_message");
+		public static final String service_dependent_message = prop.getProperty("service_dependent_message");
 
 		// messages for category module
 		public static final String category_added_message = prop.getProperty("category_added_message");

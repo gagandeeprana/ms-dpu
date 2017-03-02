@@ -9,7 +9,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CompanyAdditionalContactsDao;
@@ -55,11 +57,31 @@ public class CompanyServiceImpl implements CompanyService{
 	
 	Logger logger = Logger.getLogger(CompanyServiceImpl.class);
 	
+	@Value("${company_added_message}")
+	private String company_added_message;
+	
+	@Value("${company_unable_to_add_message}")
+	private String company_unable_to_add_message;
+	
+	@Value("${company_deleted_message}")
+	private String company_deleted_message;
+	
+	@Value("${company_unable_to_delete_message}")
+	private String company_unable_to_delete_message;
+	
+	@Value("${company_updated_message}")
+	private String company_updated_message;
+	
+	@Value("${company_unable_to_update_message}")
+	private String company_unable_to_update_message;
+	
+	@Value("${company_dependent_message}")
+	private String company_dependent_message;
+	
 	@Override
 	public Object addCompanyData(CompanyResponse companyResponse) {
 		
 		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
-		String message = "Record Added Successfully";
 		Session session = null;
 		Transaction tx = null;
 		
@@ -91,8 +113,7 @@ public class CompanyServiceImpl implements CompanyService{
 			}
 			
 			logger.error("Exception inside CompanyServiceImpl addCompanyData() :"+ e.getMessage());
-			message = "Error while inserting record";
-			return createFailedObject(message);
+			return createFailedObject(company_unable_to_add_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -103,7 +124,7 @@ public class CompanyServiceImpl implements CompanyService{
 		}
 		
 		logger.info("Inside CompanyServiceImpl addCompanyData() ends");
-		return createSuccessObject(message);
+		return createSuccessObject(company_added_message);
 	}
 	
 	private Object createFailedObject(String errorMessage) {
@@ -192,7 +213,6 @@ public class CompanyServiceImpl implements CompanyService{
 	public Object delete(Long companyId) {
 			
 		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
-		String message = "Record Deleted Successfully";
 		Session session = null;
 		Transaction tx = null;
 		
@@ -218,16 +238,16 @@ public class CompanyServiceImpl implements CompanyService{
 				}
 				companyDao.deleteCompany(company, session);
 			} else{
-				message = "unable to delete record";
-				return createFailedObject(message);
+				return createFailedObject(company_unable_to_delete_message);
 			}
 		} catch(Exception e){
 			if(tx != null){
 				tx.rollback();
 			}
-			
-			message = "unable to delete record";
-			return createFailedObject(message);
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(company_dependent_message);
+			}
+			return createFailedObject(company_unable_to_delete_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -236,7 +256,7 @@ public class CompanyServiceImpl implements CompanyService{
 				session.close();
 			}
 		}
-		return createSuccessObject(message);
+		return createSuccessObject(company_deleted_message);
 	}
 
 	@Override
@@ -383,25 +403,21 @@ public class CompanyServiceImpl implements CompanyService{
 		Company company = companyDao.findById(id);
 		Session session = null;
 		Transaction tx = null;
-		Object obj = null;
-		String message ="Records updated successfully";
+		
 		try{
 			if(company != null){
 				session = sessionFactory.openSession();
 				tx = session.beginTransaction();
 				
 				companyDao.updateData(company, companyResponse,session);
-				obj = getAll();
 			} else{
-				message ="Error while updating record.";
-				return createFailedObject(message);
+				return createFailedObject(company_unable_to_update_message);
 			}
 		} catch(Exception e){
 			if(tx != null){
 				tx.rollback();
 			}
-			message ="Error while updating record.";
-			return createFailedObject(message);
+			return createFailedObject(company_unable_to_update_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -411,7 +427,7 @@ public class CompanyServiceImpl implements CompanyService{
 			}
 		}
 		
-		return obj;
+		return createSuccessObject(company_updated_message);
 	}
 
 	@Override

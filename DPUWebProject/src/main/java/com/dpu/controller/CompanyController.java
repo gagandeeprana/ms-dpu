@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,15 @@ public class CompanyController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
+	@Value("${company_unable_to_add_message}")
+	private String company_unable_to_add_message;
+
+	@Value("${company_unable_to_delete_message}")
+	private String company_unable_to_delete_message;
+	
+	@Value("${company_unable_to_update_message}")
+	private String company_unable_to_update_message;
+
 	/**
 	 * this method is used to get all the companies
 	 * @return all companies
@@ -78,9 +88,7 @@ public class CompanyController extends MessageProperties {
 			
 		} catch (Exception e) {
 			logger.info("Exception inside CompanyController add() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(companyUnableToAddCode),
-					companyUnableToAddMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("CompanyController add() Ends");
@@ -109,9 +117,7 @@ public class CompanyController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.info("Exception inside CompanyController delete() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(companyUnableToDeleteCode),
-					companyUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info(" CompanyController delete() ends ");
@@ -139,10 +145,7 @@ public class CompanyController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.info("Exception inside CompanyController update() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(
-					Integer.parseInt(companyUnableToUpdateCode),
-					companyUnableToUpdateMessage, Iconstants.ERROR),
-					HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_update_message, Iconstants.ERROR),HttpStatus.BAD_REQUEST);
 		}
 		logger.info(" CompanyController delete() ends, companyId :"+id);
 		return obj;

@@ -114,7 +114,7 @@ public class ShipperServiceImpl implements ShipperService {
 		Object obj = null;
 		try {
 			Shipper shipper = shipperDao.findById(shipperId);
-			shipperDao.delete(shipper);
+			shipperDao.deleteShipper(shipper);
 			obj = createSuccessObject("Shipper deleted successfully",
 					Long.parseLong("1028"));
 		}catch (ConstraintViolationException em) {

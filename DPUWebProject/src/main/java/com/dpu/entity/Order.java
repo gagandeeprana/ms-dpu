@@ -71,7 +71,11 @@ public class Order implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, targetEntity = Probil.class)
 	@JoinColumn(name = "order_id", referencedColumnName = "order_id")
 	private List<Probil> probils;
-
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "handling_id")
+	private Handling handling;
+	
 	public Long getId() {
 		return id;
 	}
@@ -158,6 +162,14 @@ public class Order implements Serializable {
 
 	public void setProbils(List<Probil> probils) {
 		this.probils = probils;
+	}
+
+	public Handling getHandling() {
+		return handling;
+	}
+
+	public void setHandling(Handling handling) {
+		this.handling = handling;
 	}
 	
 	

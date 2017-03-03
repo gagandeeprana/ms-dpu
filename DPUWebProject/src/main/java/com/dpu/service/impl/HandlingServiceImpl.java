@@ -96,7 +96,7 @@ public class HandlingServiceImpl implements HandlingService {
 	private Object createFailedObject(String msg) {
 		Failed failed = new Failed();
 		failed.setMessage(msg);
-		failed.setResultList(getAll());
+		//failed.setResultList(getAll());
 		return failed;
 	}
 
@@ -166,6 +166,7 @@ public class HandlingServiceImpl implements HandlingService {
 			Handling handling = (Handling) session.get(Handling.class, id);
 			if(handling != null){
 				session.delete(handling);
+				tx.commit();
 			} else{
 				return createFailedObject(handling_unable_to_delete_message);
 			}
@@ -180,9 +181,9 @@ public class HandlingServiceImpl implements HandlingService {
 			}
 			return createFailedObject(handling_unable_to_delete_message);
 		} finally{
-			if(tx != null){
+			/*if(tx != null){
 				tx.commit();
-			}
+			}*/
 			if(session != null){
 				session.close();
 			}

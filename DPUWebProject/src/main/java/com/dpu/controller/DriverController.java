@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,15 @@ public class DriverController extends MessageProperties  {
 	DriverService driverService;
 
 	ObjectMapper mapper = new ObjectMapper();
+	
+	@Value("${Driver_unable_to_add_message}")
+	private String Driver_unable_to_add_message;
+	
+	@Value("${Driver_unable_to_delete_message}")
+	private String Driver_unable_to_delete_message;
+	
+	@Value("${Driver_unable_to_update_message}")
+	private String Driver_unable_to_update_message;
 
 	/**
 	 * this method is used to get all the drivers
@@ -73,19 +83,16 @@ public class DriverController extends MessageProperties  {
 		  
 		try {
 			Object result = driverService.addDriver(driverReq);
-			if(result != null){
-				if(result instanceof Success){ 
-					obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-				} else{
-					obj = new ResponseEntity<Object>(new Failed(Integer.parseInt("1234"), "this driver code is already present", Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-				}
-			}else{
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_add_code), CommonProperties.Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			if(result instanceof Success){ 
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else{
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("[addDriver]:" + e);
-			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_add_code), CommonProperties.Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception Inside DriverController addDriver :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
+		
 		logger.info("Inside DriverController addDriver Ends. ");
 		return obj;
 	}
@@ -98,18 +105,20 @@ public class DriverController extends MessageProperties  {
 	 */
 	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteDriver(@PathVariable("driverId") Long driverId) {
-		logger.info("Inside DriverController deleteDriver() : driverCode " + driverId);
+		
+		logger.info("Inside DriverController deleteDriver() : driverId " + driverId);
 		Object  obj = null;
+		
 		try {
 			Object result = driverService.deleteDriver(driverId);
-			if(result instanceof List<?>) {
+			if(result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_delete_code), CommonProperties.Driver_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside DriverController deleteDriver() :" + e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_delete_code), CommonProperties.Driver_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0, Driver_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside DriverController deleteDriver() Ends, driverId :" + driverId);
@@ -123,11 +132,12 @@ public class DriverController extends MessageProperties  {
 	 * @return List<driver>
 	 * @author lakhvir
 	 */
-	@RequestMapping(value = "/{driverCode}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object updateDriver(@PathVariable("driverCode") Long driverId, @RequestBody DriverReq driverReq) {
+	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateDriver(@PathVariable("driverId") Long driverId, @RequestBody DriverReq driverReq) {
 
-		logger.info("Inside DriverController updateDriver, driverId : "+ driverId);
+		logger.info("Inside DriverController updateDriver() starts, driverId : "+ driverId);
 		Object obj = null;
+		
 		try {
 			Object result = driverService.updateDriver(driverId, driverReq);
 
@@ -137,9 +147,11 @@ public class DriverController extends MessageProperties  {
 				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("[updateDriver]: Exception "+e);
-			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(CommonProperties.Driver_unable_to_update_code), CommonProperties.Driver_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside DriverController updateDriver() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, Driver_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
+		
+		logger.info("Inside DriverController updateDriver() Ends, driverId :" + driverId);
 		return obj;
 	}
 
@@ -151,45 +163,65 @@ public class DriverController extends MessageProperties  {
 	 */
 	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getDriverByDriverId(@PathVariable("driverId") Long driverId) {
-		logger.info("[getDriverByDriverCode] : Controller : Enter");
+		
+		logger.info("Inside DriverController getDriverByDriverId() starts, driverId : "+ driverId);
 		Object obj = null;
+		
 		try {
 			obj = driverService.getDriverByDriverId(driverId);
 		} catch (Exception e) {
-			logger.error("[getDriverByDriverCode]:" + e);
+			logger.error("Exception inside DriverController getDriverByDriverId() :" + e.getMessage());
 		}
+		
+		logger.info("Inside DriverController getDriverByDriverId() ends, driverId : "+ driverId);
 		return obj;
 	}
 	
+	/**
+	 * this method is used when we click on add button in driver
+	 * @return master data for driver
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
+		
 		logger.info(" Inside driverController openAdd() Starts ");
 		String json = null;
+		
 		try {
 			DriverReq driverReq = driverService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(driverReq);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside DriverController openAdd() :" + e.getMessage());
 		}
+		
 		logger.info(" Inside driverController openAdd() Ends ");
 		return json;
 	}
 	
+	/**
+	 * this method is used to search driver by driver code or driver name
+	 * @param driverCodeOrName
+	 * @return List<driver>
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{driverCodeOrName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchDriver(@PathVariable("driverCodeOrName") String driverCodeOrName) {
+		
 		logger.info("Inside driverController searchDriver() Starts, driverCodeOrName :"+driverCodeOrName);
 		String json = new String();
+		
 		try {
 			List<DriverReq> serviceList = driverService.getDriverByDriverCodeOrName(driverCodeOrName);
 			if(serviceList != null && serviceList.size() > 0) {
 				json = mapper.writeValueAsString(serviceList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside ServiceController searchService() is :" + e);
+			logger.error("Exception inside ServiceController searchDriver() :" + e.getMessage());
 		}
-		logger.info(" Inside ServiceController searchService() Starts, serviceName :"+driverCodeOrName);
+		
+		logger.info(" Inside ServiceController searchDriver() Starts, driverCodeOrName :"+driverCodeOrName);
 		return json;
 	}
 }

@@ -7,10 +7,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CategoryDao;
@@ -67,16 +70,36 @@ public class DriverServiceImpl implements DriverService {
 	SessionFactory sessionFactory;
 
 	Logger logger = Logger.getLogger(DriverServiceImpl.class);
+	
+
+	@Value("${Driver_added_message}")
+	private String Driver_added_message;
+	
+	@Value("${Driver_unable_to_add_message}")
+	private String Driver_unable_to_add_message;
+	
+	@Value("${Driver_deleted_message}")
+	private String Driver_deleted_message;
+	
+	@Value("${Driver_unable_to_delete_message}")
+	private String Driver_unable_to_delete_message;
+	
+	@Value("${Driver_updated_message}")
+	private String Driver_updated_message;
+	
+	@Value("${Driver_unable_to_update_message}")
+	private String Driver_unable_to_update_message;
+	
+	@Value("${Drive_dependent_message}")
+	private String Drive_dependent_message;
 
 	@Override
 	public Object addDriver(DriverReq driverReq) {
 
 		logger.info("Inside DriverServiceImpl addDriver() starts");
 		Object obj = null;
-		String message = "Driver Added Successfully";
 		try {
-			// boolean isDriverExist = isDriverExist(driverReq.getDriverCode());
-			// if(!isDriverExist){
+		
 			Driver driver = new Driver();
 			BeanUtils.copyProperties(driverReq, driver);
 			driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
@@ -86,17 +109,10 @@ public class DriverServiceImpl implements DriverService {
 			driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
 			driver.setStatus(statusService.get(driverReq.getStatusId()));
 			driverDao.save(driver);
-			// return getAllDriver();
-			obj = createSuccessObject(message);
-			// } else{
-			// String errorString = "This driver code is already exist";
-			// return errorString;
-			// }
+			obj = createSuccessObject(Driver_added_message);
 		} catch (Exception e) {
-			logger.error("Exception inside DriverServiceImpl addDriver() :"
-					+ e.getMessage());
-			message = "Error while inserting driver";
-			obj = createFailedObject(message);
+			logger.error("Exception inside DriverServiceImpl addDriver() :"+ e.getMessage());
+			obj = createFailedObject(Driver_unable_to_add_message);
 		}
 
 		logger.info("Inside DriverServiceImpl addDriver() Ends");
@@ -146,10 +162,8 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public Object updateDriver(Long driverId, DriverReq driverReq) {
 
-		logger.info("Inside DriverServiceImpl updateDriver() Starts, driverId :"
-				+ driverId);
+		logger.info("Inside DriverServiceImpl updateDriver() Starts, driverId :"+ driverId);
 		Object obj = null;
-		String message = "Driver Updated Successfully";
 
 		try {
 			Driver driver = driverDao.findById(driverId);
@@ -158,63 +172,65 @@ public class DriverServiceImpl implements DriverService {
 				String[] ignoreProp = new String[1];
 				ignoreProp[0] = "driverId";
 				BeanUtils.copyProperties(driverReq, driver, ignoreProp);
-				driver.setCategory(categoryDao.findById(driverReq
-						.getCategoryId()));
-				driver.setDivision(divisionDao.findById(driverReq
-						.getDivisionId()));
-				driver.setTerminal(terminalDao.findById(driverReq
-						.getTerminalId()));
+				driver.setCategory(categoryDao.findById(driverReq.getCategoryId()));
+				driver.setDivision(divisionDao.findById(driverReq.getDivisionId()));
+				driver.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
 				driver.setRole(typeService.get(driverReq.getRoleId()));
-				driver.setDriverClass(typeService.get(driverReq
-						.getDriverClassId()));
+				driver.setDriverClass(typeService.get(driverReq.getDriverClassId()));
 				driver.setStatus(statusService.get(driverReq.getStatusId()));
 				driverDao.update(driver);
-				obj = createSuccessObject(message);
+				obj = createSuccessObject(Driver_updated_message);
 			} else {
-				message = "Error while updating driver";
-				obj = createFailedObject(message);
+				obj = createFailedObject(Driver_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside DriverServiceImpl updateDriver() :"
-					+ e.getMessage());
-			message = "Error while updating record";
-			obj = createFailedObject(message);
+			logger.error("Exception inside DriverServiceImpl updateDriver() :"+ e.getMessage());
+			obj = createFailedObject(Driver_unable_to_update_message);
 		}
 
-		logger.info("Inside DriverServiceImpl updateDriver() ends, driverId :"
-				+ driverId);
+		logger.info("Inside DriverServiceImpl updateDriver() ends, driverId :"+ driverId);
 		return obj;
 	}
 
 	@Override
 	public Object deleteDriver(Long driverId) {
 
-		logger.info("Inside DriverServiceImpl deleteDriver() starts, driverId :"
-				+ driverId);
-		Object obj = null;
-		String message = "Driver Deleted Successfully";
+		logger.info("Inside DriverServiceImpl deleteDriver() starts, driverId :"+ driverId);
+		Session session = null;
+		Transaction tx = null;
 
 		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			
 			Driver driver = driverDao.findById(driverId);
 
 			if (driver != null) {
-				driverDao.delete(driver);
-				obj = createSuccessObject(message);
+				session.delete(driver);
 			} else {
-				message = "Error while deleting driver";
-				obj = createFailedObject(message);
+				return createFailedObject(Driver_unable_to_delete_message);
 			}
 		} catch (Exception e) {
-			logger.error("Exceptiom inside DriverServiceImpl deleteDriver() :"
-					+ e.getMessage());
-			message = "Error while Deleting Record";
-			obj = createFailedObject(message);
+			logger.error("Exceptiom inside DriverServiceImpl deleteDriver() :"+ e.getMessage());
+			if(tx != null){
+				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(Drive_dependent_message);
+			}
+			return createFailedObject(Driver_unable_to_delete_message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			} 
+			if(session != null){
+				session.close();
+			}
 		}
 
-		logger.info("Inside DriverServiceImpl deleteDriver() ends, driverId :"
-				+ driverId);
-		return obj;
+		logger.info("Inside DriverServiceImpl deleteDriver() ends, driverId :"+ driverId);
+		return createSuccessObject(Driver_deleted_message);
 
 	}
 

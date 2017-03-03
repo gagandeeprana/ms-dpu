@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.HandlingDao;
@@ -32,6 +34,27 @@ public class HandlingServiceImpl implements HandlingService {
 
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Value("${handling_added_message}")
+	private String handling_added_message;
+	
+	@Value("${handling_unable_to_add_message}")
+	private String handling_unable_to_add_message;
+	
+	@Value("${handling_deleted_message}")
+	private String handling_deleted_message;
+	
+	@Value("${handling_unable_to_delete_message}")
+	private String handling_unable_to_delete_message;
+	
+	@Value("${handling_updated_message}")
+	private String handling_updated_message;
+	
+	@Value("${handling_unable_to_update_message}")
+	private String handling_unable_to_update_message;
+	
+	@Value("${handling_already_used_message}")
+	private String handling_already_used_message;
 	
 	@Override
 	public List<HandlingModel> getAll() {
@@ -82,20 +105,18 @@ public class HandlingServiceImpl implements HandlingService {
 
 		logger.info("HandlingServiceImpl addHandling() starts ");
 		Handling handling = null;
-		String message ="Handling inserted successfully";
 		try {
 			handling = setHandlingValues(handlingModel);
 			handlingDao.save(handling);
 
 		} catch (Exception e) {
 			logger.info("Exception inside HandlingServiceImpl addHandling() :"+ e.getMessage());
-			message ="error while inserting Handling";
-			return createFailedObject(message);
+			return createFailedObject(handling_unable_to_add_message);
 
 		}
 		
 		logger.info("HandlingServiceImpl addHandling() ends ");
-		return createSuccessObject(message);
+		return createSuccessObject(handling_added_message);
 	}
 
 	private Handling setHandlingValues(HandlingModel handlingModel) {
@@ -111,7 +132,6 @@ public class HandlingServiceImpl implements HandlingService {
 	public Object update(Long id, HandlingModel handlingModel) {
 
 		logger.info("HandlingServiceImpl update() starts.");
-		String message ="Handling updated successfully.";
 		try {
 			Handling handling = handlingDao.findById(id);
 			
@@ -121,17 +141,16 @@ public class HandlingServiceImpl implements HandlingService {
 				handling.setStatus(status);
 				handlingDao.update(handling);
 			} else{
-				message ="Error while updating Handling";
-				return createFailedObject(message);
+				return createFailedObject(handling_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
 			logger.info("Exception inside HandlingServiceImpl update() :"+ e.getMessage());
-			return createFailedObject("Error while updating record");
+			return createFailedObject(handling_unable_to_update_message);
 		}
 		
 		logger.info("HandlingServiceImpl update() ends.");
-		return createSuccessObject(message);
+		return createSuccessObject(handling_updated_message);
 	}
 
 	@Override
@@ -140,7 +159,6 @@ public class HandlingServiceImpl implements HandlingService {
 		logger.info("HandlingServiceImpl delete() starts.");
 		Session session = null;
 		Transaction tx = null;
-		String message ="Handling deleted successfully.";
 		
 		try {
 			session = sessionFactory.openSession();
@@ -149,17 +167,18 @@ public class HandlingServiceImpl implements HandlingService {
 			if(handling != null){
 				session.delete(handling);
 			} else{
-				message ="Error while deleting Handling";
-				return createFailedObject(message);
+				return createFailedObject(handling_unable_to_delete_message);
 			}
 			
 		} catch (Exception e) {
+			logger.info("Exception inside HandlingServiceImpl delete() : " + e.getMessage());
 			if(tx != null){
 				tx.rollback();
 			}
-			logger.info("Exception inside HandlingServiceImpl delete() : " + e.getMessage());
-			message ="Error while deleting record";
-			return createFailedObject(message);
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(handling_already_used_message);
+			}
+			return createFailedObject(handling_unable_to_delete_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -170,7 +189,7 @@ public class HandlingServiceImpl implements HandlingService {
 		}
 		
 		logger.info("HandlingServiceImpl delete() ends.");
-		return createSuccessObject(message);
+		return createSuccessObject(handling_deleted_message);
 	}
 
 

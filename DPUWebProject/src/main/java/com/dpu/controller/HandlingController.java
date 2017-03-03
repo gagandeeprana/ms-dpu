@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,15 @@ public class HandlingController extends MessageProperties {
 	HandlingService handlingService;
 
 	ObjectMapper mapper = new ObjectMapper();
+	
+	@Value("${handling_unable_to_add_message}")
+	private String handling_unable_to_add_message;
+
+	@Value("${handling_unable_to_delete_message}")
+	private String handling_unable_to_delete_message;
+	
+	@Value("${handling_unable_to_update_message}")
+	private String handling_unable_to_update_message;
 
 	/**
 	 * this method is used to get all handlings
@@ -80,7 +90,7 @@ public class HandlingController extends MessageProperties {
 
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController add() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,"Error while inserting record.", Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside HandlingController add() ends ");
@@ -109,7 +119,7 @@ public class HandlingController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,"Error while deleting record.", Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Inside CategoryController delete() Ends, id is :" + handlingId);
 		return obj;
@@ -137,7 +147,7 @@ public class HandlingController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,"Error while updating record.", Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);

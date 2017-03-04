@@ -50,18 +50,4 @@ public class CategoryDaoImpl extends GenericDaoImpl<Category> implements
 		return query.list();
 	}
 
-	@Override
-	public void deleteCategory(Category category) {
-		logger.info("[CategoryDaoImpl] [deleteCategory] : Srvice: Enter");
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		session.delete(category);
-		tx.commit();
-		if (session != null) {
-			session.close();
-		}
-		logger.info("[CategoryDaoImpl] [deleteCategory] : Srvice: Exit");
-
-	}
-
 }

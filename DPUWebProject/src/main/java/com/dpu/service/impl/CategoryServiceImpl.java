@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 @Component
 public class CategoryServiceImpl implements CategoryService {
@@ -134,36 +136,88 @@ public class CategoryServiceImpl implements CategoryService {
 				Long.parseLong(CommonProperties.category_updated_code));
 	}
 
+	// @Override
+	// public Object delete(Long id) {
+	//
+	// logger.info("[CategoryServiceImpl] [delete] : Srvice: Enter");
+	//
+	// Object obj = null;
+	// try {
+	// Category category = categoryDao.findById(id);
+	// categoryDao.deleteCategory(category);
+	// obj = createSuccessObject(
+	// CommonProperties.category_deleted_message,
+	// Long.parseLong(CommonProperties.category_unable_to_delete_code));
+	// } catch (ConstraintViolationException em) {
+	// logger.info("Exception inside CategoryServiceImpl delete() : "
+	// + em.getMessage());
+	// obj = createFailedObject(
+	// CommonProperties.category_already_used_message,
+	// Long.parseLong(CommonProperties.category_already_used_code));
+	//
+	// } catch (Exception e) {
+	// logger.info("Exception inside CategoryServiceImpl delete() : "
+	// + e.getMessage());
+	// obj = createFailedObject(
+	// CommonProperties.category_unable_to_delete_message,
+	// Long.parseLong(CommonProperties.category_deleted_code));
+	// }
+	//
+	// logger.info("[CategoryServiceImpl] [delete] : Service :  Exit");
+	//
+	// return obj;
+	// }
 	@Override
 	public Object delete(Long id) {
 
-		logger.info("[CategoryServiceImpl] [delete] : Srvice: Enter");
-
-		Object obj = null;
+		logger.info("CategoryServiceImpl delete() starts.");
+		Session session = null;
+		Transaction tx = null;
 		try {
-			Category category = categoryDao.findById(id);
-			categoryDao.deleteCategory(category);
-			obj = createSuccessObject(
-					CommonProperties.category_deleted_message,
-					Long.parseLong(CommonProperties.category_unable_to_delete_code));
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Category category = (Category) session.get(Category.class, id);
+			if (category != null) {
+				session.delete(category);
+				tx.commit();
+			} else {
+				return createFailedObject(
+						CommonProperties.category_unable_to_delete_message,
+						Long.parseLong(CommonProperties.category_deleted_code));
+			}
 		} catch (ConstraintViolationException em) {
 			logger.info("Exception inside CategoryServiceImpl delete() : "
 					+ em.getMessage());
-			obj = createFailedObject(
+			return createAlreadyExistObject(
 					CommonProperties.category_already_used_message,
 					Long.parseLong(CommonProperties.category_already_used_code));
 
-		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl delete() : "
-					+ e.getMessage());
-			obj = createFailedObject(
-					CommonProperties.category_unable_to_delete_message,
-					Long.parseLong(CommonProperties.category_deleted_code));
 		}
 
-		logger.info("[CategoryServiceImpl] [delete] : Service :  Exit");
+		catch (Exception e) {
+			logger.info("Exception inside HandlingServiceImpl delete() : "
+					+ e.getMessage());
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (e instanceof ConstraintViolationException) {
+				return createAlreadyExistObject(
+						CommonProperties.category_already_used_message,
+						Long.parseLong(CommonProperties.category_already_used_code));
+			}
+			return createFailedObject(
+					CommonProperties.category_unable_to_delete_message,
+					Long.parseLong(CommonProperties.category_deleted_code));
+		} finally {
 
-		return obj;
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("CategoryServiceImpl delete() ends.");
+		return createSuccessObject(CommonProperties.category_deleted_message,
+				Long.parseLong(CommonProperties.category_unable_to_delete_code));
 	}
 
 	@Override

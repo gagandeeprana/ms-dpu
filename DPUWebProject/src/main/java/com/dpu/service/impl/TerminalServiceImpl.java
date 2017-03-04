@@ -9,15 +9,19 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.ServiceDao;
 import com.dpu.dao.ShipperDao;
 import com.dpu.dao.TerminalDao;
+import com.dpu.entity.Handling;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Terminal;
@@ -57,6 +61,45 @@ public class TerminalServiceImpl implements TerminalService {
 	
 	@Autowired
 	ServiceDao serviceDao;
+	
+	@Value("${terminal_added_code}")
+	public String terminalAddedCode;
+
+	@Value("${terminal_added_message}")
+	public String terminalAddedMessage;
+
+	@Value("${terminal_unable_to_add_code}")
+	public String terminalUnableToAddCode;
+
+	@Value("${terminal_unable_to_add_message}")
+	public String terminalUnableToAddMessage;
+
+	@Value("${terminal_deleted_code}")
+	public String terminalDeletedCode;
+
+	@Value("${terminal_deleted_message}")
+	public String terminalDeletedMessage;
+
+	@Value("${terminal_unable_to_delete_code}")
+	public String terminalUnableToDeleteCode;
+
+	@Value("${terminal_unable_to_delete_message}")
+	public String terminalUnableToDeleteMessage;
+
+	@Value("${terminal_updated_code}")
+	public String terminalUpdateCode;
+
+	@Value("${terminal_updated_message}")
+	public String terminalUpdateMessage;
+
+	@Value("${terminal_unable_to_update_code}")
+	public String terminalUnableToUpdateCode;
+
+	@Value("${terminal_unable_to_update_message}")
+	public String terminalUnableToUpdateMessage;
+	
+	@Value("${terminal_already_used_message}")
+	private String terminal_already_used_message;
 	
 	@Override
 	public List<TerminalResponse> getAllTerminals() {
@@ -121,17 +164,53 @@ public class TerminalServiceImpl implements TerminalService {
 	@Override
 	public Object deleteTerminal(Long id) {
 
-		Terminal terminal= terminalDao.findById(id);
-		Object obj = null;
+//		Terminal terminal= terminalDao.findById(id);
+//		Object obj = null;
+//		try {
+//			if(terminal != null){
+//				terminalDao.delete(terminal);
+//			}
+//			obj = createSuccessObject("Terminal Deleted Successfully");
+//		} catch (Exception e) {
+//			obj = createFailedObject("Error while deleting");
+//		}
+//		return obj;
+		
+		logger.info("TerminalServiceImpl delete() starts.");
+		Session session = null;
+		Transaction tx = null;
+		
 		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Terminal terminal = (Terminal) session.get(Terminal.class, id);
 			if(terminal != null){
-				terminalDao.delete(terminal);
+				session.delete(terminal);
+				tx.commit();
+			} else{
+				return createFailedObject(terminalUnableToDeleteMessage);
 			}
-			obj = createSuccessObject("Terminal Deleted Successfully");
+			
 		} catch (Exception e) {
-			obj = createFailedObject("Error while deleting");
+			logger.info("Exception inside TerminalServiceImpl delete() : " + e.getMessage());
+			if(tx != null){
+				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(terminal_already_used_message);
+			}
+			return createFailedObject(terminalUnableToDeleteMessage);
+		} finally{
+			/*if(tx != null){
+				tx.commit();
+			}*/
+			if(session != null){
+				session.close();
+			}
 		}
-		return obj;
+		
+		logger.info("TerminalServiceImpl delete() ends.");
+		return createSuccessObject(terminalDeletedMessage);
 	}
 
 	@Override
@@ -201,6 +280,7 @@ public class TerminalServiceImpl implements TerminalService {
 	private Object createFailedObject(String errorMessage) {
 		Failed failed = new Failed();
 		failed.setMessage(errorMessage);
+		failed.setResultList(getAllTerminals());
 		return failed;
 	}
 

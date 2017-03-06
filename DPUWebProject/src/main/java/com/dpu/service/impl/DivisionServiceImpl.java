@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.DivisionDao;
+import com.dpu.entity.Category;
 import com.dpu.entity.Division;
 import com.dpu.entity.Status;
 import com.dpu.model.DivisionReq;
@@ -110,27 +111,44 @@ public class DivisionServiceImpl implements DivisionService {
 
 	@Override
 	public Object delete(Long id) {
-		logger.info("[DivisionServiceImpl] [delete] : Srvice: Enter");
-		Division division = null;
+
+		logger.info("DivisionServiceImpl delete() starts.");
+		Session session = null;
+		Transaction tx = null;
 		try {
-			division = divisionDao.findById(id);
-			divisionDao.deleteDivision(division);
-
-		} catch (ConstraintViolationException em) {
-			logger.info("Exception inside DivisionServiceImpl delete() : "
-					+ em.getMessage());
-			return createAlreadyExistObject(
-					CommonProperties.Division_already_used_message,
-					Long.parseLong(CommonProperties.Division_already_used_code));
-
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Division division = (Division) session.get(Division.class, id);
+			if (division != null) {
+				session.delete(division);
+				tx.commit();
+			} else {
+				return createFailedObject(
+						CommonProperties.Division_unable_to_delete_message,
+						Long.parseLong(CommonProperties.Division_unable_to_delete_code));
+			}
 		} catch (Exception e) {
-			logger.error("Exception inside DivisionServiceImpl delete() :"
+			logger.info("Exception inside DivisionServiceImpl delete() : "
 					+ e.getMessage());
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (e instanceof ConstraintViolationException) {
+				return createAlreadyExistObject(
+						CommonProperties.Division_already_used_message,
+						Long.parseLong(CommonProperties.Division_already_used_code));
+			}
 			return createFailedObject(
 					CommonProperties.Division_unable_to_delete_message,
 					Long.parseLong(CommonProperties.Division_unable_to_delete_code));
+		} finally {
+
+			if (session != null) {
+				session.close();
+			}
 		}
-		logger.info("[DivisionServiceImpl] [delete] : Service :  Exit");
+
+		logger.info("DivisionServiceImpl delete() ends.");
 		return createSuccessObject(CommonProperties.Division_deleted_message,
 				Long.parseLong(CommonProperties.Division_deleted_code));
 	}

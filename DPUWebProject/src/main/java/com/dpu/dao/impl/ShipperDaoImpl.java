@@ -59,19 +59,7 @@ public class ShipperDaoImpl extends GenericDaoImpl<Shipper> implements
 		return (Shipper) query.uniqueResult();
 	}
 
-	@Override
-	public void deleteShipper(Shipper shipper) {
-		logger.info("[ShipperDaoImpl] [deleteShipper] : Srvice: Enter");
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		session.delete(shipper);
-		tx.commit();
-		if (session != null) {
-			session.close();
-		}
-		logger.info("[ShipperDaoImpl] [deleteShipper] : Srvice: Exit");
 
-	}
 
 	// Logger logger = Logger.getLogger(ShipperDaoImpl.class);
 	//

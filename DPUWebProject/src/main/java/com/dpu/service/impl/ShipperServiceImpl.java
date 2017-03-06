@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
+import com.dpu.entity.Division;
 import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
 import com.dpu.model.Failed;
@@ -107,29 +109,70 @@ public class ShipperServiceImpl implements ShipperService {
 		}
 		return obj;
 	}
-
 	@Override
-	public Object delete(Long shipperId) {
-		Object obj = null;
-		try {
-			Shipper shipper = shipperDao.findById(shipperId);
-			shipperDao.deleteShipper(shipper);
-			obj = createSuccessObject("Shipper deleted successfully",
-					Long.parseLong("1028"));
-		} catch (ConstraintViolationException em) {
-			logger.info("Exception inside ShipperServiceImpl delete() : "
-					+ em.getMessage());
-			obj = createFailedObject("Shipper already in Use ",
-					Long.parseLong("1056"));
+	public Object delete(Long id) {
 
+		logger.info("ShipperServiceImpl delete() starts.");
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Shipper shipper = (Shipper) session.get(Shipper.class, id);
+			if (shipper != null) {
+				session.delete(shipper);
+				tx.commit();
+			} else {
+				return createFailedObject(
+						"Shipper Unable to Delete",
+						Long.parseLong("2644"));
+			}
 		} catch (Exception e) {
 			logger.info("Exception inside ShipperServiceImpl delete() : "
 					+ e.getMessage());
-			obj = createFailedObject("Unable to Delete Shipper",
-					Long.parseLong("1029"));
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (e instanceof ConstraintViolationException) {
+				return createAlreadyExistObject("Shipper already in Use",
+						Long.parseLong("9888"));
+			}
+			return createFailedObject("Shipper Unable to Delete",
+					Long.parseLong("2644"));
+		} finally {
+
+			if (session != null) {
+				session.close();
+			}
 		}
-		return obj;
+
+		logger.info("ShipperServiceImpl delete() ends.");
+		return createSuccessObject("Shipper Deleted Successfully",
+				Long.parseLong("1023"));
 	}
+
+//	@Override
+//	public Object delete(Long shipperId) {
+//		Object obj = null;
+//		try {
+//			Shipper shipper = shipperDao.findById(shipperId);
+//			shipperDao.deleteShipper(shipper);
+//			obj = createSuccessObject("Shipper deleted successfully",
+//					Long.parseLong("1028"));
+//		} catch (ConstraintViolationException em) {
+//			logger.info("Exception inside ShipperServiceImpl delete() : "
+//					+ em.getMessage());
+//			obj = createFailedObject("Shipper already in Use ",
+//					Long.parseLong("1056"));
+//
+//		} catch (Exception e) {
+//			logger.info("Exception inside ShipperServiceImpl delete() : "
+//					+ e.getMessage());
+//			obj = createFailedObject("Unable to Delete Shipper",
+//					Long.parseLong("1029"));
+//		}
+//		return obj;
+//	}
 
 	@Override
 	public List<ShipperResponse> getAll() {

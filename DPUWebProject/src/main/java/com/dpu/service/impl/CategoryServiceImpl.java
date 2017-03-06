@@ -185,16 +185,7 @@ public class CategoryServiceImpl implements CategoryService {
 						CommonProperties.category_unable_to_delete_message,
 						Long.parseLong(CommonProperties.category_deleted_code));
 			}
-		} catch (ConstraintViolationException em) {
-			logger.info("Exception inside CategoryServiceImpl delete() : "
-					+ em.getMessage());
-			return createAlreadyExistObject(
-					CommonProperties.category_already_used_message,
-					Long.parseLong(CommonProperties.category_already_used_code));
-
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.info("Exception inside HandlingServiceImpl delete() : "
 					+ e.getMessage());
 			if (tx != null) {

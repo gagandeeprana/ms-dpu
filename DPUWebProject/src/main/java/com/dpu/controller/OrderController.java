@@ -41,8 +41,8 @@ public class OrderController extends MessageProperties {
 	ObjectMapper mapper = new ObjectMapper();
 
 	/**
-	 * this method is used to get all probils data
-	 * @return List<probils>
+	 * this method is used to get all Orders data
+	 * @return List<Orders>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -97,14 +97,14 @@ public class OrderController extends MessageProperties {
 	 * @return List<Order>
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/probil/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object deleteProbil(@PathVariable("id") Long probilId) {
+	@RequestMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteOrder(@PathVariable("id") Long orderId) {
 		
-		logger.info("Inside OrderController deleteProbil() Starts, probilId is :" + probilId);
+		logger.info("Inside OrderController deleteOrder() Starts, orderId is :" + orderId);
 		Object obj = null;
 		
 		try {
-			Object result = orderService.deleteProbil(probilId);
+			Object result = orderService.deleteOrder(orderId);
 			
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
@@ -114,9 +114,10 @@ public class OrderController extends MessageProperties {
 		} catch (Exception e) {
 			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToDeleteCode),
 					categoryUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-			logger.error("Exception inside OrderController deleteProbil() :"+e.getMessage());
+			logger.error("Exception inside OrderController deleteOrder() :"+e.getMessage());
 		}
-		logger.info("Inside OrderController deleteProbil() Ends, probilId is :" + probilId);
+		
+		logger.info("Inside OrderController deleteOrder() Ends, orderId is :" + orderId);
 		return obj;
 
 	}
@@ -154,24 +155,24 @@ public class OrderController extends MessageProperties {
 	 * @return probilData
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getProbilById(@PathVariable("categoryId") Long probilId) {
+	@RequestMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getParticularOrder(@PathVariable("orderId") Long orderId) {
 		
-		logger.info("Inside CategoryController getCategoryById() Starts, probilId:" + probilId);
+		logger.info("Inside OrderController getParticularOrder() Starts, orderId:" + orderId);
 		String json = null;
 		
 		try {
 			
-			ProbilModel probilModel = orderService.getProbilByProbilId(probilId);
+			OrderModel orderModel = orderService.getOrderByOrderId(orderId);
 
-			if (probilModel != null) {
-				json = mapper.writeValueAsString(probilModel);
+			if (orderModel != null) {
+				json = mapper.writeValueAsString(orderModel);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside CategoryController getCategoryById() :" + e.getMessage());
 		}
 		
-		logger.info("Inside CategoryController getCategoryById() Ends, probilId:" + probilId);
+		logger.info("Inside OrderController getParticularOrder() Ends, orderId:" + orderId);
 		return json;
 	}
 

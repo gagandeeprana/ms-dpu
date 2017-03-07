@@ -16,8 +16,6 @@ public interface OrderDao extends GenericDao<Category> {
 
 	List<Order> findAll(Session session);
 
-	Category findById(Long id, Session session);
-
 	List<Category> getCategoryByCategoryName(Session session, String categoryName);
 
 	void saveOrder(Session session, Order order);
@@ -27,5 +25,7 @@ public interface OrderDao extends GenericDao<Category> {
 	void savePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo);
 
 	Long getMaxProbilNo(Session session);
+
+	Order findByOrderId(Long orderId, Session session);
 
 }

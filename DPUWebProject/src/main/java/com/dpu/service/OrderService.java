@@ -26,8 +26,10 @@ public interface OrderService {
 
 	Object addOrder(OrderModel orderModel);
 
-	Object deleteProbil(Long probilId);
-
 	ProbilModel getProbilByProbilId(Long probilId);
+
+	OrderModel getOrderByOrderId(Long orderId);
+
+	Object deleteOrder(Long orderId);
 
 }

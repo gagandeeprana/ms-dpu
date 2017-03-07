@@ -238,47 +238,57 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Object deleteProbil(Long probilId) {
+	public Object deleteOrder(Long orderId) {
 
-		logger.info("Inside OrderServiceImpl deleteProbil() starts, probilId :"+ probilId);
+		logger.info("Inside OrderServiceImpl deleteOrder() starts, orderId :"+ orderId);
 		String message = "Record Deleted Successfully";
 		Session session = null;
 		Transaction tx = null;
 		try{
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Probil probil = (Probil) session.get(Probil.class, probilId);
-			if(probil != null){
-				List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
-				if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
-					for (OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
-						session.delete(orderPickupDropNo);
+			Order order = (Order) session.get(Order.class, orderId);
+			if(order != null){
+				List<Probil> probilList = order.getProbils();
+				if(probilList != null && !probilList.isEmpty()){
+					for (Probil probil : probilList) {
+						List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
+						if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
+							for (OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
+								session.delete(orderPickupDropNo);
+							}
+						}
+						
+						session.delete(probil);
 					}
 				}
 				
-				session.delete(probil);
+				session.delete(order);
+				tx.commit();
+				
 			} else{
 				message = "Error while deleting record.";
 				return createFailedObject(message);
 			}
 		}catch(Exception e){
-			logger.error("Exception Inside OrderServiceImpl deleteProbil() :"+ e.getMessage());
+			logger.error("Exception Inside OrderServiceImpl deleteOrder() :"+ e.getMessage());
 			if(tx != null){
 				tx.rollback();
 			}
 			message = "Error while deleting record.";
 			return createFailedObject(message);
 		} finally{
-			if(tx != null){
+			/*if(tx != null){
 				tx.commit();
-			}
+			}*/
 			if(session != null){
 				session.close();
 			}
 		}
-		logger.info("Inside OrderServiceImpl deleteProbil() ends, probilId :"+ probilId);
+		logger.info("Inside OrderServiceImpl deleteOrder() ends, orderId :"+ orderId);
 		return createSuccessObject(message);
 	}
+	
 	@Override
 	public List<OrderModel> getAllOrders() {
 
@@ -503,6 +513,78 @@ public class OrderServiceImpl implements OrderService {
 	public CompanyResponse getCompanyData(Long companyId) {
 		CompanyResponse companyResponse = companyService.getCompanyBillingLocationAndContacts(companyId);
 		return companyResponse;
+	}
+
+	@Override
+	public OrderModel getOrderByOrderId(Long orderId) {
+	
+		Session session = null;
+		OrderModel orderModel = new OrderModel();
+		
+		try{
+			
+			session = sessionFactory.openSession();
+			Order order = orderDao.findByOrderId(orderId, session);
+			
+			if(order != null){
+				/*for (Order order : orders) {*/
+					/*OrderModel orderModel = new OrderModel();*/
+					BeanUtils.copyProperties(order, orderModel);
+					orderModel.setCompanyName(order.getCompany().getName());
+					orderModel.setBillingLocationName(order.getBillingLocation().getName());
+					orderModel.setContactName(order.getContact().getCustomerName());
+					orderModel.setTemperatureName(order.getTemperature().getTypeName());
+					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
+					orderModel.setCurrencyName(order.getCurrency().getTypeName());
+					
+					List<Probil> probilList = order.getProbils();
+					List<ProbilModel> probils = new ArrayList<ProbilModel>();
+					for (Probil probil : probilList) {
+						
+						/*Date d = probil.getPickupScheduledDate();*/
+								/*System.out.println("the date is "+d);*/
+						ProbilModel probilModel = new ProbilModel();
+						BeanUtils.copyProperties(probil, probilModel);
+						probilModel.setConsineeName(probil.getConsine().getLocationName());
+						probilModel.setShipperName(probil.getShipper().getLocationName());
+						probilModel.setPickupName(probil.getPickUp().getTypeName());
+						probilModel.setDeliveryName(probil.getDelivery().getTypeName());
+						
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						String pickUpScheduledDate = sdf.format(probil.getPickupScheduledDate());
+						String deliverScheduledDate = sdf.format(probil.getDeliverScheduledDate());
+						String pickUpMABDate = sdf.format(probil.getPickupMABDate());
+						String deliverMABDate = sdf.format(probil.getDeliveryMABDate());
+						
+						probilModel.setPickupScheduledDate(pickUpScheduledDate);
+						probilModel.setPickupMABDate(pickUpMABDate);
+						probilModel.setDeliverScheduledDate(deliverScheduledDate);
+						probilModel.setDeliveryMABDate(deliverMABDate);
+						
+						SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
+						String pickUpScheduledTime = localDateFormat.format(probil.getPickupScheduledTime());
+						String pickUpMABTime = localDateFormat.format(probil.getPickupMABTime());
+						String deliverScheduledTime = localDateFormat.format(probil.getDeliverScheduledTime());
+						String deliverMABTime =  localDateFormat.format(probil.getDeliveryMABTime());
+						
+						probilModel.setPickupScheduledTime(pickUpScheduledTime);
+						probilModel.setPickupMABTime(pickUpMABTime);
+						probilModel.setDeliverScheduledTime(deliverScheduledTime);
+						probilModel.setDeliveryMABTime(deliverMABTime);
+						probils.add(probilModel);
+					}
+					
+					orderModel.setProbilList(probils);
+					
+			/*	}*/
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return orderModel;
 	}
 
 	

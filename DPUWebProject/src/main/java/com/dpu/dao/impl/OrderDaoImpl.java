@@ -26,11 +26,12 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 	}
 
 	@Override
-	public Category findById(Long id, Session session) {
-		StringBuilder sb = new StringBuilder("select c from Category c join fetch c.status join fetch c.highLight join fetch c.type where c.categoryId =:categoryId ");
+	public Order findByOrderId(Long orderId, Session session) {
+		StringBuilder sb = new StringBuilder("select o from Order o join fetch o.company join fetch o.billingLocation join fetch o.contact ")
+		.append(" join fetch o.temperature join fetch o.temperatureType join fetch o.currency where o.id =:orderId ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("categoryId", id);
-		return (Category) query.uniqueResult();
+		query.setParameter("orderId", orderId);
+		return (Order) query.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -69,5 +70,7 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 	public void savePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo) {
 		session.save(pickUpDropNo);
 	}
+
+	
 
 }

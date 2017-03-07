@@ -325,7 +325,7 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<T> find(Criterion criterion) {
-		logger.info("[DivisionDaoImpl] [find] : Enter ");
+		logger.info(" [find] : Enter ");
 		Session session = null;
 		List<T> t = null;
 		Type type = getClass().getGenericSuperclass();

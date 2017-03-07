@@ -301,7 +301,7 @@ public class OrderServiceImpl implements OrderService {
 					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
 					orderModel.setCurrencyName(order.getCurrency().getTypeName());
 					
-					List<Probil> probilList = order.getProbils();
+					/*List<Probil> probilList = order.getProbils();
 					List<ProbilModel> probils = new ArrayList<ProbilModel>();
 					for (Probil probil : probilList) {
 						
@@ -338,7 +338,7 @@ public class OrderServiceImpl implements OrderService {
 						probils.add(probilModel);
 					}
 					
-					orderModel.setProbilList(probils);
+					orderModel.setProbilList(probils);*/
 					
 					allOrders.add(orderModel);
 				}

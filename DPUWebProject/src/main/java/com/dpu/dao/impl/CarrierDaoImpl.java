@@ -36,4 +36,10 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 		
 	}
 
+	@Override
+	public void updateData(Carrier carrier, CarrierModel carrierResponse, Session session) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

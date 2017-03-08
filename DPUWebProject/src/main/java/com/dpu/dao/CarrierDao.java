@@ -12,4 +12,5 @@ public interface CarrierDao extends GenericDao<Carrier> {
 	List<CarrierModel> getAllCarrier(Session session);
 	Carrier findById(Long carrierId, Session session);
 	void deleteCarrier(Carrier carrier, Session session);
+	void updateData(Carrier carrier, CarrierModel carrierResponse, Session session);
 }

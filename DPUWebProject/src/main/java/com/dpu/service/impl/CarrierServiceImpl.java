@@ -1,8 +1,10 @@
 package com.dpu.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +18,7 @@ import com.dpu.dao.CarrierAdditionalContactsDao;
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.Carrier;
 import com.dpu.entity.CarrierAdditionalContact;
+import com.dpu.model.CarrierAdditionalContactModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -48,6 +51,12 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Value("${carrier_dependent_message}")
 	private String carrier_dependent_message;
+	
+	@Value("${carrier_unable_to_update_message}")
+	private String carrier_unable_to_update_message;
+	
+	@Value("${carrier_updated_message}")
+	private String carrier_updated_message;
 
 	@Override
 	public List<CarrierModel> getAll() {
@@ -142,5 +151,84 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 		success.setResultList(getAll());
 		return success;
 	}
+	
+	
+	@Override
+	public Object update(Long id, CarrierModel carrierResponse) {
+		Carrier carrier = carrierDao.findById(id);
+		Session session = null;
+		Transaction tx = null;
+		
+		try{
+			if(carrier != null){
+				session = sessionFactory.openSession();
+				tx = session.beginTransaction();
+				
+				carrierDao.updateData(carrier, carrierResponse,session);
+			} else{
+				return createFailedObject(carrier_unable_to_update_message);
+			}
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+			return createFailedObject(carrier_unable_to_update_message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return createSuccessObject(carrier_updated_message);
+	}
+
+	@Override
+	public CarrierModel get(Long id) {
+		Session session = null;
+		CarrierModel carrierResponse = new CarrierModel();
+		try{
+			session = sessionFactory.openSession();
+			Carrier carrier = carrierDao.findById(id, session);
+			
+			if (carrier != null) {
+				setCarrierData(carrier,carrierResponse);
+				 
+				
+				List<CarrierAdditionalContact> carrierAddContacts = carrierAdditionalContactService.getAll(id, session);
+				
+				if(carrierAddContacts != null && !carrierAddContacts.isEmpty()){
+					List<CarrierAdditionalContactModel> addContacts = new ArrayList<CarrierAdditionalContactModel>();
+					
+					for (CarrierAdditionalContact carrierAdditionalContact : carrierAddContacts) {
+						CarrierAdditionalContactModel addContact = new CarrierAdditionalContactModel();
+						try {
+							BeanUtils.copyProperties(addContact, carrierAdditionalContact);
+							//addContact.setStatusId(companyAdditionalContacts.getStatus().getId());
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+						
+						addContacts.add(addContact);
+					}
+					
+					carrierResponse.setCarrierAdditionalContactModel(addContacts);
+				}
+				
+				//List<Status> statusList = statusService.getAll();
+				//response.setStatusList(statusList);
+			}
+		}finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		
+		return carrierResponse;
+	}
+
+	 
 
 }

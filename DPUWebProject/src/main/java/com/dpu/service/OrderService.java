@@ -16,8 +16,6 @@ public interface OrderService {
 
 	OrderModel getOpenAdd();
 
-	List<CategoryReq> getCategoryByCategoryName(String categoryName);
-	
 	Category getCategory(Long categoryId);
 
 	List<CategoryReq> getSpecificData();
@@ -31,5 +29,7 @@ public interface OrderService {
 	OrderModel getOrderByOrderId(Long orderId);
 
 	Object deleteOrder(Long orderId);
+
+	List<OrderModel> getOrdersByCompanyName(String companyName);
 
 }

@@ -19,7 +19,6 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
-import com.dpu.model.ProbilModel;
 import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
 import com.dpu.service.OrderService;
@@ -128,6 +127,7 @@ public class OrderController extends MessageProperties {
 	 * @param categoryReq
 	 * @return List<Categories>
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id, @RequestBody CategoryReq categoryReq) {
 		logger.info("Inside CategoryController update() Starts, id is :" + id);
@@ -224,28 +224,27 @@ public class OrderController extends MessageProperties {
 	}
 	
 	/**
-	 * this method is used to get category based on category name
-	 * @param categoryName
-	 * @return List<category>
+	 * this method is used to get orders based on company name
+	 * @param companyName
+	 * @return List<Order>
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{categoryName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchCategory(@PathVariable("categoryName") String categoryName) {
+	@RequestMapping(value = "/{companyName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchOrder(@PathVariable("companyName") String companyName) {
 		
-		logger.info("Inside CategoryController searchCategory() Starts, categoryName :"+categoryName);
+		logger.info("Inside OrderController searchOrder() Starts, companyName :"+companyName);
 		String json = new String();
 		
 		try {
-			List<CategoryReq> categoryList = categoryService.getCategoryByCategoryName(categoryName);
-			if(categoryList != null && categoryList.size() > 0) {
-				json = mapper.writeValueAsString(categoryList);
+			List<OrderModel> orderList = orderService.getOrdersByCompanyName(companyName);
+			if(orderList != null && orderList.size() > 0) {
+				json = mapper.writeValueAsString(orderList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside CategoryController searchCategory() is :" + e.getMessage());
+			logger.error("Exception inside OrderController searchOrder() is :" + e.getMessage());
 		}
 		
-		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :"+categoryName);
+		logger.info(" Inside OrderController searchOrder() Ends, companyName :"+companyName);
 		return json;
 	}
 	

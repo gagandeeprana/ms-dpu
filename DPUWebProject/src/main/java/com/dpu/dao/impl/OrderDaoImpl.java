@@ -34,15 +34,6 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		return (Order) query.uniqueResult();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Category> getCategoryByCategoryName(Session session, String categoryName) {
-		StringBuilder sb = new StringBuilder("select c from Category c join fetch c.status join fetch c.highLight join fetch c.type where c.name like :categoryName ");
-		Query query = session.createQuery(sb.toString());
-		query.setParameter("categoryName", "%"+categoryName+"%");
-		return query.list();
-	}
-
 	@Override
 	public void saveOrder(Session session, Order order) {
 		session.save(order);
@@ -69,6 +60,17 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 	@Override
 	public void savePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo) {
 		session.save(pickUpDropNo);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Order> findOrderByCompanyName(Session session, String companyName) {
+		
+		StringBuilder sb = new StringBuilder("select o from Order o join fetch o.company c join fetch o.billingLocation join fetch o.contact ")
+		.append(" join fetch o.temperature join fetch o.temperatureType join fetch o.currency where c.name like :companyName ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("companyName", "%"+companyName+"%");
+		return query.list();
 	}
 
 	

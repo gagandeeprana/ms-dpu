@@ -410,7 +410,7 @@ public class OrderServiceImpl implements OrderService {
 			if(probil != null){
 				List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
 				if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
-					for (OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
+					for (@SuppressWarnings("unused") OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
 						//session.delete(orderPickupDropNo);
 					}
 				}
@@ -457,7 +457,7 @@ public class OrderServiceImpl implements OrderService {
 		return order;
 	}
 
-	@Override
+/*	@Override
 	public List<CategoryReq> getCategoryByCategoryName(String categoryName) {
 
 		Session session = null;
@@ -484,7 +484,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		return categories;
-	}
+	}*/
 
 	@Override
 	public Category getCategory(Long categoryId) {
@@ -585,6 +585,40 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		return orderModel;
+	}
+
+	@Override
+	public List<OrderModel> getOrdersByCompanyName(String companyName) {
+
+		Session session = null;
+		List<OrderModel> allOrders = new ArrayList<OrderModel>();
+		
+		try{
+			
+			session = sessionFactory.openSession();
+			List<Order> orders = orderDao.findOrderByCompanyName(session, companyName);
+			
+			if(orders != null && ! orders.isEmpty()){
+				for (Order order : orders) {
+					OrderModel orderModel = new OrderModel();
+					BeanUtils.copyProperties(order, orderModel);
+					orderModel.setCompanyName(order.getCompany().getName());
+					orderModel.setBillingLocationName(order.getBillingLocation().getName());
+					orderModel.setContactName(order.getContact().getCustomerName());
+					orderModel.setTemperatureName(order.getTemperature().getTypeName());
+					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
+					orderModel.setCurrencyName(order.getCurrency().getTypeName());
+					
+					allOrders.add(orderModel);
+				}
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return allOrders;
 	}
 
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,15 @@ public class OrderController extends MessageProperties {
 	OrderService orderService;
 
 	ObjectMapper mapper = new ObjectMapper();
+	
+	@Value("${order_unable_to_add_message}")
+	private String order_unable_to_add_message;
+
+	@Value("${order_unable_to_delete_message}")
+	private String order_unable_to_delete_message;
+	
+	@Value("${order_unable_to_update_message}")
+	private String order_unable_to_update_message;
 
 	/**
 	 * this method is used to get all Orders data
@@ -59,7 +69,7 @@ public class OrderController extends MessageProperties {
 		} catch (Exception e) {
 			logger.error("Exception inside OrderController getAll()"+e.getMessage());
 		}
-		logger.info("Inside OrderController getAll() Ends, json :" + json);
+		logger.info("Inside OrderController getAll() Ends");
 		return json;
 	}
 
@@ -85,7 +95,9 @@ public class OrderController extends MessageProperties {
 
 		} catch (Exception e) {
 			logger.error("Exception inside OrderController add() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,order_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
+		
 		logger.info("Inside OrderController add() Ends");
 		return obj;
 	}

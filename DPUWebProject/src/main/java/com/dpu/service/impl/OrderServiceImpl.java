@@ -292,6 +292,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderModel> getAllOrders() {
 
+		logger.info("Inside OrderServiceImpl getAllOrders() starts");
 		Session session = null;
 		List<OrderModel> allOrders = new ArrayList<OrderModel>();
 		
@@ -359,6 +360,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		
+		logger.info("Inside OrderServiceImpl getAllOrders() starts");
 		return allOrders;
 	}
 

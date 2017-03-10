@@ -42,6 +42,12 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Autowired
 	CarrierAdditionalContactsDao carrierAdditionalContactsDao;
+	
+	@Value("${carrier_unable_to_add_message}")
+	private String carrier_unable_to_add_message;
+	
+	@Value("${carrier_added_message}")
+	private String carrier_added_message;
 
 	@Value("${carrier_deleted_message}")
 	private String carrier_deleted_message;
@@ -60,6 +66,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Override
 	public List<CarrierModel> getAll() {
+		
 		List<Carrier> listOfCarrier = carrierDao.findAll();
 		List<CarrierModel> returnResponse = new ArrayList<CarrierModel>();
 
@@ -98,6 +105,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Override
 	public Object delete(Long carrierId) {
+		
 		logger.info("Inside CarrierServiceImpl delete() starts");
 		Session session = null;
 		Transaction tx = null;
@@ -112,11 +120,13 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 				List<CarrierAdditionalContact> carrierAddContacts = carrierAdditionalContactService.getAll(carrierId,
 						session);
 				if (carrierAddContacts != null && !carrierAddContacts.isEmpty()) {
-					for (CarrierAdditionalContact companyAdditionalContacts : carrierAddContacts) {
-						carrierAdditionalContactsDao.deleteAdditionalContact(companyAdditionalContacts, session);
+					for (CarrierAdditionalContact carrierAdditionalContacts : carrierAddContacts) {
+						carrierAdditionalContactsDao.deleteAdditionalContact(carrierAdditionalContacts, session);
 					}
 				}
+				
 				carrierDao.deleteCarrier(carrier, session);
+				
 			} else {
 				return createFailedObject(carrier_unable_to_delete_message);
 			}
@@ -140,21 +150,26 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	}
 
 	private Object createFailedObject(String errorMessage) {
+		
 		Failed failed = new Failed();
 		failed.setMessage(errorMessage);
 		return failed;
+		
 	}
 
 	private Object createSuccessObject(String message) {
+		
 		Success success = new Success();
 		success.setMessage(message);
 		success.setResultList(getAll());
 		return success;
+		
 	}
 	
 	
 	@Override
 	public Object update(Long id, CarrierModel carrierResponse) {
+		
 		Carrier carrier = carrierDao.findById(id);
 		Session session = null;
 		Transaction tx = null;
@@ -187,6 +202,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Override
 	public CarrierModel get(Long id) {
+		
 		Session session = null;
 		CarrierModel carrierResponse = new CarrierModel();
 		try{
@@ -206,8 +222,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 						CarrierAdditionalContactModel addContact = new CarrierAdditionalContactModel();
 						try {
 							BeanUtils.copyProperties(addContact, carrierAdditionalContact);
-							//addContact.setStatusId(companyAdditionalContacts.getStatus().getId());
-						} catch (IllegalAccessException | InvocationTargetException e) {
+ 						} catch (IllegalAccessException | InvocationTargetException e) {
 							e.printStackTrace();
 						}
 						
@@ -217,8 +232,6 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 					carrierResponse.setCarrierAdditionalContactModel(addContacts);
 				}
 				
-				//List<Status> statusList = statusService.getAll();
-				//response.setStatusList(statusList);
 			}
 		}finally {
 			if (session != null) {
@@ -229,6 +242,91 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 		return carrierResponse;
 	}
 
+	@Override
+	public Object addCarrierData(CarrierModel carrierResponse) {
+		
+		logger.info("Inside CarrierServiceImpl addCarrierData() starts");
+		Session session = null;
+		Transaction tx = null;
+		
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Carrier carrier = setCarrierValues(carrierResponse);
+			carrier = carrierDao.insertCarrierData(carrier,session);
+			
+			 
+			
+			List<CarrierAdditionalContactModel> additionalContacts = carrierResponse.getCarrierAdditionalContactModel();
+			if(additionalContacts != null && !additionalContacts.isEmpty()){
+				for (CarrierAdditionalContactModel additionalContact : additionalContacts) {
+					CarrierAdditionalContact comAdditionalContact = setAdditionalContactData(additionalContact, carrier);
+					carrierAdditionalContactsDao.insertAdditionalContacts(comAdditionalContact, session);
+				}
+			}
+			
+		} catch(Exception e){
+			e.printStackTrace();
+			if(tx != null){
+				tx.rollback();
+			}
+			
+			logger.error("Exception inside CarrierServiceImpl addCarrierData() :"+ e.getMessage());
+			return createFailedObject(carrier_unable_to_add_message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		logger.info("Inside CarrierServiceImpl addCarrierData() ends");
+		return createSuccessObject(carrier_added_message);
+	  
+	}
+	
+	private CarrierAdditionalContact setAdditionalContactData(CarrierAdditionalContactModel additionalContact,
+			Carrier carrier) {
+		
+		CarrierAdditionalContact carrierAdditionalContact = new CarrierAdditionalContact();
+		carrierAdditionalContact.setBrokerContact(additionalContact.getBrokerContact());
+		carrierAdditionalContact.setBrokerFax(additionalContact.getBrokerFax());
+		carrierAdditionalContact.setBrokerPhone(additionalContact.getBrokerPhone());
+		carrierAdditionalContact.setCarrier(carrier);
+		carrierAdditionalContact.setCongCoverage(additionalContact.getCongCoverage());
+		carrierAdditionalContact.setEmail(additionalContact.getEmail());
+		carrierAdditionalContact.setExt(additionalContact.getExt());
+		carrierAdditionalContact.setIncBroker(additionalContact.getIncBroker());
+		carrierAdditionalContact.setIncCompany(additionalContact.getIncCompany());
+		carrierAdditionalContact.setLibilityCoverage(additionalContact.getLibilityCoverage());
+		carrierAdditionalContact.setPolicyNumber(additionalContact.getPolicyNumber());
+		return carrierAdditionalContact;
+		
+	}
+
+	private Carrier setCarrierValues(CarrierModel carrierResponse) {
+		
+		Carrier carrier = new Carrier();
+		carrier.setAddress(carrierResponse.getAddress());
+		carrier.setCellular(carrierResponse.getCellular());
+		carrier.setCity(carrierResponse.getCity());
+		carrier.setContact(carrierResponse.getContact()); 
+		carrier.setEmail(carrierResponse.getEmail()); 
+		carrier.setExt(carrierResponse.getExt()); 
+		carrier.setFax(carrierResponse.getFax()); 
+		carrier.setPhone(carrierResponse.getPhone()); 
+		carrier.setPosition(carrierResponse.getPosition()); 
+		carrier.setPrefix(carrierResponse.getPrefix()); 
+		carrier.setProvinceState(carrierResponse.getProvinceState());  
+		carrier.setTollfree(carrierResponse.getTollfree());  
+		carrier.setUnitNo(carrierResponse.getUnitNo()); 
+		carrier.setWebsite(carrierResponse.getWebsite());
+		carrier.setZip(carrierResponse.getZip());
+		return carrier;
+		
+	}
 	 
 
 }

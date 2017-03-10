@@ -10,5 +10,6 @@ public interface CarrierAdditionalContactsDao extends GenericDao<CarrierAddition
 
 	void deleteAdditionalContact(CarrierAdditionalContact companyAdditionalContacts, Session session);
 	List<CarrierAdditionalContact> getAdditionalContactsByCarrierId(Long carrierId,Session session);
+	void insertAdditionalContacts(CarrierAdditionalContact comAdditionalContact, Session session);
 
 }

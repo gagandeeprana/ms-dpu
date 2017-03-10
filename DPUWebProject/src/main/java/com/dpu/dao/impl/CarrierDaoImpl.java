@@ -24,14 +24,17 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 	
 	@Override
 	public Carrier findById(Long carrierId, Session session) {
+		
 		StringBuilder sb = new StringBuilder(" select c from Carrier c where c.carrierId =:carrierId ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("carrierId", carrierId);
 		return (Carrier) query.uniqueResult();
+		
 	}
 
 	@Override
 	public void deleteCarrier(Carrier carrier, Session session) {
+		
 		session.delete(carrier);
 		
 	}
@@ -39,6 +42,14 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 	@Override
 	public void updateData(Carrier carrier, CarrierModel carrierResponse, Session session) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Carrier insertCarrierData(Carrier carrier, Session session) {
+		
+		session.save(carrier);
+		return carrier;
 		
 	}
 

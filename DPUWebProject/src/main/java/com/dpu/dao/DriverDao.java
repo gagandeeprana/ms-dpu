@@ -19,4 +19,6 @@ public interface DriverDao extends GenericDao<Driver> {
 
 	Driver findById(Long driverId, Session session);
 
+	List<Object[]> getDriverIdAndName();
+
 }

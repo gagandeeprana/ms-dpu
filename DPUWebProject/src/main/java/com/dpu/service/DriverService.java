@@ -26,5 +26,7 @@ public interface DriverService {
 
 	List<DriverReq> getDriverByDriverCodeOrName(String driverCodeOrName);
 	
+	List<DriverReq> getSpecificData();
+	
 }
 

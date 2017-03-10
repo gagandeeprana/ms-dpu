@@ -68,6 +68,7 @@ public class DriverReq implements Serializable{
 	private Long driverClassId;
 	private List<TypeResponse> driverClassList;
  
+	private String fullName;
 	public List<DivisionReq> getDivisionList() {
 		return divisionList;
 	}
@@ -342,6 +343,14 @@ public class DriverReq implements Serializable{
 
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 	
 	

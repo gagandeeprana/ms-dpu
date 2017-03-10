@@ -64,4 +64,25 @@ public class DriverDaoImpl extends GenericDaoImpl<Driver> implements DriverDao {
 		return (Driver) query.uniqueResult();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> getDriverIdAndName() {
+		
+		List<Object[]> data = null;
+		Session session = sessionFactory.openSession();
+		try {
+			Query query = session.createQuery(" select d.driverId, d.firstName, d.lastName from Driver d ");
+			data = query.list();
+
+		} catch (Exception e) {
+			
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return data;
+	}
+
 }

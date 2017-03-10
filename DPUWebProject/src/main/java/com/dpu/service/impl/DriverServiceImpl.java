@@ -399,4 +399,22 @@ public class DriverServiceImpl implements DriverService {
 		return driverReqList;
 	}
 
+	@Override
+	public List<DriverReq> getSpecificData() {
+		
+		List<Object[]> driverIdNameList = driverDao.getDriverIdAndName();
+		List<DriverReq> driverList = new ArrayList<DriverReq>();
+		
+		if(driverIdNameList != null && ! driverIdNameList.isEmpty()){
+			for (Object[] row : driverIdNameList) {
+				DriverReq driver = new DriverReq();
+				driver.setDriverId(Long.parseLong(String.valueOf(row[0])));
+				driver.setFullName(String.valueOf(row[1]) +" "+String.valueOf(row[2]));
+				driverList.add(driver);
+			}
+		}
+		
+		return driverList;
+	}
+
 }

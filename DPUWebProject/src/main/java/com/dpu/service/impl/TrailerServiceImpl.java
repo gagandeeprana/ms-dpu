@@ -268,4 +268,23 @@ public class TrailerServiceImpl implements TrailerService{
 		
 		return trailer;
 	}
+
+	@Override
+	public List<TrailerRequest> getSpecificData() {
+		
+		List<Object[]> trailerIdAndNameList = trailerdao.getSpecificData("Trailer", "trailerId", "owner");
+		List<TrailerRequest> trailerData = new ArrayList<TrailerRequest>();
+		
+		if(trailerIdAndNameList != null && !trailerIdAndNameList.isEmpty()){
+			for (Object[] row : trailerIdAndNameList) {
+				TrailerRequest trailerRequest =  new TrailerRequest();
+				trailerRequest.setTrailerId(Long.parseLong(String.valueOf(row[0])));
+				trailerRequest.setOwner(String.valueOf(row[1]));
+				trailerData.add(trailerRequest);
+			}
+			
+		}
+		
+		return trailerData;
+	}
 }

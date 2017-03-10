@@ -18,4 +18,6 @@ public interface TrailerService {
 	TrailerRequest get(Long id);
 
 	TrailerRequest getOpenAdd();
+	
+	List<TrailerRequest> getSpecificData();
 }

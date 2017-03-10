@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
+import com.dpu.model.CarrierAdditionalContactModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -135,6 +136,25 @@ public class CarrierController extends MessageProperties {
 
 		logger.info("carrierController add() Ends");
 		return obj;
+	}
+	
+	@RequestMapping(value = "/contactId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET  )
+	public Object getContactById(@PathVariable("id") Long id) {
+
+		logger.info(" CarrierController getContactById() starts, contactId :" + id);
+		String json = new String();
+		
+		try {
+			CarrierAdditionalContactModel additionalContact = carrierService.getContactById(id);
+			if (additionalContact != null) {
+				json = mapper.writeValueAsString(additionalContact);
+			}
+		} catch (Exception e) {
+			logger.info("Exception inside CarrierController getContactById() :" + e.getMessage());
+		}
+
+		logger.info(" CarrierController getContactById() ends, contactId :" + id);
+		return json;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)

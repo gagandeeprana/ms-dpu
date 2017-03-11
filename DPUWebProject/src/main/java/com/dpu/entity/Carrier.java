@@ -10,10 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "carrier")
-public class Carrier  {
+public class Carrier {
 
 	/**
 	 * 
@@ -23,6 +22,9 @@ public class Carrier  {
 	@Column(name = "carrier_id")
 	@GeneratedValue
 	private Long carrierId;
+
+	@Column(name = "carrier_name")
+	private String name;
 
 	@Column(name = "address")
 	private String address;
@@ -78,6 +80,14 @@ public class Carrier  {
 
 	public void setCarrierId(Long carrierId) {
 		this.carrierId = carrierId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getAddress() {

@@ -85,6 +85,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	private void setCarrierData(Carrier carrier, CarrierModel response) {
 
 		response.setCarrierId(carrier.getCarrierId());
+		response.setName(carrier.getName());
 		response.setAddress(carrier.getAddress());
 		response.setCellular(carrier.getCellular());
 		response.setCity(carrier.getCity());
@@ -116,7 +117,6 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 			Carrier carrier = carrierDao.findById(carrierId, session);
 
 			if (carrier != null) {
-
 				List<CarrierAdditionalContact> carrierAddContacts = carrierAdditionalContactService.getAll(carrierId,
 						session);
 				if (carrierAddContacts != null && !carrierAddContacts.isEmpty()) {
@@ -306,6 +306,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	private Carrier setCarrierValues(CarrierModel carrierResponse) {
 
 		Carrier carrier = new Carrier();
+		carrier.setName(carrierResponse.getName());
 		carrier.setAddress(carrierResponse.getAddress());
 		carrier.setCellular(carrierResponse.getCellular());
 		carrier.setCity(carrierResponse.getCity());
@@ -354,13 +355,13 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	}
 
 	@Override
-	public List<CarrierModel> getCarriersByCarrierCity(String carrierCity) {
+	public List<CarrierModel> getCarriersByCarrierName(String carrierName) {
 		Session session = null;
 		List<CarrierModel> response = new ArrayList<CarrierModel>();
 		try {
 
 			session = sessionFactory.openSession();
-			List<Carrier> carrierList = carrierDao.getCarriersByCarrierCity(carrierCity, session);
+			List<Carrier> carrierList = carrierDao.getCarriersByCarrierName(carrierName, session);
 			if (carrierList != null && !carrierList.isEmpty()) {
 				for (Carrier carrier : carrierList) {
 					CarrierModel companyModel = new CarrierModel();
@@ -374,6 +375,30 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 			}
 		}
 		return response;
+	}
+
+	@Override
+	public List<CarrierModel> getAllCarriersIdAndName() {
+		Session session = null;
+		List<CarrierModel> returnResponse = new ArrayList<CarrierModel>();
+
+		try {
+			session = sessionFactory.openSession();
+			List<Object[]> listOfCarrier = carrierDao.findCarrierIdAndName(session);
+
+			if (listOfCarrier != null && !listOfCarrier.isEmpty()) {
+				for (Object[] row : listOfCarrier) {
+					CarrierModel carrierModel = new CarrierModel();
+					carrierModel.setCarrierId((Long) row[0]);
+					carrierModel.setName(String.valueOf(row[1]));
+					returnResponse.add(carrierModel);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnResponse;
 	}
 
 }

@@ -19,6 +19,8 @@ public class CarrierModel implements Serializable {
 
 	@JsonProperty("carrierId")
 	private Long carrierId;
+	@JsonProperty("name")
+	private String name;
 	@JsonProperty("address")
 	private String address;
 	@JsonProperty("unitNo")
@@ -60,6 +62,16 @@ public class CarrierModel implements Serializable {
 	@JsonProperty("carrierId")
 	public void setCarrierId(Long carrierId) {
 		this.carrierId = carrierId;
+	}
+
+	@JsonProperty("name")
+	public String getName() {
+		return name;
+	}
+
+	@JsonProperty("name")
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@JsonProperty("address")

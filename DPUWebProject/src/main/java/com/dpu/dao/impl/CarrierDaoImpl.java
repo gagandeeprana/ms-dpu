@@ -54,12 +54,20 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 	}
 
 	@Override
-	public List<Carrier> getCarriersByCarrierCity(String carrierCity, Session session) {
+	public List<Carrier> getCarriersByCarrierName(String carrierName, Session session) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("select c from Carrier c where c.city like :carrierCity ");
+		builder.append("select c from Carrier c where c.name like :carrierName ");
 		Query query = session.createQuery(builder.toString());
-		query.setParameter("carrierCity", "%"+carrierCity+"%");
+		query.setParameter("carrierName", "%"+carrierName+"%");
 		return query.list();
+	}
+
+	@Override
+	public List<Object []> findCarrierIdAndName(Session session) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("select carrierId,name from Carrier");
+		Query query = session.createQuery(builder.toString());
+ 		return query.list();
 	}
 
 }

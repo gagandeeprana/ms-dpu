@@ -19,6 +19,8 @@ public interface CarrierService {
 	
 	CarrierAdditionalContactModel getContactById(Long id);
 
-	List<CarrierModel> getCarriersByCarrierCity(String carrierCity);
+	List<CarrierModel> getCarriersByCarrierName(String carrierName);
+
+	List<CarrierModel> getAllCarriersIdAndName();
 
 }

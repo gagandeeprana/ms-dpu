@@ -163,14 +163,14 @@ public class CarrierController extends MessageProperties {
 	 * @param carrierCity
 	 * @return List<Carrier>
 	 */
-	@RequestMapping(value = "/{carrierCity}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchCarrier(@PathVariable("carrierCity") String carrierCity) {
+	@RequestMapping(value = "/{carrierName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchCarrier(@PathVariable("carrierName") String carrierName) {
 
-		logger.info("Inside CarrierController searchCarrier() Starts, carrierCity :" + carrierCity);
+		logger.info("Inside CarrierController searchCarrier() Starts, carrierName :" + carrierName);
 		String json = new String();
 
 		try {
-			List<CarrierModel> carrierList = carrierService.getCarriersByCarrierCity(carrierCity);
+			List<CarrierModel> carrierList = carrierService.getCarriersByCarrierName(carrierName);
 			if (carrierList != null && carrierList.size() > 0) {
 				json = mapper.writeValueAsString(carrierList);
 			}
@@ -178,7 +178,7 @@ public class CarrierController extends MessageProperties {
 			logger.error("Exception inside CarrierController searchCarrier() is :" + e.getMessage());
 		}
 
-		logger.info(" Inside CarrierController searchCarrier() Ends, carrierCity :" + carrierCity);
+		logger.info(" Inside CarrierController searchCarrier() Ends, carrierName :" + carrierName);
 		return json;
 	}
 
@@ -205,6 +205,28 @@ public class CarrierController extends MessageProperties {
 		logger.info(" CarrierController update() ends, carrierId :" + id);
 		return obj;
 	}
+	
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, value ="/IdAndName")
+	public Object getAllCarriersIdAndName() {
+
+		logger.info("CarrierController getAllCarriersIdAndName() starts");
+		String json = new String();
+
+		try {
+			List<CarrierModel> carrierResponse = carrierService.getAllCarriersIdAndName();
+
+			if (carrierResponse != null) {
+				json = mapper.writeValueAsString(carrierResponse);
+			}
+
+		} catch (Exception e) {
+			logger.info("Exception inside CarrierController getAllCarrier() :" + e.getMessage());
+		}
+
+		logger.info("CarrierController getAllCarrier() ends");
+		return json;
+	}
+
 
 	
 }

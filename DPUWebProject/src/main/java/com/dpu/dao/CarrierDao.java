@@ -19,5 +19,7 @@ public interface CarrierDao extends GenericDao<Carrier> {
 
 	Carrier insertCarrierData(Carrier carrier, Session session);
 
-	List<Carrier> getCarriersByCarrierCity(String carrierCity, Session session);
+	List<Carrier> getCarriersByCarrierName(String carrierName, Session session);
+
+	List<Object []> findCarrierIdAndName(Session session);
 }

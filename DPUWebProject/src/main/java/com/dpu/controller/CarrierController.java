@@ -45,13 +45,13 @@ public class CarrierController extends MessageProperties {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllCarrier() {
-		
+
 		logger.info("CarrierController getAllCarrier() starts");
 		String json = new String();
-		
+
 		try {
 			List<CarrierModel> carrierResponse = carrierService.getAll();
-			
+
 			if (carrierResponse != null) {
 				json = mapper.writeValueAsString(carrierResponse);
 			}
@@ -59,7 +59,7 @@ public class CarrierController extends MessageProperties {
 		} catch (Exception e) {
 			logger.info("Exception inside CarrierController getAllCarrier() :" + e.getMessage());
 		}
-		
+
 		logger.info("CarrierController getAllCarrier() ends");
 		return json;
 	}
@@ -92,7 +92,7 @@ public class CarrierController extends MessageProperties {
 
 		logger.info(" CarrierController get() starts, carrierId :" + id);
 		String json = new String();
-		
+
 		try {
 			CarrierModel carrierResponse = carrierService.get(id);
 			if (carrierResponse != null) {
@@ -115,10 +115,10 @@ public class CarrierController extends MessageProperties {
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody CarrierModel carrierResponse) {
-		
+
 		logger.info("CarrierController add() starts");
 		Object obj = null;
-		
+
 		try {
 			obj = carrierService.addCarrierData(carrierResponse);
 
@@ -137,13 +137,13 @@ public class CarrierController extends MessageProperties {
 		logger.info("carrierController add() Ends");
 		return obj;
 	}
-	
-	@RequestMapping(value = "/contactId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET  )
+
+	@RequestMapping(value = "/contactId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getContactById(@PathVariable("id") Long id) {
 
 		logger.info(" CarrierController getContactById() starts, contactId :" + id);
 		String json = new String();
-		
+
 		try {
 			CarrierAdditionalContactModel additionalContact = carrierService.getContactById(id);
 			if (additionalContact != null) {
@@ -156,13 +156,39 @@ public class CarrierController extends MessageProperties {
 		logger.info(" CarrierController getContactById() ends, contactId :" + id);
 		return json;
 	}
+	
+	/**
+	 * this method is used to searchCarrier based on carrier city
+	 * 
+	 * @param carrierCity
+	 * @return List<Carrier>
+	 */
+	@RequestMapping(value = "/{carrierCity}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchCarrier(@PathVariable("carrierCity") String carrierCity) {
+
+		logger.info("Inside CarrierController searchCarrier() Starts, carrierCity :" + carrierCity);
+		String json = new String();
+
+		try {
+			List<CarrierModel> carrierList = carrierService.getCarriersByCarrierCity(carrierCity);
+			if (carrierList != null && carrierList.size() > 0) {
+				json = mapper.writeValueAsString(carrierList);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside CarrierController searchCarrier() is :" + e.getMessage());
+		}
+
+		logger.info(" Inside CarrierController searchCarrier() Ends, carrierCity :" + carrierCity);
+		return json;
+	}
+
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id, @RequestBody CarrierModel carrierResponse) {
 
 		logger.info(" CarrierController update() starts, carrierId :" + id);
 		Object obj = null;
-		
+
 		try {
 			obj = carrierService.update(id, carrierResponse);
 			if (obj instanceof Success) {
@@ -175,9 +201,10 @@ public class CarrierController extends MessageProperties {
 			obj = new ResponseEntity<Object>(new Failed(0, carrier_unable_to_update_message, Iconstants.ERROR),
 					HttpStatus.BAD_REQUEST);
 		}
-		
+
 		logger.info(" CarrierController update() ends, carrierId :" + id);
 		return obj;
 	}
 
+	
 }

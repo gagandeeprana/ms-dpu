@@ -353,4 +353,27 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 		return carrierAdditionalContactResponse;
 	}
 
+	@Override
+	public List<CarrierModel> getCarriersByCarrierCity(String carrierCity) {
+		Session session = null;
+		List<CarrierModel> response = new ArrayList<CarrierModel>();
+		try {
+
+			session = sessionFactory.openSession();
+			List<Carrier> carrierList = carrierDao.getCarriersByCarrierCity(carrierCity, session);
+			if (carrierList != null && !carrierList.isEmpty()) {
+				for (Carrier carrier : carrierList) {
+					CarrierModel companyModel = new CarrierModel();
+					org.springframework.beans.BeanUtils.copyProperties(carrier, companyModel);
+					response.add(companyModel);
+				}
+			}
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return response;
+	}
+
 }

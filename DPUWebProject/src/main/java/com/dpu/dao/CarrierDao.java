@@ -18,4 +18,6 @@ public interface CarrierDao extends GenericDao<Carrier> {
 	void updateData(Carrier carrier, CarrierModel carrierResponse, Session session);
 
 	Carrier insertCarrierData(Carrier carrier, Session session);
+
+	List<Carrier> getCarriersByCarrierCity(String carrierCity, Session session);
 }

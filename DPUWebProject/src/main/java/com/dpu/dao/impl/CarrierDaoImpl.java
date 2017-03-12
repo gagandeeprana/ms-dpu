@@ -4,10 +4,17 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.Carrier;
+import com.dpu.entity.CarrierAdditionalContact;
+import com.dpu.entity.CompanyAdditionalContacts;
+import com.dpu.entity.CompanyBillingLocation;
+import com.dpu.model.AdditionalContacts;
+import com.dpu.model.BillingLocation;
+import com.dpu.model.CarrierAdditionalContactModel;
 import com.dpu.model.CarrierModel;
 
 @Repository
@@ -21,36 +28,50 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 		Query query = session.createQuery(sb.toString());
 		return query.list();
 	}
-	
+
 	@Override
 	public Carrier findById(Long carrierId, Session session) {
-		
+
 		StringBuilder sb = new StringBuilder(" select c from Carrier c where c.carrierId =:carrierId ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("carrierId", carrierId);
 		return (Carrier) query.uniqueResult();
-		
+
 	}
 
 	@Override
 	public void deleteCarrier(Carrier carrier, Session session) {
-		
+
 		session.delete(carrier);
-		
+
 	}
 
 	@Override
 	public void updateData(Carrier carrier, CarrierModel carrierResponse, Session session) {
-		// TODO Auto-generated method stub
-		
+
+		String[] ignoreProp = new String[1];
+		ignoreProp[0] = "carrierId";
+		BeanUtils.copyProperties(carrierResponse, carrier, ignoreProp);
+		session.saveOrUpdate(carrier);
+
+		List<CarrierAdditionalContactModel> additionalContactsList = carrierResponse.getCarrierAdditionalContactModel();
+		if (additionalContactsList != null && !additionalContactsList.isEmpty()) {
+			for (CarrierAdditionalContactModel additionalContacts : additionalContactsList) {
+				CarrierAdditionalContact comAdditionalContacts = new CarrierAdditionalContact();
+				BeanUtils.copyProperties(additionalContacts, comAdditionalContacts);
+				comAdditionalContacts.setCarrier(carrier);
+				// comAdditionalContacts.setStatus(statusService.get(additionalContacts.getStatusId()));
+				session.saveOrUpdate(comAdditionalContacts);
+			}
+		}
 	}
 
 	@Override
 	public Carrier insertCarrierData(Carrier carrier, Session session) {
-		
+
 		session.save(carrier);
 		return carrier;
-		
+
 	}
 
 	@Override
@@ -58,16 +79,16 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 		StringBuilder builder = new StringBuilder();
 		builder.append("select c from Carrier c where c.name like :carrierName ");
 		Query query = session.createQuery(builder.toString());
-		query.setParameter("carrierName", "%"+carrierName+"%");
+		query.setParameter("carrierName", "%" + carrierName + "%");
 		return query.list();
 	}
 
 	@Override
-	public List<Object []> findCarrierIdAndName(Session session) {
+	public List<Object[]> findCarrierIdAndName(Session session) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("select carrierId,name from Carrier");
 		Query query = session.createQuery(builder.toString());
- 		return query.list();
+		return query.list();
 	}
 
 }

@@ -167,7 +167,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	}
 
 	@Override
-	public Object update(Long id, CarrierModel carrierResponse) {
+	public Object updateCarrier(Long id, CarrierModel carrierResponse) {
 
 		Carrier carrier = carrierDao.findById(id);
 		Session session = null;

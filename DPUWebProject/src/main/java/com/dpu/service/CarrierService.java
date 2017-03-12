@@ -11,7 +11,7 @@ public interface CarrierService {
 	
 	Object delete(Long carrierId);
 	
-	Object update(Long id, CarrierModel carrierResponse);
+	Object updateCarrier(Long id, CarrierModel carrierResponse);
 	
 	CarrierModel get(Long id);
 	

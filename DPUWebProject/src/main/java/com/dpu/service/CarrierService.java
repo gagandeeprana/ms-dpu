@@ -23,4 +23,6 @@ public interface CarrierService {
 
 	List<CarrierModel> getAllCarriersIdAndName();
 
+	Object deleteAdditionalContactByAdditionalContactId(Long contactId);
+
 }

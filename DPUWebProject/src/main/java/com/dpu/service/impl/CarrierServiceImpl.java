@@ -63,6 +63,12 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Value("${carrier_updated_message}")
 	private String carrier_updated_message;
+	
+	@Value("${carrierAdditionalContact_deleted_message}")
+	private String carrierAdditionalContact_deleted_message;
+
+	@Value("${carrierAdditionalContact_unable_to_delete_message}")
+	private String carrierAdditionalContact_unable_to_delete_message;
 
 	@Override
 	public List<CarrierModel> getAll() {
@@ -166,6 +172,14 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	}
 
+	private Object createAdditionalContactSuccessObject(String message) {
+
+		Success success = new Success();
+		success.setMessage(message);
+		//success.setResultList(getAll());
+		return success;
+
+	}
 	@Override
 	public Object updateCarrier(Long id, CarrierModel carrierResponse) {
 
@@ -399,6 +413,40 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 			e.printStackTrace();
 		}
 		return returnResponse;
+	}
+
+	@Override
+	public Object deleteAdditionalContactByAdditionalContactId(Long contactId) {
+
+		logger.info("Inside CarrierServiceImpl deleteAdditionalContactByAdditionalContactId() starts");
+		Session session = null;
+		Transaction tx = null;
+
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			CarrierAdditionalContact carrierAdditionalContact = carrierDao.findByAdditionalContactId(contactId,
+					session);
+
+			if (carrierAdditionalContact != null) {
+				carrierAdditionalContactsDao.deleteAdditionalContact(carrierAdditionalContact, session);
+			} else {
+				return createFailedObject(carrierAdditionalContact_unable_to_delete_message);
+			}
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			return createFailedObject(carrierAdditionalContact_unable_to_delete_message);
+		} finally {
+			if (tx != null) {
+				tx.commit();
+			}
+			if (session != null) {
+				session.close();
+			}
+		}
+		return createAdditionalContactSuccessObject(carrierAdditionalContact_deleted_message);
 	}
 
 }

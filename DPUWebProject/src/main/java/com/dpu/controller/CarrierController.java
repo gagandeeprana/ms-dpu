@@ -40,6 +40,9 @@ public class CarrierController extends MessageProperties {
 
 	@Value("${carrier_unable_to_update_message}")
 	private String carrier_unable_to_update_message;
+	
+	@Value("${carrierAdditionalContact_unable_to_delete_message}")
+	private String carrierAdditionalContact_unable_to_delete_message;
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -156,7 +159,7 @@ public class CarrierController extends MessageProperties {
 		logger.info(" CarrierController getContactById() ends, contactId :" + id);
 		return json;
 	}
-	
+
 	/**
 	 * this method is used to searchCarrier based on carrier city
 	 * 
@@ -182,9 +185,7 @@ public class CarrierController extends MessageProperties {
 		return json;
 	}
 
-
-	
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, value ="/IdAndName")
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, value = "/IdAndName")
 	public Object getAllCarriersIdAndName() {
 
 		logger.info("CarrierController getAllCarriersIdAndName() starts");
@@ -227,6 +228,28 @@ public class CarrierController extends MessageProperties {
 		logger.info(" CarrierController updateCarrier() ends, carrierId :" + id);
 		return obj;
 	}
-	
-	
+
+	@RequestMapping(value = "/contactId/{contactId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteContactByContactId(@PathVariable("contactId") Long contactId) {
+
+		logger.info(" CarrierController deleteContactByContactId() starts ");
+		Object obj = null;
+
+		try {
+			obj = carrierService.deleteAdditionalContactByAdditionalContactId(contactId);
+			if (obj instanceof Success) {
+				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(obj, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.info("Exception inside CarrierController deleteContactByContactId() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, carrierAdditionalContact_unable_to_delete_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info(" CarrierController deleteContactByContactId() ends ");
+		return obj;
+	}
+
 }

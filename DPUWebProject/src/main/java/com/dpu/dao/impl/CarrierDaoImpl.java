@@ -38,6 +38,16 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 		return (Carrier) query.uniqueResult();
 
 	}
+	
+	@Override
+	public CarrierAdditionalContact findByAdditionalContactId(Long contactId, Session session) {
+
+		StringBuilder sb = new StringBuilder(" select c from CarrierAdditionalContact c where c.additionalContactId =:contactId ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("contactId", contactId);
+		return (CarrierAdditionalContact) query.uniqueResult();
+
+	}
 
 	@Override
 	public void deleteCarrier(Carrier carrier, Session session) {

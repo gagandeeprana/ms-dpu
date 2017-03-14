@@ -32,4 +32,6 @@ public interface OrderService {
 
 	List<OrderModel> getOrdersByCompanyName(String companyName);
 
+	ProbilModel getProbilByProbilId(Long orderId, Long probilId);
+
 }

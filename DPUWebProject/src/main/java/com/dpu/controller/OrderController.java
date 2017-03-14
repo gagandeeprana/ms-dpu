@@ -20,6 +20,7 @@ import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
+import com.dpu.model.ProbilModel;
 import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
 import com.dpu.service.OrderService;
@@ -103,7 +104,7 @@ public class OrderController extends MessageProperties {
 	}
 
 	/**
-	 * this method is used to delete the particular probil
+	 * this method is used to delete the particular order
 	 * @param id
 	 * @return List<Order>
 	 * @author lakhvir.bansal
@@ -123,9 +124,8 @@ public class OrderController extends MessageProperties {
 				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToDeleteCode),
-					categoryUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 			logger.error("Exception inside OrderController deleteOrder() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,order_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside OrderController deleteOrder() Ends, orderId is :" + orderId);
@@ -279,4 +279,26 @@ public class OrderController extends MessageProperties {
 		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :");
 		return json;
 	}
+	
+	@RequestMapping(value = "/{orderId}/probil/{probilId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getProbilByProbilId(@PathVariable("orderId") Long orderId, @PathVariable("probilId") Long probilId) {
+		
+		logger.info("Inside OrderController getProbilByProbilId() Starts, orderId:" + orderId+", probilId"+probilId);
+		String json = null;
+		
+		try {
+			
+			ProbilModel probilModel = orderService.getProbilByProbilId(orderId, probilId);
+
+			if (probilModel != null) {
+				json = mapper.writeValueAsString(probilModel);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside CategoryController getCategoryById() :" + e.getMessage());
+		}
+		
+		logger.info("Inside OrderController getProbilByProbilId() ends, orderId:" + orderId+", probilId"+probilId);
+		return json;
+	}
+	
 }

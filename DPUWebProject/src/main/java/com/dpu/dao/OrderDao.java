@@ -28,4 +28,6 @@ public interface OrderDao extends GenericDao<Category> {
 
 	List<Order> findOrderByCompanyName(Session session, String companyName);
 
+	Probil getProbilData(Long orderId, Long probilId, Session session);
+
 }

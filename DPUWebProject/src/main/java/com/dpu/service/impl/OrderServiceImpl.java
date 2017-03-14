@@ -623,6 +623,55 @@ public class OrderServiceImpl implements OrderService {
 		return allOrders;
 	}
 
+	@Override
+	public ProbilModel getProbilByProbilId(Long orderId, Long probilId) {
+		
+		Session session = null;
+		ProbilModel probilModel = new ProbilModel();
+		
+		try{
+			session = sessionFactory.openSession();
+			Probil probil = orderDao.getProbilData(orderId, probilId, session);
+			if(probil != null){
+				BeanUtils.copyProperties(probil, probilModel);
+				probilModel.setConsineeName(probil.getConsine().getLocationName());
+				probilModel.setShipperName(probil.getShipper().getLocationName());
+				probilModel.setPickupName(probil.getPickUp().getTypeName());
+				probilModel.setDeliveryName(probil.getDelivery().getTypeName());
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String pickUpScheduledDate = sdf.format(probil.getPickupScheduledDate());
+				String deliverScheduledDate = sdf.format(probil.getDeliverScheduledDate());
+				String pickUpMABDate = sdf.format(probil.getPickupMABDate());
+				String deliverMABDate = sdf.format(probil.getDeliveryMABDate());
+				
+				probilModel.setPickupScheduledDate(pickUpScheduledDate);
+				probilModel.setPickupMABDate(pickUpMABDate);
+				probilModel.setDeliverScheduledDate(deliverScheduledDate);
+				probilModel.setDeliveryMABDate(deliverMABDate);
+				
+				SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
+				String pickUpScheduledTime = localDateFormat.format(probil.getPickupScheduledTime());
+				String pickUpMABTime = localDateFormat.format(probil.getPickupMABTime());
+				String deliverScheduledTime = localDateFormat.format(probil.getDeliverScheduledTime());
+				String deliverMABTime =  localDateFormat.format(probil.getDeliveryMABTime());
+				
+				probilModel.setPickupScheduledTime(pickUpScheduledTime);
+				probilModel.setPickupMABTime(pickUpMABTime);
+				probilModel.setDeliverScheduledTime(deliverScheduledTime);
+				probilModel.setDeliveryMABTime(deliverMABTime);
+			}
+			
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return probilModel;
+		
+	}
+
 	
 
 }

@@ -34,4 +34,6 @@ public interface OrderService {
 
 	ProbilModel getProbilByProbilId(Long orderId, Long probilId);
 
+	Object deleteProbil(Long orderId, Long probilId);
+
 }

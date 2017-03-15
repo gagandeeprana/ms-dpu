@@ -30,4 +30,6 @@ public interface OrderDao extends GenericDao<Category> {
 
 	Probil getProbilData(Long orderId, Long probilId, Session session);
 
+	Probil getProbilByProbilId(Long orderId, Long probilId, Session session);
+
 }

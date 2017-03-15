@@ -133,6 +133,30 @@ public class OrderController extends MessageProperties {
 
 	}
 
+	@RequestMapping(value = "/{orderId}/probil/{probilId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteProbilByProbilId(@PathVariable("orderId") Long orderId, @PathVariable("probilId") Long probilId) {
+		
+		logger.info("Inside OrderController deleteProbilByProbilId() Starts, orderId is :" + orderId+": probilId :"+probilId);
+		Object obj = null;
+		
+		try {
+			Object result = orderService.deleteProbil(orderId, probilId);
+			
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside OrderController deleteOrder() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,order_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+		}
+		
+		logger.info("Inside OrderController deleteProbilByProbilId() Starts, orderId is :" + orderId+": probilId :"+probilId);
+		return obj;
+
+	}
+	
 	/**
 	 * this method is used to update the categoryData based on categoryID
 	 * @param id

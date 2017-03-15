@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
 				session.close();
 			}
 		}
-		return createSuccessObject(message);
+		return createSuccessObject(message,"add");
 	}
 	
 	
@@ -205,10 +205,12 @@ public class OrderServiceImpl implements OrderService {
 		return date;
 }
 
-	private Object createSuccessObject(String message) {
+	private Object createSuccessObject(String message, String type) {
 		Success success = new Success();
 		success.setMessage(message);
-		success.setResultList(getAllOrders());
+		if(!type.equals("deleteProbil")){
+			success.setResultList(getAllOrders());
+		}
 		return success;
 	}
 	
@@ -286,7 +288,55 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		logger.info("Inside OrderServiceImpl deleteOrder() ends, orderId :"+ orderId);
-		return createSuccessObject(message);
+		return createSuccessObject(message,"order");
+	}
+	
+	
+	@Override
+	public Object deleteProbil(Long orderId, Long probilId) {
+	
+		logger.info("Inside OrderServiceImpl deleteProbil() starts, orderId :"+ orderId+": probilId :"+probilId);
+		String message = "Record Deleted Successfully";
+		Session session = null;
+		Transaction tx = null;
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Probil probil = (Probil) orderDao.getProbilByProbilId(orderId, probilId, session);
+			if(probil != null){
+				List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
+				if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
+					for (OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
+						session.delete(orderPickupDropNo);
+					}
+				}
+						
+				session.delete(probil);
+				
+				tx.commit();
+				
+			} else{
+				message = "Error while deleting record.";
+				return createFailedObject(message);
+			}
+		}catch(Exception e){
+			logger.error("Exception Inside OrderServiceImpl deleteProbil() :"+ e.getMessage());
+			if(tx != null){
+				tx.rollback();
+			}
+			message = "Error while deleting record.";
+			return createFailedObject(message);
+		} finally{
+			/*if(tx != null){
+				tx.commit();
+			}*/
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		logger.info("Inside OrderServiceImpl deleteProbil() ends, orderId :"+ orderId+": probilId :"+probilId);
+		return createSuccessObject(message,"deleteProbil");
 	}
 	
 	@Override
@@ -671,6 +721,8 @@ public class OrderServiceImpl implements OrderService {
 		return probilModel;
 		
 	}
+
+	
 
 	
 

@@ -85,6 +85,18 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		return (Probil) query.uniqueResult();
 	}
 
+	@Override
+	public Probil getProbilByProbilId(Long orderId, Long probilId, Session session) {
+
+		StringBuilder sb = new StringBuilder(" select p from Probil p  ")
+		.append(" where p.order.id = :orderId and p.id =:probilId ");
+		
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("orderId", orderId);
+		query.setParameter("probilId", probilId);
+		return (Probil) query.uniqueResult();
+	}
+
 	
 
 }

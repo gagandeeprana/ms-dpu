@@ -53,7 +53,7 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		if(maxVal != null){
 			returnVal = maxVal;
 		}
-		System.out.println("the max probil no is :"+maxVal);
+		//System.out.println("the max probil no is :"+maxVal);
 		return returnVal;
 	}
 
@@ -95,6 +95,21 @@ public class OrderDaoImpl extends GenericDaoImpl<Category> implements OrderDao{
 		query.setParameter("orderId", orderId);
 		query.setParameter("probilId", probilId);
 		return (Probil) query.uniqueResult();
+	}
+
+	@Override
+	public void updateOrder(Session session, Order order) {
+		session.saveOrUpdate(order);
+	}
+
+	@Override
+	public void updateProbil(Session session, Probil probil) {
+		session.saveOrUpdate(probil);
+	}
+
+	@Override
+	public void updatePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo) {
+		session.saveOrUpdate(pickUpDropNo);
 	}
 
 	

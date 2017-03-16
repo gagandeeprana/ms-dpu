@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.dao;
 
 import java.util.List;
@@ -31,5 +28,11 @@ public interface OrderDao extends GenericDao<Category> {
 	Probil getProbilData(Long orderId, Long probilId, Session session);
 
 	Probil getProbilByProbilId(Long orderId, Long probilId, Session session);
+
+	void updateOrder(Session session, Order order);
+
+	void updateProbil(Session session, Probil probil);
+
+	void updatePickUpDrop(Session session, OrderPickupDropNo pickUpDropNo);
 
 }

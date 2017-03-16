@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
@@ -158,30 +157,30 @@ public class OrderController extends MessageProperties {
 	}
 	
 	/**
-	 * this method is used to update the categoryData based on categoryID
+	 * this method is used to update the orderData
 	 * @param id
-	 * @param categoryReq
-	 * @return List<Categories>
+	 * @param orderModel
+	 * @return List<OrderModel>
 	 */
-	@SuppressWarnings("unused")
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id, @RequestBody CategoryReq categoryReq) {
-		logger.info("Inside CategoryController update() Starts, id is :" + id);
+	public Object update(@PathVariable("id") Long orderId, @RequestBody OrderModel orderModel) {
+		
+		logger.info("Inside OrderController update() Starts, orderId is :" + orderId);
 		Object obj = null;
+		
 		try {
-			List<CategoryReq> response = null;
-					//categoryService.update(id, categoryReq);
-			if (response != null) {
-				obj = response;
+			Object response = orderService.update(orderId, orderModel);
+			if (response instanceof Success) {
+				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(categoryUnableToUpdateCode),
-						categoryUnableToUpdateMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController update() :"+e.getMessage());
+			logger.error("Exception inside OrderController update() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,order_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
-		logger.info("Inside CategoryController update() Ends, id is :" + id);
+		logger.info("Inside OrderController update() ends, orderId is :" + orderId);
 		return obj;
 	}
 
@@ -284,25 +283,6 @@ public class OrderController extends MessageProperties {
 		return json;
 	}
 	
-	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getSpecificData() {
-		
-		logger.info("Inside CategoryController searchCategory() Starts");
-		String json = new String();
-		
-		try {
-			List<CategoryReq> categoryList = categoryService.getSpecificData();
-			if(categoryList != null && categoryList.size() > 0) {
-				json = mapper.writeValueAsString(categoryList);
-			}
-		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside CategoryController searchCategory() is :" + e.getMessage());
-		}
-		
-		logger.info(" Inside CategoryController searchCategory() Ends, categoryName :");
-		return json;
-	}
 	
 	@RequestMapping(value = "/{orderId}/probil/{probilId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getProbilByProbilId(@PathVariable("orderId") Long orderId, @PathVariable("probilId") Long probilId) {

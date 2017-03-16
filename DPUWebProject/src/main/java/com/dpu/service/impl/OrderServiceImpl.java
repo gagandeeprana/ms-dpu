@@ -10,13 +10,14 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.OrderDao;
-import com.dpu.entity.Category;
 import com.dpu.entity.Company;
 import com.dpu.entity.CompanyAdditionalContacts;
 import com.dpu.entity.CompanyBillingLocation;
@@ -26,7 +27,6 @@ import com.dpu.entity.Probil;
 import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
 import com.dpu.entity.Type;
-import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.OrderModel;
@@ -66,6 +66,36 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	ShipperService shipperService;
+	
+	@Value("${order_unable_to_add_message}")
+	private String order_unable_to_add_message;
+
+	@Value("${order_unable_to_delete_message}")
+	private String order_unable_to_delete_message;
+	
+	@Value("${order_unable_to_update_message}")
+	private String order_unable_to_update_message;
+	
+	@Value("${order_added_message}")
+	private String order_added_message;
+	
+	@Value("${order_deleted_message}")
+	private String order_deleted_message;
+	
+	@Value("${order_updated_message}")
+	private String order_updated_message;
+	
+	@Value("${order_already_used_message}")
+	private String order_already_used_message;
+	
+	@Value("${probil_deleted_message}")
+	private String probil_deleted_message;
+	
+	@Value("${probil_unable_to_delete_message}")
+	private String probil_unable_to_delete_message;
+	
+	@Value("${probil_already_used_message}")
+	private String probil_already_used_message;
 	
 	private Order addOrder(OrderModel orderModel, Session session) {
 		Company company = (Company) session.get(Company.class, orderModel.getCompanyId());
@@ -151,17 +181,14 @@ public class OrderServiceImpl implements OrderService {
 	public Object addOrder(OrderModel orderModel) {
 		
 		logger.info("Inside OrderServiceImpl addOrder() starts ");
-		String message = "Record Added Successfully";
 		Session session = null;
 		Transaction tx = null;
+		
 		try{
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			
 			Order order = addOrder(orderModel, session);
-			
 			List<ProbilModel> probils = orderModel.getProbilList();
-			
 			if(probils != null && !probils.isEmpty()){
 				for (ProbilModel probilModel : probils) {
 					addProbil(probilModel, order, session);
@@ -172,8 +199,7 @@ public class OrderServiceImpl implements OrderService {
 			if(tx != null){
 				tx.rollback();
 			}
-			message="error while inserting record";
-			return createFailedObject(message);
+			return createFailedObject(order_unable_to_add_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -182,7 +208,9 @@ public class OrderServiceImpl implements OrderService {
 				session.close();
 			}
 		}
-		return createSuccessObject(message,"add");
+		
+		logger.info("Inside OrderServiceImpl addOrder() starts ");
+		return createSuccessObject(order_added_message,"add");
 	}
 	
 	
@@ -221,29 +249,135 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<CategoryReq> update(Long id, CategoryReq categoryReq) {
+	public Object update(Long orderId, OrderModel orderModel) {
 		
-		Category category = categoryDao.findById(id);
-		category.setName(categoryReq.getName());
+		logger.info(" OrderServiceImpl update() starts, orderId :"+orderId); 
+		Session session = null;
+		Transaction tx = null;
 		
-		Status status = statusService.get(categoryReq.getStatusId());
-		category.setStatus(status);
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Order order = updateOrder(orderModel, session);
+			
+			List<ProbilModel> probilList = orderModel.getProbilList();
+			if(probilList != null && ! probilList.isEmpty()){
+				for (ProbilModel probilModel : probilList) {
+					updateProbil(probilModel, order, session);
+				}
+			}
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+			logger.info(" Exception inside OrderServiceImpl update() :"+e.getMessage());
+			return createFailedObject(order_unable_to_update_message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			} 
+			if(session != null){
+				session.close();
+			}
+		}
 		
-		Type highlight = typeService.get(categoryReq.getHighlightId());
-		category.setHighLight(highlight);
+		logger.info(" OrderServiceImpl update() ends, orderId :"+orderId);
+		return createSuccessObject(order_updated_message,"update");
+	}
+	
+	private Order updateOrder(OrderModel orderModel, Session session) {
 		
-		Type type = typeService.get(categoryReq.getTypeId());
-		category.setType(type);
+		Company company = (Company) session.get(Company.class, orderModel.getCompanyId());
+		CompanyBillingLocation billingLocation = (CompanyBillingLocation) session.get(CompanyBillingLocation.class, orderModel.getBillingLocationId());
+		CompanyAdditionalContacts additionalContacts = (CompanyAdditionalContacts) session.get(CompanyAdditionalContacts.class, orderModel.getContactId());
+		Type temp = (Type) session.get(Type.class, orderModel.getTemperatureId());
+		Type tempType = (Type) session.get(Type.class, orderModel.getTemperatureTypeId());
+		Type currency = (Type) session.get(Type.class, orderModel.getCurrencyId());
 		
-		categoryDao.update(category);
-		return null;//getAll();
+		Order order = (Order) session.get(Order.class, orderModel.getId());
+		BeanUtils.copyProperties(orderModel, order);
+		order.setCompany(company);
+		order.setBillingLocation(billingLocation);
+		order.setContact(additionalContacts);
+		order.setTemperature(temp);
+		order.setTemperatureType(tempType);
+		order.setCurrency(currency);
+		orderDao.updateOrder(session, order);
+		return order;
+		
 	}
 
+	private void updateProbil(ProbilModel probilModel, Order order, Session session) {
+		
+		Probil probil = null;
+		if(probilModel.getId() != null){
+			probil = (Probil) session.get(Probil.class, probilModel.getId());
+		} else{
+			 probil = new Probil();
+		}
+		
+		BeanUtils.copyProperties(probilModel, probil);
+		
+		if(probilModel.getId() == null){
+			Long maxProbilNo = orderDao.getMaxProbilNo(session);
+			probil.setProbilNo(maxProbilNo + 1);
+		}
+		
+		Shipper shipper = (Shipper) session.get(Shipper.class, probilModel.getShipperId());
+		Shipper consinee = (Shipper) session.get(Shipper.class, probilModel.getConsineeId());
+		Type pickUp = (Type) session.get(Type.class, probilModel.getPickupId());
+		Type delivery = (Type) session.get(Type.class, probilModel.getDeliveryId());
+		
+		probil.setConsine(consinee);
+		probil.setShipper(shipper);
+		probil.setPickUp(pickUp);
+		probil.setDelivery(delivery);
+		probil.setOrder(order);
+		
+		String pickUpScheduledDate = probilModel.getPickupScheduledDate();
+		String pickUpMabDate = probilModel.getPickupMABDate();
+		String deliveryScheduledDate = probilModel.getDeliverScheduledDate();
+		String deliveryMabData = probilModel.getDeliveryMABDate();
+		
+		probil.setPickupScheduledDate(changeStringToDate(pickUpScheduledDate));
+		probil.setPickupMABDate(changeStringToDate(pickUpMabDate));
+		probil.setDeliverScheduledDate(changeStringToDate(deliveryScheduledDate));
+		probil.setDeliveryMABDate(changeStringToDate(deliveryMabData));
+		
+		String pickUpScheduledTime = probilModel.getPickupScheduledTime();
+		String pickUpMabTime = probilModel.getPickupMABTime();
+		String deliveryScheduledTime = probilModel.getDeliverScheduledTime();
+		String deliveryMabTime = probilModel.getDeliveryMABTime();
+		
+		probil.setDeliverScheduledTime(changeStringToTime(deliveryScheduledTime));
+		probil.setDeliveryMABTime(changeStringToTime(deliveryMabTime));
+		probil.setPickupScheduledTime(changeStringToTime(pickUpScheduledTime));
+		probil.setPickupMABTime(changeStringToTime(pickUpMabTime));
+		
+		orderDao.updateProbil(session, probil);
+		
+		updatePickUpDelivery(probilModel, probil, session);
+	}
+
+	private void updatePickUpDelivery(ProbilModel probilModel, Probil probil, Session session) {
+		List<OrderPickUpDeliveryModel> orderPickUpDeliveryList = probilModel.getOrderPickUpDeliveryList();
+		
+		if(orderPickUpDeliveryList != null && !orderPickUpDeliveryList.isEmpty()){
+			
+			for (OrderPickUpDeliveryModel orderPickUpDeliveryModel : orderPickUpDeliveryList) {
+				OrderPickupDropNo pickUpDropNo = new OrderPickupDropNo();
+				BeanUtils.copyProperties(orderPickUpDeliveryModel, pickUpDropNo);
+				pickUpDropNo.setProbil(probil);
+				
+				orderDao.updatePickUpDrop(session, pickUpDropNo);
+			}
+		}
+		
+	}
 	@Override
 	public Object deleteOrder(Long orderId) {
 
 		logger.info("Inside OrderServiceImpl deleteOrder() starts, orderId :"+ orderId);
-		String message = "Record Deleted Successfully";
 		Session session = null;
 		Transaction tx = null;
 		try{
@@ -269,16 +403,17 @@ public class OrderServiceImpl implements OrderService {
 				tx.commit();
 				
 			} else{
-				message = "Error while deleting record.";
-				return createFailedObject(message);
+				return createFailedObject(order_unable_to_delete_message);
 			}
 		}catch(Exception e){
 			logger.error("Exception Inside OrderServiceImpl deleteOrder() :"+ e.getMessage());
 			if(tx != null){
 				tx.rollback();
 			}
-			message = "Error while deleting record.";
-			return createFailedObject(message);
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(order_already_used_message);
+			}
+			return createFailedObject(order_unable_to_delete_message);
 		} finally{
 			/*if(tx != null){
 				tx.commit();
@@ -288,7 +423,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		logger.info("Inside OrderServiceImpl deleteOrder() ends, orderId :"+ orderId);
-		return createSuccessObject(message,"order");
+		return createSuccessObject(order_deleted_message,"order");
 	}
 	
 	
@@ -296,7 +431,6 @@ public class OrderServiceImpl implements OrderService {
 	public Object deleteProbil(Long orderId, Long probilId) {
 	
 		logger.info("Inside OrderServiceImpl deleteProbil() starts, orderId :"+ orderId+": probilId :"+probilId);
-		String message = "Record Deleted Successfully";
 		Session session = null;
 		Transaction tx = null;
 		try{
@@ -316,16 +450,17 @@ public class OrderServiceImpl implements OrderService {
 				tx.commit();
 				
 			} else{
-				message = "Error while deleting record.";
-				return createFailedObject(message);
+				return createFailedObject(probil_unable_to_delete_message);
 			}
 		}catch(Exception e){
 			logger.error("Exception Inside OrderServiceImpl deleteProbil() :"+ e.getMessage());
 			if(tx != null){
 				tx.rollback();
 			}
-			message = "Error while deleting record.";
-			return createFailedObject(message);
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(probil_already_used_message);
+			}
+			return createFailedObject(probil_unable_to_delete_message);
 		} finally{
 			/*if(tx != null){
 				tx.commit();
@@ -336,7 +471,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		logger.info("Inside OrderServiceImpl deleteProbil() ends, orderId :"+ orderId+": probilId :"+probilId);
-		return createSuccessObject(message,"deleteProbil");
+		return createSuccessObject(probil_deleted_message,"deleteProbil");
 	}
 	
 	@Override
@@ -361,46 +496,6 @@ public class OrderServiceImpl implements OrderService {
 					orderModel.setTemperatureName(order.getTemperature().getTypeName());
 					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
 					orderModel.setCurrencyName(order.getCurrency().getTypeName());
-					
-					/*List<Probil> probilList = order.getProbils();
-					List<ProbilModel> probils = new ArrayList<ProbilModel>();
-					for (Probil probil : probilList) {
-						
-						Date d = probil.getPickupScheduledDate();
-								System.out.println("the date is "+d);
-						ProbilModel probilModel = new ProbilModel();
-						BeanUtils.copyProperties(probil, probilModel);
-						probilModel.setConsineeName(probil.getConsine().getLocationName());
-						probilModel.setShipperName(probil.getShipper().getLocationName());
-						probilModel.setPickupName(probil.getPickUp().getTypeName());
-						probilModel.setDeliveryName(probil.getDelivery().getTypeName());
-						
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						String pickUpScheduledDate = sdf.format(probil.getPickupScheduledDate());
-						String deliverScheduledDate = sdf.format(probil.getDeliverScheduledDate());
-						String pickUpMABDate = sdf.format(probil.getPickupMABDate());
-						String deliverMABDate = sdf.format(probil.getDeliveryMABDate());
-						
-						probilModel.setPickupScheduledDate(pickUpScheduledDate);
-						probilModel.setPickupMABDate(pickUpMABDate);
-						probilModel.setDeliverScheduledDate(deliverScheduledDate);
-						probilModel.setDeliveryMABDate(deliverMABDate);
-						
-						SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
-						String pickUpScheduledTime = localDateFormat.format(probil.getPickupScheduledTime());
-						String pickUpMABTime = localDateFormat.format(probil.getPickupMABTime());
-						String deliverScheduledTime = localDateFormat.format(probil.getDeliverScheduledTime());
-						String deliverMABTime =  localDateFormat.format(probil.getDeliveryMABTime());
-						
-						probilModel.setPickupScheduledTime(pickUpScheduledTime);
-						probilModel.setPickupMABTime(pickUpMABTime);
-						probilModel.setDeliverScheduledTime(deliverScheduledTime);
-						probilModel.setDeliveryMABTime(deliverMABTime);
-						probils.add(probilModel);
-					}
-					
-					orderModel.setProbilList(probils);*/
-					
 					allOrders.add(orderModel);
 				}
 			}
@@ -414,69 +509,6 @@ public class OrderServiceImpl implements OrderService {
 		return allOrders;
 	}
 
-/*	@Override
-	public CategoryReq get(Long id) {
-		
-		Session session = null;
-		CategoryReq categoryReq = new CategoryReq();
-		
-		try{
-			
-			session = sessionFactory.openSession();
-			Category category = categoryDao.findById(id, session);
-			
-			if(category != null){
-				
-				categoryReq.setCategoryId(category.getCategoryId());
-				categoryReq.setName(category.getName());
-				categoryReq.setStatusId(category.getStatus().getId());
-				categoryReq.setTypeId(category.getType().getTypeId());
-				categoryReq.setHighlightId(category.getHighLight().getTypeId());
-				
-				List<Status> statusList = statusService.getAll();
-				categoryReq.setStatusList(statusList);
-				
-				List<TypeResponse> typeList = typeService.getAll(3l);
-				categoryReq.setTypeList(typeList);
-				
-				List<TypeResponse> highlightList = typeService.getAll(4l);
-				categoryReq.setHighlightList(highlightList);
-			}
-		} finally{
-			if(session != null){
-				session.close();
-			}
-		}
-		
-		return categoryReq;
-	}*/
-
-	@Override
-	public ProbilModel getProbilByProbilId(Long probilId) {
-		
-		ProbilModel probilModel = new ProbilModel();
-		Session session = null;
-		try{
-			session = sessionFactory.openSession();
-			Probil probil = (Probil) session.get(Probil.class, probilId);
-			if(probil != null){
-				List<OrderPickupDropNo> orderPickUpDropNos = probil.getOrderPickupDropNos();
-				if(orderPickUpDropNos != null && !orderPickUpDropNos.isEmpty()){
-					for (@SuppressWarnings("unused") OrderPickupDropNo orderPickupDropNo : orderPickUpDropNos) {
-						//session.delete(orderPickupDropNo);
-					}
-				}
-				
-				//session.delete(probil);
-			}
-		} finally{
-			if(session != null){
-				session.close();
-			}
-		}
-		logger.info("Inside OrderServiceImpl deleteProbil() ends, probilId :"+ probilId);
-		return probilModel;
-	}
 	@Override
 	public OrderModel getOpenAdd() {
 
@@ -509,58 +541,6 @@ public class OrderServiceImpl implements OrderService {
 		return order;
 	}
 
-/*	@Override
-	public List<CategoryReq> getCategoryByCategoryName(String categoryName) {
-
-		Session session = null;
-		List<CategoryReq> categories = new ArrayList<CategoryReq>();
-		
-		try{
-			session = sessionFactory.openSession();
-			List<Category> categoryList = categoryDao.getCategoryByCategoryName(session, categoryName);
-			if(categoryList != null && !categoryList.isEmpty()){
-				for (Category category : categoryList) {
-					CategoryReq categoryObj = new CategoryReq();
-					categoryObj.setCategoryId(category.getCategoryId());
-					categoryObj.setName(category.getName());
-					categoryObj.setHighlightName(category.getHighLight().getTypeName());
-					categoryObj.setTypeName(category.getType().getTypeName());
-					categoryObj.setStatusName(category.getStatus().getStatus());
-					categories.add(categoryObj);
-				}
-			}
-		} finally{
-			if(session != null){
-				session.close();
-			}
-		}
-		
-		return categories;
-	}*/
-
-	@Override
-	public Category getCategory(Long categoryId) {
-		Category category = categoryDao.findById(categoryId);
-		return category;
-	}
-
-	@Override
-	public List<CategoryReq> getSpecificData(){
-		List<Object[]> categoryData = categoryDao.getSpecificData("Category","categoryId","name");
-		
-		List<CategoryReq> categories = new ArrayList<CategoryReq>();
-		if(categoryData != null && !categoryData.isEmpty()){
-			for (Object[] row : categoryData) {
-				CategoryReq categoryObj = new CategoryReq();
-				categoryObj.setCategoryId((Long) row[0]);
-				categoryObj.setName(String.valueOf(row[1]));
-				categories.add(categoryObj);
-			}
-		}
-		
-		return categories;
-	}
-
 	@Override
 	public CompanyResponse getCompanyData(Long companyId) {
 		CompanyResponse companyResponse = companyService.getCompanyBillingLocationAndContacts(companyId);
@@ -583,11 +563,22 @@ public class OrderServiceImpl implements OrderService {
 					/*OrderModel orderModel = new OrderModel();*/
 					BeanUtils.copyProperties(order, orderModel);
 					orderModel.setCompanyName(order.getCompany().getName());
+					orderModel.setCompanyId(order.getCompany().getCompanyId());
+					
 					orderModel.setBillingLocationName(order.getBillingLocation().getName());
+					orderModel.setBillingLocationId(order.getBillingLocation().getBillingLocationId());
+					
 					orderModel.setContactName(order.getContact().getCustomerName());
+					orderModel.setContactId(order.getContact().getAdditionalContactId());
+					
 					orderModel.setTemperatureName(order.getTemperature().getTypeName());
+					orderModel.setTemperatureId(order.getTemperature().getTypeId());
+					
 					orderModel.setTemperatureTypeName(order.getTemperatureType().getTypeName());
+					orderModel.setTemperatureTypeId(order.getTemperatureType().getTypeId());
+					
 					orderModel.setCurrencyName(order.getCurrency().getTypeName());
+					orderModel.setCurrencyId(order.getCurrency().getTypeId());
 					
 					List<Probil> probilList = order.getProbils();
 					List<ProbilModel> probils = new ArrayList<ProbilModel>();
@@ -598,9 +589,16 @@ public class OrderServiceImpl implements OrderService {
 						ProbilModel probilModel = new ProbilModel();
 						BeanUtils.copyProperties(probil, probilModel);
 						probilModel.setConsineeName(probil.getConsine().getLocationName());
+						probilModel.setConsineeId(probil.getConsine().getShipperId());
+						
 						probilModel.setShipperName(probil.getShipper().getLocationName());
+						probilModel.setShipperId(probil.getShipper().getShipperId());
+						
 						probilModel.setPickupName(probil.getPickUp().getTypeName());
+						probilModel.setPickupId(probil.getPickUp().getTypeId());
+						
 						probilModel.setDeliveryName(probil.getDelivery().getTypeName());
+						probilModel.setDeliveryId(probil.getDelivery().getTypeId());
 						
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						String pickUpScheduledDate = sdf.format(probil.getPickupScheduledDate());
@@ -623,6 +621,10 @@ public class OrderServiceImpl implements OrderService {
 						probilModel.setPickupMABTime(pickUpMABTime);
 						probilModel.setDeliverScheduledTime(deliverScheduledTime);
 						probilModel.setDeliveryMABTime(deliverMABTime);
+						
+						List<OrderPickupDropNo> probilPickUpDrop = probil.getOrderPickupDropNos();
+						List<OrderPickUpDeliveryModel> OrderPickUpDeliveryModels = getProbilPickUpDropData(probilPickUpDrop);
+						probilModel.setOrderPickUpDeliveryList(OrderPickUpDeliveryModels);
 						probils.add(probilModel);
 					}
 					
@@ -637,6 +639,20 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		return orderModel;
+	}
+
+	private List<OrderPickUpDeliveryModel> getProbilPickUpDropData(List<OrderPickupDropNo> probilPickUpDrop) {
+		List<OrderPickUpDeliveryModel> orderPickUpDeliveryModels = new ArrayList<OrderPickUpDeliveryModel>();
+		
+		if(probilPickUpDrop != null && !probilPickUpDrop.isEmpty()){
+			for (OrderPickupDropNo orderPickupDropNo : probilPickUpDrop) {
+				OrderPickUpDeliveryModel OrderPickUpDeliveryModel = new OrderPickUpDeliveryModel();
+				BeanUtils.copyProperties(orderPickupDropNo, OrderPickUpDeliveryModel);
+				orderPickUpDeliveryModels.add(OrderPickUpDeliveryModel);
+			}
+		}
+		
+		return orderPickUpDeliveryModels;
 	}
 
 	@Override

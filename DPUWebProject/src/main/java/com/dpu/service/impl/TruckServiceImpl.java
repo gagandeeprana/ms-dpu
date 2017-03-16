@@ -294,4 +294,23 @@ public class TruckServiceImpl implements TruckService {
 
 	}
 
+	@Override
+	public List<TruckResponse> getSpecificData() {
+
+		List<Object[]> truckIdAndNameList = truckDao.getSpecificData("Truck", "truckId", "owner");
+		List<TruckResponse> truckData = new ArrayList<TruckResponse>();
+		
+		if(truckIdAndNameList != null && !truckIdAndNameList.isEmpty()){
+			for (Object[] row : truckIdAndNameList) {
+				TruckResponse truckResponse =  new TruckResponse();
+				truckResponse.setTruckId(Long.parseLong(String.valueOf(row[0])));
+				truckResponse.setOwner(String.valueOf(row[1]));
+				truckData.add(truckResponse);
+			}
+			
+		}
+		
+		return truckData;
+	}
+
 }

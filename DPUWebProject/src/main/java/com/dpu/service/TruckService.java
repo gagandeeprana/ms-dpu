@@ -17,5 +17,7 @@ public interface TruckService {
 	Object add(TruckResponse truckResponse);
 	
 	TruckResponse getOpenAdd();
+	
+	List<TruckResponse> getSpecificData();
 
 }

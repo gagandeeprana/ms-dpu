@@ -48,6 +48,9 @@ public class OrderController extends MessageProperties {
 	
 	@Value("${order_unable_to_update_message}")
 	private String order_unable_to_update_message;
+	
+	@Value("${probil_unable_to_delete_message}")
+	private String probil_unable_to_delete_message;
 
 	/**
 	 * this method is used to get all Orders data
@@ -132,6 +135,13 @@ public class OrderController extends MessageProperties {
 
 	}
 
+	/**
+	 * this method is used to delete probil by probilId
+	 * @param orderId
+	 * @param probilId
+	 * @return info regarding delete
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{orderId}/probil/{probilId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteProbilByProbilId(@PathVariable("orderId") Long orderId, @PathVariable("probilId") Long probilId) {
 		
@@ -148,7 +158,7 @@ public class OrderController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside OrderController deleteOrder() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,order_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,probil_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside OrderController deleteProbilByProbilId() Starts, orderId is :" + orderId+": probilId :"+probilId);
@@ -185,9 +195,9 @@ public class OrderController extends MessageProperties {
 	}
 
 	/**
-	 * this method is used to get probil data based on probilId
-	 * @param probilid
-	 * @return probilData
+	 * this method is used to get particular order based on orderId
+	 * @param orderId
+	 * @return orderData
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
@@ -204,7 +214,7 @@ public class OrderController extends MessageProperties {
 				json = mapper.writeValueAsString(orderModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getCategoryById() :" + e.getMessage());
+			logger.error("Exception inside OrderController getParticularOrder() :" + e.getMessage());
 		}
 		
 		logger.info("Inside OrderController getParticularOrder() Ends, orderId:" + orderId);
@@ -283,7 +293,13 @@ public class OrderController extends MessageProperties {
 		return json;
 	}
 	
-	
+	/**
+	 * this method is used to get the probil data based on probilId
+	 * @param orderId
+	 * @param probilId
+	 * @return probilData
+	 * @author lakhvir.bansal
+	 */
 	@RequestMapping(value = "/{orderId}/probil/{probilId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getProbilByProbilId(@PathVariable("orderId") Long orderId, @PathVariable("probilId") Long probilId) {
 		
@@ -298,7 +314,7 @@ public class OrderController extends MessageProperties {
 				json = mapper.writeValueAsString(probilModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CategoryController getCategoryById() :" + e.getMessage());
+			logger.error("Exception inside OrderController getProbilByProbilId() :" + e.getMessage());
 		}
 		
 		logger.info("Inside OrderController getProbilByProbilId() ends, orderId:" + orderId+", probilId"+probilId);

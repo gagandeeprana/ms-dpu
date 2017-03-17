@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.common.CommonProperties;
 import com.dpu.constants.Iconstants;
-import com.dpu.entity.Driver;
-import com.dpu.model.DPUService;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -222,6 +219,30 @@ public class DriverController extends MessageProperties  {
 		}
 		
 		logger.info(" Inside ServiceController searchDriver() Starts, driverCodeOrName :"+driverCodeOrName);
+		return json;
+	}
+
+	/**
+	 * this method is used to return Specific data (driverId, fullname)
+	 * @return List<DriverData>
+	 * @author lakhvir.bansal
+	 */
+	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getSpecificData() {
+
+		logger.info("Inside driverController getSpecificData() Starts");
+		String json = new String();
+
+		try {
+			List<DriverReq> driverList = driverService.getSpecificData();
+			if (driverList != null && driverList.size() > 0) {
+				json = mapper.writeValueAsString(driverList);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside  driverController getSpecificData() is :"+ e.getMessage());
+		}
+
+		logger.info("Inside driverController getSpecificData() ends");
 		return json;
 	}
 }

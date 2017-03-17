@@ -1,9 +1,6 @@
 package com.dpu.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.dpu.common.CommonProperties;
-import com.dpu.constants.Iconstants;
-import com.dpu.entity.Company;
-import com.dpu.entity.Truck;
-import com.dpu.model.CompanyResponse;
-import com.dpu.model.DivisionReq;
-import com.dpu.model.DriverReq;
-import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TruckResponse;
 import com.dpu.service.TruckService;
@@ -174,4 +162,27 @@ public class TruckController extends MessageProperties {
 		return json;
 	}
 
+	/**
+	 * this method is used to return Specific data (truckId, owner)
+	 * @return List<TruckResponse>
+	 * @author lakhvir.bansal
+	 */
+	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getSpecificData() {
+
+		logger.info("Inside TruckController getSpecificData() Starts");
+		String json = new String();
+
+		try {
+			List<TruckResponse> truckData = truckService.getSpecificData();
+			if (truckData != null && truckData.size() > 0) {
+				json = mapper.writeValueAsString(truckData);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside TruckController getSpecificData() is :"+ e.getMessage());
+		}
+
+		logger.info("Inside TruckController getSpecificData() ends");
+		return json;
+	}
 }

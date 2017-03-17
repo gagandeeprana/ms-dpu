@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.dpu.model.Success;
 import com.dpu.model.TrailerRequest;
 import com.dpu.service.TrailerService;
@@ -199,5 +198,28 @@ public class TrailerController extends MessageProperties {
 		return json;
 	}
 	
+	/**
+	 * this method is used to return Specific data (trailerId, owner)
+	 * @return List<TrailerRequest>
+	 * @author lakhvir.bansal
+	 */
+	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getSpecificData() {
+
+		logger.info("Inside TrailerController getSpecificData() Starts");
+		String json = new String();
+
+		try {
+			List<TrailerRequest> trailerData = trailerService.getSpecificData();
+			if (trailerData != null && trailerData.size() > 0) {
+				json = mapper.writeValueAsString(trailerData);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside TrailerController getSpecificData() is :"+ e.getMessage());
+		}
+
+		logger.info("Inside TrailerController getSpecificData() ends");
+		return json;
+	}
 	
 }

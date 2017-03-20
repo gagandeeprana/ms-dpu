@@ -21,11 +21,10 @@ import com.dpu.model.CarrierModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CarrierService;
-import com.dpu.util.MessageProperties;
 
 @RestController
 @RequestMapping(value = "carrier")
-public class CarrierController extends MessageProperties {
+public class CarrierController {
 
 	Logger logger = Logger.getLogger(CarrierController.class);
 

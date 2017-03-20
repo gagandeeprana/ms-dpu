@@ -10,10 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.Carrier;
 import com.dpu.entity.CarrierAdditionalContact;
-import com.dpu.entity.CompanyAdditionalContacts;
-import com.dpu.entity.CompanyBillingLocation;
-import com.dpu.model.AdditionalContacts;
-import com.dpu.model.BillingLocation;
 import com.dpu.model.CarrierAdditionalContactModel;
 import com.dpu.model.CarrierModel;
 

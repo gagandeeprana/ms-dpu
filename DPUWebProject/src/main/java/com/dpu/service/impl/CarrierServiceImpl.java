@@ -63,7 +63,7 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	@Value("${carrier_updated_message}")
 	private String carrier_updated_message;
-	
+
 	@Value("${carrierAdditionalContact_deleted_message}")
 	private String carrierAdditionalContact_deleted_message;
 
@@ -176,10 +176,11 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 		Success success = new Success();
 		success.setMessage(message);
-		//success.setResultList(getAll());
+		// success.setResultList(getAll());
 		return success;
 
 	}
+
 	@Override
 	public Object updateCarrier(Long id, CarrierModel carrierResponse) {
 

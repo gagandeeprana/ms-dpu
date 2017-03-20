@@ -63,34 +63,34 @@ public class CarrierContract {
 	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "carrier")
 	// private List<CarrierAdditionalContact> carrierAdditionalContact;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Carrier> carrierlList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<ArrangedWith> arrangedWithList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Driver> driverList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Currency> currencyList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Category> categoryList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Role> roleList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Equipment> equipmentList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Commodity> commodityList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Division> divisionList;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carriercontract")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
 	private List<Dispatcher> dispatcherList;
 
 	public Long getContractNoId() {

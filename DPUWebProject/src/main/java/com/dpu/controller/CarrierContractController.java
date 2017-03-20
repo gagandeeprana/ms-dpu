@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.model.CarrierModel;
+import com.dpu.model.CarrierContractModel;
 import com.dpu.service.CarrierContractService;
 
 @RestController
 @RequestMapping(value = "carrierContract")
 public class CarrierContractController {
-	
+
 	Logger logger = Logger.getLogger(CarrierContractController.class);
 	ObjectMapper mapper = new ObjectMapper();
-	
+
 	@Autowired
 	CarrierContractService carrierContractService;
-	
+
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllCarrierContract() {
 
@@ -30,7 +30,7 @@ public class CarrierContractController {
 		String json = new String();
 
 		try {
-			List<CarrierModel> carrierResponse = carrierContractService.getAllCarrierContract();
+			List<CarrierContractModel> carrierResponse = carrierContractService.getAllCarrierContract();
 
 			if (carrierResponse != null) {
 				json = mapper.writeValueAsString(carrierResponse);

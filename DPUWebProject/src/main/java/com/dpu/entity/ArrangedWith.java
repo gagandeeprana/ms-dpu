@@ -27,6 +27,14 @@ public class ArrangedWith {
 
 	
 	
+	public CarrierContract getCarrierContract() {
+		return carrierContract;
+	}
+
+	public void setCarrierContract(CarrierContract carrierContract) {
+		this.carrierContract = carrierContract;
+	}
+
 	public Long getId() {
 		return id;
 	}

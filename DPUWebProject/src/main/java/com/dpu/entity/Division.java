@@ -72,17 +72,7 @@ public class Division {
 	@Column(name = "modified_on")
 	private Date modifiedOn;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "carrier_contract_id")
-	private CarrierContract carrierContract;
-
-	public CarrierContract getCarrierContract() {
-		return carrierContract;
-	}
-
-	public void setCarrierContract(CarrierContract carrierContract) {
-		this.carrierContract = carrierContract;
-	}
+	 
 
 	public String getModifiedBy() {
 		return modifiedBy;

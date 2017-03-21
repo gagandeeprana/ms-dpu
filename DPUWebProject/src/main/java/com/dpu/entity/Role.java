@@ -22,31 +22,23 @@ public class Role {
 	@Column(name = "roleName")
 	private String roleName;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "carrier_contract_id")
-	private CarrierContract carrierContract;
-
-	public CarrierContract getCarrierContract() {
-		return carrierContract;
-	}
-
-	public void setCarrierContract(CarrierContract carrierContract) {
-		this.carrierContract = carrierContract;
-	}
-
 	public Long getId() {
+
 		return id;
 	}
 
 	public void setId(Long id) {
+
 		this.id = id;
 	}
 
 	public String getRoleName() {
+
 		return roleName;
 	}
 
 	public void setRoleName(String roleName) {
+
 		this.roleName = roleName;
 	}
 

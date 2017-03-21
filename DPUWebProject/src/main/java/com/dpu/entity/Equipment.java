@@ -55,17 +55,7 @@ public class Equipment {
 	@JoinColumn(name = "type_id")
 	private Type type;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "carrier_contract_id")
-	private CarrierContract carrierContract;
-
-	public CarrierContract getCarrierContract() {
-		return carrierContract;
-	}
-
-	public void setCarrierContract(CarrierContract carrierContract) {
-		this.carrierContract = carrierContract;
-	}
+ 
 	public Type getType() {
 		return type;
 	}

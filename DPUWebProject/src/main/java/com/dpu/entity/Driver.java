@@ -74,17 +74,7 @@ public class Driver implements Serializable {
 	@Column(name = "pager")
 	private String pager;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "carrier_contract_id")
-	private CarrierContract carrierContract;
-
-	public CarrierContract getCarrierContract() {
-		return carrierContract;
-	}
-
-	public void setCarrierContract(CarrierContract carrierContract) {
-		this.carrierContract = carrierContract;
-	}
+	 
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "division_id")

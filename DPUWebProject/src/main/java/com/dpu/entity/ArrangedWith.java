@@ -21,19 +21,7 @@ public class ArrangedWith {
 	@Column(name="arranged_with")
 	private String arrangedWith;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "carrier_contract_id")
-	private CarrierContract carrierContract;
-
-	
-	
-	public CarrierContract getCarrierContract() {
-		return carrierContract;
-	}
-
-	public void setCarrierContract(CarrierContract carrierContract) {
-		this.carrierContract = carrierContract;
-	}
+	 
 
 	public Long getId() {
 		return id;

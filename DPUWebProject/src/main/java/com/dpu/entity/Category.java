@@ -27,12 +27,12 @@ public class Category {
 
 	@Id
 	@Column(name = "category_id")
-	//@JsonProperty(value = "category_id")
+	// @JsonProperty(value = "category_id")
 	@GeneratedValue
 	private Long categoryId;
 
 	@Column(name = "name")
-	//@JsonProperty(value = "name")
+	// @JsonProperty(value = "name")
 	private String name;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -40,86 +40,88 @@ public class Category {
 	private Status status;
 
 	@Column(name = "created_on")
-	//@JsonProperty(value = "created_on")
+	// @JsonProperty(value = "created_on")
 	private String createdOn;
 
 	@Column(name = "created_by")
-	//@JsonProperty(value = "created_by")
+	// @JsonProperty(value = "created_by")
 	private String createdBy;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "highlight_id")
 	private Type highLight;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id")
 	private Type type;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "carrier_contract_id")
-	private CarrierContract carrierContract;
 
-	public CarrierContract getCarrierContract() {
-		return carrierContract;
-	}
-
-	public void setCarrierContract(CarrierContract carrierContract) {
-		this.carrierContract = carrierContract;
-	}
-	
 	public String getName() {
+
 		return name;
 	}
 
 	public void setName(String name) {
+
 		this.name = name;
 	}
 
 	public String getCreatedOn() {
+
 		return createdOn;
 	}
 
 	public void setCreatedOn(String createdOn) {
+
 		this.createdOn = createdOn;
 	}
 
 	public String getCreatedBy() {
+
 		return createdBy;
 	}
 
 	public void setCreatedBy(String createdBy) {
+
 		this.createdBy = createdBy;
 	}
 
 	public Status getStatus() {
+
 		return status;
 	}
 
 	public void setStatus(Status status) {
+
 		this.status = status;
 	}
 
 	public Type getHighLight() {
+
 		return highLight;
 	}
 
 	public void setHighLight(Type highLight) {
+
 		this.highLight = highLight;
 	}
 
 	public Type getType() {
+
 		return type;
 	}
 
 	public void setType(Type type) {
+
 		this.type = type;
 	}
 
 	public Long getCategoryId() {
+
 		return categoryId;
 	}
 
 	public void setCategoryId(Long categoryId) {
+
 		this.categoryId = categoryId;
 	}
 

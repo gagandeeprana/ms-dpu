@@ -1,4 +1,4 @@
-/*package com.dpu.entity;
+package com.dpu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +18,6 @@ public class Commodity {
 	@Column(name = "commodity_name")
 	private String commodityName;
 
-	 
- 
 	public Long getId() {
 		return id;
 	}
@@ -28,13 +26,12 @@ public class Commodity {
 		this.id = id;
 	}
 
-	public String getArrangedWith() {
+	public String getCommodityName() {
 		return commodityName;
 	}
 
-	public void setArrangedWith(String commodityName) {
+	public void setCommodityName(String commodityName) {
 		this.commodityName = commodityName;
 	}
 
 }
-*/

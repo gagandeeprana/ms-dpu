@@ -1,4 +1,4 @@
-/*package com.dpu.entity;
+package com.dpu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +18,6 @@ public class Currency {
 	@Column(name = "currency_name")
 	private String currencyName;
 
-	 
 	public Long getId() {
 		return id;
 	}
@@ -27,12 +26,12 @@ public class Currency {
 		this.id = id;
 	}
 
-	public String getArrangedWith() {
+	public String getCurrencyName() {
 		return currencyName;
 	}
 
-	public void setArrangedWith(String currencyName) {
+	public void setCurrencyName(String currencyName) {
 		this.currencyName = currencyName;
 	}
+
 }
-*/

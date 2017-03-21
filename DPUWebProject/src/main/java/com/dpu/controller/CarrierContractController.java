@@ -1,4 +1,4 @@
-/*package com.dpu.controller;
+package com.dpu.controller;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class CarrierContractController {
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllCarrierContract() {
-
+		System.out.println("hiiii CarrierContract");
 		logger.info("CarrierContractController getAllCarrierContract() starts");
 		String json = new String();
 
@@ -45,4 +45,3 @@ public class CarrierContractController {
 	}
 
 }
-*/

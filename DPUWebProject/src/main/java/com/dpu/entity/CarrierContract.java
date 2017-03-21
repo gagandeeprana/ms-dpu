@@ -1,7 +1,6 @@
-/*package com.dpu.entity;
+package com.dpu.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -60,38 +60,45 @@ public class CarrierContract {
 	@Column(name = "dot_no")
 	private String dOTno;
 
-	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "carrier")
-	// private List<CarrierAdditionalContact> carrierAdditionalContact;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "carrier_id")
+	private Carrier carrier;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Carrier> carrierlList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "arrangedwith_id")
+	private ArrangedWith arrangedWith;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<ArrangedWith> arrangedWithList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "driver_id")
+	private Driver driver;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Driver> driverList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "currency_id")
+	private Currency currency;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Currency> currencyList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	private Category category;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Category> categoryList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role_id")
+	private Role role;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Role> roleList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "equipment_id")
+	private Equipment equipment;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Equipment> equipmentList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "commodity_id")
+	private Commodity commodity;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Commodity> commodityList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "division_id")
+	private Division division;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Division> divisionList;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "carrierContract")
-	private List<Dispatcher> dispatcherList;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dispatcher_id")
+	private Dispatcher dispatcher;
 
 	public Long getContractNoId() {
 		return contractNoId;
@@ -205,85 +212,84 @@ public class CarrierContract {
 		this.dOTno = dOTno;
 	}
 
-	public List<Carrier> getCarrierlList() {
-		return carrierlList;
+	public Currency getCurrency() {
+		return currency;
 	}
 
-	public void setCarrierlList(List<Carrier> carrierlList) {
-		this.carrierlList = carrierlList;
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 
-	public List<ArrangedWith> getArrangedWithList() {
-		return arrangedWithList;
+	public Carrier getCarrier() {
+		return carrier;
 	}
 
-	public void setArrangedWithList(List<ArrangedWith> arrangedWithList) {
-		this.arrangedWithList = arrangedWithList;
+	public void setCarrier(Carrier carrier) {
+		this.carrier = carrier;
 	}
 
-	public List<Driver> getDriverList() {
-		return driverList;
+	public ArrangedWith getArrangedWith() {
+		return arrangedWith;
 	}
 
-	public void setDriverList(List<Driver> driverList) {
-		this.driverList = driverList;
+	public void setArrangedWith(ArrangedWith arrangedWith) {
+		this.arrangedWith = arrangedWith;
 	}
 
-	public List<Currency> getCurrencyList() {
-		return currencyList;
+	public Driver getDriver() {
+		return driver;
 	}
 
-	public void setCurrencyList(List<Currency> currencyList) {
-		this.currencyList = currencyList;
+	public void setDriver(Driver driver) {
+		this.driver = driver;
 	}
 
-	public List<Category> getCategoryList() {
-		return categoryList;
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCategoryList(List<Category> categoryList) {
-		this.categoryList = categoryList;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public List<Role> getRoleList() {
-		return roleList;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRoleList(List<Role> roleList) {
-		this.roleList = roleList;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
-	public List<Equipment> getEquipmentList() {
-		return equipmentList;
+	public Equipment getEquipment() {
+		return equipment;
 	}
 
-	public void setEquipmentList(List<Equipment> equipmentList) {
-		this.equipmentList = equipmentList;
+	public void setEquipment(Equipment equipment) {
+		this.equipment = equipment;
 	}
 
-	public List<Commodity> getCommodityList() {
-		return commodityList;
+	public Commodity getCommodity() {
+		return commodity;
 	}
 
-	public void setCommodityList(List<Commodity> commodityList) {
-		this.commodityList = commodityList;
+	public void setCommodity(Commodity commodity) {
+		this.commodity = commodity;
 	}
 
-	public List<Division> getDivisionList() {
-		return divisionList;
+	public Division getDivision() {
+		return division;
 	}
 
-	public void setDivisionList(List<Division> divisionList) {
-		this.divisionList = divisionList;
+	public void setDivision(Division division) {
+		this.division = division;
 	}
 
-	public List<Dispatcher> getDispatcherList() {
-		return dispatcherList;
+	public Dispatcher getDispatcher() {
+		return dispatcher;
 	}
 
-	public void setDispatcherList(List<Dispatcher> dispatcherList) {
-		this.dispatcherList = dispatcherList;
+	public void setDispatcher(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
 	}
 
 }
-*/

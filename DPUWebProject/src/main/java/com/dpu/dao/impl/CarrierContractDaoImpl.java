@@ -1,4 +1,4 @@
-package com.dpu.dao.impl;
+/*package com.dpu.dao.impl;
 
 import org.springframework.stereotype.Repository;
 
@@ -9,3 +9,4 @@ import com.dpu.entity.CarrierContract;
 public class CarrierContractDaoImpl extends GenericDaoImpl<CarrierContract> implements CarrierContractDao{
 
 }
+*/

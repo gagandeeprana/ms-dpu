@@ -1,4 +1,4 @@
-package com.dpu.entity;
+/*package com.dpu.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,3 +35,4 @@ public class Currency {
 		this.currencyName = currencyName;
 	}
 }
+*/

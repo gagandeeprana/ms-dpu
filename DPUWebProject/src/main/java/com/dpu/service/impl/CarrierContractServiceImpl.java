@@ -1,4 +1,4 @@
-package com.dpu.service.impl;
+/*package com.dpu.service.impl;
 
 import java.util.List;
 
@@ -16,3 +16,4 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 	}
 
 }
+*/

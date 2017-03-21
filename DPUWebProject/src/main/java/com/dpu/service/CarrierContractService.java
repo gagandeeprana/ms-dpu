@@ -1,4 +1,4 @@
-package com.dpu.service;
+/*package com.dpu.service;
 
 import java.util.List;
 
@@ -9,3 +9,4 @@ public interface CarrierContractService {
 	List<CarrierContractModel> getAllCarrierContract();
 
 }
+*/

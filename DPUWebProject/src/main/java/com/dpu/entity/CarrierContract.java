@@ -1,4 +1,4 @@
-package com.dpu.entity;
+/*package com.dpu.entity;
 
 import java.util.Date;
 import java.util.List;
@@ -286,3 +286,4 @@ public class CarrierContract {
 	}
 
 }
+*/

@@ -1,24 +1,16 @@
-/**
- * 
- */
 package com.dpu.dao.impl;
 
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 
-import com.dpu.common.CommonProperties;
 import com.dpu.dao.CategoryDao;
 import com.dpu.entity.Category;
-import com.dpu.service.impl.CategoryServiceImpl;
 
 @Repository
-public class CategoryDaoImpl extends GenericDaoImpl<Category> implements
-		CategoryDao {
+public class CategoryDaoImpl extends GenericDaoImpl<Category> implements CategoryDao {
 
 	@SuppressWarnings("unchecked")
 	@Override

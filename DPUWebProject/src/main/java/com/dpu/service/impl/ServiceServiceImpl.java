@@ -15,7 +15,6 @@ import com.dpu.common.CommonProperties;
 import com.dpu.dao.ServiceDao;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
-import com.dpu.entity.Truck;
 import com.dpu.entity.Type;
 import com.dpu.model.DPUService;
 import com.dpu.model.Failed;

@@ -23,7 +23,6 @@ import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 @Component
 public class CategoryServiceImpl implements CategoryService {
@@ -54,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Failed failed = new Failed();
 		failed.setCode(code);
 		failed.setMessage(msg);
-		failed.setResultList(getAll());
+		//failed.setResultList(getAll());
 		return failed;
 	}
 
@@ -62,34 +61,34 @@ public class CategoryServiceImpl implements CategoryService {
 		Failed failed = new Failed();
 		failed.setCode(code);
 		failed.setMessage(msg);
-		failed.setResultList(getAll());
+	//	failed.setResultList(getAll());
 		return failed;
 	}
 
 	@Override
 	public Object addCategory(CategoryReq categoryReq) {
 
-		logger.info("[CategoryServiceImpl] [addCategory] : Srvice: Enter");
+		logger.info("CategoryServiceImpl addCategory() starts");
 		Category category = null;
+		
 		try {
 			category = setCategoryValues(categoryReq);
 			categoryDao.save(category);
 
 		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl addCategory() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.category_unable_to_add_message,
-					Long.parseLong(CommonProperties.category_unable_to_add_code));
+			logger.info("Exception inside CategoryServiceImpl addCategory() :"+ e.getMessage());
+			return createFailedObject(CommonProperties.category_unable_to_add_message,Long.parseLong(CommonProperties.category_unable_to_add_code));
 
 		}
-		logger.info("[CategoryServiceImpl] [addCategory] : Srvice: Exit");
-		return createSuccessObject(CommonProperties.category_added_message,
-				Long.parseLong(CommonProperties.category_added_code));
+		
+		logger.info("CategoryServiceImpl addCategory() Ends");
+		return createSuccessObject(CommonProperties.category_added_message,Long.parseLong(CommonProperties.category_added_code));
 	}
 
 	private Category setCategoryValues(CategoryReq categoryReq) {
-		logger.info("[CategoryServiceImpl] [setCategoryValues] : Srvice: Enter");
+		
+		logger.info("CategoryServiceImpl setCategoryValues() starts");
+		
 		Category category = new Category();
 		category.setName(categoryReq.getName());
 		Status status = statusService.get(categoryReq.getStatusId());
@@ -98,107 +97,80 @@ public class CategoryServiceImpl implements CategoryService {
 		Type type = typeService.get(categoryReq.getTypeId());
 		category.setType(type);
 		category.setStatus(status);
-		logger.info("[CategoryServiceImpl] [setCategoryValues] : Srvice: Exit");
+		
+		logger.info("CategoryServiceImpl setCategoryValues() ends");
 		return category;
 	}
 
 	@Override
 	public Object update(Long id, CategoryReq categoryReq) {
-		logger.info("[CategoryServiceImpl] [update] : Srvice: Enter");
+		
+		logger.info("CategoryServiceImpl update() starts, categoryId :"+id);
 		Category category = null;
+		
 		try {
 			category = categoryDao.findById(id);
-			// if (category != null) {
-
-			category.setName(categoryReq.getName());
-
-			Status status = statusService.get(categoryReq.getStatusId());
-			category.setStatus(status);
-
-			Type highlight = typeService.get(categoryReq.getHighlightId());
-			category.setHighLight(highlight);
-
-			Type type = typeService.get(categoryReq.getTypeId());
-			category.setType(type);
-
-			category = categoryDao.update(category);
-			// }
+			if (category != null) {
+				category = setCategoryData(category, categoryReq);
+				category = categoryDao.update(category);
+			} else{
+				return createFailedObject(CommonProperties.category_unable_to_update_message,Long.parseLong(CommonProperties.category_unable_to_update_code));
+			}
 
 		} catch (Exception e) {
-			logger.info("Exception inside CategoryServiceImpl updateCategory() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.category_unable_to_update_message,
-					Long.parseLong(CommonProperties.category_unable_to_update_code));
+			logger.info("Exception inside CategoryServiceImpl updateCategory() :"+ e.getMessage());
+			return createFailedObject(CommonProperties.category_unable_to_update_message,Long.parseLong(CommonProperties.category_unable_to_update_code));
 		}
-		logger.info("[CategoryServiceImpl] [update] : Srvice: Exit");
-		return createSuccessObject(CommonProperties.category_updated_message,
-				Long.parseLong(CommonProperties.category_updated_code));
+		
+		logger.info("CategoryServiceImpl update() ends, categoryId :"+id);
+		return createSuccessObject(CommonProperties.category_updated_message,Long.parseLong(CommonProperties.category_updated_code));
 	}
 
-	// @Override
-	// public Object delete(Long id) {
-	//
-	// logger.info("[CategoryServiceImpl] [delete] : Srvice: Enter");
-	//
-	// Object obj = null;
-	// try {
-	// Category category = categoryDao.findById(id);
-	// categoryDao.deleteCategory(category);
-	// obj = createSuccessObject(
-	// CommonProperties.category_deleted_message,
-	// Long.parseLong(CommonProperties.category_unable_to_delete_code));
-	// } catch (ConstraintViolationException em) {
-	// logger.info("Exception inside CategoryServiceImpl delete() : "
-	// + em.getMessage());
-	// obj = createFailedObject(
-	// CommonProperties.category_already_used_message,
-	// Long.parseLong(CommonProperties.category_already_used_code));
-	//
-	// } catch (Exception e) {
-	// logger.info("Exception inside CategoryServiceImpl delete() : "
-	// + e.getMessage());
-	// obj = createFailedObject(
-	// CommonProperties.category_unable_to_delete_message,
-	// Long.parseLong(CommonProperties.category_deleted_code));
-	// }
-	//
-	// logger.info("[CategoryServiceImpl] [delete] : Service :  Exit");
-	//
-	// return obj;
-	// }
+	private Category setCategoryData(Category category, CategoryReq categoryReq) {
+	
+		category.setName(categoryReq.getName());
+
+		Status status = statusService.get(categoryReq.getStatusId());
+		category.setStatus(status);
+
+		Type highlight = typeService.get(categoryReq.getHighlightId());
+		category.setHighLight(highlight);
+
+		Type type = typeService.get(categoryReq.getTypeId());
+		category.setType(type);
+		
+		return category;
+
+	}
+
 	@Override
 	public Object delete(Long id) {
 
-		logger.info("CategoryServiceImpl delete() starts.");
+		logger.info("CategoryServiceImpl delete() starts, categoryId :"+id);
 		Session session = null;
 		Transaction tx = null;
+		
 		try {
 			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
 			Category category = (Category) session.get(Category.class, id);
+			
 			if (category != null) {
+				tx = session.beginTransaction();
 				session.delete(category);
 				tx.commit();
 			} else {
-				return createFailedObject(
-						CommonProperties.category_unable_to_delete_message,
-						Long.parseLong(CommonProperties.category_deleted_code));
+				return createFailedObject(CommonProperties.category_unable_to_delete_message,Long.parseLong(CommonProperties.category_deleted_code));
 			}
+			
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl delete() : "
-					+ e.getMessage());
+			logger.info("Exception inside HandlingServiceImpl delete() : "+ e.getMessage());
 			if (tx != null) {
 				tx.rollback();
 			}
 			if (e instanceof ConstraintViolationException) {
-				return createAlreadyExistObject(
-						CommonProperties.category_already_used_message,
-						Long.parseLong(CommonProperties.category_already_used_code));
+				return createAlreadyExistObject(CommonProperties.category_already_used_message,Long.parseLong(CommonProperties.category_already_used_code));
 			}
-			return createFailedObject(
-					CommonProperties.category_unable_to_delete_message,
-					Long.parseLong(CommonProperties.category_deleted_code));
+			return createFailedObject(CommonProperties.category_unable_to_delete_message,Long.parseLong(CommonProperties.category_deleted_code));
 		} finally {
 
 			if (session != null) {
@@ -206,14 +178,14 @@ public class CategoryServiceImpl implements CategoryService {
 			}
 		}
 
-		logger.info("CategoryServiceImpl delete() ends.");
-		return createSuccessObject(CommonProperties.category_deleted_message,
-				Long.parseLong(CommonProperties.category_unable_to_delete_code));
+		logger.info("CategoryServiceImpl delete() ends, categoryId :"+id);
+		return createSuccessObject(CommonProperties.category_deleted_message,Long.parseLong(CommonProperties.category_unable_to_delete_code));
 	}
 
 	@Override
 	public List<CategoryReq> getAll() {
-		logger.info("[CategoryServiceImpl] [getAll] : Srvice: Enter");
+	
+		logger.info("CategoryServiceImpl getAll() starts");
 		Session session = null;
 		List<CategoryReq> categoriesList = new ArrayList<CategoryReq>();
 
@@ -227,8 +199,7 @@ public class CategoryServiceImpl implements CategoryService {
 					CategoryReq categoryReq = new CategoryReq();
 					categoryReq.setCategoryId(category.getCategoryId());
 					categoryReq.setName(category.getName());
-					categoryReq.setHighlightName(category.getHighLight()
-							.getTypeName());
+					categoryReq.setHighlightName(category.getHighLight().getTypeName());
 					categoryReq.setTypeName(category.getType().getTypeName());
 					categoryReq.setStatusName(category.getStatus().getStatus());
 					categoriesList.add(categoryReq);
@@ -239,13 +210,15 @@ public class CategoryServiceImpl implements CategoryService {
 				session.close();
 			}
 		}
-		logger.info("[CategoryServiceImpl] [getAll] : Srvice: Exit");
+	
+		logger.info("CategoryServiceImpl getAll() ends");
 		return categoriesList;
 	}
 
 	@Override
 	public CategoryReq get(Long id) {
-		logger.info("[CategoryServiceImpl] [get] : Srvice: Enter");
+		
+		logger.info("CategoryServiceImpl get() starts, categoryId :"+id);
 		Session session = null;
 		CategoryReq categoryReq = new CategoryReq();
 
@@ -276,13 +249,15 @@ public class CategoryServiceImpl implements CategoryService {
 				session.close();
 			}
 		}
-		logger.info("[CategoryServiceImpl] [get] : Srvice: Exit");
+	
+		logger.info("CategoryServiceImpl get() ends, categoryId :"+id);
 		return categoryReq;
 	}
 
 	@Override
 	public CategoryReq getOpenAdd() {
-		logger.info("[CategoryServiceImpl] [getOpenAdd] : Srvice: Enter");
+		
+		logger.info("CategoryServiceImpl getOpenAdd() starts");
 		CategoryReq categoryReq = new CategoryReq();
 
 		List<Status> statusList = statusService.getAll();
@@ -293,27 +268,28 @@ public class CategoryServiceImpl implements CategoryService {
 
 		List<TypeResponse> highlightList = typeService.getAll(4l);
 		categoryReq.setHighlightList(highlightList);
-		logger.info("[CategoryServiceImpl] [getOpenAdd] : Srvice: Exit");
+		
+		logger.info("CategoryServiceImpl getOpenAdd() ends");
 		return categoryReq;
 	}
 
 	@Override
 	public List<CategoryReq> getCategoryByCategoryName(String categoryName) {
-		logger.info("[CategoryServiceImpl] [getCategoryByCategoryName] : Srvice: Enter");
+		
+		logger.info("CategoryServiceImpl getCategoryByCategoryName() starts, categoryName :"+categoryName);
 		Session session = null;
 		List<CategoryReq> categories = new ArrayList<CategoryReq>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Category> categoryList = categoryDao
-					.getCategoryByCategoryName(session, categoryName);
+			List<Category> categoryList = categoryDao.getCategoryByCategoryName(session, categoryName);
+			
 			if (categoryList != null && !categoryList.isEmpty()) {
 				for (Category category : categoryList) {
 					CategoryReq categoryObj = new CategoryReq();
 					categoryObj.setCategoryId(category.getCategoryId());
 					categoryObj.setName(category.getName());
-					categoryObj.setHighlightName(category.getHighLight()
-							.getTypeName());
+					categoryObj.setHighlightName(category.getHighLight().getTypeName());
 					categoryObj.setTypeName(category.getType().getTypeName());
 					categoryObj.setStatusName(category.getStatus().getStatus());
 					categories.add(categoryObj);
@@ -324,7 +300,8 @@ public class CategoryServiceImpl implements CategoryService {
 				session.close();
 			}
 		}
-		logger.info("[CategoryServiceImpl] [getCategoryByCategoryName] : Srvice: Exit");
+		
+		logger.info("CategoryServiceImpl getCategoryByCategoryName() ends, categoryName :"+categoryName);
 		return categories;
 	}
 
@@ -336,8 +313,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<CategoryReq> getSpecificData() {
-		List<Object[]> categoryData = categoryDao.getSpecificData("Category",
-				"categoryId", "name");
+		List<Object[]> categoryData = categoryDao.getSpecificData("Category","categoryId", "name");
 
 		List<CategoryReq> categories = new ArrayList<CategoryReq>();
 		if (categoryData != null && !categoryData.isEmpty()) {

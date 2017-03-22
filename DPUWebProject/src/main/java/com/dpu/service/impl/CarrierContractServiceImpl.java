@@ -3,19 +3,23 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CarrierContractDao;
-import com.dpu.entity.ArrangedWith;
 import com.dpu.entity.CarrierContract;
+import com.dpu.entity.Driver;
 import com.dpu.model.CarrierContractModel;
 import com.dpu.service.CarrierContractService;
 
 @Component
 public class CarrierContractServiceImpl implements CarrierContractService {
+
+	Logger logger = Logger.getLogger(CarrierContractServiceImpl.class);
 
 	@Autowired
 	CarrierContractDao carrierContractDao;
@@ -26,15 +30,14 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 	@Override
 	public List<CarrierContractModel> getAllCarrierContract() {
 
-
+		logger.info("Inside CarrierContractServiceImpl getAllCarrierContract() starts ");
 		Session session = null;
 		List<CarrierContractModel> returnResponse = new ArrayList<CarrierContractModel>();
 
 		try {
 			session = sessionFactory.openSession();
 			List<CarrierContract> listOfCarrierContract = carrierContractDao.findAllCarrierContract(session);
-			 
-			
+
 			if (listOfCarrierContract != null && !listOfCarrierContract.isEmpty()) {
 				for (CarrierContract carrierContract : listOfCarrierContract) {
 					CarrierContractModel response = new CarrierContractModel();
@@ -44,11 +47,13 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception inside CarrierContractServiceImpl getAllCarrierContract() :" + e.getMessage());
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
-		if (session != null) {
-			session.close();
-		}
+		logger.info("Inside CarrierContractServiceImpl getAllCarrierContract() ends ");
 		return returnResponse;
 	}
 
@@ -79,6 +84,31 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		response.setRoleName(carrierContract.getRole().getRoleName());
 		response.setTransDoc(carrierContract.getTransDoc());
 
+	}
+
+	@Override
+	public Object addCarrierContract(CarrierContractModel carrierContractModel) {
+		logger.info("Inside CarrierContractServiceImpl addCarrierContract() starts");
+		Object obj = null;
+		/*try {
+		
+			CarrierContract carrierContract = new CarrierContract();
+			BeanUtils.copyProperties(carrierContractModel, carrierContract);
+			carrierContract.setCategory(categoryDao.findById(driverReq.getCategoryId()));
+			carrierContract.setDivision(divisionDao.findById(driverReq.getDivisionId()));
+			carrierContract.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
+			carrierContract.setRole(typeService.get(driverReq.getRoleId()));
+			carrierContract.setDriverClass(typeService.get(driverReq.getDriverClassId()));
+			carrierContract.setStatus(statusService.get(driverReq.getStatusId()));
+			carrierContractDao.save(carrierContract);
+			obj = createSuccessObject(CarrierContract_added_message);
+		} catch (Exception e) {
+			logger.error("Exception inside CarrierContractServiceImpl addCarrierContract() :"+ e.getMessage());
+			obj = createFailedObject(CarrierContract_unable_to_add_message);
+		}
+
+		logger.info("Inside CarrierContractServiceImpl addCarrierContract() Ends");*/
+		return obj;
 	}
 
 }

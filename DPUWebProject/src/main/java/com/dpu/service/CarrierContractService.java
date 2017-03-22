@@ -8,4 +8,6 @@ public interface CarrierContractService {
 
 	List<CarrierContractModel> getAllCarrierContract();
 
+	Object addCarrierContract(CarrierContractModel carrierContract);
+
 }

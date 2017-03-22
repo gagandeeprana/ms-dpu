@@ -10,4 +10,6 @@ public interface CarrierContractService {
 
 	Object addCarrierContract(CarrierContractModel carrierContract);
 
+	CarrierContractModel getOpenAdd();
+
 }

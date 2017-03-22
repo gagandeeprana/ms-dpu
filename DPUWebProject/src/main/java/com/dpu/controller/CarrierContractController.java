@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.CarrierContractModel;
+import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CarrierContractService;
@@ -25,6 +26,7 @@ import com.dpu.service.CarrierContractService;
 public class CarrierContractController {
 
 	Logger logger = Logger.getLogger(CarrierContractController.class);
+
 	ObjectMapper mapper = new ObjectMapper();
 
 	@Value("${CarrierContract_unable_to_add_message}")
@@ -39,60 +41,94 @@ public class CarrierContractController {
 	@Autowired
 	CarrierContractService carrierContractService;
 
-	
 	/**
 	 * this method is used to get all the carrierContract
+	 * 
 	 * @return List<carrierContracts>
 	 * @author sumit
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllCarrierContract() {
+
 		System.out.println("hiiii CarrierContract");
 		logger.info("CarrierContractController getAllCarrierContract() starts");
 		String json = new String();
 
 		try {
-			List<CarrierContractModel> carrierResponse = carrierContractService.getAllCarrierContract();
+			List<CarrierContractModel> carrierResponse = carrierContractService
+					.getAllCarrierContract();
 
 			if (carrierResponse != null) {
 				json = mapper.writeValueAsString(carrierResponse);
 			}
 
 		} catch (Exception e) {
-			logger.info("Exception inside CarrierContractController getAllCarrierContract() :" + e.getMessage());
+			logger.info("Exception inside CarrierContractController getAllCarrierContract() :"
+					+ e.getMessage());
 		}
 
 		logger.info("CarrierContractController getAllCarrierContract() ends");
 		return json;
 	}
-	
+
 	/**
 	 * this method is used to add new CarrierContract
+	 * 
 	 * @param CarrierContractModel
 	 * @return List<CarrierContracts>
-	 * @author 
+	 * @author
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<Object> addCarrierContract(@RequestBody CarrierContractModel carrierContract) {
-		
+	public ResponseEntity<Object> addCarrierContract(
+			@RequestBody CarrierContractModel carrierContract) {
+
 		logger.info("Inside CarrierContractController addCarrierContract Starts. ");
-		ResponseEntity<Object> obj =  null;
-		  
+		ResponseEntity<Object> obj = null;
+
 		try {
-			Object result = carrierContractService.addCarrierContract(carrierContract);
-			if(result instanceof Success){ 
+			Object result = carrierContractService
+					.addCarrierContract(carrierContract);
+			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-			} else{
+			} else {
 				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("Exception Inside CarrierContractController addCarrierContract :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0, CarrierContract_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception Inside CarrierContractController addCarrierContract :"
+					+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,
+					CarrierContract_unable_to_add_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
-		
+
 		logger.info("Inside CarrierContractController addCarrierContract Ends. ");
 		return obj;
 	}
 
+	/**
+	 * this method is used when we click on add button in driver
+	 * 
+	 * @return master data for driver
+	 * @author
+	 */
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAdd() {
+
+		logger.info(" Inside CarrierContractController openAdd() Starts ");
+		String json = null;
+
+		try {
+			CarrierContractModel carrierContractModel = carrierContractService
+					.getOpenAdd();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(carrierContractModel);
+		} catch (Exception e) {
+			logger.error("Exception inside CarrierContractController openAdd() :"
+					+ e.getMessage());
+		}
+
+		logger.info(" Inside CarrierContractController openAdd() Ends ");
+		return json;
+	}
 
 }

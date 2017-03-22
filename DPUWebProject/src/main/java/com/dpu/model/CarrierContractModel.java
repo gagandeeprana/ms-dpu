@@ -45,7 +45,7 @@ public class CarrierContractModel {
 	
 	private String arrangedWithName;
 	private Long arrangedWithId;
-	private List<ArrangedWithModel> arrangedWithList;
+	private List<TypeResponse> arrangedWithList;
 	
 
 	private String driverName;
@@ -54,7 +54,7 @@ public class CarrierContractModel {
 
 	private String currencyName;
 	private Long currencyId;
-	private List<CurrencyModel> currencyList;
+	private List<TypeResponse> currencyList;
 
 	private String categoryName;
 	private Long categoryId;
@@ -62,7 +62,7 @@ public class CarrierContractModel {
 
 	private String roleName;
 	private Long roleId;
-	private List<RoleModel> roleList;
+	private List<TypeResponse> roleList;
 
 	private String equipmentName;
 	private Long equipmentId;
@@ -70,7 +70,7 @@ public class CarrierContractModel {
 
 	private String commodityName;
 	private Long commodityId;
-	private List<CommodityModel> commodityList;
+	private List<TypeResponse> commodityList;
 
 	private String divisionName;
 	private Long divisionId;
@@ -78,7 +78,7 @@ public class CarrierContractModel {
 
 	private String dispatcherName;
 	private Long dispatcherId;
-	private List<DispatcherModel> dispatcherList;
+	private List<TypeResponse> dispatcherList;
 
 	public Long getContractNoId() {
 		return contractNoId;
@@ -309,13 +309,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<ArrangedWithModel> getArrangedWithList() {
+	public List<TypeResponse> getArrangedWithList() {
 	
 		return arrangedWithList;
 	}
 
 	
-	public void setArrangedWithList(List<ArrangedWithModel> arrangedWithList) {
+	public void setArrangedWithList(List<TypeResponse> arrangedWithList) {
 	
 		this.arrangedWithList = arrangedWithList;
 	}
@@ -357,13 +357,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<CurrencyModel> getCurrencyList() {
+	public List<TypeResponse> getCurrencyList() {
 	
 		return currencyList;
 	}
 
 	
-	public void setCurrencyList(List<CurrencyModel> currencyList) {
+	public void setCurrencyList(List<TypeResponse> currencyList) {
 	
 		this.currencyList = currencyList;
 	}
@@ -405,13 +405,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<RoleModel> getRoleList() {
+	public List<TypeResponse> getRoleList() {
 	
 		return roleList;
 	}
 
 	
-	public void setRoleList(List<RoleModel> roleList) {
+	public void setRoleList(List<TypeResponse> roleList) {
 	
 		this.roleList = roleList;
 	}
@@ -453,13 +453,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<CommodityModel> getCommodityList() {
+	public List<TypeResponse> getCommodityList() {
 	
 		return commodityList;
 	}
 
 	
-	public void setCommodityList(List<CommodityModel> commodityList) {
+	public void setCommodityList(List<TypeResponse> commodityList) {
 	
 		this.commodityList = commodityList;
 	}
@@ -501,13 +501,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<DispatcherModel> getDispatcherList() {
+	public List<TypeResponse> getDispatcherList() {
 	
 		return dispatcherList;
 	}
 
 	
-	public void setDispatcherList(List<DispatcherModel> dispatcherList) {
+	public void setDispatcherList(List<TypeResponse> dispatcherList) {
 	
 		this.dispatcherList = dispatcherList;
 	}

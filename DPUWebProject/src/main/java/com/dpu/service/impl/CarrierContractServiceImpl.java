@@ -14,11 +14,24 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CarrierContractDao;
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.CarrierContract;
-import com.dpu.entity.Driver;
+import com.dpu.entity.Status;
 import com.dpu.model.CarrierContractModel;
+import com.dpu.model.CarrierModel;
+import com.dpu.model.CategoryReq;
+import com.dpu.model.DivisionReq;
+import com.dpu.model.DriverReq;
+import com.dpu.model.EquipmentReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
+import com.dpu.model.TerminalResponse;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.CarrierContractService;
+import com.dpu.service.CarrierService;
+import com.dpu.service.CategoryService;
+import com.dpu.service.DivisionService;
+import com.dpu.service.DriverService;
+import com.dpu.service.EquipmentService;
+import com.dpu.service.TypeService;
 
 @Component
 public class CarrierContractServiceImpl implements CarrierContractService {
@@ -30,6 +43,24 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Autowired
 	CarrierDao carrierDao;
+	
+	@Autowired
+	CarrierService carrierService;
+	
+	@Autowired 
+	DriverService driverService;
+	
+	@Autowired
+	CategoryService categoryService;
+	
+	@Autowired
+	TypeService typeService;
+	
+	@Autowired
+	EquipmentService equipmentService;
+	
+	@Autowired
+	DivisionService divisionService;
 
 	// @Autowired
 	// ArrangedWithDao arrangedWithDao;
@@ -158,6 +189,47 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		success.setMessage(message);
 		success.setResultList(getAllCarrierContract());
 		return success;
+	}
+
+	@Override
+	public CarrierContractModel getOpenAdd() {
+
+		 
+		CarrierContractModel carrierContractModel = new CarrierContractModel();
+ 
+		 List<CarrierModel> carrierList = carrierService.getAll();
+		carrierContractModel.setCarrierList(carrierList);
+		
+		List<TypeResponse> arrangedWithList = typeService.getAll(18l);
+		carrierContractModel.setArrangedWithList(arrangedWithList);
+		
+		List<DriverReq> driverList = driverService.getAllDriver();
+		carrierContractModel.setDriverList(driverList);
+		
+		List<TypeResponse> currencyList = typeService.getAll(9l);
+		carrierContractModel.setCurrencyList(currencyList);
+		 
+		
+		List<CategoryReq> categoryList = categoryService.getAll();
+		carrierContractModel.setCategoryList(categoryList);
+		
+		 List<TypeResponse> roleList = typeService.getAll(6l);
+		carrierContractModel.setRoleList(roleList);
+
+		List<EquipmentReq> equipmentList = equipmentService.getAll("");
+		carrierContractModel.setEquipmentList(equipmentList);
+		
+		List<TypeResponse> commodityList = typeService.getAll(17l);
+		carrierContractModel.setCommodityList(commodityList);
+		
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		carrierContractModel.setDivisionList(divisionList);
+		
+		List<TypeResponse> dispatcherList = typeService.getAll(19l);
+		carrierContractModel.setDispatcherList(dispatcherList);   
+
+		 
+		return carrierContractModel;
 	}
 
 }

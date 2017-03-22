@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.controller;
 
 import java.util.List;
@@ -8,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
 import com.dpu.service.TerminalService;
 import com.dpu.util.MessageProperties;
-/**
- * @author anuj
- *
- */
+
+
 @RestController
 @RequestMapping(value = "terminal")
 public class TerminalController extends MessageProperties {
@@ -38,29 +33,41 @@ public class TerminalController extends MessageProperties {
 	TerminalService terminalService;
 
 	ObjectMapper mapper = new ObjectMapper();
+	
+	@Value("${terminal_unable_to_add_message}")
+	private String terminal_unable_to_add_message;
+
+	@Value("${terminal_unable_to_delete_message}")
+	private String terminal_unable_to_delete_message;
+	
+	@Value("${terminal_unable_to_update_message}")
+	private String terminal_unable_to_update_message;
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllTerminals() {
-		logger.info("[getAllTerminals] : Enter ");
+		
+		logger.info("TerminalController getAllTerminals() starts ");
 		String json = null;
+		
 		try {
 			List<TerminalResponse> lstTerminalRes = terminalService.getAllTerminals();
 			if (lstTerminalRes != null && lstTerminalRes.size() > 0) {
 				json = mapper.writeValueAsString(lstTerminalRes);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-			logger.error(e);
-			logger.error("TerminalController : getAll " + e);
+			logger.error("Exception inside TerminalController getAllTerminals() :" + e.getMessage());
 		}
-		logger.info("[getAllTerminals] :Exit");
+		
+		logger.info("TerminalController getAllTerminals() ends ");
 		return json;
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody TerminalResponse terminalResp) {
-		logger.info("[addTerminal] : Enter");
+		
+		logger.info("TerminalController add() starts ");
 		Object obj = null;
+		
 		try {
 			Object response = terminalService.addTerminal(terminalResp);
 			if (response instanceof Success) {
@@ -69,9 +76,11 @@ public class TerminalController extends MessageProperties {
 				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TerminalController add() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, terminal_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}	
-		logger.info("[addTerminal] : Exit");
+		
+		logger.info("TerminalController add() ends ");
 		return obj;
 	}
 
@@ -79,8 +88,10 @@ public class TerminalController extends MessageProperties {
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
-		logger.info("[delete] : Enter : Id : "+id);
+		
+		logger.info("TerminalController delete() starts, terminalId :"+id);
 		Object obj = null;
+		
 		try {
 			Object response = terminalService.deleteTerminal(id);
 			if (response instanceof Success) {
@@ -89,17 +100,20 @@ public class TerminalController extends MessageProperties {
 				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TerminalController delete() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, terminal_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[delete] : Exit:   ");
+
+		logger.info("TerminalController delete() ends, terminalId :"+id);
 		return obj;
 	}
 
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id,
-			@RequestBody TerminalResponse terminalRes) {
-		logger.info("[update] : Enter : Id : "+id);
+	public Object update(@PathVariable("id") Long id, @RequestBody TerminalResponse terminalRes) {
+		
+		logger.info("TerminalController update() starts, terminalId :"+id);
 		Object obj = null;
+		
 		try {
 			Object response = terminalService.updateTerminal(id, terminalRes);
 			if (response instanceof Success) {
@@ -108,38 +122,44 @@ public class TerminalController extends MessageProperties {
 				obj = new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TerminalController update() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, terminal_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("[update] : Exit");
+		
+		logger.info("TerminalController update() ends, terminalId :"+id);
 		return obj;
 	}
 
 	@RequestMapping(value = "/{terminalid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("terminalid") Long id) {
-		logger.info("[get] : Enter : Id : "+id);
+		
+		logger.info("TerminalController get() starts, terminalId :"+id);
 		String json = null;
+		
 		try {
 			TerminalResponse terminalResponse = terminalService.getTerminal(id);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(terminalResponse);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Exception inside TerminalController get() :" + e.getMessage());
 		}
-		logger.info("[get] : Exit " );
+		
+		logger.info("TerminalController get() ends, terminalId :"+id);
 		return json;
 	}
 
 	@RequestMapping(value = "/{terminalName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchTerminal(@PathVariable("terminalName") String terminalName) {
+		
 		logger.info("Inside TerminalController search, terminalName :"+terminalName);
 		String json = new String();
+		
 		try {
 			List<TerminalResponse> terminalList = terminalService.getTerminalByTerminalName(terminalName);
 			if(terminalList != null && terminalList.size() > 0) {
 				json = mapper.writeValueAsString(terminalList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
 			logger.error("Exception inside TerminalController search is :" + e);
 		}
 		logger.info(" Inside TerminalController terminalService() Starts, terminalName :"+terminalName);

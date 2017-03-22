@@ -8,9 +8,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CarrierContractDao;
+import com.dpu.dao.CarrierDao;
 import com.dpu.entity.CarrierContract;
 import com.dpu.entity.Driver;
 import com.dpu.model.CarrierContractModel;
@@ -23,10 +25,26 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Autowired
 	CarrierContractDao carrierContractDao;
+	
+	@Autowired
+	CarrierDao carrierDao;
+	
+	//@Autowired
+	//ArrangedWithDao arrangedWithDao;
+	
+	
 
 	@Autowired
 	SessionFactory sessionFactory;
 
+	@Value("${CarrierContract_added_message}")
+	private String CarrierContract_added_message;
+
+	@Value("${CarrierContract_unable_to_add_message}")
+	private String CarrierContract_unable_to_add_message;
+
+	 
+	
 	@Override
 	public List<CarrierContractModel> getAllCarrierContract() {
 
@@ -106,8 +124,8 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			logger.error("Exception inside CarrierContractServiceImpl addCarrierContract() :"+ e.getMessage());
 			obj = createFailedObject(CarrierContract_unable_to_add_message);
 		}
-
-		logger.info("Inside CarrierContractServiceImpl addCarrierContract() Ends");*/
+*/
+		logger.info("Inside CarrierContractServiceImpl addCarrierContract() Ends");
 		return obj;
 	}
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.CarrierContractModel;
-import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CarrierContractService;
@@ -28,14 +27,14 @@ public class CarrierContractController {
 	Logger logger = Logger.getLogger(CarrierContractController.class);
 	ObjectMapper mapper = new ObjectMapper();
 
-	@Value("${Driver_unable_to_add_message}")
-	private String Driver_unable_to_add_message;
+	@Value("${CarrierContract_unable_to_add_message}")
+	private String CarrierContract_unable_to_add_message;
 
-	@Value("${Driver_unable_to_delete_message}")
-	private String Driver_unable_to_delete_message;
+	@Value("${CarrierContract_unable_to_delete_message}")
+	private String CarrierContract_unable_to_delete_message;
 
-	@Value("${Driver_unable_to_update_message}")
-	private String Driver_unable_to_update_message;
+	@Value("${CarrierContract_unable_to_update_message}")
+	private String CarrierContract_unable_to_update_message;
 
 	@Autowired
 	CarrierContractService carrierContractService;
@@ -68,10 +67,10 @@ public class CarrierContractController {
 	}
 	
 	/**
-	 * this method is used to add new driver
-	 * @param driverReq
-	 * @return List<drivers>
-	 * @author lakhvir
+	 * this method is used to add new CarrierContract
+	 * @param CarrierContractModel
+	 * @return List<CarrierContracts>
+	 * @author 
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public ResponseEntity<Object> addCarrierContract(@RequestBody CarrierContractModel carrierContract) {
@@ -88,7 +87,7 @@ public class CarrierContractController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception Inside CarrierContractController addCarrierContract :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0, Driver_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0, CarrierContract_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside CarrierContractController addCarrierContract Ends. ");

@@ -40,24 +40,45 @@ public class CarrierContractModel {
 	private String dOTno;
 
 	private String carrierName;
-
+	private Long carrierId;
+	private List<CarrierModel> carrierList;
+	
 	private String arrangedWithName;
+	private Long arrangedWithId;
+	private List<ArrangedWithModel> arrangedWithList;
+	
 
 	private String driverName;
+	private Long driverId;
+	private List<DriverReq> driverList;
 
 	private String currencyName;
+	private Long currencyId;
+	private List<CurrencyModel> currencyList;
 
 	private String categoryName;
+	private Long categoryId;
+	private List<CategoryReq> categoryList;
 
 	private String roleName;
+	private Long roleId;
+	private List<RoleModel> roleList;
 
 	private String equipmentName;
+	private Long equipmentId;
+	private List<EquipmentReq> equipmentList;
 
 	private String commodityName;
+	private Long commodityId;
+	private List<CommodityModel> commodityList;
 
 	private String divisionName;
+	private Long divisionId;
+	private List<DivisionReq> divisionList;
 
 	private String dispatcherName;
+	private Long dispatcherId;
+	private List<DispatcherModel> dispatcherList;
 
 	public Long getContractNoId() {
 		return contractNoId;
@@ -250,5 +271,247 @@ public class CarrierContractModel {
 	public void setDispatcherName(String dispatcherName) {
 		this.dispatcherName = dispatcherName;
 	}
+
+	
+	public Long getCarrierId() {
+	
+		return carrierId;
+	}
+
+	
+	public void setCarrierId(Long carrierId) {
+	
+		this.carrierId = carrierId;
+	}
+
+	
+	public List<CarrierModel> getCarrierList() {
+	
+		return carrierList;
+	}
+
+	
+	public void setCarrierList(List<CarrierModel> carrierList) {
+	
+		this.carrierList = carrierList;
+	}
+
+	
+	public Long getArrangedWithId() {
+	
+		return arrangedWithId;
+	}
+
+	
+	public void setArrangedWithId(Long arrangedWithId) {
+	
+		this.arrangedWithId = arrangedWithId;
+	}
+
+	
+	public List<ArrangedWithModel> getArrangedWithList() {
+	
+		return arrangedWithList;
+	}
+
+	
+	public void setArrangedWithList(List<ArrangedWithModel> arrangedWithList) {
+	
+		this.arrangedWithList = arrangedWithList;
+	}
+
+	
+	public Long getDriverId() {
+	
+		return driverId;
+	}
+
+	
+	public void setDriverId(Long driverId) {
+	
+		this.driverId = driverId;
+	}
+
+	
+	public List<DriverReq> getDriverList() {
+	
+		return driverList;
+	}
+
+	
+	public void setDriverList(List<DriverReq> driverList) {
+	
+		this.driverList = driverList;
+	}
+
+	
+	public Long getCurrencyId() {
+	
+		return currencyId;
+	}
+
+	
+	public void setCurrencyId(Long currencyId) {
+	
+		this.currencyId = currencyId;
+	}
+
+	
+	public List<CurrencyModel> getCurrencyList() {
+	
+		return currencyList;
+	}
+
+	
+	public void setCurrencyList(List<CurrencyModel> currencyList) {
+	
+		this.currencyList = currencyList;
+	}
+
+	
+	public Long getCategoryId() {
+	
+		return categoryId;
+	}
+
+	
+	public void setCategoryId(Long categoryId) {
+	
+		this.categoryId = categoryId;
+	}
+
+	
+	public List<CategoryReq> getCategoryList() {
+	
+		return categoryList;
+	}
+
+	
+	public void setCategoryList(List<CategoryReq> categoryList) {
+	
+		this.categoryList = categoryList;
+	}
+
+	
+	public Long getRoleId() {
+	
+		return roleId;
+	}
+
+	
+	public void setRoleId(Long roleId) {
+	
+		this.roleId = roleId;
+	}
+
+	
+	public List<RoleModel> getRoleList() {
+	
+		return roleList;
+	}
+
+	
+	public void setRoleList(List<RoleModel> roleList) {
+	
+		this.roleList = roleList;
+	}
+
+	
+	public Long getEquipmentId() {
+	
+		return equipmentId;
+	}
+
+	
+	public void setEquipmentId(Long equipmentId) {
+	
+		this.equipmentId = equipmentId;
+	}
+
+	
+	public List<EquipmentReq> getEquipmentList() {
+	
+		return equipmentList;
+	}
+
+	
+	public void setEquipmentList(List<EquipmentReq> equipmentList) {
+	
+		this.equipmentList = equipmentList;
+	}
+
+	
+	public Long getCommodityId() {
+	
+		return commodityId;
+	}
+
+	
+	public void setCommodityId(Long commodityId) {
+	
+		this.commodityId = commodityId;
+	}
+
+	
+	public List<CommodityModel> getCommodityList() {
+	
+		return commodityList;
+	}
+
+	
+	public void setCommodityList(List<CommodityModel> commodityList) {
+	
+		this.commodityList = commodityList;
+	}
+
+	
+	public Long getDivisionId() {
+	
+		return divisionId;
+	}
+
+	
+	public void setDivisionId(Long divisionId) {
+	
+		this.divisionId = divisionId;
+	}
+
+	
+	public List<DivisionReq> getDivisionList() {
+	
+		return divisionList;
+	}
+
+	
+	public void setDivisionList(List<DivisionReq> divisionList) {
+	
+		this.divisionList = divisionList;
+	}
+
+	
+	public Long getDispatcherId() {
+	
+		return dispatcherId;
+	}
+
+	
+	public void setDispatcherId(Long dispatcherId) {
+	
+		this.dispatcherId = dispatcherId;
+	}
+
+	
+	public List<DispatcherModel> getDispatcherList() {
+	
+		return dispatcherList;
+	}
+
+	
+	public void setDispatcherList(List<DispatcherModel> dispatcherList) {
+	
+		this.dispatcherList = dispatcherList;
+	}
+	
+	
 
 }

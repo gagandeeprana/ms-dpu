@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.CarrierContractModel;
-import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CarrierContractService;
@@ -104,11 +104,40 @@ public class CarrierContractController {
 		logger.info("Inside CarrierContractController addCarrierContract Ends. ");
 		return obj;
 	}
+	
+	/**
+	 * this method is used to delete the carrierContract based on carrierContractId
+	 * @param carrierContractId
+	 * @return List<carrierContract>
+	 * @author sumit
+	 */
+	@RequestMapping(value = "/{carrierContractId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteCarrierContract(@PathVariable("carrierContractId") Long carrierContractId) {
+		
+		logger.info("Inside CarrierContractController deleteCarrierContract() : carrierContractId " + carrierContractId);
+		Object  obj = null;
+		
+		try {
+			Object result = carrierContractService.deleteCarrierContract(carrierContractId);
+			if(result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside CarrierContractController deleteCarrierContract() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, CarrierContract_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+		}
+		
+		logger.info("Inside CarrierContractController deleteCarrierContract() Ends, carrierContractId :" + carrierContractId);
+		return obj;
+	}
+
 
 	/**
-	 * this method is used when we click on add button in driver
+	 * this method is used when we click on add button in carrierContract
 	 * 
-	 * @return master data for driver
+	 * @return master data for carrierContract
 	 * @author
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)

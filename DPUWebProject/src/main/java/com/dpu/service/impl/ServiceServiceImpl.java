@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,7 +53,7 @@ public class ServiceServiceImpl implements ServiceService {
 		Failed failed = new Failed();
 		failed.setCode(code);
 		failed.setMessage(msg);
-		failed.setResultList(getAll());
+		//failed.setResultList(getAll());
 		return failed;
 	}
 
@@ -118,19 +119,35 @@ public class ServiceServiceImpl implements ServiceService {
 	public Object delete(Long id) {
 		
 		logger.info("ServiceServiceImpl delete() starts, serviceId :"+id);
-		Service service = null;
-
+		Session session = null;
+		Transaction tx = null;
+		
 		try {
-			service = serviceDao.findById(id);
-			serviceDao.delete(service);
+			session = sessionFactory.openSession();
+			Service service = (Service) session.get(Service.class, id);
+			
+			if(service != null){
+				tx = session.beginTransaction();
+				session.delete(service);
+				tx.commit();
+			} else{
+				return createFailedObject(CommonProperties.service_unable_to_delete_message,0l);
+			}
+			
 
 		} catch (Exception e) {
 			logger.error("Exception inside ServiceServiceImpl delete() :"+ e.getMessage());
-			
+			if(tx != null){
+				tx.rollback();
+			}
 			if(e instanceof ConstraintViolationException){
 				return createFailedObject(CommonProperties.service_dependent_message,0l);
 			}
 			return createFailedObject(CommonProperties.service_unable_to_delete_message,Long.parseLong(CommonProperties.service_unable_to_delete_code));
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		logger.info("ServiceServiceImpl delete() ends, serviceId :"+id);

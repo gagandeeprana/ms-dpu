@@ -16,6 +16,8 @@ import com.dpu.dao.CarrierDao;
 import com.dpu.entity.CarrierContract;
 import com.dpu.entity.Driver;
 import com.dpu.model.CarrierContractModel;
+import com.dpu.model.Failed;
+import com.dpu.model.Success;
 import com.dpu.service.CarrierContractService;
 
 @Component
@@ -25,14 +27,12 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Autowired
 	CarrierContractDao carrierContractDao;
-	
+
 	@Autowired
 	CarrierDao carrierDao;
-	
-	//@Autowired
-	//ArrangedWithDao arrangedWithDao;
-	
-	
+
+	// @Autowired
+	// ArrangedWithDao arrangedWithDao;
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -43,8 +43,6 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 	@Value("${CarrierContract_unable_to_add_message}")
 	private String CarrierContract_unable_to_add_message;
 
-	 
-	
 	@Override
 	public List<CarrierContractModel> getAllCarrierContract() {
 
@@ -54,9 +52,11 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 		try {
 			session = sessionFactory.openSession();
-			List<CarrierContract> listOfCarrierContract = carrierContractDao.findAllCarrierContract(session);
+			List<CarrierContract> listOfCarrierContract = carrierContractDao
+					.findAllCarrierContract(session);
 
-			if (listOfCarrierContract != null && !listOfCarrierContract.isEmpty()) {
+			if (listOfCarrierContract != null
+					&& !listOfCarrierContract.isEmpty()) {
 				for (CarrierContract carrierContract : listOfCarrierContract) {
 					CarrierContractModel response = new CarrierContractModel();
 					setCarrierContractData(carrierContract, response);
@@ -65,7 +65,8 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CarrierContractServiceImpl getAllCarrierContract() :" + e.getMessage());
+			logger.error("Exception inside CarrierContractServiceImpl getAllCarrierContract() :"
+					+ e.getMessage());
 		} finally {
 			if (session != null) {
 				session.close();
@@ -75,25 +76,33 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		return returnResponse;
 	}
 
-	private void setCarrierContractData(CarrierContract carrierContract, CarrierContractModel response) {
+	private void setCarrierContractData(CarrierContract carrierContract,
+			CarrierContractModel response) {
+
 		response.setContractNoId(carrierContract.getContractNoId());
-		response.setArrangedWithName(carrierContract.getArrangedWith().getArrangedWith());
+		response.setArrangedWithName(carrierContract.getArrangedWith()
+				.getArrangedWith());
 		response.setCargo(carrierContract.getCargo());
 		response.setCarrierName(carrierContract.getCarrier().getName());
 		response.setCarrierRat(carrierContract.getCarrierRat());
 		response.setCategoryName(carrierContract.getCategory().getName());
-		response.setCommodityName(carrierContract.getCommodity().getCommodityName());
+		response.setCommodityName(carrierContract.getCommodity()
+				.getCommodityName());
 		response.setContractNo(carrierContract.getContractNo());
 		response.setContractNoId(carrierContract.getContractNoId());
 		response.setContractRate(carrierContract.getContractRate());
 		response.setCreatedBy(carrierContract.getCreatedBy());
-		response.setCurrencyName(carrierContract.getCurrency().getCurrencyName());
+		response.setCurrencyName(carrierContract.getCurrency()
+				.getCurrencyName());
 		response.setDispatched(carrierContract.getDispatched());
-		response.setDispatcherName(carrierContract.getDispatcher().getDispatcherName());
-		response.setDivisionName(carrierContract.getDivision().getDivisionName());
+		response.setDispatcherName(carrierContract.getDispatcher()
+				.getDispatcherName());
+		response.setDivisionName(carrierContract.getDivision()
+				.getDivisionName());
 		response.setdOTno(carrierContract.getdOTno());
 		response.setDriverName(carrierContract.getDriver().getFirstName());
-		response.setEquipmentName(carrierContract.getEquipment().getEquipmentName());
+		response.setEquipmentName(carrierContract.getEquipment()
+				.getEquipmentName());
 		response.setHours(carrierContract.getHours());
 		response.setInsExpires(carrierContract.getInsExpires());
 		response.setLiabity(carrierContract.getLiabity());
@@ -106,27 +115,49 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Override
 	public Object addCarrierContract(CarrierContractModel carrierContractModel) {
+
 		logger.info("Inside CarrierContractServiceImpl addCarrierContract() starts");
 		Object obj = null;
-		/*try {
-		
+		try {
+
 			CarrierContract carrierContract = new CarrierContract();
 			BeanUtils.copyProperties(carrierContractModel, carrierContract);
-			carrierContract.setCategory(categoryDao.findById(driverReq.getCategoryId()));
-			carrierContract.setDivision(divisionDao.findById(driverReq.getDivisionId()));
-			carrierContract.setTerminal(terminalDao.findById(driverReq.getTerminalId()));
+			/*carrierContract.setCategory(categoryDao.findById(driverReq
+					.getCategoryId()));
+			carrierContract.setDivision(divisionDao.findById(driverReq
+					.getDivisionId()));
+			carrierContract.setTerminal(terminalDao.findById(driverReq
+					.getTerminalId()));
 			carrierContract.setRole(typeService.get(driverReq.getRoleId()));
-			carrierContract.setDriverClass(typeService.get(driverReq.getDriverClassId()));
-			carrierContract.setStatus(statusService.get(driverReq.getStatusId()));
+			carrierContract.setDriverClass(typeService.get(driverReq
+					.getDriverClassId()));
+			carrierContract
+					.setStatus(statusService.get(driverReq.getStatusId()));*/
 			carrierContractDao.save(carrierContract);
 			obj = createSuccessObject(CarrierContract_added_message);
 		} catch (Exception e) {
-			logger.error("Exception inside CarrierContractServiceImpl addCarrierContract() :"+ e.getMessage());
+			logger.error("Exception inside CarrierContractServiceImpl addCarrierContract() :"
+					+ e.getMessage());
 			obj = createFailedObject(CarrierContract_unable_to_add_message);
 		}
-*/
+
 		logger.info("Inside CarrierContractServiceImpl addCarrierContract() Ends");
 		return obj;
+	}
+
+	private Object createFailedObject(String errorMessage) {
+
+		Failed failed = new Failed();
+		failed.setMessage(errorMessage);
+		return failed;
+	}
+
+	private Object createSuccessObject(String message) {
+
+		Success success = new Success();
+		success.setMessage(message);
+		success.setResultList(getAllCarrierContract());
+		return success;
 	}
 
 }

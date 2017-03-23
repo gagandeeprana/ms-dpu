@@ -14,4 +14,7 @@ public interface CarrierContractService {
 
 	Object deleteCarrierContract(Long carrierContractId);
 
+	Object updateCarrierContract(Long carrierContractId,
+			CarrierContractModel carrierContractModel);
+
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.CarrierContractModel;
+import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CarrierContractService;
@@ -167,6 +168,36 @@ public class CarrierContractController {
 
 		logger.info(" Inside CarrierContractController openAdd() Ends ");
 		return json;
+	}
+
+	/**
+	 * this method is used to update the driver based on driverId
+	 * @param driverCode
+	 * @param driver
+	 * @return List<driver>
+	 * @author lakhvir
+	 */
+	@RequestMapping(value = "/{carrierContractId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateCarrierContract(@PathVariable("carrierContractId") Long carrierContractId, @RequestBody CarrierContractModel CarrierContractModel) {
+
+		logger.info("Inside CarrierContractController updateCarrierContract() starts, carrierContractId : "+ carrierContractId);
+		Object obj = null;
+		
+		try {
+			Object result = carrierContractService.updateCarrierContract(carrierContractId, CarrierContractModel);
+
+			if(result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside CarrierContractController updateCarrierContract() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, CarrierContract_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+		}
+		
+		logger.info("Inside CarrierContractController updateCarrierContract() Ends, carrierContractId :" + carrierContractId);
+		return obj;
 	}
 
 }

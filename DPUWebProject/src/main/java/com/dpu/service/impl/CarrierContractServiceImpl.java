@@ -84,6 +84,14 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 	@Autowired
 	EquipmentDao equipmentDao;
 
+	
+	
+	@Value("${CarrierContract_updated_message}")
+	private String CarrierContract_updated_message;
+	
+	@Value("${CarrierContract_unable_to_update_message}")
+	private String CarrierContract_unable_to_update_message;
+	
 	@Value("${CarrierContract_added_message}")
 	private String CarrierContract_added_message;
 
@@ -176,7 +184,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		Transaction tx = null;
 		try {
 			session = sessionFactory.openSession();
-			tx= session.beginTransaction();
+			tx = session.beginTransaction();
 			CarrierContract carrierContract = new CarrierContract();
 			BeanUtils.copyProperties(carrierContractModel, carrierContract);
 
@@ -202,7 +210,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 					.getDispatcherId()));
 			session.save(carrierContract);
 			tx.commit();
-			//carrierContractDao.save(carrierContract);
+			// carrierContractDao.save(carrierContract);
 			obj = createSuccessObject(CarrierContract_added_message);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -312,6 +320,55 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 				+ carrierContractId);
 		return createSuccessObject(CarrierContract_deleted_message);
 
+	}
+
+	@Override
+	public Object updateCarrierContract(Long carrierContractId,
+			CarrierContractModel carrierContractModel) {
+
+		logger.info("Inside CarrierContractServiceImpl updateCarrierContract() Starts, carrierContractId :"+ carrierContractId);
+		Object obj = null;
+
+		  try {
+			CarrierContract carrierContract = carrierContractDao.findById(carrierContractId);
+
+			if (carrierContract != null) {
+				String[] ignoreProp = new String[1];
+				ignoreProp[0] = "contractNoId";
+				BeanUtils.copyProperties(carrierContractModel, carrierContract, ignoreProp);
+				carrierContract.setCarrier(carrierDao.findById(carrierContractModel
+					.getCarrierId()));
+			carrierContract.setArrangedWith(typeService
+					.get(carrierContractModel.getArrangedWithId()));
+			carrierContract.setDriver(driverDao.findById(carrierContractModel
+					.getDriverId()));
+			carrierContract.setCurrency(typeService.get(carrierContractModel
+					.getCurrencyId()));
+			carrierContract.setCategory(categoryDao
+					.findById(carrierContractModel.getCategoryId()));
+			carrierContract.setRole(typeService.get(carrierContractModel
+					.getRoleId()));
+			carrierContract.setEquipment(equipmentDao
+					.findById(carrierContractModel.getEquipmentId()));
+			carrierContract.setCommodity(typeService.get(carrierContractModel
+					.getCommodityId()));
+			carrierContract.setDivision(divisionDao
+					.findById(carrierContractModel.getDivisionId()));
+			carrierContract.setDispatcher(typeService.get(carrierContractModel
+					.getDispatcherId()));
+				carrierContractDao.update(carrierContract);
+				obj = createSuccessObject(CarrierContract_updated_message);
+			} else {
+				obj = createFailedObject(CarrierContract_unable_to_update_message);
+			}
+
+		} catch (Exception e) {
+			logger.error("Exception inside CarrierContractServiceImpl updateCarrierContract() :"+ e.getMessage());
+			obj = createFailedObject(CarrierContract_unable_to_update_message);
+		}
+
+		logger.info("Inside DriverServiceImpl updateCarrierContract() ends, carrierContractId :"+ carrierContractId);
+		return obj; 
 	}
 
 }

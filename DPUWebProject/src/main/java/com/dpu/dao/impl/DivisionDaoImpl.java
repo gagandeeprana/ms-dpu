@@ -1,28 +1,17 @@
-/**
- * 
- */
 package com.dpu.dao.impl;
 
 import java.util.Date;
-
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
 import com.dpu.entity.Status;
 import com.dpu.model.DivisionReq;
 import com.dpu.service.StatusService;
 
-/**
- * @author jagvir
- *
- */
 @Repository
-public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
-		DivisionDao {
+public class DivisionDaoImpl extends GenericDaoImpl<Division> implements DivisionDao {
 
 	@Autowired
 	StatusService statusService;
@@ -34,8 +23,7 @@ public class DivisionDaoImpl extends GenericDaoImpl<Division> implements
 		try {
 
 			division = setDivisionValues(divisionReq);
-			Status status = (Status) session.get(Status.class,
-					divisionReq.getStatusId());
+			Status status = (Status) session.get(Status.class,divisionReq.getStatusId());
 			division.setStatus(status);
 
 			Long divisionId = (Long) session.save(division);

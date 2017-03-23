@@ -10,9 +10,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,16 +18,12 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.ServiceDao;
 import com.dpu.dao.ShipperDao;
 import com.dpu.dao.TerminalDao;
-import com.dpu.entity.Handling;
 import com.dpu.entity.Service;
 import com.dpu.entity.Status;
 import com.dpu.entity.Terminal;
-import com.dpu.model.DPUService;
 import com.dpu.model.Failed;
-import com.dpu.model.ShipperResponse;
 import com.dpu.model.Success;
 import com.dpu.model.TerminalResponse;
-import com.dpu.model.TypeResponse;
 import com.dpu.service.ServiceService;
 import com.dpu.service.ShipperService;
 import com.dpu.service.StatusService;
@@ -104,8 +97,10 @@ public class TerminalServiceImpl implements TerminalService {
 	@Override
 	public List<TerminalResponse> getAllTerminals() {
 		
+		logger.info(" TerminalServiceImpl getAllTerminals() starts");
 		Session session = null;
 		List<TerminalResponse> terminalRespList = new ArrayList<TerminalResponse>();
+		
 		try{
 			session = sessionFactory.openSession();
 			List<Terminal> terminalList = terminalDao.findAll(null, session);
@@ -120,26 +115,34 @@ public class TerminalServiceImpl implements TerminalService {
 				}
 			}
 		} finally{
-			session.close();
+			if(session != null){
+				session.close();
+			}
 		}
 		
+		logger.info(" TerminalServiceImpl getAllTerminals() ends");
 		return terminalRespList;
 	}
 
 	@Override
 	public Object addTerminal(TerminalResponse terminalResponse) {
+		
+		logger.info(" TerminalServiceImpl addTerminal() starts");
 		Object obj = null;
+		
 		try {
-			Terminal terminal= setServiceValues(terminalResponse);
+			Terminal terminal= setTerminalValues(terminalResponse);
 			terminalDao.save(terminal);
-			obj = createSuccessObject("Terminal Added Successfully");
+			obj = createSuccessObject(terminalAddedMessage);
 		} catch (Exception e) {
-			obj = createFailedObject("Error while adding");
+			obj = createFailedObject(terminalUnableToAddMessage);
 		}
+		
+		logger.info(" TerminalServiceImpl addTerminal() starts");
 		return obj;
 	}
 
-	private Terminal setServiceValues(TerminalResponse terminalResponse) {
+	private Terminal setTerminalValues(TerminalResponse terminalResponse) {
 		Terminal terminal  = new Terminal();
 		terminal.setTerminalName(terminalResponse.getTerminalName());
 		Status status = statusService.get(terminalResponse.getStatusId());
@@ -163,18 +166,6 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public Object deleteTerminal(Long id) {
-
-//		Terminal terminal= terminalDao.findById(id);
-//		Object obj = null;
-//		try {
-//			if(terminal != null){
-//				terminalDao.delete(terminal);
-//			}
-//			obj = createSuccessObject("Terminal Deleted Successfully");
-//		} catch (Exception e) {
-//			obj = createFailedObject("Error while deleting");
-//		}
-//		return obj;
 		
 		logger.info("TerminalServiceImpl delete() starts.");
 		Session session = null;
@@ -182,9 +173,9 @@ public class TerminalServiceImpl implements TerminalService {
 		
 		try {
 			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
 			Terminal terminal = (Terminal) session.get(Terminal.class, id);
 			if(terminal != null){
+				tx = session.beginTransaction();
 				session.delete(terminal);
 				tx.commit();
 			} else{
@@ -216,12 +207,13 @@ public class TerminalServiceImpl implements TerminalService {
 	@Override
 	public TerminalResponse getTerminal(Long id) {
 		
+		logger.info("TerminalServiceImpl getTerminal() starts, terminalId :"+id);
 		Session session = null;
 		TerminalResponse terminalResp = new TerminalResponse();
-		Terminal terminal = null;
+		
 		try {
 			session = sessionFactory.openSession();
-			terminal = terminalDao.findById(session, id);
+			Terminal terminal = terminalDao.findById(session, id);
 			if(terminal != null){
 				terminalResp.setTerminalId(terminal.getTerminalId());
 				terminalResp.setTerminalName(terminal.getTerminalName());
@@ -235,22 +227,26 @@ public class TerminalServiceImpl implements TerminalService {
 				}
 				terminalResp.setServiceIds(serviceIds);
 			}		
-		} catch (Exception e) {
-			// TODO: handle exception
-		} finally {
+		}  finally {
 			if(session != null) {
 				session.close();
 			}
 		}
+		
+		logger.info("TerminalServiceImpl getTerminal() ends, terminalId :"+id);
 		return terminalResp;
 	}
 
 	@Override
 	public TerminalResponse getOpenAdd() {
 		
+		logger.info("TerminalServiceImpl getOpenAdd() starts");
+		
 		TerminalResponse tresponse = new TerminalResponse();
 		tresponse.setServiceList(serviceService.getServiceData());
 		tresponse.setShipperList(shipperService.getSpecificData());
+		
+		logger.info("TerminalServiceImpl getOpenAdd() ends");
 		return tresponse;
 	}
 
@@ -258,15 +254,18 @@ public class TerminalServiceImpl implements TerminalService {
 	public Object updateTerminal(Long id, TerminalResponse terminalResponse) {
 		
 		Object obj = null;
+		logger.info("TerminalServiceImpl updateTerminal() starts, terminalId :"+id);
+		
 		try {
-			Terminal terminal= setServiceValues(terminalResponse);
+			Terminal terminal= setTerminalValues(terminalResponse);
 			terminal.setTerminalId(id);
 			terminalDao.update(terminal);
-			obj = createSuccessObject("Terminal Updated Successfully");
+			obj = createSuccessObject(terminalUpdateMessage);
 		} catch (Exception e) {
-			obj = createFailedObject("Error while updating");
+			obj = createFailedObject(terminalUnableToUpdateMessage);
 		}
 		
+		logger.info("TerminalServiceImpl updateTerminal() ends, terminalId :"+id);
 		return obj;
 	}
 	
@@ -286,9 +285,12 @@ public class TerminalServiceImpl implements TerminalService {
 
 	@Override
 	public List<TerminalResponse> getTerminalByTerminalName(String terminalName) {
+		
+		logger.info("TerminalServiceImpl getTerminalByTerminalName() starts, terminalName :"+terminalName);
 		Session session = null;
 		List<Terminal> terminalList = null;
 		List<TerminalResponse> termList = new ArrayList<TerminalResponse>();
+		
 		try {
 			session = sessionFactory.openSession();
 			if(terminalName != null && terminalName.length() > 0) {
@@ -304,14 +306,13 @@ public class TerminalServiceImpl implements TerminalService {
 					termList.add(terminalObj);
 				}
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			if(session != null) {
 				session.close();
 			}
 		}
-		
+	
+		logger.info("TerminalServiceImpl getTerminalByTerminalName() starts, terminalName :"+terminalName);
 		return termList;
 	}
 

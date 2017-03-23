@@ -66,7 +66,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "arrangedwith_id")
-	private ArrangedWith arrangedWith;
+	private Type arrangedWith;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "driver_id")
@@ -74,7 +74,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id")
-	private Currency currency;
+	private Type currency;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
@@ -82,7 +82,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id")
-	private Role role;
+	private Type role;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "equipment_id")
@@ -90,7 +90,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "commodity_id")
-	private Commodity commodity;
+	private Type commodity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "division_id")
@@ -98,7 +98,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "dispatcher_id")
-	private Dispatcher dispatcher;
+	private Type dispatcher;
 
 	public Long getContractNoId() {
 		return contractNoId;
@@ -212,11 +212,11 @@ public class CarrierContract {
 		this.dOTno = dOTno;
 	}
 
-	public Currency getCurrency() {
+	public Type getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(Currency currency) {
+	public void setCurrency(Type currency) {
 		this.currency = currency;
 	}
 
@@ -228,11 +228,11 @@ public class CarrierContract {
 		this.carrier = carrier;
 	}
 
-	public ArrangedWith getArrangedWith() {
+	public Type getArrangedWith() {
 		return arrangedWith;
 	}
 
-	public void setArrangedWith(ArrangedWith arrangedWith) {
+	public void setArrangedWith(Type arrangedWith) {
 		this.arrangedWith = arrangedWith;
 	}
 
@@ -252,11 +252,11 @@ public class CarrierContract {
 		this.category = category;
 	}
 
-	public Role getRole() {
+	public Type getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(Type role) {
 		this.role = role;
 	}
 
@@ -268,11 +268,11 @@ public class CarrierContract {
 		this.equipment = equipment;
 	}
 
-	public Commodity getCommodity() {
+	public Type getCommodity() {
 		return commodity;
 	}
 
-	public void setCommodity(Commodity commodity) {
+	public void setCommodity(Type commodity) {
 		this.commodity = commodity;
 	}
 
@@ -284,11 +284,11 @@ public class CarrierContract {
 		this.division = division;
 	}
 
-	public Dispatcher getDispatcher() {
+	public Type getDispatcher() {
 		return dispatcher;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher) {
+	public void setDispatcher(Type dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 

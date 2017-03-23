@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CarrierContractDao;
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.CarrierContract;
-import com.dpu.entity.Driver;
 import com.dpu.model.CarrierContractModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.CategoryReq;
@@ -121,23 +120,22 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			CarrierContractModel response) {
 
 		response.setContractNoId(carrierContract.getContractNoId());
-		response.setArrangedWithName(carrierContract.getArrangedWith()
-				.getArrangedWith());
+		response.setArrangedWithName(carrierContract.getArrangedWith().getTypeName());
 		response.setCargo(carrierContract.getCargo());
 		response.setCarrierName(carrierContract.getCarrier().getName());
 		response.setCarrierRat(carrierContract.getCarrierRat());
 		response.setCategoryName(carrierContract.getCategory().getName());
 		response.setCommodityName(carrierContract.getCommodity()
-				.getCommodityName());
+				.getTypeName());
 		response.setContractNo(carrierContract.getContractNo());
 		response.setContractNoId(carrierContract.getContractNoId());
 		response.setContractRate(carrierContract.getContractRate());
 		response.setCreatedBy(carrierContract.getCreatedBy());
 		response.setCurrencyName(carrierContract.getCurrency()
-				.getCurrencyName());
+				.getTypeName());
 		response.setDispatched(carrierContract.getDispatched());
 		response.setDispatcherName(carrierContract.getDispatcher()
-				.getDispatcherName());
+				.getTypeName());
 		response.setDivisionName(carrierContract.getDivision()
 				.getDivisionName());
 		response.setdOTno(carrierContract.getdOTno());
@@ -149,7 +147,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		response.setLiabity(carrierContract.getLiabity());
 		response.setmCno(carrierContract.getmCno());
 		response.setMiles(carrierContract.getMiles());
-		response.setRoleName(carrierContract.getRole().getRoleName());
+		response.setRoleName(carrierContract.getRole().getTypeName());
 		response.setTransDoc(carrierContract.getTransDoc());
 
 	}

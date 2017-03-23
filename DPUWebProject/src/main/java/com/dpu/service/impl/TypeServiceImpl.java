@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
@@ -17,10 +14,6 @@ import com.dpu.entity.Type;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.TypeService;
 
-/**
- * @author jagvir
- *
- */
 @Component
 public class TypeServiceImpl implements TypeService {
 	
@@ -31,15 +24,10 @@ public class TypeServiceImpl implements TypeService {
 
 	@Override
 	public List<TypeResponse> getAll(Long typeValue) {
-		List<Type> types = null;
 		List<TypeResponse> response = new ArrayList<TypeResponse>();
 		Criterion eqcriterion = Restrictions.eq("value", typeValue);
-		/*if(typeName != null && typeName.length() > 0) {
-			Criterion typecriterion = Restrictions.likeRestrictions.like("typeName", typeName);
-			types = typeDao.find(criterion);
-		} else {*/
-			types = typeDao.find(eqcriterion);
-		/*}*/
+		List<Type> types = typeDao.find(eqcriterion);
+		
 		if(types != null  && types.size() > 0) {
 			for(Type type : types) {
 				TypeResponse typeResponse = new TypeResponse();
@@ -55,7 +43,6 @@ public class TypeServiceImpl implements TypeService {
 	@Override
 	public Type get(Long typeId) {
 		return typeDao.findById(typeId);
-		
 	}
 
 }

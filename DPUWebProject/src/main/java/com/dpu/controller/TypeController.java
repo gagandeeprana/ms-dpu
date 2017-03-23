@@ -28,11 +28,10 @@ public class TypeController extends MessageProperties {
 	@RequestMapping(value = "/type", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllTypes() {
 		
-		logger.info("TypeController: getAll(): STARTS");
-		
+		logger.info("TypeController getAllTypes() STARTS");
 		String json = new String();
+		
 		try {
-			
 			List<TypeResponse> typeResponses = typeService.getAll(1l);
 			
 			if(typeResponses != null) {
@@ -40,18 +39,19 @@ public class TypeController extends MessageProperties {
 			}
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside TypeController getAllTypes() :"+e.getMessage());
 		}
-		logger.info("[getAll] : Exit");
+		
+		logger.info("TypeController getAllTypes() ends");
 		return json;
 	}
 
 	@RequestMapping(value = "/textFields", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllTextFields() {
 		
-		logger.info("TypeController: getAll(): STARTS");
-		
+		logger.info("TypeController getAllTextFields() STARTS");
 		String json = new String();
+		
 		try {
 			
 			List<TypeResponse> typeResponses = typeService.getAll(2l);
@@ -61,20 +61,20 @@ public class TypeController extends MessageProperties {
 			}
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside TypeController getAllTextFields() :"+e.getMessage());
 		}
-		logger.info("[getAll] : Exit");
+		
+		logger.info("TypeController getAllTextFields() ends");
 		return json;
 	}
 	
 	@RequestMapping(value = "/assosiationWith", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllAssosiationWith() {
 		
-		logger.info("TypeController: getAll(): STARTS");
-		
+		logger.info("TypeController getAllAssosiationWith() STARTS");
 		String json = new String();
+		
 		try {
-			
 			List<TypeResponse> typeResponses = typeService.getAll(3l);
 			
 			if(typeResponses != null) {
@@ -82,9 +82,10 @@ public class TypeController extends MessageProperties {
 			}
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside TypeController getAllAssosiationWith() :"+e.getMessage());
 		}
-		logger.info("[getAll] : Exit");
+		
+		logger.info("TypeController getAllAssosiationWith() ends");
 		return json;
 	}
 }

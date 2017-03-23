@@ -10,4 +10,6 @@ public interface CarrierContractDao extends GenericDao<CarrierContract> {
 
 	List<CarrierContract> findAllCarrierContract(Session session);
 
+	CarrierContract findById(Long carrierContractId, Session session);
+
 }

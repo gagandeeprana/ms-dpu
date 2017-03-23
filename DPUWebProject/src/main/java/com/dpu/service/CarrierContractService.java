@@ -17,4 +17,6 @@ public interface CarrierContractService {
 	Object updateCarrierContract(Long carrierContractId,
 			CarrierContractModel carrierContractModel);
 
+	Object  getCarrierContractById(Long carrierContractId);
+
 }

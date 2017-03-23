@@ -370,8 +370,8 @@ public class CarrierServiceImpl extends MessageProperties implements
 				try {
 					BeanUtils.copyProperties(carrierAdditionalContactResponse,
 							carrierAdditionalContact);
-				} catch (IllegalAccessException | InvocationTargetException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+
 				}
 
 			}

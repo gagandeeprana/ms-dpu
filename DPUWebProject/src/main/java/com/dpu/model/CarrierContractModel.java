@@ -26,7 +26,7 @@ public class CarrierContractModel {
 
 	private Date dispatched;
 
-	private String createdBy;
+	private Long createdBy;
 
 	private String insExpires;
 
@@ -137,11 +137,11 @@ public class CarrierContractModel {
 		this.dispatched = dispatched;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 

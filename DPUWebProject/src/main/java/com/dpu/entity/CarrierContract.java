@@ -40,7 +40,7 @@ public class CarrierContract {
 	private Date dispatched;
 
 	@Column(name = "createdBy")
-	private String createdBy;
+	private Long createdBy;
 
 	@Column(name = "ins_expires")
 	private String insExpires;
@@ -170,12 +170,12 @@ public class CarrierContract {
 		this.dispatched = new Date();
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 
 		this.createdBy = createdBy;
 	}

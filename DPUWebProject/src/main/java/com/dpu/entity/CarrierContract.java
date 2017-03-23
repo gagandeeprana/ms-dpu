@@ -101,194 +101,242 @@ public class CarrierContract {
 	private Type dispatcher;
 
 	public Long getContractNoId() {
+
 		return contractNoId;
 	}
 
 	public void setContractNoId(Long contractNoId) {
+
 		this.contractNoId = contractNoId;
 	}
 
 	public String getContractNo() {
+
 		return contractNo;
 	}
 
 	public void setContractNo(String contractNo) {
+
 		this.contractNo = contractNo;
 	}
 
 	public Double getContractRate() {
+
 		return contractRate;
 	}
 
 	public void setContractRate(Double contractRate) {
+
 		this.contractRate = contractRate;
 	}
 
 	public String getCarrierRat() {
+
 		return carrierRat;
 	}
 
 	public void setCarrierRat(String carrierRat) {
+
 		this.carrierRat = carrierRat;
 	}
 
 	public String getHours() {
+
 		return hours;
 	}
 
 	public void setHours(String hours) {
+
 		this.hours = hours;
 	}
 
 	public String getMiles() {
+
 		return miles;
 	}
 
 	public void setMiles(String miles) {
+
 		this.miles = miles;
 	}
 
 	public Date getDispatched() {
+
 		return dispatched;
 	}
 
 	public void setDispatched(Date dispatched) {
-		this.dispatched = dispatched;
+
+		this.dispatched = new Date();
 	}
 
 	public String getCreatedBy() {
+
 		return createdBy;
 	}
 
 	public void setCreatedBy(String createdBy) {
+
 		this.createdBy = createdBy;
 	}
 
 	public String getInsExpires() {
+
 		return insExpires;
 	}
 
 	public void setInsExpires(String insExpires) {
+
 		this.insExpires = insExpires;
 	}
 
 	public String getCargo() {
+
 		return cargo;
 	}
 
 	public void setCargo(String cargo) {
+
 		this.cargo = cargo;
 	}
 
 	public String getLiabity() {
+
 		return liabity;
 	}
 
 	public void setLiabity(String liabity) {
+
 		this.liabity = liabity;
 	}
 
 	public String getTransDoc() {
+
 		return transDoc;
 	}
 
 	public void setTransDoc(String transDoc) {
+
 		this.transDoc = transDoc;
 	}
 
 	public String getmCno() {
+
 		return mCno;
 	}
 
 	public void setmCno(String mCno) {
+
 		this.mCno = mCno;
 	}
 
 	public String getdOTno() {
+
 		return dOTno;
 	}
 
 	public void setdOTno(String dOTno) {
+
 		this.dOTno = dOTno;
 	}
 
 	public Type getCurrency() {
+
 		return currency;
 	}
 
 	public void setCurrency(Type currency) {
+
 		this.currency = currency;
 	}
 
 	public Carrier getCarrier() {
+
 		return carrier;
 	}
 
 	public void setCarrier(Carrier carrier) {
+
 		this.carrier = carrier;
 	}
 
 	public Type getArrangedWith() {
+
 		return arrangedWith;
 	}
 
 	public void setArrangedWith(Type arrangedWith) {
+
 		this.arrangedWith = arrangedWith;
 	}
 
 	public Driver getDriver() {
+
 		return driver;
 	}
 
 	public void setDriver(Driver driver) {
+
 		this.driver = driver;
 	}
 
 	public Category getCategory() {
+
 		return category;
 	}
 
 	public void setCategory(Category category) {
+
 		this.category = category;
 	}
 
 	public Type getRole() {
+
 		return role;
 	}
 
 	public void setRole(Type role) {
+
 		this.role = role;
 	}
 
 	public Equipment getEquipment() {
+
 		return equipment;
 	}
 
 	public void setEquipment(Equipment equipment) {
+
 		this.equipment = equipment;
 	}
 
 	public Type getCommodity() {
+
 		return commodity;
 	}
 
 	public void setCommodity(Type commodity) {
+
 		this.commodity = commodity;
 	}
 
 	public Division getDivision() {
+
 		return division;
 	}
 
 	public void setDivision(Division division) {
+
 		this.division = division;
 	}
 
 	public Type getDispatcher() {
+
 		return dispatcher;
 	}
 
 	public void setDispatcher(Type dispatcher) {
+
 		this.dispatcher = dispatcher;
 	}
 

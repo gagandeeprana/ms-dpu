@@ -11,6 +11,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CarrierContractModel {
 
+	
 	private Long contractNoId;
 
 	private String contractNo;

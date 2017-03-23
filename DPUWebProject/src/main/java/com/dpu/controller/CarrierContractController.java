@@ -82,6 +82,7 @@ public class CarrierContractController {
 	public ResponseEntity<Object> addCarrierContract(
 			@RequestBody CarrierContractModel carrierContract) {
 
+		System.out.println("Enter Post");
 		logger.info("Inside CarrierContractController addCarrierContract Starts. ");
 		ResponseEntity<Object> obj = null;
 
@@ -104,35 +105,43 @@ public class CarrierContractController {
 		logger.info("Inside CarrierContractController addCarrierContract Ends. ");
 		return obj;
 	}
-	
+
 	/**
-	 * this method is used to delete the carrierContract based on carrierContractId
+	 * this method is used to delete the carrierContract based on
+	 * carrierContractId
+	 * 
 	 * @param carrierContractId
 	 * @return List<carrierContract>
 	 * @author sumit
 	 */
 	@RequestMapping(value = "/{carrierContractId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object deleteCarrierContract(@PathVariable("carrierContractId") Long carrierContractId) {
-		
-		logger.info("Inside CarrierContractController deleteCarrierContract() : carrierContractId " + carrierContractId);
-		Object  obj = null;
-		
+	public Object deleteCarrierContract(
+			@PathVariable("carrierContractId") Long carrierContractId) {
+
+		logger.info("Inside CarrierContractController deleteCarrierContract() : carrierContractId "
+				+ carrierContractId);
+		Object obj = null;
+
 		try {
-			Object result = carrierContractService.deleteCarrierContract(carrierContractId);
-			if(result instanceof Success) {
+			Object result = carrierContractService
+					.deleteCarrierContract(carrierContractId);
+			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CarrierContractController deleteCarrierContract() :" + e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0, CarrierContract_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside CarrierContractController deleteCarrierContract() :"
+					+ e.getMessage());
+			obj = new ResponseEntity<Object>(
+					new Failed(0, CarrierContract_unable_to_delete_message,
+							Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		
-		logger.info("Inside CarrierContractController deleteCarrierContract() Ends, carrierContractId :" + carrierContractId);
+
+		logger.info("Inside CarrierContractController deleteCarrierContract() Ends, carrierContractId :"
+				+ carrierContractId);
 		return obj;
 	}
-
 
 	/**
 	 * this method is used when we click on add button in carrierContract

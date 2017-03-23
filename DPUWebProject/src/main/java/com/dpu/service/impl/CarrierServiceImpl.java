@@ -1,6 +1,5 @@
 package com.dpu.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +113,8 @@ public class CarrierServiceImpl extends MessageProperties implements
 	@Override
 	public Object delete(Long carrierId) {
 
-		logger.info("Inside CarrierServiceImpl delete() starts");
+		logger.info("Inside CarrierServiceImpl delete() starts , carrierId : "
+				+ carrierId);
 		Session session = null;
 		Transaction tx = null;
 
@@ -124,8 +124,9 @@ public class CarrierServiceImpl extends MessageProperties implements
 			Carrier carrier = carrierDao.findById(carrierId, session);
 
 			if (carrier != null) {
-				List<CarrierAdditionalContact> carrierAddContacts = carrierAdditionalContactService
-						.getAll(carrierId, session);
+
+				List<CarrierAdditionalContact> carrierAddContacts = carrier
+						.getCarrierAdditionalContact();
 				if (carrierAddContacts != null && !carrierAddContacts.isEmpty()) {
 					for (CarrierAdditionalContact carrierAdditionalContacts : carrierAddContacts) {
 						carrierAdditionalContactsDao.deleteAdditionalContact(
@@ -138,6 +139,9 @@ public class CarrierServiceImpl extends MessageProperties implements
 			} else {
 				return createFailedObject(carrier_unable_to_delete_message);
 			}
+			if (tx != null) {
+				tx.commit();
+			}
 		} catch (Exception e) {
 			if (tx != null) {
 				tx.rollback();
@@ -147,9 +151,7 @@ public class CarrierServiceImpl extends MessageProperties implements
 			}
 			return createFailedObject(carrier_unable_to_delete_message);
 		} finally {
-			if (tx != null) {
-				tx.commit();
-			}
+
 			if (session != null) {
 				session.close();
 			}
@@ -285,7 +287,6 @@ public class CarrierServiceImpl extends MessageProperties implements
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (tx != null) {
 				tx.rollback();
 			}

@@ -69,7 +69,7 @@ public class CarrierController {
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteCarrier(@PathVariable("id") Long carrierId) {
 
-		logger.info(" CarrierController delete() starts ");
+		logger.info(" CarrierController delete() starts , carrierId  : "+carrierId);
 		Object obj = null;
 
 		try {

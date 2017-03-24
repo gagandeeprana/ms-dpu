@@ -336,7 +336,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		return obj;
 	}
 
-	@SuppressWarnings("unchecked")
+	 
 	@Override
 	public Object getCarrierContractById(Long carrierContractId) {
 
@@ -347,40 +347,16 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		Object obj = null;
 		String message = "CarrierContract data get Successfully";
 
-		/*try {
+		 try {
 			session = sessionFactory.openSession();
 			CarrierContract carrierContract = carrierContractDao.findById(carrierContractId, session);
 			CarrierContractModel response = new CarrierContractModel();
-
-			if (carrierContract != null) {
-				BeanUtils.copyProperties(carrierContract, response);
-				response.setCategoryId(carrierContract.getCategory().getCategoryId());
-				response.setStatusId(carrierContract.getStatus().getId());
-				response.setDivisionId(carrierContract.getDivision().getDivisionId());
-				response.setDriverClassId(carrierContract.getDriverClass().getTypeId());
-				response.setRoleId(carrierContract.getRole().getTypeId());
-				response.setTerminalId(carrierContract.getTerminal().getTerminalId());
-
-				List<TypeResponse> roleList = typeService.getAll(6l);
-				response.setRoleList(roleList);
-
-				List<TypeResponse> driverClassList = typeService.getAll(5l);
-				response.setDriverClassList(driverClassList);
-
-				List<CategoryReq> categoryList = categoryService.getAll();
-				response.setCategoryList(categoryList);
-
-				List<DivisionReq> divisionList = divisionService.getAll("");
-				response.setDivisionList(divisionList);
-
-				List<TerminalResponse> terminalList = terminalService
-						.getAllTerminals();
-				response.setTerminalList(terminalList);
+			setCarrierContractData(carrierContract, response);
 				obj = createSuccessObjectForParRecord(message, response);
-			} else {
-				message = "Error while getting record";
-				obj = createFailedObject(message);
-			}
+			/*
+			 * } else { message = "Error while getting record"; obj =
+			 * createFailedObject(message); }
+			 */
 		} catch (Exception e) {
 			message = "Error while getting record";
 			obj = createFailedObject(message);
@@ -388,12 +364,12 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			if (session != null) {
 				session.close();
 			}
-		}*/
+		}
 		return obj;
 	}
 
 	private Object createSuccessObjectForParRecord(String message,
-			DriverReq response) {
+			CarrierContractModel response) {
 		Success success = new Success();
 		success.setMessage(message);
 		success.setResultList(response);

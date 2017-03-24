@@ -21,4 +21,11 @@ public class CarrierContractDaoImpl extends GenericDaoImpl<CarrierContract> impl
 				return query.list();
 	}
 
+	@Override
+	public CarrierContract findById(Long carrierContractId, Session session) {
+
+		 
+		return null;
+	}
+
 }

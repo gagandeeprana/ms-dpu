@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.Carrier;
-import com.dpu.entity.CarrierAdditionalContact;
-import com.dpu.model.CarrierAdditionalContactModel;
+import com.dpu.entity.CarrierAdditionalContacts;
+import com.dpu.model.CarrierAdditionalContactsModel;
 import com.dpu.model.CarrierModel;
 
 @Repository
@@ -36,12 +36,12 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 	}
 	
 	@Override
-	public CarrierAdditionalContact findByAdditionalContactId(Long contactId, Session session) {
+	public CarrierAdditionalContacts findByAdditionalContactId(Long contactId, Session session) {
 
-		StringBuilder sb = new StringBuilder(" select c from CarrierAdditionalContact c where c.additionalContactId =:contactId ");
+		StringBuilder sb = new StringBuilder(" select c from CarrierAdditionalContacts c where c.additionalContactId =:contactId ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("contactId", contactId);
-		return (CarrierAdditionalContact) query.uniqueResult();
+		return (CarrierAdditionalContacts) query.uniqueResult();
 
 	}
 
@@ -60,10 +60,10 @@ public class CarrierDaoImpl extends GenericDaoImpl<Carrier> implements CarrierDa
 		BeanUtils.copyProperties(carrierResponse, carrier, ignoreProp);
 		session.saveOrUpdate(carrier);
 
-		List<CarrierAdditionalContactModel> additionalContactsList = carrierResponse.getCarrierAdditionalContactModel();
+		List<CarrierAdditionalContactsModel> additionalContactsList = carrierResponse.getCarrierAdditionalContactModel();
 		if (additionalContactsList != null && !additionalContactsList.isEmpty()) {
-			for (CarrierAdditionalContactModel additionalContacts : additionalContactsList) {
-				CarrierAdditionalContact comAdditionalContacts = new CarrierAdditionalContact();
+			for (CarrierAdditionalContactsModel additionalContacts : additionalContactsList) {
+				CarrierAdditionalContacts comAdditionalContacts = new CarrierAdditionalContacts();
 				BeanUtils.copyProperties(additionalContacts, comAdditionalContacts);
 				comAdditionalContacts.setCarrier(carrier);
 				// comAdditionalContacts.setStatus(statusService.get(additionalContacts.getStatusId()));

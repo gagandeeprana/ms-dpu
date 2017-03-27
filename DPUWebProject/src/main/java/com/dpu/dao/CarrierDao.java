@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 
 import com.dpu.entity.Carrier;
-import com.dpu.entity.CarrierAdditionalContact;
+import com.dpu.entity.CarrierAdditionalContacts;
 import com.dpu.model.CarrierModel;
 
 public interface CarrierDao extends GenericDao<Carrier> {
@@ -24,5 +24,5 @@ public interface CarrierDao extends GenericDao<Carrier> {
 
 	List<Object []> findCarrierIdAndName(Session session);
 
-	CarrierAdditionalContact findByAdditionalContactId(Long contactId, Session session);
+	CarrierAdditionalContacts findByAdditionalContactId(Long contactId, Session session);
 }

@@ -1,4 +1,4 @@
-package com.dpu.entity;
+/*package com.dpu.entity;
 
 import java.util.Date;
 
@@ -15,9 +15,9 @@ import javax.persistence.Table;
 @Table(name = "carrieradditionalcontact")
 public class CarrierAdditionalContact  {
 
-	/**
+	*//**
 	 * 
-	 */
+	 *//*
 	@Id
 	@GeneratedValue
 	@Column(name = "additional_contact_id")
@@ -195,3 +195,4 @@ public class CarrierAdditionalContact  {
 
 
 }
+*/

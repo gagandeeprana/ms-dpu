@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.CarrierAdditionalContactModel;
+import com.dpu.model.CarrierAdditionalContactsModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -147,7 +147,7 @@ public class CarrierController {
 		String json = new String();
 
 		try {
-			CarrierAdditionalContactModel additionalContact = carrierService.getContactById(id);
+			List<CarrierAdditionalContactsModel> additionalContact = carrierService.getContactById(id);
 			if (additionalContact != null) {
 				json = mapper.writeValueAsString(additionalContact);
 			}
@@ -250,5 +250,7 @@ public class CarrierController {
 		logger.info(" CarrierController deleteContactByContactId() ends ");
 		return obj;
 	}
+	
+	 
 
 }

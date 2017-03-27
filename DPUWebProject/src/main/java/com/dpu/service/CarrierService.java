@@ -2,7 +2,7 @@ package com.dpu.service;
 
 import java.util.List;
 
-import com.dpu.model.CarrierAdditionalContactModel;
+import com.dpu.model.CarrierAdditionalContactsModel;
 import com.dpu.model.CarrierModel;
 
 public interface CarrierService {
@@ -17,12 +17,13 @@ public interface CarrierService {
 	
 	Object addCarrierData(CarrierModel carrierResponse);
 	
-	CarrierAdditionalContactModel getContactById(Long id);
+	List<CarrierAdditionalContactsModel> getContactById(Long id);
 
 	List<CarrierModel> getCarriersByCarrierName(String carrierName);
 
 	List<CarrierModel> getAllCarriersIdAndName();
 
 	Object deleteAdditionalContactByAdditionalContactId(Long contactId);
+	//List<CarrierAdditionalContactsModel> getContactByAdditionalContactId(Long contactId);
 
 }

@@ -7,34 +7,61 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.CarrierAdditionalContactsDao;
-import com.dpu.entity.CarrierAdditionalContact;
+import com.dpu.entity.CarrierAdditionalContacts;
 
 @Repository
-public class CarrierAdditionalContactsDaoImpl extends GenericDaoImpl<CarrierAdditionalContact>
-		implements CarrierAdditionalContactsDao {
+public class CarrierAdditionalContactsDaoImpl extends
+		GenericDaoImpl<CarrierAdditionalContacts> implements
+		CarrierAdditionalContactsDao {
 
 	@Override
-	public void deleteAdditionalContact(CarrierAdditionalContact carrierAdditionalContact, Session session) {
-		
+	public void deleteAdditionalContact(
+			CarrierAdditionalContacts carrierAdditionalContact, Session session) {
+
 		session.delete(carrierAdditionalContact);
 
 	}
 
 	@Override
-	public List<CarrierAdditionalContact> getAdditionalContactsByCarrierId(Long carrierId, Session session) {
-		
-		StringBuilder sb = new StringBuilder(" select cac from CarrierAdditionalContact cac  where cac.carrier.carrierId =:carrierId " );
+	public List<CarrierAdditionalContacts> getAdditionalContactsByCarrierId(
+			Long contactId, Session session) {
+
+		/*
+		 * StringBuilder sb = new StringBuilder(
+		 * " select cac from CarrierAdditionalContacts cac  where cac.carrier.carrierId =:carrierId "
+		 * );
+		 */
+		StringBuilder sb = new StringBuilder(
+				" select cac from CarrierAdditionalContacts cac  where cac.additionalContactId =:contactId ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("carrierId", carrierId);
+		query.setParameter("contactId", contactId);
 		return query.list();
-		
+
 	}
 
 	@Override
-	public void insertAdditionalContacts(CarrierAdditionalContact comAdditionalContact, Session session) {
-		
-		session.save(comAdditionalContact);
-		
+	public void insertAdditionalContacts(
+			CarrierAdditionalContacts comAdditionalContact, Session session) {
+
+		try {
+			session.save(comAdditionalContact);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public CarrierAdditionalContacts findById(Session session, Long contactId) {
+
+		StringBuilder sb = new StringBuilder(
+				"select cac from CarrierAdditionalContacts cac  where cac.additionalContactId =:contactId ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("contactId", contactId);
+		@SuppressWarnings("unchecked")
+		List<CarrierAdditionalContacts> listOfCarrierAdditionalContacts = query
+				.list();
+		return listOfCarrierAdditionalContacts.get(0);
 	}
 
 }

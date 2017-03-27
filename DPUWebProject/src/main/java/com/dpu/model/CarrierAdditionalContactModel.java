@@ -1,4 +1,4 @@
-package com.dpu.model;
+/*package com.dpu.model;
 
 import java.io.Serializable;
 
@@ -11,9 +11,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CarrierAdditionalContactModel implements Serializable {
 
-	/**
+	*//**
 	 * @author sumit
-	 */
+	 *//*
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("additionalContactId")
@@ -162,3 +162,4 @@ public class CarrierAdditionalContactModel implements Serializable {
 	}
 
 }
+*/

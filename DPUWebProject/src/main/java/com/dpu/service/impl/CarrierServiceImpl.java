@@ -16,20 +16,25 @@ import org.springframework.stereotype.Component;
 import com.dpu.dao.CarrierAdditionalContactsDao;
 import com.dpu.dao.CarrierDao;
 import com.dpu.entity.Carrier;
-import com.dpu.entity.CarrierAdditionalContact;
-import com.dpu.model.CarrierAdditionalContactModel;
+import com.dpu.entity.CarrierAdditionalContacts;
+import com.dpu.model.CarrierAdditionalContactsModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CarrierAdditionalContactService;
 import com.dpu.service.CarrierService;
+import com.dpu.service.StatusService;
 import com.dpu.util.MessageProperties;
 
 @Component
-public class CarrierServiceImpl extends MessageProperties implements CarrierService {
+public class CarrierServiceImpl extends MessageProperties implements
+		CarrierService {
 
 	Logger logger = Logger.getLogger(CarrierServiceImpl.class);
 
+	@Autowired
+	StatusService statusService;
+	
 	@Autowired
 	SessionFactory sessionFactory;
 
@@ -112,7 +117,8 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	@Override
 	public Object delete(Long carrierId) {
 
-		logger.info("Inside CarrierServiceImpl delete() starts , carrierId : " + carrierId);
+		logger.info("Inside CarrierServiceImpl delete() starts , carrierId : "
+				+ carrierId);
 		Session session = null;
 		Transaction tx = null;
 
@@ -122,10 +128,12 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 			if (carrier != null) {
 				tx = session.beginTransaction();
-				List<CarrierAdditionalContact> carrierAddContacts = carrier.getCarrierAdditionalContact();
+				List<CarrierAdditionalContacts> carrierAddContacts = carrier
+						.getCarrierAdditionalContact();
 				if (carrierAddContacts != null && !carrierAddContacts.isEmpty()) {
-					for (CarrierAdditionalContact carrierAdditionalContacts : carrierAddContacts) {
-						carrierAdditionalContactsDao.deleteAdditionalContact(carrierAdditionalContacts, session);
+					for (CarrierAdditionalContacts carrierAdditionalContacts : carrierAddContacts) {
+						carrierAdditionalContactsDao.deleteAdditionalContact(
+								carrierAdditionalContacts, session);
 					}
 				}
 
@@ -226,18 +234,21 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 			if (carrier != null) {
 				setCarrierData(carrier, carrierResponse);
 
-				List<CarrierAdditionalContact> carrierAddContacts = carrierAdditionalContactService.getAll(id, session);
+				List<CarrierAdditionalContacts> carrierAddContacts = carrierAdditionalContactService
+						.getAll(id, session);
 
 				if (carrierAddContacts != null && !carrierAddContacts.isEmpty()) {
-					List<CarrierAdditionalContactModel> addContacts = new ArrayList<CarrierAdditionalContactModel>();
+					List<CarrierAdditionalContactsModel> addContacts = new ArrayList<CarrierAdditionalContactsModel>();
 
-					for (CarrierAdditionalContact carrierAdditionalContact : carrierAddContacts) {
-						CarrierAdditionalContactModel addContact = new CarrierAdditionalContactModel();
-						BeanUtils.copyProperties(addContact, carrierAdditionalContact);
+					for (CarrierAdditionalContacts carrierAdditionalContact : carrierAddContacts) {
+						CarrierAdditionalContactsModel addContact = new CarrierAdditionalContactsModel();
+						BeanUtils.copyProperties(addContact,
+								carrierAdditionalContact);
 						addContacts.add(addContact);
 					}
 
-					carrierResponse.setCarrierAdditionalContactModel(addContacts);
+					carrierResponse
+							.setCarrierAdditionalContactModel(addContacts);
 				}
 
 			}
@@ -263,12 +274,14 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 			Carrier carrier = setCarrierValues(carrierResponse);
 			carrier = carrierDao.insertCarrierData(carrier, session);
 
-			List<CarrierAdditionalContactModel> additionalContacts = carrierResponse.getCarrierAdditionalContactModel();
+			List<CarrierAdditionalContactsModel> additionalContacts = carrierResponse
+					.getCarrierAdditionalContactModel();
 			if (additionalContacts != null && !additionalContacts.isEmpty()) {
-				for (CarrierAdditionalContactModel additionalContact : additionalContacts) {
-					CarrierAdditionalContact comAdditionalContact = setAdditionalContactData(additionalContact,
-							carrier);
-					carrierAdditionalContactsDao.insertAdditionalContacts(comAdditionalContact, session);
+				for (CarrierAdditionalContactsModel additionalContact : additionalContacts) {
+					CarrierAdditionalContacts comAdditionalContact = setAdditionalContactData(
+							additionalContact, carrier);
+					carrierAdditionalContactsDao.insertAdditionalContacts(
+							comAdditionalContact, session);
 				}
 			}
 
@@ -277,7 +290,8 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 				tx.rollback();
 			}
 
-			logger.error("Exception inside CarrierServiceImpl addCarrierData() :" + e.getMessage());
+			logger.error("Exception inside CarrierServiceImpl addCarrierData() :"
+					+ e.getMessage());
 			return createFailedObject(carrier_unable_to_add_message);
 		} finally {
 			if (tx != null) {
@@ -293,21 +307,24 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 	}
 
-	private CarrierAdditionalContact setAdditionalContactData(CarrierAdditionalContactModel additionalContact,
-			Carrier carrier) {
+	private CarrierAdditionalContacts setAdditionalContactData(
+			CarrierAdditionalContactsModel additionalContact, Carrier carrier) {
 
-		CarrierAdditionalContact carrierAdditionalContact = new CarrierAdditionalContact();
-		carrierAdditionalContact.setBrokerContact(additionalContact.getBrokerContact());
-		carrierAdditionalContact.setBrokerFax(additionalContact.getBrokerFax());
-		carrierAdditionalContact.setBrokerPhone(additionalContact.getBrokerPhone());
-		carrierAdditionalContact.setCarrier(carrier);
-		carrierAdditionalContact.setCongCoverage(additionalContact.getCongCoverage());
+		CarrierAdditionalContacts carrierAdditionalContact = new CarrierAdditionalContacts();
+		carrierAdditionalContact.setCellular(additionalContact
+				.getCellular());
+		carrierAdditionalContact.setCustomerName(additionalContact
+				.getCustomerName());
 		carrierAdditionalContact.setEmail(additionalContact.getEmail());
+		carrierAdditionalContact.setCarrier(carrier);
 		carrierAdditionalContact.setExt(additionalContact.getExt());
-		carrierAdditionalContact.setIncBroker(additionalContact.getIncBroker());
-		carrierAdditionalContact.setIncCompany(additionalContact.getIncCompany());
-		carrierAdditionalContact.setLibilityCoverage(additionalContact.getLibilityCoverage());
-		carrierAdditionalContact.setPolicyNumber(additionalContact.getPolicyNumber());
+		carrierAdditionalContact.setFax(additionalContact.getFax());
+		carrierAdditionalContact.setPhone(additionalContact.getPhone());
+		carrierAdditionalContact.setPosition(additionalContact
+				.getPosition());
+		carrierAdditionalContact
+				.setPrefix(additionalContact.getPrefix());
+		carrierAdditionalContact.setStatus(statusService.get(additionalContact.getStatusId()));
 		return carrierAdditionalContact;
 
 	}
@@ -336,28 +353,41 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 	}
 
 	@Override
-	public CarrierAdditionalContactModel getContactById(Long id) {
+	public List<CarrierAdditionalContactsModel> getContactById(Long id) {
+
 		logger.info("Inside CarrierServiceImpl getContactById() starts");
 		Session session = null;
-		CarrierAdditionalContactModel carrierAdditionalContactResponse = new CarrierAdditionalContactModel();
-
+		
+		List<CarrierAdditionalContactsModel> response = new ArrayList<CarrierAdditionalContactsModel>();
+		
 		try {
 			session = sessionFactory.openSession();
-			CarrierAdditionalContact carrierAdditionalContact = carrierAdditionalContactsDao.findById(id);
-
-			if (carrierAdditionalContact != null) {
-				BeanUtils.copyProperties(carrierAdditionalContactResponse, carrierAdditionalContact);
+			List<CarrierAdditionalContacts> carrierAdditionalContacts = carrierAdditionalContactsDao.getAdditionalContactsByCarrierId(id,session);
+			/*CarrierAdditionalContacts carrierAdditionalContact = carrierAdditionalContactsDao
+					.findById(session, id);*/
+		
+			if (carrierAdditionalContacts != null) {
+				for(CarrierAdditionalContacts carrierAdditionalContact: carrierAdditionalContacts ){
+					CarrierAdditionalContactsModel carrierAdditionalContactResponse = new CarrierAdditionalContactsModel();
+					BeanUtils.copyProperties(
+							carrierAdditionalContact,carrierAdditionalContactResponse);
+					response.add(carrierAdditionalContactResponse);
+				}
+				
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception Inside CarrierServiceImpl getContactById() :  " + e.getMessage());
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			logger.error("Exception Inside CarrierServiceImpl getContactById() :  "
+					+ e.getMessage());
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
 		logger.info("Inside CarrierServiceImpl getContactById() ends");
-		return carrierAdditionalContactResponse;
+		return response;
 	}
 
 	@Override
@@ -368,11 +398,13 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 		try {
 
 			session = sessionFactory.openSession();
-			List<Carrier> carrierList = carrierDao.getCarriersByCarrierName(carrierName, session);
+			List<Carrier> carrierList = carrierDao.getCarriersByCarrierName(
+					carrierName, session);
 			if (carrierList != null && !carrierList.isEmpty()) {
 				for (Carrier carrier : carrierList) {
 					CarrierModel companyModel = new CarrierModel();
-					org.springframework.beans.BeanUtils.copyProperties(carrier, companyModel);
+					org.springframework.beans.BeanUtils.copyProperties(carrier,
+							companyModel);
 					response.add(companyModel);
 				}
 			}
@@ -392,7 +424,8 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 
 		try {
 			session = sessionFactory.openSession();
-			List<Object[]> listOfCarrier = carrierDao.findCarrierIdAndName(session);
+			List<Object[]> listOfCarrier = carrierDao
+					.findCarrierIdAndName(session);
 
 			if (listOfCarrier != null && !listOfCarrier.isEmpty()) {
 				for (Object[] row : listOfCarrier) {
@@ -419,11 +452,12 @@ public class CarrierServiceImpl extends MessageProperties implements CarrierServ
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			CarrierAdditionalContact carrierAdditionalContact = carrierDao.findByAdditionalContactId(contactId,
-					session);
+			CarrierAdditionalContacts carrierAdditionalContact = carrierDao
+					.findByAdditionalContactId(contactId, session);
 
 			if (carrierAdditionalContact != null) {
-				carrierAdditionalContactsDao.deleteAdditionalContact(carrierAdditionalContact, session);
+				carrierAdditionalContactsDao.deleteAdditionalContact(
+						carrierAdditionalContact, session);
 			} else {
 				return createFailedObject(carrierAdditionalContact_unable_to_delete_message);
 			}

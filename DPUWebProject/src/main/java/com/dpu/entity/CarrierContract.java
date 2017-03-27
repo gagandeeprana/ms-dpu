@@ -66,7 +66,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "arrangedwith_id")
-	private Type arrangedWith;
+	private ArrangedWith arrangedWith;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "driver_id")
@@ -98,7 +98,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "dispatcher_id")
-	private Type dispatcher;
+	private Dispatcher dispatcher;
 
 	public Long getContractNoId() {
 
@@ -260,12 +260,12 @@ public class CarrierContract {
 		this.carrier = carrier;
 	}
 
-	public Type getArrangedWith() {
+	public ArrangedWith getArrangedWith() {
 
 		return arrangedWith;
 	}
 
-	public void setArrangedWith(Type arrangedWith) {
+	public void setArrangedWith(ArrangedWith arrangedWith) {
 
 		this.arrangedWith = arrangedWith;
 	}
@@ -330,12 +330,12 @@ public class CarrierContract {
 		this.division = division;
 	}
 
-	public Type getDispatcher() {
+	public Dispatcher getDispatcher() {
 
 		return dispatcher;
 	}
 
-	public void setDispatcher(Type dispatcher) {
+	public void setDispatcher(Dispatcher dispatcher) {
 
 		this.dispatcher = dispatcher;
 	}

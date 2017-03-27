@@ -7,6 +7,10 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.dpu.entity.ArrangedWith;
+import com.dpu.entity.CarrierContract;
+import com.dpu.entity.Dispatcher;
+
 @JsonSerialize(include = Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CarrierContractModel {
@@ -46,7 +50,7 @@ public class CarrierContractModel {
 	
 	private String arrangedWithName;
 	private Long arrangedWithId;
-	private List<TypeResponse> arrangedWithList;
+	private List<ArrangedWith> arrangedWithList;
 	
 
 	private String driverName;
@@ -79,7 +83,7 @@ public class CarrierContractModel {
 
 	private String dispatcherName;
 	private Long dispatcherId;
-	private List<TypeResponse> dispatcherList;
+	private List<Dispatcher> dispatcherList;
 
 	public Long getContractNoId() {
 		return contractNoId;
@@ -310,13 +314,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<TypeResponse> getArrangedWithList() {
+	public List<ArrangedWith> getArrangedWithList() {
 	
 		return arrangedWithList;
 	}
 
 	
-	public void setArrangedWithList(List<TypeResponse> arrangedWithList) {
+	public void setArrangedWithList(List<ArrangedWith> arrangedWithList) {
 	
 		this.arrangedWithList = arrangedWithList;
 	}
@@ -502,13 +506,13 @@ public class CarrierContractModel {
 	}
 
 	
-	public List<TypeResponse> getDispatcherList() {
+	public List<Dispatcher> getDispatcherList() {
 	
 		return dispatcherList;
 	}
 
 	
-	public void setDispatcherList(List<TypeResponse> dispatcherList) {
+	public void setDispatcherList(List<Dispatcher> dispatcherList) {
 	
 		this.dispatcherList = dispatcherList;
 	}

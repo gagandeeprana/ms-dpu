@@ -13,13 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.ArrangedWithDao;
 import com.dpu.dao.CarrierContractDao;
 import com.dpu.dao.CarrierDao;
 import com.dpu.dao.CategoryDao;
+import com.dpu.dao.DispatcherDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.DriverDao;
 import com.dpu.dao.EquipmentDao;
+import com.dpu.entity.ArrangedWith;
 import com.dpu.entity.CarrierContract;
+import com.dpu.entity.Dispatcher;
 import com.dpu.model.CarrierContractModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.CategoryReq;
@@ -29,9 +33,11 @@ import com.dpu.model.EquipmentReq;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
+import com.dpu.service.ArrangedWithService;
 import com.dpu.service.CarrierContractService;
 import com.dpu.service.CarrierService;
 import com.dpu.service.CategoryService;
+import com.dpu.service.DispatcherService;
 import com.dpu.service.DivisionService;
 import com.dpu.service.DriverService;
 import com.dpu.service.EquipmentService;
@@ -43,8 +49,17 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 	Logger logger = Logger.getLogger(CarrierContractServiceImpl.class);
 
 	@Autowired
+	DispatcherDao dispatcherdao;
+	
+	@Autowired
+	ArrangedWithService arrangedWithService;
+	
+	@Autowired
 	CarrierContractDao carrierContractDao;
 
+	@Autowired
+	ArrangedWithDao arrangedWithDao;
+	
 	@Autowired
 	CarrierDao carrierDao;
 
@@ -68,6 +83,9 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Autowired
 	DivisionService divisionService;
+	
+	@Autowired
+	DispatcherDao dispatcherDao;
 
 	// @Autowired
 	// ArrangedWithDao arrangedWithDao;
@@ -77,6 +95,8 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Autowired
 	DriverDao driverDao;
+	@Autowired
+	DispatcherService dispatcherService;
 
 	@Autowired
 	CategoryDao categoryDao;
@@ -138,7 +158,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 	private void setCarrierContractData(CarrierContract carrierContract, CarrierContractModel response) {
 
 		response.setContractNoId(carrierContract.getContractNoId());
-		response.setArrangedWithName(carrierContract.getArrangedWith().getTypeName());
+		response.setArrangedWithName(carrierContract.getArrangedWith().getArrangedWith());
 		response.setCargo(carrierContract.getCargo());
 		response.setCarrierName(carrierContract.getCarrier().getName());
 		response.setCarrierRat(carrierContract.getCarrierRat());
@@ -150,7 +170,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		response.setCreatedBy(carrierContract.getCreatedBy());
 		response.setCurrencyName(carrierContract.getCurrency().getTypeName());
 		response.setDispatched(carrierContract.getDispatched());
-		response.setDispatcherName(carrierContract.getDispatcher().getTypeName());
+		response.setDispatcherName(carrierContract.getDispatcher().getDispatcherName());
 		response.setDivisionName(carrierContract.getDivision().getDivisionName());
 		response.setdOTno(carrierContract.getdOTno());
 		response.setDriverName(carrierContract.getDriver().getFirstName());
@@ -179,7 +199,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			BeanUtils.copyProperties(carrierContractModel, carrierContract);
 
 			carrierContract.setCarrier(carrierDao.findById(carrierContractModel.getCarrierId()));
-			carrierContract.setArrangedWith(typeService.get(carrierContractModel.getArrangedWithId()));
+			carrierContract.setArrangedWith(arrangedWithDao.findById(carrierContractModel.getArrangedWithId()));
 			carrierContract.setDriver(driverDao.findById(carrierContractModel.getDriverId()));
 			carrierContract.setCurrency(typeService.get(carrierContractModel.getCurrencyId()));
 			carrierContract.setCategory(categoryDao.findById(carrierContractModel.getCategoryId()));
@@ -187,7 +207,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			carrierContract.setEquipment(equipmentDao.findById(carrierContractModel.getEquipmentId()));
 			carrierContract.setCommodity(typeService.get(carrierContractModel.getCommodityId()));
 			carrierContract.setDivision(divisionDao.findById(carrierContractModel.getDivisionId()));
-			carrierContract.setDispatcher(typeService.get(carrierContractModel.getDispatcherId()));
+			carrierContract.setDispatcher(dispatcherdao.findById(carrierContractModel.getDispatcherId()));
 			session.save(carrierContract);
 			tx.commit();
 			// carrierContractDao.save(carrierContract);
@@ -226,7 +246,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		List<CarrierModel> carrierList = carrierService.getAll();
 		carrierContractModel.setCarrierList(carrierList);
 
-		List<TypeResponse> arrangedWithList = typeService.getAll(18l);
+		List<ArrangedWith> arrangedWithList = arrangedWithService.getAllArrangedWith();
 		carrierContractModel.setArrangedWithList(arrangedWithList);
 
 		List<DriverReq> driverList = driverService.getAllDriver();
@@ -250,7 +270,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		List<DivisionReq> divisionList = divisionService.getAll("");
 		carrierContractModel.setDivisionList(divisionList);
 
-		List<TypeResponse> dispatcherList = typeService.getAll(19l);
+		List<Dispatcher> dispatcherList = dispatcherService.getAllDispatcher();
 		carrierContractModel.setDispatcherList(dispatcherList);
 
 		return carrierContractModel;
@@ -312,7 +332,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 				ignoreProp[0] = "contractNoId";
 				BeanUtils.copyProperties(carrierContractModel, carrierContract, ignoreProp);
 				carrierContract.setCarrier(carrierDao.findById(carrierContractModel.getCarrierId()));
-				carrierContract.setArrangedWith(typeService.get(carrierContractModel.getArrangedWithId()));
+				carrierContract.setArrangedWith(arrangedWithDao.findById(carrierContract.getArrangedWith()));
 				carrierContract.setDriver(driverDao.findById(carrierContractModel.getDriverId()));
 				carrierContract.setCurrency(typeService.get(carrierContractModel.getCurrencyId()));
 				carrierContract.setCategory(categoryDao.findById(carrierContractModel.getCategoryId()));
@@ -320,7 +340,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 				carrierContract.setEquipment(equipmentDao.findById(carrierContractModel.getEquipmentId()));
 				carrierContract.setCommodity(typeService.get(carrierContractModel.getCommodityId()));
 				carrierContract.setDivision(divisionDao.findById(carrierContractModel.getDivisionId()));
-				carrierContract.setDispatcher(typeService.get(carrierContractModel.getDispatcherId()));
+				carrierContract.setDispatcher(dispatcherDao.findById(carrierContractModel.getDispatcherId()));
 				carrierContractDao.update(carrierContract);
 				obj = createSuccessObject(CarrierContract_updated_message);
 			} else {

@@ -159,10 +159,10 @@ public class CarrierContractController {
 	/**
 	 * this method is used to update the driver based on driverId
 	 * 
-	 * @param driverCode
-	 * @param driver
-	 * @return List<driver>
-	 * @author lakhvir
+	 * @param carrierContractId
+	 * @param carrierContract
+	 * @return List<carrierContract>
+	 * @author sumit
 	 */
 	@RequestMapping(value = "/{carrierContractId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object updateCarrierContract(@PathVariable("carrierContractId") Long carrierContractId,

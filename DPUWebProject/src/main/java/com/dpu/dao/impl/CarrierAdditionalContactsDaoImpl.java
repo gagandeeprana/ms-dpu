@@ -26,11 +26,6 @@ public class CarrierAdditionalContactsDaoImpl extends
 	public List<CarrierAdditionalContacts> getAdditionalContactsByCarrierId(
 			Long contactId, Session session) {
 
-		/*
-		 * StringBuilder sb = new StringBuilder(
-		 * " select cac from CarrierAdditionalContacts cac  where cac.carrier.carrierId =:carrierId "
-		 * );
-		 */
 		StringBuilder sb = new StringBuilder(
 				" select cac from CarrierAdditionalContacts cac  where cac.additionalContactId =:contactId ");
 		Query query = session.createQuery(sb.toString());

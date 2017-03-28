@@ -17,13 +17,12 @@ public interface CarrierService {
 	
 	Object addCarrierData(CarrierModel carrierResponse);
 	
-	List<CarrierAdditionalContactsModel> getContactById(Long id);
+	 CarrierAdditionalContactsModel getContactById(Long id);
 
 	List<CarrierModel> getCarriersByCarrierName(String carrierName);
 
 	List<CarrierModel> getAllCarriersIdAndName();
 
 	Object deleteAdditionalContactByAdditionalContactId(Long contactId);
-	//List<CarrierAdditionalContactsModel> getContactByAdditionalContactId(Long contactId);
 
 }

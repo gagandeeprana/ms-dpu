@@ -19,9 +19,13 @@ public class ArrangedWithServiceImpl implements ArrangedWithService {
 	@Override
 	public List<ArrangedWith> getAllArrangedWith() {
 
-		List<ArrangedWith> listOfArrangeWith = arrangedWithDao.findAll();
-		if (listOfArrangeWith != null) {
-			return listOfArrangeWith;
+		try {
+			List<ArrangedWith> listOfArrangeWith = arrangedWithDao.findAll();
+			if (listOfArrangeWith != null) {
+				return listOfArrangeWith;
+			}
+		} catch (Exception e) {
+			
 		}
 		return new ArrayList<ArrangedWith>();
 	}

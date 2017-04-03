@@ -55,6 +55,8 @@ public class OrderModel implements Serializable{
 	
 	private List<TypeResponse> deliveryList;
 	
+	private CompanyResponse companyResponse;
+	
 	public Long getId() {
 		return id;
 	}
@@ -261,6 +263,14 @@ public class OrderModel implements Serializable{
 
 	public void setDeliveryList(List<TypeResponse> deliveryList) {
 		this.deliveryList = deliveryList;
+	}
+
+	public CompanyResponse getCompanyResponse() {
+		return companyResponse;
+	}
+
+	public void setCompanyResponse(CompanyResponse companyResponse) {
+		this.companyResponse = companyResponse;
 	}
 	
  

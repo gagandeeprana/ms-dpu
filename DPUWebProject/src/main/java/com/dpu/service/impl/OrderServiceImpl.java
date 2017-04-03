@@ -630,6 +630,32 @@ public class OrderServiceImpl implements OrderService {
 					
 					orderModel.setProbilList(probils);
 					
+					List<TypeResponse> temperatureList = typeService.getAll(12l);
+					orderModel.setTemperatureList(temperatureList);
+					
+					List<TypeResponse> temperatureTypeList = typeService.getAll(13l);
+					orderModel.setTemperatureTypeList(temperatureTypeList);
+					
+					List<CompanyResponse> companyData = companyService.getCompanyData();
+					orderModel.setCompanyList(companyData);
+					
+					List<TypeResponse> currencyList = typeService.getAll(9l);
+					orderModel.setCurrencyList(currencyList);
+					
+					List<ShipperResponse> shipperConsineeList = shipperService.getSpecificData();
+					orderModel.setShipperConsineeList(shipperConsineeList);
+					
+					List<TypeResponse> pickUpTypes = typeService.getAll(10l);
+					orderModel.setPickupList(pickUpTypes);
+					
+					List<TypeResponse> deliveryTypes = typeService.getAll(11l);
+					orderModel.setDeliveryList(deliveryTypes);
+					
+					CompanyResponse companyResponse = companyService.getCompanyBillingLocationAndContacts(order.getCompany().getCompanyId());
+					if(companyResponse != null){
+						orderModel.setCompanyResponse(companyResponse);
+					}
+					
 			/*	}*/
 			}
 		} finally{

@@ -590,9 +590,15 @@ public class OrderServiceImpl implements OrderService {
 						BeanUtils.copyProperties(probil, probilModel);
 						probilModel.setConsineeName(probil.getConsine().getLocationName());
 						probilModel.setConsineeId(probil.getConsine().getShipperId());
+						List<ShipperResponse> consineeList = new ArrayList<ShipperResponse>();
+						consineeList.add(shipperService.getParticularData(probil.getConsine().getShipperId()));
+						probilModel.setConsineeList(consineeList);
 						
 						probilModel.setShipperName(probil.getShipper().getLocationName());
 						probilModel.setShipperId(probil.getShipper().getShipperId());
+						List<ShipperResponse> shipperList = new ArrayList<ShipperResponse>();
+						shipperList.add(shipperService.getParticularData(probil.getShipper().getShipperId()));
+						probilModel.setShipperList(shipperList);
 						
 						probilModel.setPickupName(probil.getPickUp().getTypeName());
 						probilModel.setPickupId(probil.getPickUp().getTypeId());

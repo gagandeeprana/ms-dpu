@@ -231,6 +231,27 @@ public class ShipperServiceImpl implements ShipperService {
 	}
 
 	@Override
+	public ShipperResponse getParticularData(Long id) {
+
+		Session session = null;
+		ShipperResponse response = new ShipperResponse();
+
+		try {
+			session = sessionFactory.openSession();
+			Shipper shipper = (Shipper) session.get(Shipper.class, id);
+			if (shipper != null) {
+				BeanUtils.copyProperties(shipper, response);
+			}
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return response;
+	}
+	
+	@Override
 	public ShipperResponse getMasterData() {
 
 		ShipperResponse response = new ShipperResponse();

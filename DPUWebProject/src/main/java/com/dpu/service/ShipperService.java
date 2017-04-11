@@ -21,4 +21,6 @@ public interface ShipperService {
 	Object update(Long id, ShipperResponse shipperResponse);
 	
 	List<ShipperResponse> getSpecificData();
+
+	ShipperResponse getParticularData(Long id);
 }

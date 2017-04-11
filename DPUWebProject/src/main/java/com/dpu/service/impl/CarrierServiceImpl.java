@@ -380,6 +380,45 @@ public class CarrierServiceImpl extends MessageProperties implements
 	}
 
 	@Override
+	public List<CarrierAdditionalContactsModel> getContactByCarrierId(
+			Long carrierId) {
+
+		logger.info("Inside CarrierServiceImpl getContactByCarrierId() starts");
+		Session session = null;
+
+		session = sessionFactory.openSession();
+		List<CarrierAdditionalContactsModel> carrierAdditionalContactsResponse = new ArrayList<CarrierAdditionalContactsModel>();
+		List<CarrierAdditionalContacts> carrierAdditionalContacts = carrierDao
+				.getAdditionalContactsByCarrierId(carrierId, session);
+
+		try {
+
+			if (carrierAdditionalContacts != null
+					&& !carrierAdditionalContacts.isEmpty()) {
+				for (CarrierAdditionalContacts carrierAdditionalContact : carrierAdditionalContacts) {
+					CarrierAdditionalContactsModel carrierAdditionalContactsModel = new CarrierAdditionalContactsModel();
+					org.springframework.beans.BeanUtils.copyProperties(
+							carrierAdditionalContact,
+							carrierAdditionalContactsModel);
+					carrierAdditionalContactsResponse
+							.add(carrierAdditionalContactsModel);
+				}
+			}
+
+		} catch (Exception e) {
+
+			logger.error("Exception Inside CarrierServiceImpl getContactByCarrierId() :  "
+					+ e.getMessage());
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		logger.info("Inside CarrierServiceImpl getContactByCarrierId() ends");
+		return carrierAdditionalContactsResponse;
+	}
+
+	@Override
 	public List<CarrierModel> getCarriersByCarrierName(String carrierName) {
 
 		Session session = null;

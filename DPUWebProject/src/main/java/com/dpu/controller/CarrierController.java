@@ -148,7 +148,7 @@ public class CarrierController {
 	}
 
 	@RequestMapping(value = "/contactId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getContactByContactId(@PathVariable("id") Long id) {
+	public Object getContactById(@PathVariable("id") Long id) {
 
 		logger.info(" CarrierController getContactById() starts, contactId :"
 				+ id);
@@ -166,6 +166,30 @@ public class CarrierController {
 		}
 
 		logger.info(" CarrierController getContactById() ends, contactId :"
+				+ id);
+		return json;
+	}
+
+	@RequestMapping(value = "/carrierId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getContactByCarriertId(@PathVariable("id") Long id) {
+
+		logger.info(" CarrierController getContactByCarriertId() starts, contactId :"
+				+ id);
+		String json = new String();
+
+		try {
+			List<CarrierAdditionalContactsModel> additionalContact = carrierService
+					.getContactByCarrierId(id);
+			if (additionalContact != null) {
+				json = mapper.writeValueAsString(additionalContact);
+				System.out.println("json : " + json);
+			}
+		} catch (Exception e) {
+			logger.info("Exception inside CarrierController getContactByCarriertId() :"
+					+ e.getMessage());
+		}
+
+		logger.info(" CarrierController getContactByCarriertId() ends, carrier :"
 				+ id);
 		return json;
 	}

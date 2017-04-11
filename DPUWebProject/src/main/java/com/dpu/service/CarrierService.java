@@ -8,21 +8,23 @@ import com.dpu.model.CarrierModel;
 public interface CarrierService {
 
 	List<CarrierModel> getAll();
-	
+
 	Object delete(Long carrierId);
-	
+
 	Object updateCarrier(Long id, CarrierModel carrierResponse);
-	
+
 	CarrierModel get(Long id);
-	
+
 	Object addCarrierData(CarrierModel carrierResponse);
-	
-	 CarrierAdditionalContactsModel getContactById(Long id);
+
+	CarrierAdditionalContactsModel getContactById(Long id);
 
 	List<CarrierModel> getCarriersByCarrierName(String carrierName);
 
 	List<CarrierModel> getAllCarriersIdAndName();
 
 	Object deleteAdditionalContactByAdditionalContactId(Long contactId);
+
+	List<CarrierAdditionalContactsModel> getContactByCarrierId(Long id);
 
 }

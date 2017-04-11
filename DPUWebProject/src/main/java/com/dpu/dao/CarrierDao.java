@@ -16,13 +16,18 @@ public interface CarrierDao extends GenericDao<Carrier> {
 
 	void deleteCarrier(Carrier carrier, Session session);
 
-	void updateData(Carrier carrier, CarrierModel carrierResponse, Session session);
+	void updateData(Carrier carrier, CarrierModel carrierResponse,
+			Session session);
 
 	Carrier insertCarrierData(Carrier carrier, Session session);
 
 	List<Carrier> getCarriersByCarrierName(String carrierName, Session session);
 
-	List<Object []> findCarrierIdAndName(Session session);
+	List<Object[]> findCarrierIdAndName(Session session);
 
-	CarrierAdditionalContacts findByAdditionalContactId(Long contactId, Session session);
+	CarrierAdditionalContacts findByAdditionalContactId(Long contactId,
+			Session session);
+
+	List<CarrierAdditionalContacts> getAdditionalContactsByCarrierId(
+			Long carrierId, Session session);
 }

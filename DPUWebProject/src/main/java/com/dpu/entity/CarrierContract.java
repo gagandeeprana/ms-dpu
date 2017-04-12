@@ -66,7 +66,7 @@ public class CarrierContract {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "arrangedwith_id")
-	private ArrangedWith arrangedWith;
+	private CarrierAdditionalContacts arrangedWith;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "driver_id")
@@ -260,12 +260,12 @@ public class CarrierContract {
 		this.carrier = carrier;
 	}
 
-	public ArrangedWith getArrangedWith() {
+	public CarrierAdditionalContacts getArrangedWith() {
 
 		return arrangedWith;
 	}
 
-	public void setArrangedWith(ArrangedWith arrangedWith) {
+	public void setArrangedWith(CarrierAdditionalContacts arrangedWith) {
 
 		this.arrangedWith = arrangedWith;
 	}

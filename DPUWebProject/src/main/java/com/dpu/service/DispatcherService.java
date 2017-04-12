@@ -2,12 +2,12 @@ package com.dpu.service;
 
 import java.util.List;
 
-import com.dpu.entity.Dispatcher;
+import com.dpu.model.DispatcherModel;
 
 
 public interface DispatcherService {
 
-	List<Dispatcher> getAllDispatcher();
+	List<DispatcherModel> getAllDispatcher();
 
 	 
 

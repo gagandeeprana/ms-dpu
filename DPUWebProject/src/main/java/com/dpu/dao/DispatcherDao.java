@@ -8,6 +8,5 @@ import com.dpu.entity.Dispatcher;
 @Repository
 public interface DispatcherDao  extends GenericDao<Dispatcher>{
 
-	 
 
 }

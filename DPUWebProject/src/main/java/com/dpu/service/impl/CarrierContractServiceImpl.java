@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.ArrangedWithDao;
+import com.dpu.dao.CarrierAdditionalContactsDao;
 import com.dpu.dao.CarrierContractDao;
 import com.dpu.dao.CarrierDao;
 import com.dpu.dao.CategoryDao;
@@ -21,12 +22,12 @@ import com.dpu.dao.DispatcherDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.DriverDao;
 import com.dpu.dao.EquipmentDao;
-import com.dpu.entity.ArrangedWith;
 import com.dpu.entity.CarrierContract;
-import com.dpu.entity.Dispatcher;
+import com.dpu.model.CarrierAdditionalContactsModel;
 import com.dpu.model.CarrierContractModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.CategoryReq;
+import com.dpu.model.DispatcherModel;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.EquipmentReq;
@@ -34,6 +35,7 @@ import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
 import com.dpu.service.ArrangedWithService;
+import com.dpu.service.CarrierAdditionalContactService;
 import com.dpu.service.CarrierContractService;
 import com.dpu.service.CarrierService;
 import com.dpu.service.CategoryService;
@@ -50,6 +52,12 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 	@Autowired
 	DispatcherDao dispatcherdao;
+
+	@Autowired
+	CarrierAdditionalContactService carrierAdditionalContactService;
+
+	@Autowired
+	CarrierAdditionalContactsDao carrierAdditionalContactsDao;
 
 	@Autowired
 	ArrangedWithService arrangedWithService;
@@ -164,11 +172,13 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 		response.setContractNoId(carrierContract.getContractNoId());
 		response.setArrangedWithName(carrierContract.getArrangedWith()
-				.getArrangedWith());
+				.getCustomerName());
+
 		response.setCargo(carrierContract.getCargo());
 		response.setCarrierName(carrierContract.getCarrier().getName());
 		response.setCarrierRat(carrierContract.getCarrierRat());
 		response.setCategoryName(carrierContract.getCategory().getName());
+
 		response.setCommodityName(carrierContract.getCommodity().getTypeName());
 		response.setContractNo(carrierContract.getContractNo());
 		response.setContractNoId(carrierContract.getContractNoId());
@@ -192,6 +202,92 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		response.setRoleName(carrierContract.getRole().getTypeName());
 		response.setTransDoc(carrierContract.getTransDoc());
 
+		/*
+		 * List<CarrierModel> carrierList = carrierService.getAll();
+		 * response.setCarrierList(carrierList);
+		 * 
+		 * List<CategoryReq> categoryList = categoryService.getAll();
+		 * response.setCategoryList(categoryList);
+		 * 
+		 * List<TypeResponse> commodityList = typeService.getAll(17l);
+		 * response.setCommodityList(commodityList);
+		 * 
+		 * List<TypeResponse> currencyList = typeService.getAll(9l);
+		 * response.setCurrencyList(currencyList);
+		 * 
+		 * List<DispatcherModel> dispatcherList = dispatcherService
+		 * .getAllDispatcher(); response.setDispatcherList(dispatcherList);
+		 * 
+		 * List<DivisionReq> divisionList = divisionService.getAll("");
+		 * response.setDivisionList(divisionList);
+		 * 
+		 * List<DriverReq> driverList = driverService.getAllDriver();
+		 * response.setDriverList(driverList);
+		 * 
+		 * List<EquipmentReq> equipmentList = equipmentService.getAll("");
+		 * response.setEquipmentList(equipmentList);
+		 * 
+		 * List<TypeResponse> roleList = typeService.getAll(6l);
+		 * response.setRoleList(roleList);
+		 * 
+		 * List<CarrierAdditionalContactsModel> arrangedWithList =
+		 * carrierAdditionalContactService .getAll();
+		 * response.setArrangedWithList(arrangedWithList);
+		 */
+
+	}
+
+	private void setCarrierContractDataById(CarrierContract carrierContract,
+			CarrierContractModel response) {
+
+		response.setContractNoId(carrierContract.getContractNoId());
+		response.setCargo(carrierContract.getCargo());
+		response.setCarrierRat(carrierContract.getCarrierRat());
+		response.setContractNo(carrierContract.getContractNo());
+		response.setContractNoId(carrierContract.getContractNoId());
+		response.setContractRate(carrierContract.getContractRate());
+		response.setCreatedBy(carrierContract.getCreatedBy());
+		response.setDispatched(carrierContract.getDispatched());
+		response.setdOTno(carrierContract.getdOTno());
+		response.setHours(carrierContract.getHours());
+		response.setInsExpires(carrierContract.getInsExpires());
+		response.setLiabity(carrierContract.getLiabity());
+		response.setmCno(carrierContract.getmCno());
+		response.setMiles(carrierContract.getMiles());
+		response.setTransDoc(carrierContract.getTransDoc());
+
+		List<CarrierModel> carrierList = carrierService.getAll();
+		response.setCarrierList(carrierList);
+
+		List<CategoryReq> categoryList = categoryService.getAll();
+		response.setCategoryList(categoryList);
+
+		List<TypeResponse> commodityList = typeService.getAll(17l);
+		response.setCommodityList(commodityList);
+
+		List<TypeResponse> currencyList = typeService.getAll(9l);
+		response.setCurrencyList(currencyList);
+
+		List<DispatcherModel> dispatcherList = dispatcherService
+				.getAllDispatcher();
+		response.setDispatcherList(dispatcherList);
+
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		response.setDivisionList(divisionList);
+
+		List<DriverReq> driverList = driverService.getAllDriver();
+		response.setDriverList(driverList);
+
+		List<EquipmentReq> equipmentList = equipmentService.getAll("");
+		response.setEquipmentList(equipmentList);
+
+		List<TypeResponse> roleList = typeService.getAll(6l);
+		response.setRoleList(roleList);
+
+		List<CarrierAdditionalContactsModel> arrangedWithList = carrierAdditionalContactService
+				.getAll();
+		response.setArrangedWithList(arrangedWithList);
+
 	}
 
 	@Override
@@ -209,8 +305,9 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 			carrierContract.setCarrier(carrierDao.findById(carrierContractModel
 					.getCarrierId()));
-			carrierContract.setArrangedWith(arrangedWithDao
+			carrierContract.setArrangedWith(carrierAdditionalContactsDao
 					.findById(carrierContractModel.getArrangedWithId()));
+
 			carrierContract.setDriver(driverDao.findById(carrierContractModel
 					.getDriverId()));
 			carrierContract.setCurrency(typeService.get(carrierContractModel
@@ -264,8 +361,8 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		List<CarrierModel> carrierList = carrierService.getAll();
 		carrierContractModel.setCarrierList(carrierList);
 
-		List<ArrangedWith> arrangedWithList = arrangedWithService
-				.getAllArrangedWith();
+		List<CarrierAdditionalContactsModel> arrangedWithList = carrierAdditionalContactService
+				.getAll();
 		carrierContractModel.setArrangedWithList(arrangedWithList);
 
 		List<DriverReq> driverList = driverService.getAllDriver();
@@ -289,7 +386,8 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		List<DivisionReq> divisionList = divisionService.getAll("");
 		carrierContractModel.setDivisionList(divisionList);
 
-		List<Dispatcher> dispatcherList = dispatcherService.getAllDispatcher();
+		List<DispatcherModel> dispatcherList = dispatcherService
+				.getAllDispatcher();
 		carrierContractModel.setDispatcherList(dispatcherList);
 
 		return carrierContractModel;
@@ -357,9 +455,10 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 				ignoreProp[0] = "contractNoId";
 				BeanUtils.copyProperties(carrierContractModel, carrierContract,
 						ignoreProp);
+
 				carrierContract.setCarrier(carrierDao
 						.findById(carrierContractModel.getCarrierId()));
-				carrierContract.setArrangedWith(arrangedWithDao
+				carrierContract.setArrangedWith(carrierAdditionalContactsDao
 						.findById(carrierContract.getArrangedWith()));
 				carrierContract.setDriver(driverDao
 						.findById(carrierContractModel.getDriverId()));
@@ -406,14 +505,11 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 
 		try {
 			session = sessionFactory.openSession();
-			/*
-			 * CarrierContract carrierContract = carrierContractDao.findById(
-			 * carrierContractId, session);
-			 */
+
 			CarrierContract carrierContract = (CarrierContract) session.get(
 					CarrierContract.class, carrierContractId);
 			CarrierContractModel response = new CarrierContractModel();
-			setCarrierContractData(carrierContract, response);
+			setCarrierContractDataById(carrierContract, response);
 			obj = createSuccessObjectForParRecord(message, response);
 
 		} catch (Exception e) {

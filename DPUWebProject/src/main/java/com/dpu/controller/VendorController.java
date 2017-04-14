@@ -224,4 +224,22 @@ public class VendorController{
 		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"+vendorName);
 		return json;
 	}
+	
+	@RequestMapping(value = "/{id}/additionalContacts", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getVendorAdditionalContacts(@PathVariable("id") Long id) {
+		
+		logger.info(" CompanyController get() starts, companyId :"+id);
+		String json = new String();
+		try {
+			VendorModel vendorResponse = vendorService.getVendorContacts(id);
+			if(vendorResponse != null) {
+				json = mapper.writeValueAsString(vendorResponse);
+			}
+		} catch (Exception e) {
+			logger.info("Exception inside CompanyController get() :"+e.getMessage());
+		}
+
+		logger.info(" CompanyController get() ends, companyId :"+id);
+		return json;
+	}
 }

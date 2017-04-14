@@ -28,5 +28,7 @@ public interface VendorService {
 	CompanyResponse getCompanyBillingLocationAndContacts(Long companyId);
 
 	List<VendorModel> getVendorByVendorName(String vendorName);
+
+	VendorModel getVendorContacts(Long id);
 	
 }

@@ -494,4 +494,38 @@ public class VendorServiceImpl implements VendorService{
 		}
 		return response;
 	}
+
+	@Override
+	public VendorModel getVendorContacts(Long vendorId) {
+		Session session = null;
+		VendorModel response = new VendorModel();
+		try{
+			
+			session = sessionFactory.openSession();
+			Vendor vendor = (Vendor) session.get(Vendor.class, vendorId);
+			List<VendorContacts> contacts = vendor.getAdditionalContacts();
+			if(contacts != null && !contacts.isEmpty()){
+				List<VendorAdditionalContactsModel> vendorAdditionalContacts = new ArrayList<VendorAdditionalContactsModel>();
+				for (VendorContacts vendorContacts : contacts) {
+					VendorAdditionalContactsModel addContact = new VendorAdditionalContactsModel();
+					org.springframework.beans.BeanUtils.copyProperties(vendorContacts, addContact);
+					addContact.setStatusId(vendorContacts.getStatus().getId());
+				
+					vendorAdditionalContacts.add(addContact);
+				}
+				response.setAdditionalContacts(vendorAdditionalContacts);
+				
+				/*for (Vendor vendor : vendorList) {
+					VendorModel obj = new VendorModel();
+					setVendorData(vendor,obj);
+					response.add(obj);
+				}*/
+			}
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		return response;
+	}
 }

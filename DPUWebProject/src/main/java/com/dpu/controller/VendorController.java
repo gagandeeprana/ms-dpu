@@ -44,13 +44,15 @@ public class VendorController{
 
 	/**
 	 * this method is used to get all the vendors
-	 * @return all companies
+	 * @return all vendors
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
-		logger.info("CompanyController getAll() starts");
+		
+		logger.info("VendorController getAll() starts");
 		String json = new String();
+		
 		try {
 			
 			List<VendorModel> companyResponses = vendorService.getAll();
@@ -60,25 +62,26 @@ public class VendorController{
 			}
 			
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController getAll() :"+e.getMessage());
+			logger.info("Exception inside VendorController getAll() :"+e.getMessage());
 		}
-		logger.info("CompanyController getAll() ends");
+		
+		logger.info("VendorController getAll() ends");
 		return json;
 	}
 
 	/**
-	 * this method is used to add company
+	 * this method is used to add vendor
 	 * @param companyResponse
 	 * @return all companies data
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody CompanyResponse companyResponse) {
+	public Object add(@RequestBody VendorModel vendorModel) {
 		
-		logger.info("CompanyController add() starts");
+		logger.info("VendorController add() starts");
 		Object obj = null;
 		try {
-			//obj = companyService.addCompanyData(companyResponse);
+			obj = vendorService.addVendorData(vendorModel);
 			
 			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
@@ -87,11 +90,11 @@ public class VendorController{
 			}
 			
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController add() :"+e.getMessage());
+			logger.info("Exception inside VendorController add() :"+e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
-		logger.info("CompanyController add() Ends");
+		logger.info("VendorController add() Ends");
 		return obj;
 	}
 
@@ -163,10 +166,10 @@ public class VendorController{
 		logger.info(" CompanyController get() starts, companyId :"+id);
 		String json = new String();
 		try {
-			//CompanyResponse companyResponse = companyService.get(id);
-			/*if(companyResponse != null) {
-				json = mapper.writeValueAsString(companyResponse);
-			}*/
+			VendorModel vendorResponse = vendorService.get(id);
+			if(vendorResponse != null) {
+				json = mapper.writeValueAsString(vendorResponse);
+			}
 		} catch (Exception e) {
 			logger.info("Exception inside CompanyController get() :"+e.getMessage());
 		}

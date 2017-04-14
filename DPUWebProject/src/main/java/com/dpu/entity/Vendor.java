@@ -1,6 +1,8 @@
 package com.dpu.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -78,10 +80,10 @@ public class Vendor {
 	private String afterHours;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor")
-    private Set<VendorBillingLocation> billingLocations = new HashSet<VendorBillingLocation>();
+    private List<VendorBillingLocation> billingLocations = new ArrayList<VendorBillingLocation>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor")
-    private Set<VendorContacts> additionalContacts = new HashSet<VendorContacts>();
+    private List<VendorContacts> additionalContacts = new ArrayList<VendorContacts>();
 	
 	public String getName() {
 		return name;
@@ -243,20 +245,21 @@ public class Vendor {
 		this.vendorNotes = vendorNotes;
 	}
 
-	public Set<VendorBillingLocation> getBillingLocations() {
+	public List<VendorBillingLocation> getBillingLocations() {
 		return billingLocations;
 	}
 
-	public void setBillingLocations(Set<VendorBillingLocation> billingLocations) {
+	public void setBillingLocations(List<VendorBillingLocation> billingLocations) {
 		this.billingLocations = billingLocations;
 	}
 
-	public Set<VendorContacts> getAdditionalContacts() {
+	public List<VendorContacts> getAdditionalContacts() {
 		return additionalContacts;
 	}
 
-	public void setAdditionalContacts(Set<VendorContacts> additionalContacts) {
+	public void setAdditionalContacts(List<VendorContacts> additionalContacts) {
 		this.additionalContacts = additionalContacts;
 	}
+
 	
 }

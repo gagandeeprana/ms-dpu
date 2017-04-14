@@ -120,7 +120,7 @@ public class VendorServiceImpl implements VendorService{
 				tx.rollback();
 			}
 			
-			logger.error("Exception inside CompanyServiceImpl addCompanyData() :"+ e.getMessage());
+			logger.error("Exception inside VendorServiceImpl addVendorData() :"+ e.getMessage());
 			return createFailedObject(company_unable_to_add_message);
 		} finally{
 			if(tx != null){
@@ -131,7 +131,7 @@ public class VendorServiceImpl implements VendorService{
 			}
 		}
 		
-		logger.info("Inside CompanyServiceImpl addCompanyData() ends");
+		logger.info("Inside VendorServiceImpl addVendorData() ends");
 		return createSuccessObject(company_added_message);
 	}
 	
@@ -299,40 +299,33 @@ public class VendorServiceImpl implements VendorService{
 			if (vendor != null) {
 				setVendorData(vendor,response);
 				//BeanUtils.copyProperties(response, company);
-				/*List<VendorBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(id, session);
+				List<VendorBillingLocation> listCompanyBillingLocations = vendor.getBillingLocations();
 				
 				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
-					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
-					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
-						BillingLocation location = new BillingLocation();
-						try {
-							BeanUtils.copyProperties(location, companyBillingLocation);
-							location.setStatusId(companyBillingLocation.getStatus().getId());
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							e.printStackTrace();
-						}
+					List<VendorBillingLocationModel> billingLocations = new ArrayList<VendorBillingLocationModel>();
+					for (VendorBillingLocation vendorBillingLocation : listCompanyBillingLocations) {
+						VendorBillingLocationModel location = new VendorBillingLocationModel();
+							org.springframework.beans.BeanUtils.copyProperties(vendorBillingLocation, location);
+							//BeanUtils.copyProperties(location, vendorBillingLocation);
+							location.setStatusId(vendorBillingLocation.getStatus().getId());
 						billingLocations.add(location);
 					}
 					response.setBillingLocations(billingLocations);
-				}*/
+				}
 				
-				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(id, session);
+				List<VendorContacts> comAddContacts = vendor.getAdditionalContacts();
 				
 				if(comAddContacts != null && !comAddContacts.isEmpty()){
-					List<AdditionalContacts> addContacts = new ArrayList<AdditionalContacts>();
-					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
-						AdditionalContacts addContact = new AdditionalContacts();
-						try {
-							BeanUtils.copyProperties(addContact, companyAdditionalContacts);
-							addContact.setStatusId(companyAdditionalContacts.getStatus().getId());
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							e.printStackTrace();
-						}
+					List<VendorAdditionalContactsModel> addContacts = new ArrayList<VendorAdditionalContactsModel>();
+					for (VendorContacts vendorContacts : comAddContacts) {
+						VendorAdditionalContactsModel addContact = new VendorAdditionalContactsModel();
+							org.springframework.beans.BeanUtils.copyProperties(vendorContacts, addContact);
+							addContact.setStatusId(vendorContacts.getStatus().getId());
 						
 						addContacts.add(addContact);
 					}
 					
-					//response.setAdditionalContacts(addContacts);
+					response.setAdditionalContacts(addContacts);
 				}
 				
 				List<Status> statusList = statusService.getAll();

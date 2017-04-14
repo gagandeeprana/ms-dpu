@@ -190,9 +190,9 @@ public class VendorController{
 		String json = null;
 		
 		try {
-			//CompanyResponse companyResponse = companyService.getOpenAdd();
+			VendorModel vendorModel = vendorService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
-			//json = mapper.writeValueAsString(companyResponse);
+			json = mapper.writeValueAsString(vendorModel);
 		} catch (Exception e) {
 			logger.error(" Exception inside CompanyController openAdd() :"+e.getMessage());
 		}
@@ -206,22 +206,22 @@ public class VendorController{
 	 * @param companyName
 	 * @return List<Companies>
 	 */
-	@RequestMapping(value = "/{companyName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchCompany(@PathVariable("companyName") String companyName) {
+	@RequestMapping(value = "/{vendorName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchVendor(@PathVariable("vendorName") String vendorName) {
 		
-		logger.info("Inside CompanyController searchCompany() Starts, companyName :"+companyName);
+		logger.info("Inside CompanyController searchCompany() Starts, companyName :"+vendorName);
 		String json = new String();
 		
 		try {
-			/*List<CompanyResponse> companyList = companyService.getCompanyByCompanyName(companyName);
-			if(companyList != null && companyList.size() > 0) {
-				json = mapper.writeValueAsString(companyList);
-			}*/
+			List<VendorModel> vendorList = vendorService.getVendorByVendorName(vendorName);
+			if(vendorList != null && vendorList.size() > 0) {
+				json = mapper.writeValueAsString(vendorList);
+			}
 		} catch (Exception e) {
 			logger.error("Exception inside CompanyController searchCompany() is :" + e.getMessage());
 		}
 		
-		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"+companyName);
+		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"+vendorName);
 		return json;
 	}
 }

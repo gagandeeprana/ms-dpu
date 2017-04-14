@@ -417,13 +417,14 @@ public class VendorServiceImpl implements VendorService{
 	}
 
 	@Override
-	public CompanyResponse getOpenAdd() {
-		CompanyResponse companyResponse = new CompanyResponse();
+	public VendorModel getOpenAdd() {
+		
+		VendorModel vendorModel = new VendorModel();
 		
 		List<Status> statusList = statusService.getAll();
-		companyResponse.setStatusList(statusList);
+		vendorModel.setStatusList(statusList);
 		
-		return companyResponse;
+		return vendorModel;
 	}
 
 	@Override
@@ -472,20 +473,20 @@ public class VendorServiceImpl implements VendorService{
 	}
 
 	@Override
-	public List<CompanyResponse> getCompanyByCompanyName(String companyName) {
+	public List<VendorModel> getVendorByVendorName(String vendorName) {
 		Session session = null;
-		List<CompanyResponse> response = new ArrayList<CompanyResponse>();
+		List<VendorModel> response = new ArrayList<VendorModel>();
 		try{
 			
 			session = sessionFactory.openSession();
-			/*List<Company> companyList = companyDao.getCompaniesByCompanyName(companyName, session);
-			if(companyList != null && !companyList.isEmpty()){
-				for (Company company : companyList) {
-					CompanyResponse companyResponse = new CompanyResponse();
-					org.springframework.beans.BeanUtils.copyProperties(company, companyResponse);
-					response.add(companyResponse);
+			List<Vendor> vendorList = vendorDao.getVendorsByVendorName(vendorName, session);
+			if(vendorList != null && !vendorList.isEmpty()){
+				for (Vendor vendor : vendorList) {
+					VendorModel obj = new VendorModel();
+					setVendorData(vendor,obj);
+					response.add(obj);
 				}
-			}*/
+			}
 		} finally{
 			if(session != null){
 				session.close();

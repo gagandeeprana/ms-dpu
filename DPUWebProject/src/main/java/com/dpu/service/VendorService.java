@@ -23,10 +23,10 @@ public interface VendorService {
 
 	Object update(Long id, CompanyResponse companyResponse);
 
-	CompanyResponse getOpenAdd();
+	VendorModel getOpenAdd();
 	
 	CompanyResponse getCompanyBillingLocationAndContacts(Long companyId);
 
-	List<CompanyResponse> getCompanyByCompanyName(String companyName);
+	List<VendorModel> getVendorByVendorName(String vendorName);
 	
 }

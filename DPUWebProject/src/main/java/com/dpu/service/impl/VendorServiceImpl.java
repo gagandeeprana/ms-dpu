@@ -231,17 +231,17 @@ public class VendorServiceImpl implements VendorService{
 			
 			if(vendor != null){
 				
-				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(vendorId, session);
-				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
-					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
-						companyBillingLocationDao.deleteBillingLocation(companyBillingLocation,session);
+				List<VendorBillingLocation> listVendorBillingLocations = vendor.getBillingLocations();
+				if(listVendorBillingLocations != null && !listVendorBillingLocations.isEmpty()){
+					for (VendorBillingLocation vendorBillingLocation : listVendorBillingLocations) {
+						session.delete(vendorBillingLocation);
 					}
 				}
 				
-				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(vendorId, session);
-				if(comAddContacts != null && !comAddContacts.isEmpty()){
-					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
-						companyAdditionalContactsDao.deleteAdditionalContact(companyAdditionalContacts, session);
+				List<VendorContacts> vendorContacts = vendor.getAdditionalContacts();
+				if(vendorContacts != null && !vendorContacts.isEmpty()){
+					for (VendorContacts vendorContactObj : vendorContacts) {
+						session.delete(vendorContactObj);
 					}
 				}
 				vendorDao.deleteVendor(vendor, session);

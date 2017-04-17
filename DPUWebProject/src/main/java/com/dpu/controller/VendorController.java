@@ -105,14 +105,14 @@ public class VendorController{
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long companyId) {
+	public Object delete(@PathVariable("id") Long vendorId) {
 
-		logger.info(" CompanyController delete() starts ");
+		logger.info(" VendorController delete() starts ");
 		Object obj = null;
 
 		try {
 			
-			//obj = companyService.delete(companyId);
+			obj = vendorService.delete(vendorId);
 			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {

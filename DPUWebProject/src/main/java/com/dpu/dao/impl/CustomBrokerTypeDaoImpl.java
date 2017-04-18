@@ -1,8 +1,8 @@
 package com.dpu.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +15,14 @@ public class CustomBrokerTypeDaoImpl extends GenericDaoImpl<CustomBrokerType>
 
 	@Override
 	public List<CustomBrokerType> getAll(Session session, Long customerBrokerId) {
-
-		Query query=session.createQuery("from CustomBrokerType where customBroker = " + customerBrokerId);  
-		List<CustomBrokerType> customBrokerTypeList = query.list();
+		
+		List<CustomBrokerType> customBrokerTypeList = new ArrayList<CustomBrokerType>();
+		if(customerBrokerId != null){
+			StringBuilder queryAppender = new StringBuilder("select cbt from CustomBrokerType cbt ");
+			queryAppender.append("where customBroker = " + customerBrokerId );
+			customBrokerTypeList = session.createQuery(queryAppender.toString()).list();
+		}
+		
 		return customBrokerTypeList;
 	}
 

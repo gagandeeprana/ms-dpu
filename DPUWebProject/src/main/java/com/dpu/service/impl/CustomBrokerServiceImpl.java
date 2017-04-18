@@ -272,8 +272,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 					customBrokerResponseObj.setCustomBrokerId(customerBrokerId);
 					customBrokerResponseObj.setCustomBrokerName(customBroker.getCustomBrokerName());
 					 
-					Query query=session.createQuery("from CustomBrokerType where customBroker = " + customerBrokerId);  
-					List<CustomBrokerType> customBrokerTypeList = query.list();
+					List<CustomBrokerType> customBrokerTypeList = customBrokerTypeDao.getAll(session,customerBrokerId);
 					
 					if(customBrokerTypeList != null && !customBrokerTypeList.isEmpty()){
 						List<CustomBrokerTypeModel> customBrokerTypeModelList = new ArrayList<CustomBrokerTypeModel>();

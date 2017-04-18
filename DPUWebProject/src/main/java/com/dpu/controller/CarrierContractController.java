@@ -157,7 +157,7 @@ public class CarrierContractController {
 	}
 
 	/**
-	 * this method is used to update the driver based on driverId
+	 * this method is used to update the carrierContract based on carrierContractId
 	 * 
 	 * @param carrierContractId
 	 * @param carrierContract

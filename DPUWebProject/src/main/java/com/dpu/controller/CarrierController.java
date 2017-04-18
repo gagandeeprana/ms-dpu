@@ -45,6 +45,12 @@ public class CarrierController {
 
 	ObjectMapper mapper = new ObjectMapper();
 
+	/**
+	 * this method is used to get all the carrier
+	 * 
+	 * @return List<carrier>
+	 * @author sumit
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAllCarrier() {
 
@@ -67,6 +73,12 @@ public class CarrierController {
 		return json;
 	}
 
+	/**
+	 * this method is used to delete  the carrier based on carrierId
+	 * @param carrierId
+	 * @return List<carrier>
+	 * @author sumit
+	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteCarrier(@PathVariable("id") Long carrierId) {
 
@@ -93,14 +105,20 @@ public class CarrierController {
 		return obj;
 	}
 
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getCarrierByCarrierId(@PathVariable("id") Long id) {
+	/**
+	 * this method is used to get  the carrier based on carrierId
+	 * @param carrierId
+	 * @return  carrier
+	 * @author sumit
+	 */
+	@RequestMapping(value = "/{carrierId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getCarrierByCarrierId(@PathVariable("carrierId") Long carrierId) {
 
-		logger.info(" CarrierController get() starts, carrierId :" + id);
+		logger.info(" CarrierController get() starts, carrierId :" + carrierId);
 		String json = new String();
 
 		try {
-			CarrierModel carrierResponse = carrierService.get(id);
+			CarrierModel carrierResponse = carrierService.get(carrierId);
 			if (carrierResponse != null) {
 				json = mapper.writeValueAsString(carrierResponse);
 			}
@@ -109,7 +127,7 @@ public class CarrierController {
 					+ e.getMessage());
 		}
 
-		logger.info(" CarrierController get() ends, carrierId :" + id);
+		logger.info(" CarrierController get() ends, carrierId :" + carrierId);
 		return json;
 	}
 
@@ -147,16 +165,22 @@ public class CarrierController {
 		return obj;
 	}
 
-	@RequestMapping(value = "/contactId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getContactById(@PathVariable("id") Long id) {
+	/**
+	 * this method is used to get  the contact based on contactId
+	 * @param contactId
+	 * @return  CarrierAdditionalContactsModel
+	 * @author sumit
+	 */
+	@RequestMapping(value = "/contactId/{contactId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getContactById(@PathVariable("contactId") Long contactId) {
 
 		logger.info(" CarrierController getContactById() starts, contactId :"
-				+ id);
+				+ contactId);
 		String json = new String();
 
 		try {
 			CarrierAdditionalContactsModel additionalContact = carrierService
-					.getContactById(id);
+					.getContactById(contactId);
 			if (additionalContact != null) {
 				json = mapper.writeValueAsString(additionalContact);
 			}
@@ -166,20 +190,26 @@ public class CarrierController {
 		}
 
 		logger.info(" CarrierController getContactById() ends, contactId :"
-				+ id);
+				+ contactId);
 		return json;
 	}
 
-	@RequestMapping(value = "/carrierId/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getContactByCarriertId(@PathVariable("id") Long id) {
+	/**
+	 * this method is used to get  the List of contact based on carrierId
+	 * @param carrierId
+	 * @return  List<CarrierAdditionalContactsModel>
+	 * @author sumit
+	 */
+	@RequestMapping(value = "/carrierId/{carrierId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getContactByCarriertId(@PathVariable("carrierId") Long carrierId) {
 
-		logger.info(" CarrierController getContactByCarriertId() starts, contactId :"
-				+ id);
+		logger.info(" CarrierController getContactByCarriertId() starts, carrierId :"
+				+ carrierId);
 		String json = new String();
 
 		try {
 			List<CarrierAdditionalContactsModel> additionalContact = carrierService
-					.getContactByCarrierId(id);
+					.getContactByCarrierId(carrierId);
 			if (additionalContact != null) {
 				json = mapper.writeValueAsString(additionalContact);
 				System.out.println("json : " + json);
@@ -190,12 +220,12 @@ public class CarrierController {
 		}
 
 		logger.info(" CarrierController getContactByCarriertId() ends, carrier :"
-				+ id);
+				+ carrierId);
 		return json;
 	}
 
 	/**
-	 * this method is used to searchCarrier based on carrier city
+	 * this method is used to searchCarrier based on carrier Name
 	 * 
 	 * @param carrierName
 	 * @return List<Carrier>
@@ -223,6 +253,12 @@ public class CarrierController {
 		return json;
 	}
 
+	/**
+	 * this method is used to getAll carrierName and carierId
+	 * 
+	 *  
+	 * @return List<Carrier>
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, value = "/IdAndName")
 	public Object getAllCarriersIdAndName() {
 
@@ -246,16 +282,22 @@ public class CarrierController {
 		return json;
 	}
 
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object updateCarrier(@PathVariable("id") Long id,
+	/**
+	 * this method is used to updateCarrier based on carrierId
+	 * 
+	 * @param carrierId
+	 * @return List<Carrier>
+	 */
+	@RequestMapping(value = "/{carrierId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateCarrier(@PathVariable("carrierId") Long carrierId,
 			@RequestBody CarrierModel carrierResponse) {
 
 		logger.info(" CarrierController updateCarrier() starts, carrierId :"
-				+ id);
+				+ carrierId);
 		Object obj = null;
 
 		try {
-			obj = carrierService.updateCarrier(id, carrierResponse);
+			obj = carrierService.updateCarrier(carrierId, carrierResponse);
 			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
 			} else {
@@ -269,10 +311,16 @@ public class CarrierController {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info(" CarrierController updateCarrier() ends, carrierId :" + id);
+		logger.info(" CarrierController updateCarrier() ends, carrierId :" + carrierId);
 		return obj;
 	}
 
+	/**
+	 * this method is used to delete the contact based on contactId
+	 * @param contactId
+	 *  
+	 * @author sumit
+	 */
 	@RequestMapping(value = "/contactId/{contactId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteContactByContactId(
 			@PathVariable("contactId") Long contactId) {

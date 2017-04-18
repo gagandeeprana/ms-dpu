@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.CustomBrokerDao;
+import com.dpu.dao.CustomBrokerTypeDao;
 import com.dpu.entity.CustomBroker;
 import com.dpu.entity.CustomBrokerType;
 import com.dpu.entity.Status;
@@ -39,6 +41,9 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 	
 	@Autowired
 	TypeService typeService;
+	
+	@Autowired
+	CustomBrokerTypeDao customBrokerTypeDao;
 
 	Logger logger = Logger.getLogger(CustomBrokerServiceImpl.class);
 
@@ -259,14 +264,37 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 
 			session = sessionFactory.openSession();
 			List<CustomBroker> customBrokerList = customBrokerDao.findAll(null,session);
-
+			
 			if (customBrokerList != null && !customBrokerList.isEmpty()) {
 				for (CustomBroker customBroker : customBrokerList) {
+					Long customerBrokerId = customBroker.getCustomBrokerId();
 					CustomBrokerResponse customBrokerResponseObj = new CustomBrokerResponse();
-					customBrokerResponseObj.setCustomBrokerId(customBroker.getCustomBrokerId());
+					customBrokerResponseObj.setCustomBrokerId(customerBrokerId);
 					customBrokerResponseObj.setCustomBrokerName(customBroker.getCustomBrokerName());
-					customBrokerResponseList.add(customBrokerResponseObj);
+					 
+					Query query=session.createQuery("from CustomBrokerType where customBroker = " + customerBrokerId);  
+					List<CustomBrokerType> customBrokerTypeList = query.list();
+					
+					if(customBrokerTypeList != null && !customBrokerTypeList.isEmpty()){
+						List<CustomBrokerTypeModel> customBrokerTypeModelList = new ArrayList<CustomBrokerTypeModel>();
+						
+						for(CustomBrokerType customBrokerType : customBrokerTypeList){
+							String customerBrokerTypeName = customBrokerType.getType().getTypeName();
+							CustomBrokerTypeModel customBrokerTypeModel = new CustomBrokerTypeModel();
+							BeanUtils.copyProperties(customBrokerType, customBrokerTypeModel);
+							
+							if(customerBrokerTypeName != null){
+								customBrokerTypeModel.setTypeName(customerBrokerTypeName);
+							}
+							
+							customBrokerTypeModelList.add(customBrokerTypeModel);
+							customBrokerResponseObj.setCustomBrokerTypes(customBrokerTypeModelList);
+						}
+					}
+					 
+					customBrokerResponseList.add(customBrokerResponseObj);	
 				}
+				
 			}
 		} finally {
 			if (session != null) {
@@ -381,7 +409,7 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 				session.close();
 			}
 		}
-		
+
 		logger.info("Inside CustomBrokerServiceImpl getCustomBrokerByCustomBrokerName() ends ");
 		return customBrokerResponseList;
 	}

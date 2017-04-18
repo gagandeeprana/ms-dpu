@@ -23,6 +23,7 @@ public class CustomBrokerTypeModel {
 	private String phone;
 	private String extention;
 	private String faxNumber;
+	private String typeName;
 	
 	private List<TypeResponse> timeZoneList;
 	private Long timeZoneId;
@@ -122,6 +123,12 @@ public class CustomBrokerTypeModel {
 	}
 	public void setTypeId(Long typeId) {
 		this.typeId = typeId;
+	}
+	public String getTypeName() {
+		return typeName;
+	}
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 	
 	

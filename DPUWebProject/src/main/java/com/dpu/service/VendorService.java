@@ -21,7 +21,7 @@ public interface VendorService {
 
 	VendorModel get(Long id);
 
-	Object update(Long id, CompanyResponse companyResponse);
+	//Object update(Long id, CompanyResponse companyResponse);
 
 	VendorModel getOpenAdd();
 	
@@ -30,5 +30,7 @@ public interface VendorService {
 	List<VendorModel> getVendorByVendorName(String vendorName);
 
 	VendorModel getVendorContacts(Long id);
+
+	Object update(Long id, VendorModel vendorModel);
 	
 }

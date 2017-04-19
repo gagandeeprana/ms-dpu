@@ -7,7 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 public class VendorBillingLocationModel {
 
 	//@JsonProperty( "billing_location_id")
-	private Long billingLocationId;
+	private Long vendorBillingLocationId;
 
 	//@JsonProperty( "name")
 	private String name;
@@ -63,14 +63,6 @@ public class VendorBillingLocationModel {
 
 	//@JsonProperty( "tollfree")
 	private String tollfree;
-
-	public Long getBillingLocationId() {
-		return billingLocationId;
-	}
-
-	public void setBillingLocationId(Long billingLocationId) {
-		this.billingLocationId = billingLocationId;
-	}
 
 	public String getName() {
 		return name;
@@ -222,5 +214,13 @@ public class VendorBillingLocationModel {
 
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
+	}
+
+	public Long getVendorBillingLocationId() {
+		return vendorBillingLocationId;
+	}
+
+	public void setVendorBillingLocationId(Long vendorBillingLocationId) {
+		this.vendorBillingLocationId = vendorBillingLocationId;
 	}
 }

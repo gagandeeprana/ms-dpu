@@ -135,12 +135,12 @@ public class VendorController{
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id, @RequestBody CompanyResponse companyResponse) {
+	public Object update(@PathVariable("id") Long id, @RequestBody VendorModel vendorModel) {
 		
 		logger.info(" CompanyController delete() starts, companyId :"+id);
 		Object obj = null;
 		try {
-			//obj = companyService.update(id, companyResponse);
+			obj = vendorService.update(id, vendorModel);
 			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
@@ -148,6 +148,7 @@ public class VendorController{
 			}
 		} catch (Exception e) {
 			logger.info("Exception inside CompanyController update() :"+e.getMessage());
+			e.printStackTrace();
 			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_update_message, Iconstants.ERROR),HttpStatus.BAD_REQUEST);
 		}
 		logger.info(" CompanyController delete() ends, companyId :"+id);

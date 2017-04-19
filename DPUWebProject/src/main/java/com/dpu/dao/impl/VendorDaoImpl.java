@@ -71,11 +71,17 @@ public class VendorDaoImpl extends GenericDaoImpl<Vendor> implements VendorDao {
 		BeanUtils.copyProperties(vendorModel, vendor, ignoreProp);
 		session.saveOrUpdate(vendor);
 		
-		List<VendorBillingLocationModel> billingocationList = vendorModel.getBillingLocations();
+		List<VendorBillingLocationModel> billingLocationList = vendorModel.getBillingLocations();
 		
-		if(billingocationList != null && !billingocationList.isEmpty()){
-			for (VendorBillingLocationModel billingLocation : billingocationList) {
-				VendorBillingLocation vendorBillingLocation = new VendorBillingLocation();
+		if(billingLocationList != null && !billingLocationList.isEmpty()){
+			for (VendorBillingLocationModel billingLocation : billingLocationList) {
+				VendorBillingLocation vendorBillingLocation = null;
+				if(billingLocation.getVendorBillingLocationId() != null){
+					vendorBillingLocation = (VendorBillingLocation) session.get(VendorBillingLocation.class, billingLocation.getVendorBillingLocationId());
+				} else{
+					vendorBillingLocation = new VendorBillingLocation();
+				}
+				
 				BeanUtils.copyProperties(billingLocation, vendorBillingLocation);
 				vendorBillingLocation.setVendor(vendor);
 				vendorBillingLocation.setStatus(statusService.get(billingLocation.getStatusId()));
@@ -83,9 +89,9 @@ public class VendorDaoImpl extends GenericDaoImpl<Vendor> implements VendorDao {
 			}
 		}
 
-		List<VendorAdditionalContactsModel> additionalContactsList = vendorModel.getAdditionalContacts();
+	//	List<VendorAdditionalContactsModel> additionalContactsList = vendorModel.getAdditionalContacts();
 		
-		if(additionalContactsList != null && !additionalContactsList.isEmpty()){
+		/*if(additionalContactsList != null && !additionalContactsList.isEmpty()){
 			for (VendorAdditionalContactsModel additionalContacts : additionalContactsList) {
 				VendorContacts comAdditionalContacts = new VendorContacts();
 				BeanUtils.copyProperties(additionalContacts, comAdditionalContacts);
@@ -93,7 +99,7 @@ public class VendorDaoImpl extends GenericDaoImpl<Vendor> implements VendorDao {
 				comAdditionalContacts.setStatus(statusService.get(additionalContacts.getStatusId()));
 				session.saveOrUpdate(comAdditionalContacts);
 			}
-		}
+		}*/
 	}
 
 	@SuppressWarnings("unchecked")

@@ -384,18 +384,19 @@ public class VendorServiceImpl implements VendorService{
 	}
 
 	@Override
-	public Object update(Long id, CompanyResponse companyResponse) {
+	public Object update(Long id, VendorModel vendorModel) {
 
-		/*Company company = companyDao.findById(id);
+		
 		Session session = null;
 		Transaction tx = null;
 		
 		try{
-			if(company != null){
-				session = sessionFactory.openSession();
-				tx = session.beginTransaction();
-				
-				companyDao.updateData(company, companyResponse,session);
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Vendor vendor = (Vendor) session.get(Vendor.class, id);
+			if(vendor != null){
+				//setVendorData(vendor, vendorModel);
+				vendorDao.updateData(vendor, vendorModel,session);
 			} else{
 				return createFailedObject(company_unable_to_update_message);
 			}
@@ -411,7 +412,7 @@ public class VendorServiceImpl implements VendorService{
 			if(session != null){
 				session.close();
 			}
-		}*/
+		}
 		
 		return createSuccessObject(company_updated_message);
 	}

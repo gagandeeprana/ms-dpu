@@ -81,6 +81,14 @@ public class VendorBillingLocation {
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
+	public Long getVendorBillingLocationId() {
+		return vendorBillingLocationId;
+	}
+
+	public void setVendorBillingLocationId(Long vendorBillingLocationId) {
+		this.vendorBillingLocationId = vendorBillingLocationId;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -225,14 +233,6 @@ public class VendorBillingLocation {
 		this.tollfree = tollfree;
 	}
 
-	public Long getVendorBillingLocationId() {
-		return vendorBillingLocationId;
-	}
-
-	public void setVendorBillingLocationId(Long vendorBillingLocationId) {
-		this.vendorBillingLocationId = vendorBillingLocationId;
-	}
-
 	public Vendor getVendor() {
 		return vendor;
 	}
@@ -240,5 +240,4 @@ public class VendorBillingLocation {
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
 	}
-
 }

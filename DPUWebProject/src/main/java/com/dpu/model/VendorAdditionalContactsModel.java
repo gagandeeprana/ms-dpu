@@ -1,6 +1,5 @@
 package com.dpu.model;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -8,7 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 public class VendorAdditionalContactsModel {
 
 	////@JsonProperty("add_contact_id")
-	private Long additionalContactId;
+	private Long vendorAdditionalContactId;
 
 	////@JsonProperty("customer_name")
 	private String vendorName;
@@ -36,14 +35,6 @@ public class VendorAdditionalContactsModel {
 	private String statusName;
 
 	private String email;
-
-	public Long getAdditionalContactId() {
-		return additionalContactId;
-	}
-
-	public void setAdditionalContactId(Long additionalContactId) {
-		this.additionalContactId = additionalContactId;
-	}
 
 	public String getPosition() {
 		return position;
@@ -124,5 +115,13 @@ public class VendorAdditionalContactsModel {
 
 	public void setVendorName(String vendorName) {
 		this.vendorName = vendorName;
+	}
+
+	public Long getVendorAdditionalContactId() {
+		return vendorAdditionalContactId;
+	}
+
+	public void setVendorAdditionalContactId(Long vendorAdditionalContactId) {
+		this.vendorAdditionalContactId = vendorAdditionalContactId;
 	}
 }

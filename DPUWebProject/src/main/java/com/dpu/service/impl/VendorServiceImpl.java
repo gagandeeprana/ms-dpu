@@ -395,8 +395,19 @@ public class VendorServiceImpl implements VendorService{
 			tx = session.beginTransaction();
 			Vendor vendor = (Vendor) session.get(Vendor.class, id);
 			if(vendor != null){
-				//setVendorData(vendor, vendorModel);
-				vendorDao.updateData(vendor, vendorModel,session);
+				
+				Vendor vendorr = setVendorModel(vendorModel);
+				vendorDao.updateData(vendorr,session);
+				List<VendorAdditionalContactsModel> additionalContactsList = vendorModel.getAdditionalContacts();
+				
+				if(additionalContactsList != null && !additionalContactsList.isEmpty()){
+					for (VendorAdditionalContactsModel additionalContacts : additionalContactsList) {
+						VendorContacts comAdditionalContacts = setVendorAdditionalContacts(additionalContacts);
+						comAdditionalContacts.setVendor(vendor);
+						comAdditionalContacts.setStatus(statusService.get(additionalContacts.getStatusId()));
+						vendorDao.updateDataAdditionalContact(comAdditionalContacts,session);
+					}
+				}
 			} else{
 				return createFailedObject(company_unable_to_update_message);
 			}
@@ -417,6 +428,29 @@ public class VendorServiceImpl implements VendorService{
 		return createSuccessObject(company_updated_message);
 	}
 
+	private Vendor setVendorModel(VendorModel vendorModel) {
+
+		Vendor vendor = new Vendor();
+		vendor.setVendorId(vendorModel.getVendorId());
+		vendor.setAddress(vendorModel.getAddress());
+		vendor.setName(vendorModel.getName());
+		vendor.setCity(vendorModel.getCity());
+		 
+		return vendor;
+	}
+	
+	private VendorContacts setVendorAdditionalContacts(
+			VendorAdditionalContactsModel additionalContacts) {
+		VendorContacts vendorContacts = new VendorContacts();
+		
+		if(additionalContacts.getVendorAdditionalContactId() != null){
+			vendorContacts.setVendorAdditionalContactId(additionalContacts.getVendorAdditionalContactId());
+		}
+		vendorContacts.setVendorName(additionalContacts.getVendorName());
+		return vendorContacts;
+	}
+
+	
 	@Override
 	public VendorModel getOpenAdd() {
 		
@@ -498,10 +532,10 @@ public class VendorServiceImpl implements VendorService{
 
 	@Override
 	public VendorModel getVendorContacts(Long vendorId) {
+		
 		Session session = null;
 		VendorModel response = new VendorModel();
 		try{
-			
 			session = sessionFactory.openSession();
 			Vendor vendor = (Vendor) session.get(Vendor.class, vendorId);
 			List<VendorContacts> contacts = vendor.getAdditionalContacts();

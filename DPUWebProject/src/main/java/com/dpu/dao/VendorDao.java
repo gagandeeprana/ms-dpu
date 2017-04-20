@@ -16,7 +16,7 @@ public interface VendorDao extends GenericDao<Vendor>{
 
 	List<Object[]> getVendorData();
 
-	void updateData(Vendor vendor, VendorModel vendorModel, Session session);
+	void updateData(Vendor vendor , Session session);
 
 	List<Object[]> getVendorBillingLocations(Long vendorId, Session session);
 
@@ -33,5 +33,7 @@ public interface VendorDao extends GenericDao<Vendor>{
 	void insertBillingLocation(VendorBillingLocation vendorBillingLocation, Session session);
 
 	void insertAdditionalContacts(VendorContacts vendorContacts, Session session);
+
+	void updateDataAdditionalContact(VendorContacts comAdditionalContacts,Session session);
 	
 }

@@ -26,12 +26,18 @@ import com.dpu.entity.CompanyBillingLocation;
 import com.dpu.entity.Status;
 import com.dpu.model.AdditionalContacts;
 import com.dpu.model.BillingLocation;
+import com.dpu.model.CategoryReq;
 import com.dpu.model.CompanyResponse;
+import com.dpu.model.DivisionReq;
 import com.dpu.model.Failed;
+import com.dpu.model.SaleReq;
 import com.dpu.model.Success;
+import com.dpu.service.CategoryService;
 import com.dpu.service.CompanyAdditionalContactsService;
 import com.dpu.service.CompanyBillingLocationService;
 import com.dpu.service.CompanyService;
+import com.dpu.service.DivisionService;
+import com.dpu.service.SaleService;
 import com.dpu.service.StatusService;
 
 @Component
@@ -39,6 +45,15 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	private CompanyDao companyDao;
+
+	@Autowired
+	private CategoryService categoryService;
+
+	@Autowired
+	private SaleService saleService;
+
+	@Autowired
+	private DivisionService divisionService;
 
 	@Autowired
 	private CategoryDao categoryDao;
@@ -473,6 +488,15 @@ public class CompanyServiceImpl implements CompanyService {
 
 		List<Status> statusList = statusService.getAll();
 		companyResponse.setStatusList(statusList);
+
+		List<CategoryReq> categoryList = categoryService.getAll();
+		companyResponse.setCategoryList(categoryList);
+
+		List<DivisionReq> divisionList = divisionService.getAll("");
+		companyResponse.setDivisionList(divisionList);
+
+		List<SaleReq> saleList = saleService.getAll();
+		companyResponse.setSaleList(saleList);
 
 		return companyResponse;
 	}

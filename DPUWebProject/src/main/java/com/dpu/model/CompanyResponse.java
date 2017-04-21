@@ -79,6 +79,7 @@ public class CompanyResponse implements Serializable {
 
 	private List<Status> statusList;
 
+
 	private String categoryName;
 
 	private String divisionName;

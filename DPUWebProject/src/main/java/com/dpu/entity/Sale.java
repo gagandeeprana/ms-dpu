@@ -25,7 +25,7 @@ public class Sale {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "status_id")
 	private Status status;
 

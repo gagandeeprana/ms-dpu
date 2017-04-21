@@ -32,131 +32,144 @@ import com.dpu.service.CompanyService;
 import com.dpu.service.StatusService;
 
 @Component
-public class CompanyServiceImpl implements CompanyService{
+public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	CompanyDao companyDao;
-	
+
 	@Autowired
 	CompanyBillingLocationDao companyBillingLocationDao;
-	
+
 	@Autowired
 	CompanyAdditionalContactsDao companyAdditionalContactsDao;
-	
+
 	@Autowired
 	CompanyBillingLocationService companyBillingLocationService;
-	
+
 	@Autowired
 	CompanyAdditionalContactsService companyAdditionalContactsService;
-	
+
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Autowired
 	StatusService statusService;
-	
+
 	Logger logger = Logger.getLogger(CompanyServiceImpl.class);
-	
+
 	@Value("${company_added_message}")
 	private String company_added_message;
-	
+
 	@Value("${company_unable_to_add_message}")
 	private String company_unable_to_add_message;
-	
+
 	@Value("${company_deleted_message}")
 	private String company_deleted_message;
-	
+
 	@Value("${company_unable_to_delete_message}")
 	private String company_unable_to_delete_message;
-	
+
 	@Value("${company_updated_message}")
 	private String company_updated_message;
-	
+
 	@Value("${company_unable_to_update_message}")
 	private String company_unable_to_update_message;
-	
+
 	@Value("${company_dependent_message}")
 	private String company_dependent_message;
-	
+
 	@Override
 	public Object addCompanyData(CompanyResponse companyResponse) {
-		
+
 		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
 		Session session = null;
 		Transaction tx = null;
-		
-		try{
+
+		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
 			Company company = setCompanyValues(companyResponse);
-			company = companyDao.insertCompanyData(company,session);
-			
-			List<BillingLocation> billingLocations = companyResponse.getBillingLocations();
-			if(billingLocations != null && !billingLocations.isEmpty()){
+			company = companyDao.insertCompanyData(company, session);
+
+			List<BillingLocation> billingLocations = companyResponse
+					.getBillingLocations();
+			if (billingLocations != null && !billingLocations.isEmpty()) {
 				for (BillingLocation billingLocation : billingLocations) {
-					CompanyBillingLocation comBillingLocation = setBillingData(billingLocation, company);
-					companyBillingLocationDao.insertBillingLocation(comBillingLocation, session);
+					CompanyBillingLocation comBillingLocation = setBillingData(
+							billingLocation, company);
+					companyBillingLocationDao.insertBillingLocation(
+							comBillingLocation, session);
 				}
 			}
-			
-			List<AdditionalContacts> additionalContacts = companyResponse.getAdditionalContacts();
-			if(additionalContacts != null && !additionalContacts.isEmpty()){
+
+			List<AdditionalContacts> additionalContacts = companyResponse
+					.getAdditionalContacts();
+			if (additionalContacts != null && !additionalContacts.isEmpty()) {
 				for (AdditionalContacts additionalContact : additionalContacts) {
-					CompanyAdditionalContacts comAdditionalContact = setAdditionalContactData(additionalContact, company);
-					companyAdditionalContactsDao.insertAdditionalContacts(comAdditionalContact, session);
+					CompanyAdditionalContacts comAdditionalContact = setAdditionalContactData(
+							additionalContact, company);
+					companyAdditionalContactsDao.insertAdditionalContacts(
+							comAdditionalContact, session);
 				}
 			}
-			
-		} catch(Exception e){
-			if(tx != null){
+
+		} catch (Exception e) {
+			if (tx != null) {
 				tx.rollback();
 			}
-			
-			logger.error("Exception inside CompanyServiceImpl addCompanyData() :"+ e.getMessage());
+
+			logger.error("Exception inside CompanyServiceImpl addCompanyData() :"
+					+ e.getMessage());
 			return createFailedObject(company_unable_to_add_message);
-		} finally{
-			if(tx != null){
+		} finally {
+			if (tx != null) {
 				tx.commit();
 			}
-			if(session != null){
+			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		logger.info("Inside CompanyServiceImpl addCompanyData() ends");
 		return createSuccessObject(company_added_message);
 	}
-	
+
 	private Object createFailedObject(String errorMessage) {
+
 		Failed failed = new Failed();
 		failed.setMessage(errorMessage);
 		return failed;
 	}
 
 	private Object createSuccessObject(String message) {
+
 		Success success = new Success();
 		success.setMessage(message);
 		success.setResultList(getAll());
 		return success;
 	}
-	
-	private CompanyAdditionalContacts setAdditionalContactData( AdditionalContacts additionalContact, Company company) {
+
+	private CompanyAdditionalContacts setAdditionalContactData(
+			AdditionalContacts additionalContact, Company company) {
 
 		CompanyAdditionalContacts companyAdditionalContact = new CompanyAdditionalContacts();
 		companyAdditionalContact.setCellular(additionalContact.getCellular());
 		companyAdditionalContact.setCompany(company);
-		companyAdditionalContact.setCustomerName(additionalContact.getCustomerName());
+		companyAdditionalContact.setCustomerName(additionalContact
+				.getCustomerName());
 		companyAdditionalContact.setEmail(additionalContact.getEmail());
 		companyAdditionalContact.setExt(additionalContact.getExt());
 		companyAdditionalContact.setFax(additionalContact.getFax());
 		companyAdditionalContact.setPhone(additionalContact.getPhone());
 		companyAdditionalContact.setPosition(additionalContact.getPosition());
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
-		companyAdditionalContact.setStatus(statusService.get(additionalContact.getStatusId()));
+		companyAdditionalContact.setStatus(statusService.get(additionalContact
+				.getStatusId()));
 		return companyAdditionalContact;
 	}
 
-	private CompanyBillingLocation setBillingData(BillingLocation billingLocation, Company company) {
+	private CompanyBillingLocation setBillingData(
+			BillingLocation billingLocation, Company company) {
 
 		CompanyBillingLocation comBillingLocation = new CompanyBillingLocation();
 		comBillingLocation.setAddress(billingLocation.getAddress());
@@ -174,7 +187,8 @@ public class CompanyServiceImpl implements CompanyService{
 		comBillingLocation.setPosition(billingLocation.getPosition());
 		comBillingLocation.setPrefix(billingLocation.getPrefix());
 		comBillingLocation.setProvinceState(billingLocation.getProvinceState());
-		comBillingLocation.setStatus(statusService.get(billingLocation.getStatusId()));
+		comBillingLocation.setStatus(statusService.get(billingLocation
+				.getStatusId()));
 		comBillingLocation.setTollfree(billingLocation.getTollfree());
 		comBillingLocation.setUnitNo(billingLocation.getUnitNo());
 		comBillingLocation.setZip(billingLocation.getZip());
@@ -182,6 +196,7 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	private Company setCompanyValues(CompanyResponse companyResponse) {
+
 		Company company = new Company();
 		company.setName(companyResponse.getName());
 		company.setContact(companyResponse.getContact());
@@ -206,53 +221,59 @@ public class CompanyServiceImpl implements CompanyService{
 
 	@Override
 	public Company update(Company company) {
+
 		return companyDao.update(company);
 	}
 
 	@Override
 	public Object delete(Long companyId) {
-			
+
 		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
 		Session session = null;
 		Transaction tx = null;
-		
-		try{
+
+		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
 			Company company = companyDao.findById(companyId, session);
-			
-			if(company != null){
-				
-				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(companyId, session);
-				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
+
+			if (company != null) {
+
+				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService
+						.getAll(companyId, session);
+				if (listCompanyBillingLocations != null
+						&& !listCompanyBillingLocations.isEmpty()) {
 					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
-						companyBillingLocationDao.deleteBillingLocation(companyBillingLocation,session);
+						companyBillingLocationDao.deleteBillingLocation(
+								companyBillingLocation, session);
 					}
 				}
-				
-				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(companyId, session);
-				if(comAddContacts != null && !comAddContacts.isEmpty()){
+
+				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService
+						.getAll(companyId, session);
+				if (comAddContacts != null && !comAddContacts.isEmpty()) {
 					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
-						companyAdditionalContactsDao.deleteAdditionalContact(companyAdditionalContacts, session);
+						companyAdditionalContactsDao.deleteAdditionalContact(
+								companyAdditionalContacts, session);
 					}
 				}
 				companyDao.deleteCompany(company, session);
-			} else{
+			} else {
 				return createFailedObject(company_unable_to_delete_message);
 			}
-		} catch(Exception e){
-			if(tx != null){
+		} catch (Exception e) {
+			if (tx != null) {
 				tx.rollback();
 			}
-			if(e instanceof ConstraintViolationException){
+			if (e instanceof ConstraintViolationException) {
 				return createFailedObject(company_dependent_message);
 			}
 			return createFailedObject(company_unable_to_delete_message);
-		} finally{
-			if(tx != null){
+		} finally {
+			if (tx != null) {
 				tx.commit();
 			}
-			if(session != null){
+			if (session != null) {
 				session.close();
 			}
 		}
@@ -261,101 +282,93 @@ public class CompanyServiceImpl implements CompanyService{
 
 	@Override
 	public List<CompanyResponse> getAll() {
-		
+
 		List<Company> companies = companyDao.findAll();
 		List<CompanyResponse> returnResponse = new ArrayList<CompanyResponse>();
-		
-		if(companies != null && ! companies.isEmpty()){
+
+		if (companies != null && !companies.isEmpty()) {
 			for (Company company : companies) {
 				CompanyResponse response = new CompanyResponse();
-				setCompanyData(company,response);
-				
-			/*	List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(company.getCompanyId());
-				
-				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
-					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
-					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
-						BillingLocation location = new BillingLocation();
-						try {
-							BeanUtils.copyProperties(location, companyBillingLocation);
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							e.printStackTrace();
-						}
-						billingLocations.add(location);
-					}
-					response.setBillingLocations(billingLocations);
-				}*/
-				
+				setCompanyData(company, response);
 				returnResponse.add(response);
 			}
-			
+
 		}
-		
+
 		return returnResponse;
 	}
 
 	@Override
 	public CompanyResponse get(Long id) {
-		
+
 		Session session = null;
 		CompanyResponse response = new CompanyResponse();
-		try{
+		try {
 			session = sessionFactory.openSession();
 			Company company = companyDao.findById(id, session);
-			
+
 			if (company != null) {
-				setCompanyData(company,response);
-				//BeanUtils.copyProperties(response, company);
-				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(id, session);
-				
-				if(listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()){
+				setCompanyData(company, response);
+				// BeanUtils.copyProperties(response, company);
+				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService
+						.getAll(id, session);
+
+				if (listCompanyBillingLocations != null
+						&& !listCompanyBillingLocations.isEmpty()) {
 					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
 					for (CompanyBillingLocation companyBillingLocation : listCompanyBillingLocations) {
 						BillingLocation location = new BillingLocation();
 						try {
-							BeanUtils.copyProperties(location, companyBillingLocation);
-							location.setStatusId(companyBillingLocation.getStatus().getId());
-						} catch (IllegalAccessException | InvocationTargetException e) {
+							BeanUtils.copyProperties(location,
+									companyBillingLocation);
+							location.setStatusId(companyBillingLocation
+									.getStatus().getId());
+						} catch (IllegalAccessException
+								| InvocationTargetException e) {
 							e.printStackTrace();
 						}
 						billingLocations.add(location);
 					}
 					response.setBillingLocations(billingLocations);
 				}
-				
-				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService.getAll(id, session);
-				
-				if(comAddContacts != null && !comAddContacts.isEmpty()){
+
+				List<CompanyAdditionalContacts> comAddContacts = companyAdditionalContactsService
+						.getAll(id, session);
+
+				if (comAddContacts != null && !comAddContacts.isEmpty()) {
 					List<AdditionalContacts> addContacts = new ArrayList<AdditionalContacts>();
 					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
 						AdditionalContacts addContact = new AdditionalContacts();
 						try {
-							BeanUtils.copyProperties(addContact, companyAdditionalContacts);
-							addContact.setStatusId(companyAdditionalContacts.getStatus().getId());
-						} catch (IllegalAccessException | InvocationTargetException e) {
+							BeanUtils.copyProperties(addContact,
+									companyAdditionalContacts);
+							addContact.setStatusId(companyAdditionalContacts
+									.getStatus().getId());
+						} catch (IllegalAccessException
+								| InvocationTargetException e) {
 							e.printStackTrace();
 						}
-						
+
 						addContacts.add(addContact);
 					}
-					
+
 					response.setAdditionalContacts(addContacts);
 				}
-				
+
 				List<Status> statusList = statusService.getAll();
 				response.setStatusList(statusList);
 			}
-		}finally {
+		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		return response;
 	}
 
 	private void setCompanyData(Company companyObj, CompanyResponse response) {
-		
+
 		response.setCompanyId(companyObj.getCompanyId());
 		response.setAddress(companyObj.getAddress());
 		response.setAfterHours(companyObj.getAfterHours());
@@ -376,16 +389,22 @@ public class CompanyServiceImpl implements CompanyService{
 		response.setZip(companyObj.getZip());
 		response.setUnitNo(companyObj.getUnitNo());
 		response.setWebsite(companyObj.getWebsite());
-		
+		if (companyObj.getCategory().getName() != null)
+			response.setCategoryName(companyObj.getCategory().getName());
+		if (companyObj.getDivision().getDivisionName() != null)
+			response.setDivisionName(companyObj.getDivision().getDivisionName());
+		if (companyObj.getSale().getName() != null)
+			response.setSaleName(companyObj.getSale().getName());
+
 	}
 
 	@Override
 	public List<CompanyResponse> getCompanyData() {
-		
+
 		List<Object[]> companyData = companyDao.getCompanyData();
 		List<CompanyResponse> returnRes = new ArrayList<CompanyResponse>();
-		
-		if(companyData != null && !companyData.isEmpty()){
+
+		if (companyData != null && !companyData.isEmpty()) {
 			for (Object[] row : companyData) {
 				CompanyResponse res = new CompanyResponse();
 				res.setCompanyId(Long.valueOf(String.valueOf(row[0])));
@@ -393,7 +412,7 @@ public class CompanyServiceImpl implements CompanyService{
 				returnRes.add(res);
 			}
 		}
-		
+
 		return returnRes;
 	}
 
@@ -403,105 +422,116 @@ public class CompanyServiceImpl implements CompanyService{
 		Company company = companyDao.findById(id);
 		Session session = null;
 		Transaction tx = null;
-		
-		try{
-			if(company != null){
+
+		try {
+			if (company != null) {
 				session = sessionFactory.openSession();
 				tx = session.beginTransaction();
-				
-				companyDao.updateData(company, companyResponse,session);
-			} else{
+
+				companyDao.updateData(company, companyResponse, session);
+			} else {
 				return createFailedObject(company_unable_to_update_message);
 			}
-		} catch(Exception e){
-			if(tx != null){
+		} catch (Exception e) {
+			if (tx != null) {
 				tx.rollback();
 			}
 			return createFailedObject(company_unable_to_update_message);
-		} finally{
-			if(tx != null){
+		} finally {
+			if (tx != null) {
 				tx.commit();
 			}
-			if(session != null){
+			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		return createSuccessObject(company_updated_message);
 	}
 
 	@Override
 	public CompanyResponse getOpenAdd() {
+
 		CompanyResponse companyResponse = new CompanyResponse();
-		
+
 		List<Status> statusList = statusService.getAll();
 		companyResponse.setStatusList(statusList);
-		
+
 		return companyResponse;
 	}
 
 	@Override
 	public CompanyResponse getCompanyBillingLocationAndContacts(Long companyId) {
+
 		CompanyResponse companyResponse = new CompanyResponse();
 		Session session = null;
-		
-		try{
+
+		try {
 			Company company = companyDao.findById(companyId);
-			if(company != null){
+			if (company != null) {
 				session = sessionFactory.openSession();
-				List<Object[]> billingLocationData = companyDao.getBillingLocations(company.getCompanyId(), session);
-				if(billingLocationData != null && !billingLocationData.isEmpty()){
+				List<Object[]> billingLocationData = companyDao
+						.getBillingLocations(company.getCompanyId(), session);
+				if (billingLocationData != null
+						&& !billingLocationData.isEmpty()) {
 					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
 					for (Object[] row : billingLocationData) {
 						BillingLocation billingLocation = new BillingLocation();
-						billingLocation.setBillingLocationId(Long.parseLong(String.valueOf(row[0])));
+						billingLocation.setBillingLocationId(Long
+								.parseLong(String.valueOf(row[0])));
 						billingLocation.setName(String.valueOf(row[1]));
 						billingLocations.add(billingLocation);
 					}
-					
+
 					companyResponse.setBillingLocations(billingLocations);
 				}
-				
-				List<Object[]> additionalContacts = companyDao.getAdditionalContacts(company.getCompanyId(), session);
-				if(additionalContacts != null && !additionalContacts.isEmpty()){
+
+				List<Object[]> additionalContacts = companyDao
+						.getAdditionalContacts(company.getCompanyId(), session);
+				if (additionalContacts != null && !additionalContacts.isEmpty()) {
 					List<AdditionalContacts> additionalContactList = new ArrayList<AdditionalContacts>();
 					for (Object[] row : additionalContacts) {
 						AdditionalContacts additionalContact = new AdditionalContacts();
-						additionalContact.setAdditionalContactId(Long.parseLong(String.valueOf(row[0])));
-						additionalContact.setCustomerName(String.valueOf(row[1]));
+						additionalContact.setAdditionalContactId(Long
+								.parseLong(String.valueOf(row[0])));
+						additionalContact.setCustomerName(String
+								.valueOf(row[1]));
 						additionalContactList.add(additionalContact);
 					}
-					
-					companyResponse.setAdditionalContacts(additionalContactList);
+
+					companyResponse
+							.setAdditionalContacts(additionalContactList);
 				}
 			}
-		} finally{
-			if(session != null){
+		} finally {
+			if (session != null) {
 				session.close();
 			}
 		}
-		
-		
+
 		return companyResponse;
 	}
 
 	@Override
 	public List<CompanyResponse> getCompanyByCompanyName(String companyName) {
+
 		Session session = null;
 		List<CompanyResponse> response = new ArrayList<CompanyResponse>();
-		try{
-			
+		try {
+
 			session = sessionFactory.openSession();
-			List<Company> companyList = companyDao.getCompaniesByCompanyName(companyName, session);
-			if(companyList != null && !companyList.isEmpty()){
+			List<Company> companyList = companyDao.getCompaniesByCompanyName(
+					companyName, session);
+			if (companyList != null && !companyList.isEmpty()) {
 				for (Company company : companyList) {
 					CompanyResponse companyResponse = new CompanyResponse();
-					org.springframework.beans.BeanUtils.copyProperties(company, companyResponse);
+					org.springframework.beans.BeanUtils.copyProperties(company,
+							companyResponse);
 					response.add(companyResponse);
 				}
 			}
-		} finally{
-			if(session != null){
+		} finally {
+			if (session != null) {
 				session.close();
 			}
 		}

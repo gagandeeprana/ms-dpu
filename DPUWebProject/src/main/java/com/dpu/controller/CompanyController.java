@@ -27,40 +27,47 @@ import com.dpu.util.MessageProperties;
 public class CompanyController extends MessageProperties {
 
 	Logger logger = Logger.getLogger(CompanyController.class);
-	
+
 	@Autowired
 	CompanyService companyService;
 
 	ObjectMapper mapper = new ObjectMapper();
-	
+
 	@Value("${company_unable_to_add_message}")
 	private String company_unable_to_add_message;
 
 	@Value("${company_unable_to_delete_message}")
 	private String company_unable_to_delete_message;
-	
+
 	@Value("${company_unable_to_update_message}")
 	private String company_unable_to_update_message;
 
 	/**
 	 * this method is used to get all the companies
+	 * 
 	 * @return all companies
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
+
 		logger.info("CompanyController getAll() starts");
 		String json = new String();
 		try {
-			
+
 			List<CompanyResponse> companyResponses = companyService.getAll();
-			
-			if(companyResponses != null) {
+
+			if (companyResponses != null) {
 				json = mapper.writeValueAsString(companyResponses);
 			}
-			
+			 
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController getAll() :"+e.getMessage());
+			e.printStackTrace();
+			logger.info("Exception inside CompanyController getAll() :"
+					+ e.getMessage());
+			Failed failed = new Failed();
+			failed.setMessage("Internal Server Error");
+			return failed;
 		}
 		logger.info("CompanyController getAll() ends");
 		return json;
@@ -68,35 +75,40 @@ public class CompanyController extends MessageProperties {
 
 	/**
 	 * this method is used to add company
+	 * 
 	 * @param companyResponse
 	 * @return all companies data
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody CompanyResponse companyResponse) {
-		
+
 		logger.info("CompanyController add() starts");
 		Object obj = null;
 		try {
 			obj = companyService.addCompanyData(companyResponse);
-			
+
 			if (obj instanceof Success) {
 				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
 			} else {
 				obj = new ResponseEntity<Object>(obj, HttpStatus.BAD_REQUEST);
 			}
-			
+
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController add() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.info("Exception inside CompanyController add() :"
+					+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,
+					company_unable_to_add_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
-		
+
 		logger.info("CompanyController add() Ends");
 		return obj;
 	}
 
 	/**
 	 * this method is used to delete the company
+	 * 
 	 * @param companyId
 	 * @return List<Company>
 	 * @author lakhvir.bansal
@@ -108,16 +120,19 @@ public class CompanyController extends MessageProperties {
 		Object obj = null;
 
 		try {
-			
+
 			obj = companyService.delete(companyId);
 			if (obj instanceof Success) {
-				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
+				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController delete() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.info("Exception inside CompanyController delete() :"
+					+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,
+					company_unable_to_delete_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info(" CompanyController delete() ends ");
@@ -126,99 +141,113 @@ public class CompanyController extends MessageProperties {
 
 	/**
 	 * this method is used to update the record
+	 * 
 	 * @param id
 	 * @param companyResponse
 	 * @return List<Company>
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id, @RequestBody CompanyResponse companyResponse) {
-		
-		logger.info(" CompanyController delete() starts, companyId :"+id);
+	public Object update(@PathVariable("id") Long id,
+			@RequestBody CompanyResponse companyResponse) {
+
+		logger.info(" CompanyController delete() starts, companyId :" + id);
 		Object obj = null;
 		try {
 			obj = companyService.update(id, companyResponse);
 			if (obj instanceof Success) {
-				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
+				obj = new ResponseEntity<Object>(obj, HttpStatus.OK);
 			} else {
-				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController update() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_update_message, Iconstants.ERROR),HttpStatus.BAD_REQUEST);
+			logger.info("Exception inside CompanyController update() :"
+					+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,
+					company_unable_to_update_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
 		}
-		logger.info(" CompanyController delete() ends, companyId :"+id);
+		logger.info(" CompanyController delete() ends, companyId :" + id);
 		return obj;
 	}
 
 	/**
 	 * this method is used to get the particular company Data
+	 * 
 	 * @param id
 	 * @return particular company details
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("id") Long id) {
-		
-		logger.info(" CompanyController get() starts, companyId :"+id);
+
+		logger.info(" CompanyController get() starts, companyId :" + id);
 		String json = new String();
 		try {
 			CompanyResponse companyResponse = companyService.get(id);
-			if(companyResponse != null) {
+			if (companyResponse != null) {
 				json = mapper.writeValueAsString(companyResponse);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController get() :"+e.getMessage());
+			logger.info("Exception inside CompanyController get() :"
+					+ e.getMessage());
 		}
 
-		logger.info(" CompanyController get() ends, companyId :"+id);
+		logger.info(" CompanyController get() ends, companyId :" + id);
 		return json;
 	}
-	
+
 	/**
 	 * this method is used when we click on add button on company screen
+	 * 
 	 * @return master data for company
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
-		
+
 		logger.info(" Inside CompanyController openAdd() Starts ");
 		String json = null;
-		
+
 		try {
 			CompanyResponse companyResponse = companyService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(companyResponse);
 		} catch (Exception e) {
-			logger.error(" Exception inside CompanyController openAdd() :"+e.getMessage());
+			logger.error(" Exception inside CompanyController openAdd() :"
+					+ e.getMessage());
 		}
-		
+
 		logger.info(" Inside CompanyController openAdd() Ends ");
 		return json;
 	}
-	
+
 	/**
 	 * this method is used to searchCompany based on company name
+	 * 
 	 * @param companyName
 	 * @return List<Companies>
 	 */
 	@RequestMapping(value = "/{companyName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchCompany(@PathVariable("companyName") String companyName) {
-		
-		logger.info("Inside CompanyController searchCompany() Starts, companyName :"+companyName);
+
+		logger.info("Inside CompanyController searchCompany() Starts, companyName :"
+				+ companyName);
 		String json = new String();
-		
+
 		try {
-			List<CompanyResponse> companyList = companyService.getCompanyByCompanyName(companyName);
-			if(companyList != null && companyList.size() > 0) {
+			List<CompanyResponse> companyList = companyService
+					.getCompanyByCompanyName(companyName);
+			if (companyList != null && companyList.size() > 0) {
 				json = mapper.writeValueAsString(companyList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CompanyController searchCompany() is :" + e.getMessage());
+			logger.error("Exception inside CompanyController searchCompany() is :"
+					+ e.getMessage());
 		}
-		
-		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"+companyName);
+
+		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"
+				+ companyName);
 		return json;
 	}
 }

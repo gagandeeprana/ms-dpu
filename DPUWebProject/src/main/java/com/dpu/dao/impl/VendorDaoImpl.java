@@ -8,23 +8,13 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.VendorDao;
-import com.dpu.entity.Company;
-import com.dpu.entity.CompanyAdditionalContacts;
-import com.dpu.entity.CompanyBillingLocation;
 import com.dpu.entity.Vendor;
 import com.dpu.entity.VendorBillingLocation;
 import com.dpu.entity.VendorContacts;
-import com.dpu.model.AdditionalContacts;
-import com.dpu.model.BillingLocation;
-import com.dpu.model.CompanyResponse;
-import com.dpu.model.VendorAdditionalContactsModel;
-import com.dpu.model.VendorBillingLocationModel;
-import com.dpu.model.VendorModel;
 import com.dpu.service.StatusService;
 
 @Transactional
@@ -69,41 +59,8 @@ public class VendorDaoImpl extends GenericDaoImpl<Vendor> implements VendorDao {
 	@Override
 	public void updateData(Vendor vendor, Session session) {
 
-		String[] ignoreProp = new String[1];
-		ignoreProp[0] = "vendorId";
-		session.merge(vendor);
+		session.saveOrUpdate(vendor);
 
-		// List<VendorBillingLocationModel> billingLocationList =
-		// vendorModel.getBillingLocations();
-
-		/*
-		 * if(billingLocationList != null && !billingLocationList.isEmpty()){
-		 * for (VendorBillingLocationModel billingLocation :
-		 * billingLocationList) { VendorBillingLocation vendorBillingLocation =
-		 * null; if(billingLocation.getVendorBillingLocationId() != null){
-		 * vendorBillingLocation = (VendorBillingLocation)
-		 * session.get(VendorBillingLocation.class,
-		 * billingLocation.getVendorBillingLocationId()); } else{
-		 * vendorBillingLocation = new VendorBillingLocation(); }
-		 * 
-		 * BeanUtils.copyProperties(billingLocation, vendorBillingLocation);
-		 * vendorBillingLocation.setVendor(vendor);
-		 * vendorBillingLocation.setStatus
-		 * (statusService.get(billingLocation.getStatusId()));
-		 * session.saveOrUpdate(vendorBillingLocation); } }
-		 */
-
-		/*
-		 * if(additionalContactsList != null &&
-		 * !additionalContactsList.isEmpty()){ for
-		 * (VendorAdditionalContactsModel additionalContacts :
-		 * additionalContactsList) { VendorContacts comAdditionalContacts =
-		 * setVendorAdditionalContacts(additionalContacts);
-		 * comAdditionalContacts.setVendor(vendor);
-		 * comAdditionalContacts.setStatus
-		 * (statusService.get(additionalContacts.getStatusId()));
-		 * session.saveOrUpdate(comAdditionalContacts); } }
-		 */
 	}
 
 	@SuppressWarnings("unchecked")
@@ -165,30 +122,36 @@ public class VendorDaoImpl extends GenericDaoImpl<Vendor> implements VendorDao {
 	}
 
 	@Override
-	public void insertBillingLocation(
-			VendorBillingLocation vendorBillingLocation, Session session) {
+	public void insertBillingLocation(VendorBillingLocation vendorBillingLocation, Session session) {
 
 		session.save(vendorBillingLocation);
 	}
 
 	@Override
-	public void insertAdditionalContacts(VendorContacts vendorContacts,
-			Session session) {
+	public void insertAdditionalContacts(VendorContacts vendorContacts, Session session) {
 
 		session.save(vendorContacts);
 	}
 
 	@Override
-	public void updateDataAdditionalContact(
-			VendorContacts comAdditionalContacts, Session session) {
+	public void updateDataAdditionalContact(VendorContacts comAdditionalContacts, Session session) {
 
-		try {
-			session.saveOrUpdate(comAdditionalContacts);
-		} catch (Exception e) {
+		session.saveOrUpdate(comAdditionalContacts);
 
-		} finally {
-		}
+	}
 
+	@Override
+	public void updateVendorBillingLocation(VendorBillingLocation vendorBillingLocation, Session session) {
+
+		session.saveOrUpdate(vendorBillingLocation);
+		
+	}
+
+	@Override
+	public boolean deleteAdditionalContact(Long vendorId,
+			Long additionalContactId) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

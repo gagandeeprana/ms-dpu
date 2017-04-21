@@ -35,5 +35,9 @@ public interface VendorDao extends GenericDao<Vendor>{
 	void insertAdditionalContacts(VendorContacts vendorContacts, Session session);
 
 	void updateDataAdditionalContact(VendorContacts comAdditionalContacts,Session session);
+
+	void updateVendorBillingLocation(VendorBillingLocation vendorBillingLocation, Session session);
+
+	boolean deleteAdditionalContact(Long vendorId, Long additionalContactId);
 	
 }

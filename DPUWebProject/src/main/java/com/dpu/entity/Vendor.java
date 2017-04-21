@@ -77,10 +77,10 @@ public class Vendor {
 	@Column(name = "after_hours")
 	private String afterHours;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendorObj")
     private List<VendorBillingLocation> billingLocations = new ArrayList<VendorBillingLocation>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendorObj")
     private List<VendorContacts> additionalContacts = new ArrayList<VendorContacts>();
 	
 	public String getName() {

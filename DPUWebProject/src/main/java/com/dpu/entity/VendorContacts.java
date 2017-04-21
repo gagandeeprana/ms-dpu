@@ -9,12 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
 @Entity
 @Table(name = "vendor_additional_contacts")
-@JsonSerialize(include = Inclusion.NON_NULL)
 public class VendorContacts {
 
 	@Id
@@ -50,12 +46,14 @@ public class VendorContacts {
 	@Column(name = "email")
 	private String email;
 
-	/*@Transient
-	private Map<Integer, List<CompanyWorkingHours>> map = new HashMap<>();*/
+	/*
+	 * @Transient private Map<Integer, List<CompanyWorkingHours>> map = new
+	 * HashMap<>();
+	 */
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "vendor_id")
-	private Vendor vendor;
+	private Vendor vendorObj;
 
 	public String getPosition() {
 		return position;
@@ -137,12 +135,18 @@ public class VendorContacts {
 		this.vendorName = vendorName;
 	}
 
-	public Vendor getVendor() {
-		return vendor;
+	public Vendor getVendorObj() {
+		return vendorObj;
 	}
 
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
+	public void setVendorObj(Vendor vendorObj) {
+		this.vendorObj = vendorObj;
 	}
+
+	/*
+	 * public Vendor getVendor() { return vendor; }
+	 * 
+	 * public void setVendor(Vendor vendor) { this.vendor = vendor; }
+	 */
 
 }

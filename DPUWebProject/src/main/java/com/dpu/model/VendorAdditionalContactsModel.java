@@ -1,9 +1,11 @@
 package com.dpu.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VendorAdditionalContactsModel {
 
 	////@JsonProperty("add_contact_id")

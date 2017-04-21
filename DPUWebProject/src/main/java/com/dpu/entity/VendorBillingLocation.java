@@ -14,7 +14,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @Table(name = "vendor_billing_locations")
-@JsonSerialize(include = Inclusion.NON_NULL)
 public class VendorBillingLocation {
 
     @Id
@@ -79,7 +78,7 @@ public class VendorBillingLocation {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
+    private Vendor vendorObj;
 
 	public Long getVendorBillingLocationId() {
 		return vendorBillingLocationId;
@@ -233,11 +232,19 @@ public class VendorBillingLocation {
 		this.tollfree = tollfree;
 	}
 
-	public Vendor getVendor() {
+	public Vendor getVendorObj() {
+		return vendorObj;
+	}
+
+	public void setVendorObj(Vendor vendorObj) {
+		this.vendorObj = vendorObj;
+	}
+
+	/*public Vendor getVendor() {
 		return vendor;
 	}
 
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
-	}
+	}*/
 }

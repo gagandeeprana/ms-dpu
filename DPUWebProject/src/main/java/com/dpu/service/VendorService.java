@@ -32,5 +32,9 @@ public interface VendorService {
 	VendorModel getVendorContacts(Long id);
 
 	Object update(Long id, VendorModel vendorModel);
+
+	boolean delete(Long vendorId, Long additionalContactId);
+
+	boolean deleteAdditionalContact(Long vendorId, Long additionalContactId);
 	
 }

@@ -243,4 +243,26 @@ public class VendorController{
 		logger.info(" CompanyController get() ends, companyId :"+id);
 		return json;
 	}
+	
+	
+	@RequestMapping(value = "/{vendorid}/additionalContacts/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteAdditionalContact(@PathVariable("vendorid") Long vendorId,@PathVariable("id") Long additionalContactId) {
+		logger.info("[delete] : Enter : ID : "+additionalContactId);
+		Object obj = null;
+		boolean result = false;
+
+		try {
+			
+			result = vendorService.deleteAdditionalContact(vendorId, additionalContactId);
+			if(result) {
+				//obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyDeletedCode), companyDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			} else {
+				//obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(companyUnableToDeleteCode), companyUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		logger.info("[delete] : Exit ");
+		return obj;
+	}
 }

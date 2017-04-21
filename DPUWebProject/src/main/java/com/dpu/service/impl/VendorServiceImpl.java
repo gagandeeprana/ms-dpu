@@ -1,10 +1,8 @@
 package com.dpu.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,17 +14,11 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.CompanyAdditionalContactsDao;
 import com.dpu.dao.CompanyBillingLocationDao;
-import com.dpu.dao.CompanyDao;
 import com.dpu.dao.VendorDao;
-import com.dpu.entity.Company;
-import com.dpu.entity.CompanyAdditionalContacts;
-import com.dpu.entity.CompanyBillingLocation;
 import com.dpu.entity.Status;
 import com.dpu.entity.Vendor;
 import com.dpu.entity.VendorBillingLocation;
 import com.dpu.entity.VendorContacts;
-import com.dpu.model.AdditionalContacts;
-import com.dpu.model.BillingLocation;
 import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
@@ -35,7 +27,6 @@ import com.dpu.model.VendorBillingLocationModel;
 import com.dpu.model.VendorModel;
 import com.dpu.service.CompanyAdditionalContactsService;
 import com.dpu.service.CompanyBillingLocationService;
-import com.dpu.service.CompanyService;
 import com.dpu.service.StatusService;
 import com.dpu.service.VendorService;
 
@@ -96,13 +87,13 @@ public class VendorServiceImpl implements VendorService{
 		try{
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Vendor vendor = setVendorValues(vendorModel);
+			Vendor vendor = setVendorValues(null,vendorModel);
 			vendor = vendorDao.insertVendorData(vendor,session);
 			
 			List<VendorBillingLocationModel> billingLocations = vendorModel.getBillingLocations();
 			if(billingLocations != null && !billingLocations.isEmpty()){
 				for (VendorBillingLocationModel billingLocation : billingLocations) {
-					VendorBillingLocation comBillingLocation = setBillingData(billingLocation, vendor);
+					VendorBillingLocation comBillingLocation = setBillingData(billingLocation, vendor, null);
 					vendorDao.insertBillingLocation(comBillingLocation, session);
 				}
 			}
@@ -110,7 +101,7 @@ public class VendorServiceImpl implements VendorService{
 			List<VendorAdditionalContactsModel> additionalContacts = vendorModel.getAdditionalContacts();
 			if(additionalContacts != null && !additionalContacts.isEmpty()){
 				for (VendorAdditionalContactsModel additionalContact : additionalContacts) {
-					VendorContacts comAdditionalContact = setAdditionalContactData(additionalContact, vendor);
+					VendorContacts comAdditionalContact = setAdditionalContactData(additionalContact, vendor,null);
 					vendorDao.insertAdditionalContacts(comAdditionalContact, session);
 				}
 			}
@@ -135,6 +126,68 @@ public class VendorServiceImpl implements VendorService{
 		return createSuccessObject(company_added_message);
 	}
 	
+	@Override
+	public Object update(Long id, VendorModel vendorModel) {
+
+		
+		Session session = null;
+		Transaction tx = null;
+		
+		try{
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Vendor vendor = (Vendor) session.get(Vendor.class, id);
+			if(vendor != null){
+				
+				setVendorValues(vendor,vendorModel);
+				vendorDao.updateData(vendor,session);
+				
+				List<VendorBillingLocationModel> vendorBillingLocations = vendorModel.getBillingLocations();
+				if(vendorBillingLocations != null && !vendorBillingLocations.isEmpty()){
+					for (VendorBillingLocationModel vendorBillingLocationModel : vendorBillingLocations) {
+						VendorBillingLocation billingLocation = null;
+						if(vendorBillingLocationModel.getVendorBillingLocationId() != null){
+							billingLocation = (VendorBillingLocation) session.get(VendorBillingLocation.class, vendorBillingLocationModel.getVendorBillingLocationId());
+						}
+						
+						VendorBillingLocation vendorBillingLocation = setBillingData(vendorBillingLocationModel, vendor, billingLocation);
+						vendorDao.updateVendorBillingLocation(vendorBillingLocation, session);
+					}
+				}
+				
+				List<VendorAdditionalContactsModel> additionalContactsList = vendorModel.getAdditionalContacts();
+				
+				if(additionalContactsList != null && !additionalContactsList.isEmpty()){
+					for (VendorAdditionalContactsModel additionalContacts : additionalContactsList) {
+						VendorContacts vendorContacts = null;
+						if(additionalContacts.getVendorAdditionalContactId() != null){
+							vendorContacts = (VendorContacts) session.get(VendorContacts.class, additionalContacts.getVendorAdditionalContactId());
+						}
+						VendorContacts comAdditionalContacts = setAdditionalContactData(additionalContacts, vendor, vendorContacts);
+						vendorDao.updateDataAdditionalContact(comAdditionalContacts,session);
+					}
+				}
+			} else{
+				return createFailedObject(company_unable_to_update_message);
+			}
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+			return createFailedObject(company_unable_to_update_message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return createSuccessObject(company_updated_message);
+	}
+	
+
 	private Object createFailedObject(String errorMessage) {
 		Failed failed = new Failed();
 		failed.setMessage(errorMessage);
@@ -148,11 +201,13 @@ public class VendorServiceImpl implements VendorService{
 		return success;
 	}
 	
-	private VendorContacts setAdditionalContactData( VendorAdditionalContactsModel additionalContact, Vendor vendor) {
+	private VendorContacts setAdditionalContactData( VendorAdditionalContactsModel additionalContact, Vendor vendor, VendorContacts vendorContact) {
 
-		VendorContacts vendorContact = new VendorContacts();
+		if(vendorContact == null){
+			vendorContact = new VendorContacts();
+		}
 		vendorContact.setCellular(additionalContact.getCellular());
-		vendorContact.setVendor(vendor);
+		vendorContact.setVendorObj(vendor);
 		vendorContact.setVendorName(additionalContact.getVendorName());
 		vendorContact.setEmail(additionalContact.getEmail());
 		vendorContact.setExt(additionalContact.getExt());
@@ -164,15 +219,17 @@ public class VendorServiceImpl implements VendorService{
 		return vendorContact;
 	}
 
-	private VendorBillingLocation setBillingData(VendorBillingLocationModel billingLocation, Vendor vendor) {
+	private VendorBillingLocation setBillingData(VendorBillingLocationModel billingLocation, Vendor vendor, VendorBillingLocation vendorBillingLocation) {
 
-		VendorBillingLocation vendorBillingLocation = new VendorBillingLocation();
+		if(vendorBillingLocation == null){
+			vendorBillingLocation = new VendorBillingLocation();
+		}
 		vendorBillingLocation.setAddress(billingLocation.getAddress());
 		vendorBillingLocation.setArCDN(billingLocation.getArCDN());
 		vendorBillingLocation.setArUS(billingLocation.getArUS());
 		vendorBillingLocation.setCellular(billingLocation.getCellular());
 		vendorBillingLocation.setCity(billingLocation.getCity());
-		vendorBillingLocation.setVendor(vendor);
+		vendorBillingLocation.setVendorObj(vendor);
 		vendorBillingLocation.setContact(billingLocation.getContact());
 		vendorBillingLocation.setEmail(billingLocation.getEmail());
 		vendorBillingLocation.setExt(billingLocation.getExt());
@@ -189,8 +246,10 @@ public class VendorServiceImpl implements VendorService{
 		return vendorBillingLocation;
 	}
 
-	private Vendor setVendorValues(VendorModel vendorModel) {
-		Vendor vendor = new Vendor();
+	private Vendor setVendorValues(Vendor vendor, VendorModel vendorModel) {
+		if(vendor == null){
+			vendor = new Vendor();
+		}
 		vendor.setName(vendorModel.getName());
 		vendor.setContact(vendorModel.getContact());
 		vendor.setAddress(vendorModel.getAddress());
@@ -382,74 +441,6 @@ public class VendorServiceImpl implements VendorService{
 		
 		return returnRes;
 	}
-
-	@Override
-	public Object update(Long id, VendorModel vendorModel) {
-
-		
-		Session session = null;
-		Transaction tx = null;
-		
-		try{
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			Vendor vendor = (Vendor) session.get(Vendor.class, id);
-			if(vendor != null){
-				
-				Vendor vendorr = setVendorModel(vendorModel);
-				vendorDao.updateData(vendorr,session);
-				List<VendorAdditionalContactsModel> additionalContactsList = vendorModel.getAdditionalContacts();
-				
-				if(additionalContactsList != null && !additionalContactsList.isEmpty()){
-					for (VendorAdditionalContactsModel additionalContacts : additionalContactsList) {
-						VendorContacts comAdditionalContacts = setVendorAdditionalContacts(additionalContacts);
-						comAdditionalContacts.setVendor(vendor);
-						comAdditionalContacts.setStatus(statusService.get(additionalContacts.getStatusId()));
-						vendorDao.updateDataAdditionalContact(comAdditionalContacts,session);
-					}
-				}
-			} else{
-				return createFailedObject(company_unable_to_update_message);
-			}
-		} catch(Exception e){
-			if(tx != null){
-				tx.rollback();
-			}
-			return createFailedObject(company_unable_to_update_message);
-		} finally{
-			if(tx != null){
-				tx.commit();
-			}
-			if(session != null){
-				session.close();
-			}
-		}
-		
-		return createSuccessObject(company_updated_message);
-	}
-
-	private Vendor setVendorModel(VendorModel vendorModel) {
-
-		Vendor vendor = new Vendor();
-		vendor.setVendorId(vendorModel.getVendorId());
-		vendor.setAddress(vendorModel.getAddress());
-		vendor.setName(vendorModel.getName());
-		vendor.setCity(vendorModel.getCity());
-		 
-		return vendor;
-	}
-	
-	private VendorContacts setVendorAdditionalContacts(
-			VendorAdditionalContactsModel additionalContacts) {
-		VendorContacts vendorContacts = new VendorContacts();
-		
-		if(additionalContacts.getVendorAdditionalContactId() != null){
-			vendorContacts.setVendorAdditionalContactId(additionalContacts.getVendorAdditionalContactId());
-		}
-		vendorContacts.setVendorName(additionalContacts.getVendorName());
-		return vendorContacts;
-	}
-
 	
 	@Override
 	public VendorModel getOpenAdd() {
@@ -562,5 +553,31 @@ public class VendorServiceImpl implements VendorService{
 			}
 		}
 		return response;
+	}
+
+	@Override
+	public boolean delete(Long vendorId, Long additionalContactId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteAdditionalContact(Long vendorId, Long additionalContactId) {
+		
+		Session session = null;
+		Transaction tx =null;
+		
+		try{
+			session = sessionFactory.openSession();
+			tx =session.beginTransaction();
+			
+			boolean result = vendorDao.deleteAdditionalContact(vendorId, additionalContactId);
+		} catch(Exception e){
+			
+		} finally{
+			
+		}
+	
+		return false;
 	}
 }

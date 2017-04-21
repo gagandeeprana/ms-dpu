@@ -14,9 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.CategoryDao;
 import com.dpu.dao.CompanyAdditionalContactsDao;
 import com.dpu.dao.CompanyBillingLocationDao;
 import com.dpu.dao.CompanyDao;
+import com.dpu.dao.DivisionDao;
+import com.dpu.dao.SaleDao;
 import com.dpu.entity.Company;
 import com.dpu.entity.CompanyAdditionalContacts;
 import com.dpu.entity.CompanyBillingLocation;
@@ -35,7 +38,16 @@ import com.dpu.service.StatusService;
 public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
-	CompanyDao companyDao;
+	private CompanyDao companyDao;
+
+	@Autowired
+	private CategoryDao categoryDao;
+
+	@Autowired
+	private DivisionDao divisionDao;
+
+	@Autowired
+	private SaleDao saleDao;
 
 	@Autowired
 	CompanyBillingLocationDao companyBillingLocationDao;
@@ -216,6 +228,11 @@ public class CompanyServiceImpl implements CompanyService {
 		company.setWebsite(companyResponse.getWebsite());
 		company.setCellular(companyResponse.getCellular());
 		company.setPager(companyResponse.getPager());
+		company.setCategory(categoryDao.findById(companyResponse
+				.getCategoryId()));
+		company.setDivision(divisionDao.findById(companyResponse
+				.getDivisionId()));
+		company.setSale(saleDao.findById(companyResponse.getSaleId()));
 		return company;
 	}
 

@@ -3,6 +3,7 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +20,20 @@ public class SaleServiceImpl implements SaleService {
 
 	@Override
 	public List<SaleReq> getAll() {
-		List<Sale> saleList = saleDao.findAll();
-		List<SaleReq> saleReqList = new ArrayList<SaleReq>();
 
-		if (saleList != null && !saleList.isEmpty()) {
-			for (Sale sale : saleList) {
-				SaleReq saleReq = new SaleReq();
-				saleReq.setName(sale.getName());
-				saleReq.setSaleId(saleReq.getSaleId());
-				saleReq.setStatus(sale.getStatus().getStatus());
-				saleReqList.add(saleReq);
+		List<SaleReq> saleListResponse = new ArrayList<SaleReq>();
+		List<Sale> saleList = saleDao.findAll();
+
+		if (saleList != null) {
+
+			for (Sale Sale : saleList) {
+				SaleReq saleResponse = new SaleReq();
+				BeanUtils.copyProperties(Sale, saleResponse);
+				saleResponse.setStatus(Sale.getStatus().getStatus());
+				saleListResponse.add(saleResponse);
 			}
 		}
-		return saleReqList;
+		return saleListResponse;
 	}
 
 }

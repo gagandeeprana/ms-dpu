@@ -33,8 +33,8 @@ public interface VendorService {
 
 	Object update(Long id, VendorModel vendorModel);
 
-	boolean delete(Long vendorId, Long additionalContactId);
+	Object deleteAdditionalContact(Long vendorId, Long additionalContactId);
 
-	boolean deleteAdditionalContact(Long vendorId, Long additionalContactId);
+	Object deleteBillingLocation(Long vendorId, Long billingLocationId);
 	
 }

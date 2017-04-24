@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.CompanyResponse;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.VendorModel;
@@ -33,19 +32,18 @@ public class VendorController{
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Value("${company_unable_to_add_message}")
-	private String company_unable_to_add_message;
+	@Value("${vendor_unable_to_add_message}")
+	private String vendor_unable_to_add_message;
 
-	@Value("${company_unable_to_delete_message}")
-	private String company_unable_to_delete_message;
+	@Value("${vendor_unable_to_delete_message}")
+	private String vendor_unable_to_delete_message;
 	
-	@Value("${company_unable_to_update_message}")
-	private String company_unable_to_update_message;
-
+	@Value("${vendor_unable_to_update_message}")
+	private String vendor_unable_to_update_message;
+	
 	/**
-	 * this method is used to get all the vendors
-	 * @return all vendors
-	 * @author lakhvir.bansal
+	 * this method is used to return all vendors data
+	 * @return List<Vendors>
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
@@ -69,11 +67,11 @@ public class VendorController{
 		return json;
 	}
 
+
 	/**
-	 * this method is used to add vendor
-	 * @param companyResponse
-	 * @return all companies data
-	 * @author lakhvir.bansal
+	 * this method is used to add particular vendor
+	 * @param vendorModel
+	 * @return all vendors List
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody VendorModel vendorModel) {
@@ -91,7 +89,7 @@ public class VendorController{
 			
 		} catch (Exception e) {
 			logger.info("Exception inside VendorController add() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,vendor_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("VendorController add() Ends");
@@ -99,15 +97,14 @@ public class VendorController{
 	}
 
 	/**
-	 * this method is used to delete the company
-	 * @param companyId
-	 * @return List<Company>
-	 * @author lakhvir.bansal
+	 * this method is used to delete particular vendor
+	 * @param vendorId
+	 * @return List<vendor>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long vendorId) {
 
-		logger.info(" VendorController delete() starts ");
+		logger.info(" VendorController delete() starts, vendorId :"+vendorId);
 		Object obj = null;
 
 		try {
@@ -119,25 +116,24 @@ public class VendorController{
 				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController delete() :"+e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.info("Exception inside VendorController delete() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,vendor_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info(" CompanyController delete() ends ");
+		logger.info(" VendorController delete() ends, vendorId :"+vendorId);
 		return obj;
 	}
 
 	/**
-	 * this method is used to update the record
+	 * this method is used to update the vendor Record
 	 * @param id
-	 * @param companyResponse
-	 * @return List<Company>
-	 * @author lakhvir.bansal
+	 * @param vendorModel
+	 * @return List<Vendor>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long id, @RequestBody VendorModel vendorModel) {
 		
-		logger.info(" CompanyController delete() starts, companyId :"+id);
+		logger.info(" VendorController update() starts, vendorId :"+id);
 		Object obj = null;
 		try {
 			obj = vendorService.update(id, vendorModel);
@@ -147,24 +143,23 @@ public class VendorController{
 				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController update() :"+e.getMessage());
+			logger.info("Exception inside VendorController update() :"+e.getMessage());
 			e.printStackTrace();
-			obj = new ResponseEntity<Object>(new Failed(0,company_unable_to_update_message, Iconstants.ERROR),HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,vendor_unable_to_update_message, Iconstants.ERROR),HttpStatus.BAD_REQUEST);
 		}
-		logger.info(" CompanyController delete() ends, companyId :"+id);
+		logger.info(" VendorController update() ends, vendorId :"+id);
 		return obj;
 	}
 
 	/**
-	 * this method is used to get the particular company Data
+	 * this method is used to get the particular vendor Data
 	 * @param id
-	 * @return particular company details
-	 * @author lakhvir.bansal
+	 * @return particular vendor details
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("id") Long id) {
 		
-		logger.info(" CompanyController get() starts, companyId :"+id);
+		logger.info(" VendorController get() starts, vendorId :"+id);
 		String json = new String();
 		try {
 			VendorModel vendorResponse = vendorService.get(id);
@@ -172,22 +167,21 @@ public class VendorController{
 				json = mapper.writeValueAsString(vendorResponse);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController get() :"+e.getMessage());
+			logger.info("Exception inside VendorController get() :"+e.getMessage());
 		}
 
-		logger.info(" CompanyController get() ends, companyId :"+id);
+		logger.info(" VendorController get() ends, vendorId :"+id);
 		return json;
 	}
 	
 	/**
-	 * this method is used when we click on add button on company screen
-	 * @return master data for company
-	 * @author lakhvir.bansal
+	 * this method is used when we click on add button on vendor screen
+	 * @return master data for vendor
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
-		logger.info(" Inside CompanyController openAdd() Starts ");
+		logger.info(" Inside VendorController openAdd() Starts ");
 		String json = null;
 		
 		try {
@@ -195,22 +189,22 @@ public class VendorController{
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(vendorModel);
 		} catch (Exception e) {
-			logger.error(" Exception inside CompanyController openAdd() :"+e.getMessage());
+			logger.error(" Exception inside VendorController openAdd() :"+e.getMessage());
 		}
 		
-		logger.info(" Inside CompanyController openAdd() Ends ");
+		logger.info(" Inside VendorController openAdd() Ends ");
 		return json;
 	}
 	
 	/**
-	 * this method is used to searchCompany based on company name
-	 * @param companyName
-	 * @return List<Companies>
+	 * this method is used to searchVendor based on vendor name
+	 * @param vendorName
+	 * @return List<vendor>
 	 */
 	@RequestMapping(value = "/{vendorName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchVendor(@PathVariable("vendorName") String vendorName) {
 		
-		logger.info("Inside CompanyController searchCompany() Starts, companyName :"+vendorName);
+		logger.info("Inside VendorController searchVendor() Starts, vendorName :"+vendorName);
 		String json = new String();
 		
 		try {
@@ -219,17 +213,22 @@ public class VendorController{
 				json = mapper.writeValueAsString(vendorList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside CompanyController searchCompany() is :" + e.getMessage());
+			logger.error("Exception inside VendorController searchVendor() is :" + e.getMessage());
 		}
 		
-		logger.info(" Inside CompanyController searchCompany() Ends, companyName :"+vendorName);
+		logger.info(" Inside VendorController searchVendor() Ends, vendorName :"+vendorName);
 		return json;
 	}
 	
+	/**
+	 * this method is used to get the additional contacts of particular vendor
+	 * @param id
+	 * @return additional contacts of particular vendor
+	 */
 	@RequestMapping(value = "/{id}/additionalContacts", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getVendorAdditionalContacts(@PathVariable("id") Long id) {
 		
-		logger.info(" CompanyController get() starts, companyId :"+id);
+		logger.info(" VendorController getVendorAdditionalContacts() starts, vendorId :"+id);
 		String json = new String();
 		try {
 			VendorModel vendorResponse = vendorService.getVendorContacts(id);
@@ -237,32 +236,66 @@ public class VendorController{
 				json = mapper.writeValueAsString(vendorResponse);
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside CompanyController get() :"+e.getMessage());
+			logger.info("Exception inside VendorController getVendorAdditionalContacts() :"+e.getMessage());
 		}
 
-		logger.info(" CompanyController get() ends, companyId :"+id);
+		logger.info(" VendorController getVendorAdditionalContacts() ends, vendorId :"+id);
 		return json;
 	}
 	
-	
+	/**
+	 * this method is used to delete additionalContact based on vendorId and additionalContactId
+	 * @param vendorId
+	 * @param additionalContactId
+	 * @return Info regarding deletion
+	 */
 	@RequestMapping(value = "/{vendorid}/additionalContacts/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteAdditionalContact(@PathVariable("vendorid") Long vendorId,@PathVariable("id") Long additionalContactId) {
-		logger.info("[delete] : Enter : ID : "+additionalContactId);
+		
+		logger.info("VendorController deleteAdditionalContact() starts,vendorId :"+vendorId+", additionalContactId :"+additionalContactId);
 		Object obj = null;
-		boolean result = false;
-
+	
 		try {
 			
-			result = vendorService.deleteAdditionalContact(vendorId, additionalContactId);
-			if(result) {
-				//obj = new ResponseEntity<Object>(new Success(Integer.parseInt(companyDeletedCode), companyDeletedMessage, Iconstants.SUCCESS), HttpStatus.OK);
+			obj = vendorService.deleteAdditionalContact(vendorId, additionalContactId);
+			if (obj instanceof Success) {
+				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
 			} else {
-				//obj = new ResponseEntity<Object>(new Failed(Integer.parseInt(companyUnableToDeleteCode), companyUnableToDeleteMessage, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.info("Exception inside VendorController deleteAdditionalContact() :"+e.getMessage());
 		}
-		logger.info("[delete] : Exit ");
+		
+		logger.info("VendorController deleteAdditionalContact() ends,vendorId :"+vendorId+", additionalContactId :"+additionalContactId);
+		return obj;
+	}
+	
+	/**
+	 * this method is used to delete billingLocation based on vendorId and billingLocationId
+	 * @param vendorId
+	 * @param billingLocationId
+	 * @return Info regarding deletion
+	 */
+	@RequestMapping(value = "/{vendorid}/billingLocation/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteBillingLocation(@PathVariable("vendorid") Long vendorId,@PathVariable("id") Long billingLocationId) {
+		
+		logger.info("VendorController deleteBillingLocation() starts,vendorId :"+vendorId+", billingLocationId :"+billingLocationId);
+		Object obj = null;
+	
+		try {
+			
+			obj = vendorService.deleteBillingLocation(vendorId, billingLocationId);
+			if (obj instanceof Success) {
+				obj = new ResponseEntity<Object>(obj,HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(obj,HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			logger.info("Exception inside CompanyController get() :"+e.getMessage());
+		}
+		
+		logger.info("VendorController deleteBillingLocation() ends,vendorId :"+vendorId+", billingLocationId :"+billingLocationId);
 		return obj;
 	}
 }

@@ -148,10 +148,43 @@ public class VendorDaoImpl extends GenericDaoImpl<Vendor> implements VendorDao {
 	}
 
 	@Override
-	public boolean deleteAdditionalContact(Long vendorId,
-			Long additionalContactId) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteAdditionalContact(Long vendorId, Session session, Long additionalContactId) {
+		
+		VendorContacts vendorContacts = null;
+		boolean returnVal = false;
+		String hql ="from VendorContacts v where v.vendorObj.vendorId =:vendorId and v.vendorAdditionalContactId =:additionalContactId";
+			
+		Query query = session.createQuery(hql);
+		query.setParameter("vendorId", vendorId);
+		query.setParameter("additionalContactId", additionalContactId);
+		vendorContacts = (VendorContacts) query.uniqueResult();
+		
+		if(vendorContacts != null){
+			session.delete(vendorContacts);
+			returnVal = true;
+		}
+		
+		return returnVal;
+	}
+
+	@Override
+	public boolean deleteBillingLocation(Long vendorId, Session session, Long billingLocationId) {
+
+		VendorBillingLocation billingLocation = null;
+		boolean returnVal = false;
+		String hql ="from VendorBillingLocation v where v.vendorObj.vendorId =:vendorId and v.vendorBillingLocationId =:billingLocationId";
+			
+		Query query = session.createQuery(hql);
+		query.setParameter("vendorId", vendorId);
+		query.setParameter("billingLocationId", billingLocationId);
+		billingLocation = (VendorBillingLocation) query.uniqueResult();
+		
+		if(billingLocation != null){
+			session.delete(billingLocation);
+			returnVal = true;
+		}
+		
+		return returnVal;
 	}
 
 }

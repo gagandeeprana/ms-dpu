@@ -56,26 +56,44 @@ public class VendorServiceImpl implements VendorService{
 	
 	Logger logger = Logger.getLogger(VendorServiceImpl.class);
 	
-	@Value("${company_added_message}")
-	private String company_added_message;
+	@Value("${vendor_added_message}")
+	private String vendor_added_message;
 	
-	@Value("${company_unable_to_add_message}")
-	private String company_unable_to_add_message;
+	@Value("${vendor_unable_to_add_message}")
+	private String vendor_unable_to_add_message;
 	
-	@Value("${company_deleted_message}")
-	private String company_deleted_message;
+	@Value("${vendor_deleted_message}")
+	private String vendor_deleted_message;
 	
-	@Value("${company_unable_to_delete_message}")
-	private String company_unable_to_delete_message;
+	@Value("${vendor_unable_to_delete_message}")
+	private String vendor_unable_to_delete_message;
 	
-	@Value("${company_updated_message}")
-	private String company_updated_message;
+	@Value("${vendor_updated_message}")
+	private String vendor_updated_message;
 	
-	@Value("${company_unable_to_update_message}")
-	private String company_unable_to_update_message;
+	@Value("${vendor_unable_to_update_message}")
+	private String vendor_unable_to_update_message;
 	
-	@Value("${company_dependent_message}")
-	private String company_dependent_message;
+	@Value("${vendor_dependent_message}")
+	private String vendor_dependent_message;
+	
+	@Value("${vendor_additional_contact_delete_message}")
+	private String vendor_additional_contact_delete_message;
+	
+	@Value("${vendor_unable_additional_contact_delete_message}")
+	private String vendor_unable_additional_contact_delete_message;
+	
+	@Value("${vendor_additional_contact_dependent_message}")
+	private String vendor_additional_contact_dependent_message;
+	
+	@Value("${vendor_billing_location_delete_message}")
+	private String vendor_billing_location_delete_message;
+	
+	@Value("${vendor_unable_billing_location_delete_message}")
+	private String vendor_unable_billing_location_delete_message;
+	
+	@Value("${vendor_billing_location_dependent_message}")
+	private String vendor_billing_location_dependent_message;
 	
 	@Override
 	public Object addVendorData(VendorModel vendorModel) {
@@ -112,7 +130,7 @@ public class VendorServiceImpl implements VendorService{
 			}
 			
 			logger.error("Exception inside VendorServiceImpl addVendorData() :"+ e.getMessage());
-			return createFailedObject(company_unable_to_add_message);
+			return createFailedObject(vendor_unable_to_add_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -123,7 +141,7 @@ public class VendorServiceImpl implements VendorService{
 		}
 		
 		logger.info("Inside VendorServiceImpl addVendorData() ends");
-		return createSuccessObject(company_added_message);
+		return createSuccessObject(vendor_added_message);
 	}
 	
 	@Override
@@ -168,13 +186,13 @@ public class VendorServiceImpl implements VendorService{
 					}
 				}
 			} else{
-				return createFailedObject(company_unable_to_update_message);
+				return createFailedObject(vendor_unable_to_update_message);
 			}
 		} catch(Exception e){
 			if(tx != null){
 				tx.rollback();
 			}
-			return createFailedObject(company_unable_to_update_message);
+			return createFailedObject(vendor_unable_to_update_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -184,7 +202,7 @@ public class VendorServiceImpl implements VendorService{
 			}
 		}
 		
-		return createSuccessObject(company_updated_message);
+		return createSuccessObject(vendor_updated_message);
 	}
 	
 
@@ -305,16 +323,16 @@ public class VendorServiceImpl implements VendorService{
 				}
 				vendorDao.deleteVendor(vendor, session);
 			} else{
-				return createFailedObject(company_unable_to_delete_message);
+				return createFailedObject(vendor_unable_to_delete_message);
 			}
 		} catch(Exception e){
 			if(tx != null){
 				tx.rollback();
 			}
 			if(e instanceof ConstraintViolationException){
-				return createFailedObject(company_dependent_message);
+				return createFailedObject(vendor_dependent_message);
 			}
-			return createFailedObject(company_unable_to_delete_message);
+			return createFailedObject(vendor_unable_to_delete_message);
 		} finally{
 			if(tx != null){
 				tx.commit();
@@ -323,7 +341,7 @@ public class VendorServiceImpl implements VendorService{
 				session.close();
 			}
 		}
-		return createSuccessObject(company_deleted_message);
+		return createSuccessObject(vendor_deleted_message);
 	}
 
 	@Override
@@ -555,14 +573,9 @@ public class VendorServiceImpl implements VendorService{
 		return response;
 	}
 
-	@Override
-	public boolean delete(Long vendorId, Long additionalContactId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
-	public boolean deleteAdditionalContact(Long vendorId, Long additionalContactId) {
+	public Object deleteAdditionalContact(Long vendorId, Long additionalContactId) {
 		
 		Session session = null;
 		Transaction tx =null;
@@ -571,13 +584,66 @@ public class VendorServiceImpl implements VendorService{
 			session = sessionFactory.openSession();
 			tx =session.beginTransaction();
 			
-			boolean result = vendorDao.deleteAdditionalContact(vendorId, additionalContactId);
+			boolean retVal = vendorDao.deleteAdditionalContact(vendorId, session, additionalContactId);
+			if(!retVal){
+				return createFailedObject(vendor_unable_additional_contact_delete_message);
+			}
 		} catch(Exception e){
-			
+			if(tx != null){
+				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(vendor_additional_contact_dependent_message);
+			}
+			return createFailedObject(vendor_unable_additional_contact_delete_message);
 		} finally{
-			
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
 		}
 	
-		return false;
+		return createSuccessObjectWithOutList(vendor_additional_contact_delete_message);
+	}
+
+	private Object createSuccessObjectWithOutList(String message) {
+		Success success = new Success();
+		success.setMessage(message);
+		return success;
+	}
+
+	@Override
+	public Object deleteBillingLocation(Long vendorId, Long billingLocationId) {
+		Session session = null;
+		Transaction tx =null;
+		
+		try{
+			session = sessionFactory.openSession();
+			tx =session.beginTransaction();
+			
+			boolean retVal = vendorDao.deleteBillingLocation(vendorId, session, billingLocationId);
+			if(!retVal){
+				return createFailedObject(vendor_unable_billing_location_delete_message);
+			}
+		} catch(Exception e){
+			if(tx != null){
+				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				return createFailedObject(vendor_billing_location_dependent_message);
+			}
+			return createFailedObject(vendor_unable_billing_location_delete_message);
+		} finally{
+			if(tx != null){
+				tx.commit();
+			}
+			if(session != null){
+				session.close();
+			}
+		}
+	
+		return createSuccessObjectWithOutList(vendor_billing_location_delete_message);
 	}
 }

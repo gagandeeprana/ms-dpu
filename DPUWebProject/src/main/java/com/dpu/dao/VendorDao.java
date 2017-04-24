@@ -38,6 +38,8 @@ public interface VendorDao extends GenericDao<Vendor>{
 
 	void updateVendorBillingLocation(VendorBillingLocation vendorBillingLocation, Session session);
 
-	boolean deleteAdditionalContact(Long vendorId, Long additionalContactId);
+	boolean deleteAdditionalContact(Long vendorId, Session session, Long additionalContactId);
+
+	boolean deleteBillingLocation(Long vendorId, Session session, Long billingLocationId);
 	
 }

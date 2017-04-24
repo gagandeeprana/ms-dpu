@@ -32,6 +32,7 @@ import com.dpu.model.DivisionReq;
 import com.dpu.model.Failed;
 import com.dpu.model.SaleReq;
 import com.dpu.model.Success;
+import com.dpu.model.TypeResponse;
 import com.dpu.service.CategoryService;
 import com.dpu.service.CompanyAdditionalContactsService;
 import com.dpu.service.CompanyBillingLocationService;
@@ -39,6 +40,7 @@ import com.dpu.service.CompanyService;
 import com.dpu.service.DivisionService;
 import com.dpu.service.SaleService;
 import com.dpu.service.StatusService;
+import com.dpu.service.TypeService;
 
 @Component
 public class CompanyServiceImpl implements CompanyService {
@@ -63,6 +65,9 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	private SaleDao saleDao;
+	
+	@Autowired
+	private TypeService typeService;
 
 	@Autowired
 	CompanyBillingLocationDao companyBillingLocationDao;
@@ -497,6 +502,9 @@ public class CompanyServiceImpl implements CompanyService {
 
 		List<SaleReq> saleList = saleService.getAll();
 		companyResponse.setSaleList(saleList);
+		
+		List<TypeResponse> companyList = typeService.getAll(20l);
+		companyResponse.setCompanyList(companyList);
 
 		return companyResponse;
 	}

@@ -79,7 +79,6 @@ public class CompanyResponse implements Serializable {
 
 	private List<Status> statusList;
 
-
 	private String categoryName;
 
 	private String divisionName;
@@ -97,6 +96,18 @@ public class CompanyResponse implements Serializable {
 	private List<DivisionReq> divisionList;
 
 	private List<SaleReq> saleList;
+
+	private List<TypeResponse> companyList;
+
+	public List<TypeResponse> getCompanyList() {
+
+		return companyList;
+	}
+
+	public void setCompanyList(List<TypeResponse> companyList) {
+
+		this.companyList = companyList;
+	}
 
 	public String getCategoryName() {
 

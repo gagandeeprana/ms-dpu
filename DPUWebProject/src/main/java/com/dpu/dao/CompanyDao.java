@@ -21,7 +21,7 @@ public interface CompanyDao extends GenericDao<Company>{
 	
 	List<Object[]> getCompanyData();
 
-	void updateData(Company company, CompanyResponse companyResponse, Session session);
+	boolean updateData(Company company, CompanyResponse companyResponse, Session session);
 
 	List<Object[]> getBillingLocations(Long companyId, Session session);
 

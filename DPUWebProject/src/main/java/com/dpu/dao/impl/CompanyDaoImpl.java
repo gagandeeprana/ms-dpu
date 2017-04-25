@@ -8,9 +8,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.CategoryDao;
+import com.dpu.dao.CompanyAdditionalContactsDao;
 import com.dpu.dao.CompanyDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.SaleDao;
@@ -40,10 +42,16 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 	private SaleDao saleDao;
 
 	@Autowired
-	StatusService statusService;
+	private StatusService statusService;
 
 	@Autowired
-	TypeService typeService;
+	private TypeService typeService;
+	
+	@Autowired
+	private CompanyAdditionalContactsDao companyAdditionalContactsDao;
+	
+	@Value("${company_unable_to_add_primary_again_message}")
+	private String company_unable_to_add_primary_again_message;
 
 	Logger logger = Logger.getLogger(CompanyDaoImpl.class);
 
@@ -75,12 +83,12 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 	}
 
 	@Override
-	public void updateData(Company company, CompanyResponse companyResponse,
+	public boolean updateData(Company company, CompanyResponse companyResponse,
 			Session session) {
 
 		String[] ignoreProp = new String[1];
 		ignoreProp[0] = "companyId";
-
+		boolean sts = true;
 		BeanUtils.copyProperties(companyResponse, company, ignoreProp);
 
 		company.setCategory(categoryDao.findById(companyResponse
@@ -105,8 +113,7 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 			}
 		}
 
-		List<AdditionalContacts> additionalContactsList = companyResponse
-				.getAdditionalContacts();
+		List<AdditionalContacts> additionalContactsList = companyResponse.getAdditionalContacts();
 
 		if (additionalContactsList != null && !additionalContactsList.isEmpty()) {
 			for (AdditionalContacts additionalContacts : additionalContactsList) {
@@ -114,14 +121,41 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 				BeanUtils.copyProperties(additionalContacts,
 						comAdditionalContacts);
 				comAdditionalContacts.setCompany(company);
-				//Long companyId = company.getCompanyId();
+				// Long companyId = company.getCompanyId();
 				comAdditionalContacts.setStatus(statusService
 						.get(additionalContacts.getStatusId()));
 				if (additionalContacts.getFunctionId() != null)
-					comAdditionalContacts.setFunction(typeService.get(additionalContacts.getFunctionId()));
-				session.saveOrUpdate(comAdditionalContacts);
+					comAdditionalContacts.setFunction(typeService
+							.get(additionalContacts.getFunctionId()));
+				sts = isPrimaryFunctionExist(session,company.getCompanyId(),additionalContacts.getFunctionId());
+				if (sts)
+					session.saveOrUpdate(comAdditionalContacts);
 			}
 		}
+		return sts;
+	}
+
+	private boolean isPrimaryFunctionExist(Session session,Long companyId ,Long functionId) {
+
+		
+		Query query = session.createQuery("from CompanyAdditionalContacts where company = "+companyId+" and function ="+functionId);
+		/*Criterion companyAdditionaContactCriteria = Restrictions.and(
+				Restrictions.eq("company", companyId),
+				Restrictions.eq("function", 83));
+		List<CompanyAdditionalContacts> companyAdditionalContacts = companyAdditionalContactsDao
+				.find(companyAdditionaContactCriteria);*/
+		if(functionId == 83){
+			@SuppressWarnings("unchecked")
+			List<CompanyAdditionalContacts> companyAdditionalContacts = query.list();
+			if (companyAdditionalContacts != null
+					&& !companyAdditionalContacts.isEmpty()) {
+				if (companyAdditionalContacts.size() >= 1)
+					return false;
+
+			}
+		}
+		return true;
+
 	}
 
 	@SuppressWarnings("unchecked")

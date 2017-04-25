@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -70,22 +71,22 @@ public class CompanyServiceImpl implements CompanyService {
 	private TypeService typeService;
 
 	@Autowired
-	CompanyBillingLocationDao companyBillingLocationDao;
+	private CompanyBillingLocationDao companyBillingLocationDao;
 
 	@Autowired
-	CompanyAdditionalContactsDao companyAdditionalContactsDao;
+	private CompanyAdditionalContactsDao companyAdditionalContactsDao;
 
 	@Autowired
-	CompanyBillingLocationService companyBillingLocationService;
+	private CompanyBillingLocationService companyBillingLocationService;
 
 	@Autowired
-	CompanyAdditionalContactsService companyAdditionalContactsService;
+	private CompanyAdditionalContactsService companyAdditionalContactsService;
 
 	@Autowired
-	SessionFactory sessionFactory;
+	private SessionFactory sessionFactory;
 
 	@Autowired
-	StatusService statusService;
+	private StatusService statusService;
 
 	Logger logger = Logger.getLogger(CompanyServiceImpl.class);
 
@@ -94,6 +95,9 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Value("${company_unable_to_add_message}")
 	private String company_unable_to_add_message;
+	
+	@Value("${company_unable_to_add_two_primary_message}")
+	private String company_unable_to_add_two_primary_message;
 
 	@Value("${company_deleted_message}")
 	private String company_deleted_message;
@@ -116,7 +120,7 @@ public class CompanyServiceImpl implements CompanyService {
 		logger.info("Inside CompanyServiceImpl addCompanyData() starts");
 		Session session = null;
 		Transaction tx = null;
-
+		boolean sts = true;
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -140,8 +144,16 @@ public class CompanyServiceImpl implements CompanyService {
 				for (AdditionalContacts additionalContact : additionalContacts) {
 					CompanyAdditionalContacts comAdditionalContact = setAdditionalContactData(
 							additionalContact, company);
-					companyAdditionalContactsDao.insertAdditionalContacts(
-							comAdditionalContact, session);
+
+					sts = isPrimaryFunctionExist(session,
+							company.getCompanyId(), comAdditionalContact
+									.getFunction().getTypeId());
+					if (sts) {
+						companyAdditionalContactsDao.insertAdditionalContacts(
+								comAdditionalContact, session);
+					} else {
+						return createFailedObject(company_unable_to_add_two_primary_message);
+					}
 				}
 			}
 
@@ -154,7 +166,7 @@ public class CompanyServiceImpl implements CompanyService {
 					+ e.getMessage());
 			return createFailedObject(company_unable_to_add_message);
 		} finally {
-			if (tx != null) {
+			if (sts && tx != null) {
 				tx.commit();
 			}
 			if (session != null) {
@@ -200,6 +212,32 @@ public class CompanyServiceImpl implements CompanyService {
 		companyAdditionalContact.setFunction(typeService.get(additionalContact
 				.getFunctionId()));
 		return companyAdditionalContact;
+	}
+
+	private boolean isPrimaryFunctionExist(Session session, Long companyId,
+			Long functionId) {
+
+		Query query = session
+				.createQuery("from CompanyAdditionalContacts where company = "
+						+ companyId + " and function = " + functionId);
+		/*
+		 * Criterion companyAdditionaContactCriteria = Restrictions.and(
+		 * Restrictions.eq("company", companyId), Restrictions.eq("function",
+		 * 83)); List<CompanyAdditionalContacts> companyAdditionalContacts =
+		 * companyAdditionalContactsDao .find(companyAdditionaContactCriteria);
+		 */
+		if (functionId == 83) {
+			@SuppressWarnings("unchecked")
+			List<CompanyAdditionalContacts> companyAdditionalContacts = query.list();
+			if (companyAdditionalContacts != null
+					&& !companyAdditionalContacts.isEmpty()) {
+				if (companyAdditionalContacts.size() >= 1)
+					return false;
+
+			}
+		}
+		return true;
+
 	}
 
 	private CompanyBillingLocation setBillingData(
@@ -461,13 +499,14 @@ public class CompanyServiceImpl implements CompanyService {
 		Company company = companyDao.findById(id);
 		Session session = null;
 		Transaction tx = null;
+		boolean sts = true;
 
 		try {
 			if (company != null) {
 				session = sessionFactory.openSession();
 				tx = session.beginTransaction();
 
-				companyDao.updateData(company, companyResponse, session);
+				sts = companyDao.updateData(company, companyResponse, session);
 			} else {
 				return createFailedObject(company_unable_to_update_message);
 			}
@@ -477,14 +516,15 @@ public class CompanyServiceImpl implements CompanyService {
 			}
 			return createFailedObject(company_unable_to_update_message);
 		} finally {
-			if (tx != null) {
+			if (sts && tx != null) {
 				tx.commit();
 			}
 			if (session != null) {
 				session.close();
 			}
 		}
-
+		if (!sts)
+			return createFailedObject(company_unable_to_add_two_primary_message);
 		return createSuccessObject(company_updated_message);
 	}
 

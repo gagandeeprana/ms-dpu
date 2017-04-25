@@ -21,6 +21,7 @@ import com.dpu.model.AdditionalContacts;
 import com.dpu.model.BillingLocation;
 import com.dpu.model.CompanyResponse;
 import com.dpu.service.StatusService;
+import com.dpu.service.TypeService;
 
 @Repository
 public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
@@ -40,6 +41,9 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 
 	@Autowired
 	StatusService statusService;
+
+	@Autowired
+	TypeService typeService;
 
 	Logger logger = Logger.getLogger(CompanyDaoImpl.class);
 
@@ -79,8 +83,10 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 
 		BeanUtils.copyProperties(companyResponse, company, ignoreProp);
 
-		company.setCategory(categoryDao.findById(companyResponse.getCategoryId()));
-		company.setDivision(divisionDao.findById(companyResponse.getDivisionId()));
+		company.setCategory(categoryDao.findById(companyResponse
+				.getCategoryId()));
+		company.setDivision(divisionDao.findById(companyResponse
+				.getDivisionId()));
 		company.setSale(saleDao.findById(companyResponse.getSaleId()));
 		session.saveOrUpdate(company);
 
@@ -108,8 +114,11 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 				BeanUtils.copyProperties(additionalContacts,
 						comAdditionalContacts);
 				comAdditionalContacts.setCompany(company);
+				//Long companyId = company.getCompanyId();
 				comAdditionalContacts.setStatus(statusService
 						.get(additionalContacts.getStatusId()));
+				if (additionalContacts.getFunctionId() != null)
+					comAdditionalContacts.setFunction(typeService.get(additionalContacts.getFunctionId()));
 				session.saveOrUpdate(comAdditionalContacts);
 			}
 		}

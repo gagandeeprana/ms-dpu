@@ -55,6 +55,25 @@ public class CompanyAdditionalContacts {
 	@Column(name = "email")
 	private String email;
 
+//	private String functionName;
+
+//	private Long functionId;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "function_id")
+	private Type function;
+ 
+
+	public Type getFunction() {
+
+		return function;
+	}
+
+	public void setFunction(Type function) {
+
+		this.function = function;
+	}
+
 	@Transient
 	private Map<Integer, List<CompanyWorkingHours>> map = new HashMap<>();
 
@@ -63,98 +82,122 @@ public class CompanyAdditionalContacts {
 	private Company company;
 
 	public Long getAdditionalContactId() {
+
 		return additionalContactId;
 	}
 
 	public void setAdditionalContactId(Long additionalContactId) {
+
 		this.additionalContactId = additionalContactId;
 	}
 
 	public String getCustomerName() {
+
 		return customerName;
 	}
 
 	public void setCustomerName(String customerName) {
+
 		this.customerName = customerName;
 	}
 
 	public String getPosition() {
+
 		return position;
 	}
 
 	public void setPosition(String position) {
+
 		this.position = position;
 	}
 
 	public String getPhone() {
+
 		return phone;
 	}
 
 	public void setPhone(String phone) {
+
 		this.phone = phone;
 	}
 
 	public String getExt() {
+
 		return ext;
 	}
 
 	public void setExt(String ext) {
+
 		this.ext = ext;
 	}
 
 	public String getFax() {
+
 		return fax;
 	}
 
 	public void setFax(String fax) {
+
 		this.fax = fax;
 	}
 
 	public String getPrefix() {
+
 		return prefix;
 	}
 
 	public void setPrefix(String prefix) {
+
 		this.prefix = prefix;
 	}
 
 	public String getCellular() {
+
 		return cellular;
 	}
 
 	public void setCellular(String cellular) {
+
 		this.cellular = cellular;
 	}
 
 	public String getEmail() {
+
 		return email;
 	}
 
 	public Status getStatus() {
+
 		return status;
 	}
 
 	public void setStatus(Status status) {
+
 		this.status = status;
 	}
 
 	public void setEmail(String email) {
+
 		this.email = email;
 	}
 
 	public Map<Integer, List<CompanyWorkingHours>> getMap() {
+
 		return map;
 	}
 
 	public void setMap(Map<Integer, List<CompanyWorkingHours>> map) {
+
 		this.map = map;
 	}
 
 	public Company getCompany() {
+
 		return company;
 	}
 
 	public void setCompany(Company company) {
+
 		this.company = company;
 	}
 }

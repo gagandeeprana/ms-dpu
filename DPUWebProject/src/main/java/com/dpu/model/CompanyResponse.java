@@ -117,11 +117,24 @@ public class CompanyResponse implements Serializable {
 
 	private List<TypeResponse> countryList;
 
+	private List<TypeResponse> functionList;
+
+	public List<TypeResponse> getFunctionList() {
+
+		return functionList;
+	}
+
+	public void setFunctionList(List<TypeResponse> functionList) {
+
+		this.functionList = functionList;
+	}
+
 	public List<TypeResponse> getCountryList() {
 		return countryList;
 	}
 
 	public void setCountryList(List<TypeResponse> countryList) {
+
 		this.countryList = countryList;
 	}
 

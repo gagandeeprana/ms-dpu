@@ -1,8 +1,6 @@
 package com.dpu.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -40,6 +37,18 @@ public class VendorInvoice {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "currency_id")
 	private Type currency;
+	
+	@Column(name = "created_by")
+	private Long created_by;
+
+	@Column(name = "created_on")
+	private Date createdOn;
+	
+	@Column(name = "modified_by")
+	private Long modified_by;
+	
+	@Column(name = "modified_on")
+	private Date modifiedOn;
 
 	public Long getVendorInvoiceId() {
 		return vendorInvoiceId;

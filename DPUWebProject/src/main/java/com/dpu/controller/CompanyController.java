@@ -221,6 +221,31 @@ public class CompanyController extends MessageProperties {
 		logger.info(" Inside CompanyController openAdd() Ends ");
 		return json;
 	}
+	
+	/**
+	 * this method is used when we click on add button on company screen
+	 * 
+	 * @return master data for company
+	 * @author sumit
+	 */
+	@RequestMapping(value = "/openAddAdditionalContact", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object openAddAdditionalContact() {
+
+		logger.info(" Inside CompanyController openAddAdditionalContact() Starts ");
+		String json = null;
+
+		try {
+			CompanyResponse companyResponse = companyService.getOpenAddAdditionalContact();
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(companyResponse);
+		} catch (Exception e) {
+			logger.error(" Exception inside CompanyController openAddAdditionalContact() :"
+					+ e.getMessage());
+		}
+
+		logger.info(" Inside CompanyController openAddAdditionalContact() Ends ");
+		return json;
+	}
 
 	/**
 	 * this method is used to searchCompany based on company name

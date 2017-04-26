@@ -95,7 +95,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Value("${company_unable_to_add_message}")
 	private String company_unable_to_add_message;
-	
+
 	@Value("${company_unable_to_add_two_primary_message}")
 	private String company_unable_to_add_two_primary_message;
 
@@ -228,7 +228,8 @@ public class CompanyServiceImpl implements CompanyService {
 		 */
 		if (functionId == 83) {
 			@SuppressWarnings("unchecked")
-			List<CompanyAdditionalContacts> companyAdditionalContacts = query.list();
+			List<CompanyAdditionalContacts> companyAdditionalContacts = query
+					.list();
 			if (companyAdditionalContacts != null
 					&& !companyAdditionalContacts.isEmpty()) {
 				if (companyAdditionalContacts.size() >= 1)
@@ -533,9 +534,6 @@ public class CompanyServiceImpl implements CompanyService {
 
 		CompanyResponse companyResponse = new CompanyResponse();
 
-		List<Status> statusList = statusService.getAll();
-		companyResponse.setStatusList(statusList);
-
 		List<CategoryReq> categoryList = categoryService.getAll();
 		companyResponse.setCategoryList(categoryList);
 
@@ -545,8 +543,22 @@ public class CompanyServiceImpl implements CompanyService {
 		List<SaleReq> saleList = saleService.getAll();
 		companyResponse.setSaleList(saleList);
 
-		List<TypeResponse> companyList = typeService.getAll(20l);
-		companyResponse.setCompanyList(companyList);
+		List<TypeResponse> countryList = typeService.getAll(21l);
+		companyResponse.setCountryList(countryList);
+
+		return companyResponse;
+	}
+
+	@Override
+	public CompanyResponse getOpenAddAdditionalContact() {
+
+		CompanyResponse companyResponse = new CompanyResponse();
+
+		List<Status> statusList = statusService.getAll();
+		companyResponse.setStatusList(statusList);
+
+		List<TypeResponse> functionList = typeService.getAll(20l);
+		companyResponse.setFunctionList(functionList);
 
 		return companyResponse;
 	}

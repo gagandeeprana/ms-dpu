@@ -26,5 +26,7 @@ public interface CompanyService {
 	CompanyResponse getCompanyBillingLocationAndContacts(Long companyId);
 
 	List<CompanyResponse> getCompanyByCompanyName(String companyName);
+
+	CompanyResponse getOpenAddAdditionalContact();
 	
 }

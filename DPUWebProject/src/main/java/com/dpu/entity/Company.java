@@ -96,6 +96,20 @@ public class Company {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "sale_id")
 	private Sale sale;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "country_id")
+	private Type country;
+	
+	
+
+	public Type getCountry() {
+		return country;
+	}
+
+	public void setCountry(Type country) {
+		this.country = country;
+	}
 
 	public Division getDivision() {
 

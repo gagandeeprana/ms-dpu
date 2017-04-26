@@ -209,8 +209,8 @@ public class CompanyServiceImpl implements CompanyService {
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
 		companyAdditionalContact.setStatus(statusService.get(additionalContact
 				.getStatusId()));
-		companyAdditionalContact.setFunction(typeService.get(additionalContact
-				.getFunctionId()));
+		companyAdditionalContact.setFunction(typeService.get(additionalContact.getFunctionId()));
+				 
 		return companyAdditionalContact;
 	}
 
@@ -293,6 +293,7 @@ public class CompanyServiceImpl implements CompanyService {
 		company.setDivision(divisionDao.findById(companyResponse
 				.getDivisionId()));
 		company.setSale(saleDao.findById(companyResponse.getSaleId()));
+		company.setCountry(typeService.get(companyResponse.getCountryId()));
 		return company;
 	}
 
@@ -545,8 +546,8 @@ public class CompanyServiceImpl implements CompanyService {
 		List<SaleReq> saleList = saleService.getAll();
 		companyResponse.setSaleList(saleList);
 
-		List<TypeResponse> companyList = typeService.getAll(20l);
-		companyResponse.setCompanyList(companyList);
+		List<TypeResponse> countryList = typeService.getAll(21l);
+		companyResponse.setCountryList(countryList);
 
 		return companyResponse;
 	}

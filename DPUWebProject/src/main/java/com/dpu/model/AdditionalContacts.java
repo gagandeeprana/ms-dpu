@@ -32,6 +32,42 @@ public class AdditionalContacts {
 
 	private Long functionId;
 
+	private String countryName;
+
+	private Long countryId;
+
+	private TypeResponse country;
+
+	public String getCountryName() {
+
+		return countryName;
+	}
+
+	public void setCountryName(String countryName) {
+
+		this.countryName = countryName;
+	}
+
+	public Long getCountryId() {
+
+		return countryId;
+	}
+
+	public void setCountryId(Long countryId) {
+
+		this.countryId = countryId;
+	}
+
+	public TypeResponse getCountry() {
+
+		return country;
+	}
+
+	public void setCountry(TypeResponse country) {
+
+		this.country = country;
+	}
+
 	private Long companyId;
 
 	public Long getCompanyId() {

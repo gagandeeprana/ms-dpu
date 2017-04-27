@@ -102,7 +102,6 @@ public class Company {
 	private Type country;
 	
 	
-
 	public Type getCountry() {
 		return country;
 	}

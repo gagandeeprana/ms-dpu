@@ -55,14 +55,27 @@ public class CompanyAdditionalContacts {
 	@Column(name = "email")
 	private String email;
 
-//	private String functionName;
+	// private String functionName;
 
-//	private Long functionId;
+	// private Long functionId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "function_id")
 	private Type function;
- 
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "country_id")
+	private Type country;
+
+	public Type getCountry() {
+
+		return country;
+	}
+
+	public void setCountry(Type country) {
+
+		this.country = country;
+	}
 
 	public Type getFunction() {
 

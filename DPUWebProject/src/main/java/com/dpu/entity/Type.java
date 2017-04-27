@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 /**
  * @author jagvir
  *
@@ -16,6 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "typemaster")
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class Type {
 
 	@Id

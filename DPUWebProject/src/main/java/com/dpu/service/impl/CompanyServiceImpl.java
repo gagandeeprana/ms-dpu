@@ -486,11 +486,15 @@ public class CompanyServiceImpl implements CompanyService {
 			response.setDivisionName(companyObj.getDivision().getDivisionName());
 		if (companyObj.getSale().getName() != null)
 			response.setSaleName(companyObj.getSale().getName());
+		if(companyObj.getCountry() != null){
+		if (companyObj.getCountry().getTypeName() != null)
+			response.setCountryName(companyObj.getCountry().getTypeName());
+		}
 		
 		List<AdditionalContacts> additionalContactsList =  new ArrayList<AdditionalContacts>();
 		try{
 			Query query = session.createQuery("from CompanyAdditionalContacts where company = "+companyObj.getCompanyId());
-		//	Criterion additionalContactCriteria = Restrictions.and(Restrictions.eq("company", companyObj.getCompanyId()));
+
 			List<CompanyAdditionalContacts> companyAdditionalContactsList = query.list();
 			
 				if(companyAdditionalContactsList != null){

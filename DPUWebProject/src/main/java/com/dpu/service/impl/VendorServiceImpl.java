@@ -390,7 +390,7 @@ public class VendorServiceImpl implements VendorService{
 					response.setBillingLocations(billingLocations);
 				}
 				
-				List<VendorContacts> comAddContacts = vendor.getAdditionalContacts();
+				/*List<VendorContacts> comAddContacts = vendor.getAdditionalContacts();
 				
 				if(comAddContacts != null && !comAddContacts.isEmpty()){
 					List<VendorAdditionalContactsModel> addContacts = new ArrayList<VendorAdditionalContactsModel>();
@@ -403,7 +403,7 @@ public class VendorServiceImpl implements VendorService{
 					}
 					
 					response.setAdditionalContacts(addContacts);
-				}
+				}*/
 				
 				List<Status> statusList = statusService.getAll();
 				response.setStatusList(statusList);

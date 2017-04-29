@@ -76,14 +76,14 @@ public class TaxCodeController {
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody HandlingModel handlingModel) {
+	public Object add(@RequestBody TaxCodeModel taxCodeModel) {
 
 		logger.info("Inside HandlingController add() starts ");
 		Object obj = null;
 		
 		try {
 
-			Object result = null;//handlingService.addHandling(handlingModel);
+			Object result = taxCodeService.addTaxCode(taxCodeModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {

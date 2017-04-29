@@ -104,31 +104,44 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	}
 
 	@Override
-	public Object addHandling(HandlingModel handlingModel) {
+	public Object addTaxCode(TaxCodeModel taxCodeModel) {
 
 		logger.info("HandlingServiceImpl addHandling() starts ");
-		Handling handling = null;
+		TaxCode taxCode = null;
+		Session session = null;
+		Transaction tx = null;
 		try {
-			handling = setHandlingValues(handlingModel);
-			//handlingDao.save(handling);
+			
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			taxCode = setTaxCodeValues(taxCodeModel);
+			session.save(taxCode);
 
 		} catch (Exception e) {
+			if(tx != null){
+				tx.rollback();
+			}
 			logger.info("Exception inside HandlingServiceImpl addHandling() :"+ e.getMessage());
 			return createFailedObject(handling_unable_to_add_message);
 
+		} finally{
+			if(tx != null){
+				tx.commit();
+			} 
+			if(session !=null){
+				session.close();
+			}
 		}
 		
 		logger.info("HandlingServiceImpl addHandling() ends ");
 		return createSuccessObject(handling_added_message);
 	}
 
-	private Handling setHandlingValues(HandlingModel handlingModel) {
+	private TaxCode setTaxCodeValues(TaxCodeModel taxCodeModel) {
 		
-		Handling handling = new Handling();
-		handling.setName(handlingModel.getName());
-		Status status = statusService.get(handlingModel.getStatusId());
-		handling.setStatus(status);
-		return handling;
+		TaxCode taxCode = new TaxCode();
+		BeanUtils.copyProperties(taxCodeModel, taxCode);
+		return taxCode;
 	}
 
 	@Override

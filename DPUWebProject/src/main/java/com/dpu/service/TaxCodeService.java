@@ -18,7 +18,7 @@ public interface TaxCodeService {
 	
 	List<HandlingModel> getSpecificData();
 
-	Object addHandling(HandlingModel handlingModel);
+	Object addTaxCode(TaxCodeModel taxCodeModel);
 
 	List<HandlingModel> getHandlingByHandlingName(String handlingName);
 

@@ -1,13 +1,9 @@
-/**
- * 
- */
 package com.dpu.dao;
 
 import java.util.List;
 
 import org.hibernate.Session;
 
-import com.dpu.entity.Handling;
 import com.dpu.entity.TaxCode;
 
 public interface TaxCodeDao extends GenericDao<TaxCode> {
@@ -16,5 +12,5 @@ public interface TaxCodeDao extends GenericDao<TaxCode> {
 
 	TaxCode findById(Long id, Session session);
 
-	List<Handling> getHandlingByHandlingName(Session session, String handlingName);
+	List<TaxCode> getTaxCodesByTaxCodeNames(Session session, String taxCodeName);
 }

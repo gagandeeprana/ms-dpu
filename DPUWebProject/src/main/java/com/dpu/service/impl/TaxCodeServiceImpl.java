@@ -260,22 +260,20 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	}
 
 	@Override
-	public List<HandlingModel> getHandlingByHandlingName(String handlingName) {
+	public List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName) {
 		
 		logger.info("HandlingServiceImpl getHandlingByHandlingName() starts ");
 		Session session = null;
-		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
+		List<TaxCodeModel> taxCodeList = new ArrayList<TaxCodeModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Handling> handlingList = null;//handlingDao.getHandlingByHandlingName(session, handlingName);
-			if (handlingList != null && !handlingList.isEmpty()) {
-				for (Handling handling : handlingList) {
-					HandlingModel handlingObj = new HandlingModel();
-					handlingObj.setId(handling.getId());
-					handlingObj.setName(handling.getName());
-					handlingObj.setStatusName(handling.getStatus().getStatus());
-					handlings.add(handlingObj);
+			List<TaxCode> taxCodes = taxCodeDao.getTaxCodesByTaxCodeNames(session, taxCodeName);
+			if (taxCodes != null && !taxCodes.isEmpty()) {
+				for (TaxCode taxCode : taxCodes) {
+					TaxCodeModel taxCodeModel = new TaxCodeModel();
+					BeanUtils.copyProperties(taxCode, taxCodeModel);
+					taxCodeList.add(taxCodeModel);
 				}
 			}
 		} finally {
@@ -285,7 +283,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		}
 		
 		logger.info("HandlingServiceImpl getHandlingByHandlingName() ends ");
-		return handlings;
+		return taxCodeList;
 	}
 
 	@Override

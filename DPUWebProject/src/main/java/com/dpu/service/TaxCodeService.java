@@ -20,6 +20,6 @@ public interface TaxCodeService {
 
 	Object addTaxCode(TaxCodeModel taxCodeModel);
 
-	List<HandlingModel> getHandlingByHandlingName(String handlingName);
+	List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName);
 
 }

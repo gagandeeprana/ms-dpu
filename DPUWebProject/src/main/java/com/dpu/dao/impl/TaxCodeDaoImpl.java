@@ -9,9 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.dpu.dao.HandlingDao;
 import com.dpu.dao.TaxCodeDao;
-import com.dpu.entity.Handling;
 import com.dpu.entity.TaxCode;
 
 @Repository
@@ -36,10 +34,10 @@ public class TaxCodeDaoImpl extends GenericDaoImpl<TaxCode> implements TaxCodeDa
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Handling> getHandlingByHandlingName(Session session, String handlingName) {
-		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status where h.name like :handlingName ");
+	public List<TaxCode> getTaxCodesByTaxCodeNames(Session session, String taxCodeName) {
+		StringBuilder sb = new StringBuilder(" select h from TaxCode h where h.taxCode like :taxCodeName ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("handlingName", "%"+handlingName+"%");
+		query.setParameter("taxCodeName", "%"+taxCodeName+"%");
 		return query.list();
 	}
 

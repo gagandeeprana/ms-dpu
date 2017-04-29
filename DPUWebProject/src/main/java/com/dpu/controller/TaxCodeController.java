@@ -213,22 +213,22 @@ public class TaxCodeController {
 	 * @return List<Handling>
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{handlingName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchHandling(@PathVariable("handlingName") String handlingName) {
+	@RequestMapping(value = "/{taxCodeName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchTaxCode(@PathVariable("taxCodeName") String taxCodeName) {
 
-		logger.info("Inside HandlingController searchHandling() Starts, handlingName :"+ handlingName);
+		logger.info("Inside HandlingController searchHandling() Starts, handlingName :"+ taxCodeName);
 		String json = new String();
 
 		try {
-			List<HandlingModel> handlingList = null;//handlingService.getHandlingByHandlingName(handlingName);
-			if (handlingList != null && handlingList.size() > 0) {
-				json = mapper.writeValueAsString(handlingList);
+			List<TaxCodeModel> taxCodeList = taxCodeService.getTaxCodeByTaxCodeName(taxCodeName);
+			if (taxCodeList != null && taxCodeList.size() > 0) {
+				json = mapper.writeValueAsString(taxCodeList);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController searchHandling() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside HandlingController searchHandling() Ends, handlingName :"+ handlingName);
+		logger.info(" Inside HandlingController searchHandling() Ends, handlingName :"+ taxCodeName);
 		return json;
 	}
 

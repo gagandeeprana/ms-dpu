@@ -106,13 +106,13 @@ public class TaxCodeController {
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long handlingId) {
+	public Object delete(@PathVariable("id") Long taxCodeId) {
 
-		logger.info("Inside HandlingController delete() Starts, handlingId is :" + handlingId);
+		logger.info("Inside HandlingController delete() Starts, handlingId is :" + taxCodeId);
 		Object obj = null;
 
 		try {
-			Object result = null;//handlingService.delete(handlingId);
+			Object result = taxCodeService.delete(taxCodeId);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -123,7 +123,7 @@ public class TaxCodeController {
 			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + handlingId);
+		logger.info("Inside CategoryController delete() Ends, id is :" + taxCodeId);
 		return obj;
 
 	}
@@ -135,12 +135,12 @@ public class TaxCodeController {
 	 * @return List<Categories>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long handlingId, @RequestBody HandlingModel handlingModel) {
+	public Object update(@PathVariable("id") Long taxCodeId, @RequestBody TaxCodeModel taxCodeModel) {
 
-		logger.info("Inside HandlingController update() Starts, handlingId is :" + handlingId);
+		logger.info("Inside HandlingController update() Starts, handlingId is :" + taxCodeId);
 		Object obj = null;
 		try {
-			Object result = null;// handlingService.update(handlingId, handlingModel);
+			Object result = taxCodeService.update(taxCodeId, taxCodeModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -152,7 +152,7 @@ public class TaxCodeController {
 			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);
+		logger.info("Inside HandlingController update() Ends, handlingId is :" + taxCodeId);
 		return obj;
 	}
 
@@ -162,24 +162,24 @@ public class TaxCodeController {
 	 * @return handlingData
 	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/{handlingId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getHandlingById(@PathVariable("handlingId") Long handlingId) {
+	@RequestMapping(value = "/{taxCodeId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getHandlingById(@PathVariable("taxCodeId") Long taxCodeId) {
 		
-		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ handlingId);
+		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ taxCodeId);
 		String json = null;
 
 		try {
 
-			HandlingModel handlingModel = null;//handlingService.get(handlingId);
+			TaxCodeModel taxCodeModel = taxCodeService.get(taxCodeId);
 
-			if (handlingModel != null) {
-				json = mapper.writeValueAsString(handlingModel);
+			if (taxCodeModel != null) {
+				json = mapper.writeValueAsString(taxCodeModel);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ handlingId);
+		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ taxCodeId);
 		return json;
 	}
 

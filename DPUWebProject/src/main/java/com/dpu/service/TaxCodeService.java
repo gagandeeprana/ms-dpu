@@ -6,7 +6,7 @@ import com.dpu.model.HandlingModel;
 import com.dpu.model.TaxCodeModel;
 
 public interface TaxCodeService {
-	Object update(Long id, HandlingModel handlingModel);
+	Object update(Long id, TaxCodeModel taxCodeModel);
 
 	Object delete(Long id);
 
@@ -14,7 +14,7 @@ public interface TaxCodeService {
 
 	HandlingModel getOpenAdd();
 
-	HandlingModel get(Long id);
+	TaxCodeModel get(Long id);
 	
 	List<HandlingModel> getSpecificData();
 

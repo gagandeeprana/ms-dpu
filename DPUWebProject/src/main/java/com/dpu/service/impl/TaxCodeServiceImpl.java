@@ -145,24 +145,35 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	}
 
 	@Override
-	public Object update(Long id, HandlingModel handlingModel) {
+	public Object update(Long id, TaxCodeModel taxCodeModel) {
 
 		logger.info("HandlingServiceImpl update() starts.");
+		Session session = null;
+		Transaction tx = null;
 		try {
-			Handling handling = null;//handlingDao.findById(id);
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			TaxCode taxCode = (TaxCode) session.get(TaxCode.class, id);
 			
-			if (handling != null) {
-				handling.setName(handlingModel.getName());
-				Status status = statusService.get(handlingModel.getStatusId());
-				handling.setStatus(status);
-				//handlingDao.update(handling);
+			if (taxCode != null) {
+				String[] ignorePro ={"taxCodeId"};
+				BeanUtils.copyProperties(taxCodeModel, taxCode, ignorePro);
+				session.update(taxCode);
+				tx.commit();
 			} else{
 				return createFailedObject(handling_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
+			if(tx != null){
+				tx.rollback();
+			}
 			logger.info("Exception inside HandlingServiceImpl update() :"+ e.getMessage());
 			return createFailedObject(handling_unable_to_update_message);
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		logger.info("HandlingServiceImpl update() ends.");
@@ -179,9 +190,9 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Handling handling = (Handling) session.get(Handling.class, id);
-			if(handling != null){
-				session.delete(handling);
+			TaxCode taxCode = (TaxCode) session.get(TaxCode.class, id);
+			if(taxCode != null){
+				session.delete(taxCode);
 				tx.commit();
 			} else{
 				return createFailedObject(handling_unable_to_delete_message);
@@ -212,25 +223,19 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 
 
 	@Override
-	public HandlingModel get(Long id) {
+	public TaxCodeModel get(Long id) {
 		
 		logger.info("HandlingServiceImpl get() starts.");
 		Session session = null;
-		HandlingModel handlingModel = new HandlingModel();
+		TaxCodeModel taxCodeModel = new TaxCodeModel();
 
 		try {
 
 			session = sessionFactory.openSession();
-			Handling handling = null;//handlingDao.findById(id, session);
+			TaxCode taxCode = taxCodeDao.findById(id, session);
 
-			if (handling != null) {
-
-				handlingModel.setId(handling.getId());
-				handlingModel.setName(handling.getName());
-				handlingModel.setStatusId(handling.getStatus().getId());
-
-				List<Status> statusList = statusService.getAll();
-				handlingModel.setStatusList(statusList);
+			if (taxCode != null) {
+				BeanUtils.copyProperties(taxCode, taxCodeModel);
 			}
 		} finally {
 			if (session != null) {
@@ -239,7 +244,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		}
 		
 		logger.info("HandlingServiceImpl get() ends.");
-		return handlingModel;
+		return taxCodeModel;
 	}
 
 	@Override

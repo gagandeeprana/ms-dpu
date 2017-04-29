@@ -14,7 +14,7 @@ public interface TaxCodeDao extends GenericDao<TaxCode> {
 
 	List<TaxCode> findAll(Session session);
 
-	Handling findById(Long id, Session session);
+	TaxCode findById(Long id, Session session);
 
 	List<Handling> getHandlingByHandlingName(Session session, String handlingName);
 }

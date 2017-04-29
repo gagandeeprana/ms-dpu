@@ -27,11 +27,11 @@ public class TaxCodeDaoImpl extends GenericDaoImpl<TaxCode> implements TaxCodeDa
 	}
 
 	@Override
-	public Handling findById(Long id, Session session) {
-		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status where h.id =:handlingId ");
+	public TaxCode findById(Long id, Session session) {
+		StringBuilder sb = new StringBuilder(" select h from TaxCode h where h.taxCodeId =:taxCodeId ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("handlingId", id);
-		return (Handling) query.uniqueResult();
+		query.setParameter("taxCodeId", id);
+		return (TaxCode) query.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

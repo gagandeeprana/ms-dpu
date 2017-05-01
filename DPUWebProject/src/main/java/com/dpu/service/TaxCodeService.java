@@ -2,7 +2,6 @@ package com.dpu.service;
 
 import java.util.List;
 
-import com.dpu.model.HandlingModel;
 import com.dpu.model.TaxCodeModel;
 
 public interface TaxCodeService {
@@ -12,11 +11,11 @@ public interface TaxCodeService {
 
 	List<TaxCodeModel> getAll();
 
-	HandlingModel getOpenAdd();
+	//HandlingModel getOpenAdd();
 
 	TaxCodeModel get(Long id);
 	
-	List<HandlingModel> getSpecificData();
+	List<TaxCodeModel> getSpecificData();
 
 	Object addTaxCode(TaxCodeModel taxCodeModel);
 

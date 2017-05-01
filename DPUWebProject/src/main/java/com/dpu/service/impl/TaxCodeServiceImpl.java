@@ -13,16 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dpu.dao.HandlingDao;
 import com.dpu.dao.TaxCodeDao;
-import com.dpu.entity.Handling;
-import com.dpu.entity.Status;
 import com.dpu.entity.TaxCode;
 import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
 import com.dpu.model.Success;
 import com.dpu.model.TaxCodeModel;
-import com.dpu.service.HandlingService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TaxCodeService;
 
@@ -40,31 +35,31 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	@Autowired
 	SessionFactory sessionFactory;
 	
-	@Value("${handling_added_message}")
-	private String handling_added_message;
+	@Value("${taxcode_added_message}")
+	private String taxcode_added_message;
 	
-	@Value("${handling_unable_to_add_message}")
-	private String handling_unable_to_add_message;
+	@Value("${taxcode_unable_to_add_message}")
+	private String taxcode_unable_to_add_message;
 	
-	@Value("${handling_deleted_message}")
-	private String handling_deleted_message;
+	@Value("${taxcode_deleted_message}")
+	private String taxcode_deleted_message;
 	
-	@Value("${handling_unable_to_delete_message}")
-	private String handling_unable_to_delete_message;
+	@Value("${taxcode_unable_to_delete_message}")
+	private String taxcode_unable_to_delete_message;
 	
-	@Value("${handling_updated_message}")
-	private String handling_updated_message;
+	@Value("${taxcode_updated_message}")
+	private String taxcode_updated_message;
 	
-	@Value("${handling_unable_to_update_message}")
-	private String handling_unable_to_update_message;
+	@Value("${taxcode_unable_to_update_message}")
+	private String taxcode_unable_to_update_message;
 	
-	@Value("${handling_already_used_message}")
-	private String handling_already_used_message;
+	@Value("${taxcode_dependent_message}")
+	private String taxcode_dependent_message;
 	
 	@Override
 	public List<TaxCodeModel> getAll() {
 		
-		logger.info("HandlingServiceImpl getAll() starts ");
+		logger.info("TaxCodeServiceImpl getAll() starts ");
 		Session session = null;
 		List<TaxCodeModel> taxCodeList = new ArrayList<TaxCodeModel>();
 
@@ -85,7 +80,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			}
 		}
 	
-		logger.info("HandlingServiceImpl getAll() ends ");
+		logger.info("TaxCodeServiceImpl getAll() ends ");
 		return taxCodeList;
 	}
 
@@ -106,7 +101,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	@Override
 	public Object addTaxCode(TaxCodeModel taxCodeModel) {
 
-		logger.info("HandlingServiceImpl addHandling() starts ");
+		logger.info("TaxCodeServiceImpl addTaxCode() starts ");
 		TaxCode taxCode = null;
 		Session session = null;
 		Transaction tx = null;
@@ -121,8 +116,8 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			if(tx != null){
 				tx.rollback();
 			}
-			logger.info("Exception inside HandlingServiceImpl addHandling() :"+ e.getMessage());
-			return createFailedObject(handling_unable_to_add_message);
+			logger.info("Exception inside TaxCodeServiceImpl addTaxCode() :"+ e.getMessage());
+			return createFailedObject(taxcode_unable_to_add_message);
 
 		} finally{
 			if(tx != null){
@@ -133,8 +128,8 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			}
 		}
 		
-		logger.info("HandlingServiceImpl addHandling() ends ");
-		return createSuccessObject(handling_added_message);
+		logger.info("TaxCodeServiceImpl addTaxCode() ends ");
+		return createSuccessObject(taxcode_added_message);
 	}
 
 	private TaxCode setTaxCodeValues(TaxCodeModel taxCodeModel) {
@@ -147,7 +142,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	@Override
 	public Object update(Long id, TaxCodeModel taxCodeModel) {
 
-		logger.info("HandlingServiceImpl update() starts.");
+		logger.info("TaxCodeServiceImpl update() starts.");
 		Session session = null;
 		Transaction tx = null;
 		try {
@@ -161,29 +156,29 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 				session.update(taxCode);
 				tx.commit();
 			} else{
-				return createFailedObject(handling_unable_to_update_message);
+				return createFailedObject(taxcode_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
 			if(tx != null){
 				tx.rollback();
 			}
-			logger.info("Exception inside HandlingServiceImpl update() :"+ e.getMessage());
-			return createFailedObject(handling_unable_to_update_message);
+			logger.info("Exception inside TaxCodeServiceImpl update() :"+ e.getMessage());
+			return createFailedObject(taxcode_unable_to_update_message);
 		} finally{
 			if(session != null){
 				session.close();
 			}
 		}
 		
-		logger.info("HandlingServiceImpl update() ends.");
-		return createSuccessObject(handling_updated_message);
+		logger.info("TaxCodeServiceImpl update() ends.");
+		return createSuccessObject(taxcode_updated_message);
 	}
 
 	@Override
 	public Object delete(Long id) {
 		
-		logger.info("HandlingServiceImpl delete() starts.");
+		logger.info("TaxCodeServiceImpl delete() starts.");
 		Session session = null;
 		Transaction tx = null;
 		
@@ -195,18 +190,18 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 				session.delete(taxCode);
 				tx.commit();
 			} else{
-				return createFailedObject(handling_unable_to_delete_message);
+				return createFailedObject(taxcode_unable_to_delete_message);
 			}
 			
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl delete() : " + e.getMessage());
+			logger.info("Exception inside TaxCodeServiceImpl delete() : " + e.getMessage());
 			if(tx != null){
 				tx.rollback();
 			}
 			if(e instanceof ConstraintViolationException){
-				return createFailedObject(handling_already_used_message);
+				return createFailedObject(taxcode_dependent_message);
 			}
-			return createFailedObject(handling_unable_to_delete_message);
+			return createFailedObject(taxcode_unable_to_delete_message);
 		} finally{
 			/*if(tx != null){
 				tx.commit();
@@ -216,8 +211,8 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			}
 		}
 		
-		logger.info("HandlingServiceImpl delete() ends.");
-		return createSuccessObject(handling_deleted_message);
+		logger.info("TaxCodeServiceImpl delete() ends.");
+		return createSuccessObject(taxcode_deleted_message);
 	}
 
 
@@ -225,7 +220,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	@Override
 	public TaxCodeModel get(Long id) {
 		
-		logger.info("HandlingServiceImpl get() starts.");
+		logger.info("TaxCodeServiceImpl get() starts.");
 		Session session = null;
 		TaxCodeModel taxCodeModel = new TaxCodeModel();
 
@@ -243,11 +238,11 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			}
 		}
 		
-		logger.info("HandlingServiceImpl get() ends.");
+		logger.info("TaxCodeServiceImpl get() ends.");
 		return taxCodeModel;
 	}
 
-	@Override
+	/*@Override
 	public HandlingModel getOpenAdd() {
 		logger.info("HandlingServiceImpl getOpenAdd() starts ");
 		HandlingModel handlingModel = new HandlingModel();
@@ -257,12 +252,12 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		
 		logger.info("HandlingServiceImpl getOpenAdd() ends ");
 		return handlingModel;
-	}
+	}*/
 
 	@Override
 	public List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName) {
 		
-		logger.info("HandlingServiceImpl getHandlingByHandlingName() starts ");
+		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() starts, taxCodeName :"+taxCodeName);
 		Session session = null;
 		List<TaxCodeModel> taxCodeList = new ArrayList<TaxCodeModel>();
 
@@ -282,21 +277,22 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			}
 		}
 		
-		logger.info("HandlingServiceImpl getHandlingByHandlingName() ends ");
+		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() ends, taxCodeName :"+taxCodeName);
 		return taxCodeList;
 	}
 
 	@Override
-	public List<HandlingModel> getSpecificData() {
-		List<Object[]> handlingData = null;//handlingDao.getSpecificData("Handling","id", "name");
+	public List<TaxCodeModel> getSpecificData() {
+		
+		List<Object[]> handlingData = taxCodeDao.getSpecificData("TaxCode","taxCodeId", "taxCode");
 
-		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
+		List<TaxCodeModel> handlings = new ArrayList<TaxCodeModel>();
 		if (handlingData != null && !handlingData.isEmpty()) {
 			for (Object[] row : handlingData) {
-				HandlingModel handlingObj = new HandlingModel();
-				handlingObj.setId((Long) row[0]);
-				handlingObj.setName(String.valueOf(row[1]));
-				handlings.add(handlingObj);
+				TaxCodeModel taxCodeModel = new TaxCodeModel();
+				taxCodeModel.setTaxCodeId((Long) row[0]);
+				taxCodeModel.setTaxCode(String.valueOf(row[1]));
+				handlings.add(taxCodeModel);
 			}
 		}
 

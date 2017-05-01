@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
 import com.dpu.model.Success;
 import com.dpu.model.TaxCodeModel;
-import com.dpu.service.HandlingService;
 import com.dpu.service.TaxCodeService;
-import com.dpu.util.MessageProperties;
 
 @RestController
 @RequestMapping(value = "taxCode")
@@ -35,24 +32,23 @@ public class TaxCodeController {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Value("${handling_unable_to_add_message}")
-	private String handling_unable_to_add_message;
+	@Value("${taxcode_unable_to_add_message}")
+	private String taxcode_unable_to_add_message;
 
-	@Value("${handling_unable_to_delete_message}")
-	private String handling_unable_to_delete_message;
+	@Value("${taxcode_unable_to_delete_message}")
+	private String taxcode_unable_to_delete_message;
 	
-	@Value("${handling_unable_to_update_message}")
-	private String handling_unable_to_update_message;
+	@Value("${taxcode_unable_to_update_message}")
+	private String taxcode_unable_to_update_message;
 
 	/**
-	 * this method is used to get all handlings
-	 * @return List<Handlings>
-	 * @author lakhvir.bansal
+	 * this method is used to get all taxCodes
+	 * @return List<taxCode>
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 
-		logger.info("Inside HandlingController getAll() Starts ");
+		logger.info("Inside TaxCodeController getAll() Starts ");
 		String json = null;
 
 		try {
@@ -62,23 +58,22 @@ public class TaxCodeController {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController getAll() :"+ e.getMessage());
+			logger.error("Exception inside TaxCodeController getAll() :"+ e.getMessage());
 		}
 		
-		logger.info("Inside HandlingController getAll() Ends ");
+		logger.info("Inside TaxCodeController getAll() Ends ");
 		return json;
 	}
 
 	/**
-	 * this method is used to add the Handling
-	 * @param handlingModel
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * this method is used to add the Tax code
+	 * @param taxCodeModel
+	 * @return List<Tax code>
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody TaxCodeModel taxCodeModel) {
 
-		logger.info("Inside HandlingController add() starts ");
+		logger.info("Inside TaxCodeController add() starts ");
 		Object obj = null;
 		
 		try {
@@ -91,24 +86,23 @@ public class TaxCodeController {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController add() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside TaxCodeController add() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,taxcode_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
-		logger.info("Inside HandlingController add() ends ");
+		logger.info("Inside TaxCodeController add() ends ");
 		return obj;
 	}
 
 	/**
-	 * this method is used to delete the Handling based on handlingId
+	 * this method is used to delete the taxCode based on taxcodeId
 	 * @param id
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * @return List<Tax codes>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long taxCodeId) {
 
-		logger.info("Inside HandlingController delete() Starts, handlingId is :" + taxCodeId);
+		logger.info("Inside TaxCodeController delete() Starts, handlingId is :" + taxCodeId);
 		Object obj = null;
 
 		try {
@@ -120,24 +114,25 @@ public class TaxCodeController {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside TaxCodeController delete() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,taxcode_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + taxCodeId);
+		
+		logger.info("Inside TaxCodeController delete() Ends, id is :" + taxCodeId);
 		return obj;
 
 	}
 
 	/**
-	 * this method is used to update the handling based on handlingID
-	 * @param handlingId
-	 * @param handlingModel
-	 * @return List<Categories>
+	 * this method is used to update the taxCode based on taxCodeId
+	 * @param taxCodeId
+	 * @param taxCodeModel
+	 * @return List<TaxCode>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("id") Long taxCodeId, @RequestBody TaxCodeModel taxCodeModel) {
 
-		logger.info("Inside HandlingController update() Starts, handlingId is :" + taxCodeId);
+		logger.info("Inside TaxCodeController update() Starts, taxCodeId is :" + taxCodeId);
 		Object obj = null;
 		try {
 			Object result = taxCodeService.update(taxCodeId, taxCodeModel);
@@ -148,24 +143,23 @@ public class TaxCodeController {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside TaxCodeController update() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,taxcode_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside HandlingController update() Ends, handlingId is :" + taxCodeId);
+		logger.info("Inside TaxCodeController update() Ends, taxCodeId is :" + taxCodeId);
 		return obj;
 	}
 
 	/**
-	 * this method is used to get Handling data based on handlingId
-	 * @param handlingId
-	 * @return handlingData
-	 * @author lakhvir.bansal
+	 * this method is used to get taxcode data based on taxcodeId
+	 * @param taxCodeId
+	 * @return taxCodeData
 	 */
 	@RequestMapping(value = "/{taxCodeId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getHandlingById(@PathVariable("taxCodeId") Long taxCodeId) {
+	public Object getTaxcodeById(@PathVariable("taxCodeId") Long taxCodeId) {
 		
-		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ taxCodeId);
+		logger.info("Inside TaxCodeController getTaxcodeById() Starts, Id:"+ taxCodeId);
 		String json = null;
 
 		try {
@@ -176,10 +170,10 @@ public class TaxCodeController {
 				json = mapper.writeValueAsString(taxCodeModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
+			logger.error("Exception inside TaxCodeController getTaxcodeById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ taxCodeId);
+		logger.info("Inside TaxCodeController getTaxcodeById() Ends, Id:"+ taxCodeId);
 		return json;
 	}
 
@@ -187,9 +181,8 @@ public class TaxCodeController {
 	 * this method is used when we click on add button on handling screen
 	 * send master data
 	 * @return master data for add handling
-	 * @author lakhvir.bansal
 	 */
-	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+/*	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
 		logger.info("Inside HandlingController openAdd() Starts ");
@@ -205,18 +198,17 @@ public class TaxCodeController {
 
 		logger.info("Inside HandlingController openAdd() ends ");
 		return json;
-	}
+	}*/
 
 	/**
-	 * this method is used to get handling data based on handling name
-	 * @param handlingName
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * this method is used to get taxcode data based on taxcode name
+	 * @param taxCodeName
+	 * @return List<TaxCode>
 	 */
 	@RequestMapping(value = "/{taxCodeName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchTaxCode(@PathVariable("taxCodeName") String taxCodeName) {
 
-		logger.info("Inside HandlingController searchHandling() Starts, handlingName :"+ taxCodeName);
+		logger.info("Inside TaxCodeController searchTaxCode() Starts, taxCodeName :"+ taxCodeName);
 		String json = new String();
 
 		try {
@@ -225,36 +217,34 @@ public class TaxCodeController {
 				json = mapper.writeValueAsString(taxCodeList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController searchHandling() is :"+ e.getMessage());
+			logger.error("Exception inside TaxCodeController searchTaxCode() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside HandlingController searchHandling() Ends, handlingName :"+ taxCodeName);
+		logger.info(" Inside TaxCodeController searchTaxCode() Ends, taxCodeName :"+ taxCodeName);
 		return json;
 	}
 
 	/**
-	 * this method is used to get specific handling data (id and name)
-	 * @return handlingId and name
-	 * @author lakhvir.bansal
+	 * this method is used to get specific taxcode data (id and name)
+	 * @return taxcode Id and name
 	 */
 	
 	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
 
-		logger.info("Inside HandlingController getSpecificData() Starts ");
+		logger.info("Inside TaxCodeController getSpecificData() Starts ");
 		String json = new String();
 
 		try {
-			List<HandlingModel> handlingList = null;//handlingService.getSpecificData();
-			if (handlingList != null && handlingList.size() > 0) {
-				json = mapper.writeValueAsString(handlingList);
+			List<TaxCodeModel> taxCodeList = taxCodeService.getSpecificData();
+			if (taxCodeList != null && taxCodeList.size() > 0) {
+				json = mapper.writeValueAsString(taxCodeList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside HandlingController getSpecificData() is :"+ e.getMessage());
+			logger.error("Exception inside TaxCodeController getSpecificData() is :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getSpecificData() Ends ");
+		logger.info("Inside TaxCodeController getSpecificData() Ends ");
 		return json;
 	}
 }

@@ -6,35 +6,37 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
+import com.dpu.dao.AccountDao;
 import com.dpu.dao.TaxCodeDao;
+import com.dpu.entity.Account;
 import com.dpu.entity.TaxCode;
 
 @Repository
-public class AccountDaoImpl extends GenericDaoImpl<TaxCode> implements TaxCodeDao{
+public class AccountDaoImpl extends GenericDaoImpl<Account> implements AccountDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TaxCode> findAll(Session session) {
+	public List<Account> findAll(Session session) {
 		
-		StringBuilder sb = new StringBuilder(" select h from TaxCode h ");
+		StringBuilder sb = new StringBuilder(" select a from Account a left join fetch a.currency left join fetch a.accountType left join fetch a.parentAccount ");
 		Query query = session.createQuery(sb.toString());
 		return query.list();
 	}
 
 	@Override
-	public TaxCode findById(Long id, Session session) {
-		StringBuilder sb = new StringBuilder(" select h from TaxCode h where h.taxCodeId =:taxCodeId ");
+	public Account findById(Long id, Session session) {
+		StringBuilder sb = new StringBuilder(" select a from Account a left join fetch a.currency left join fetch a.accountType left join fetch a.parentAccount where a.accountId =:accountId ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("taxCodeId", id);
-		return (TaxCode) query.uniqueResult();
+		query.setParameter("accountId", id);
+		return (Account) query.uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TaxCode> getTaxCodesByTaxCodeNames(Session session, String taxCodeName) {
-		StringBuilder sb = new StringBuilder(" select h from TaxCode h where h.taxCode like :taxCodeName ");
+	public List<Account> getAccountByAccountName(Session session, String accountName) {
+		StringBuilder sb = new StringBuilder(" select a from Account a left join fetch a.currency left join fetch a.accountType left join fetch a.parentAccount where a.accountName like :accountName ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("taxCodeName", "%"+taxCodeName+"%");
+		query.setParameter("accountName", "%"+accountName+"%");
 		return query.list();
 	}
 

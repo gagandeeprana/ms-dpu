@@ -69,18 +69,18 @@ public class AccountController {
 
 	/**
 	 * this method is used to add the Tax code
-	 * @param taxCodeModel
+	 * @param accountModel
 	 * @return List<Tax code>
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody TaxCodeModel taxCodeModel) {
+	public Object add(@RequestBody AccountModel accountModel) {
 
 		logger.info("Inside TaxCodeController add() starts ");
 		Object obj = null;
 		
 		try {
 
-			Object result = null;//taxCodeService.addTaxCode(taxCodeModel);
+			Object result = accountService.addAccount(accountModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -102,13 +102,13 @@ public class AccountController {
 	 * @return List<Tax codes>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long taxCodeId) {
+	public Object delete(@PathVariable("id") Long accountId) {
 
-		logger.info("Inside TaxCodeController delete() Starts, handlingId is :" + taxCodeId);
+		logger.info("Inside TaxCodeController delete() Starts, handlingId is :" + accountId);
 		Object obj = null;
 
 		try {
-			Object result = null;//taxCodeService.delete(taxCodeId);
+			Object result = accountService.delete(accountId);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -120,24 +120,24 @@ public class AccountController {
 			obj = new ResponseEntity<Object>(new Failed(0,taxcode_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
-		logger.info("Inside TaxCodeController delete() Ends, id is :" + taxCodeId);
+		logger.info("Inside TaxCodeController delete() Ends, id is :" + accountId);
 		return obj;
 
 	}
 
 	/**
 	 * this method is used to update the taxCode based on taxCodeId
-	 * @param taxCodeId
-	 * @param taxCodeModel
+	 * @param accountId
+	 * @param accountModel
 	 * @return List<TaxCode>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long taxCodeId, @RequestBody TaxCodeModel taxCodeModel) {
+	public Object update(@PathVariable("id") Long accountId, @RequestBody AccountModel accountModel) {
 
-		logger.info("Inside TaxCodeController update() Starts, taxCodeId is :" + taxCodeId);
+		logger.info("Inside TaxCodeController update() Starts, taxCodeId is :" + accountId);
 		Object obj = null;
 		try {
-			Object result = null;//taxCodeService.update(taxCodeId, taxCodeModel);
+			Object result = accountService.update(accountId, accountModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -149,33 +149,33 @@ public class AccountController {
 			obj = new ResponseEntity<Object>(new Failed(0,taxcode_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside TaxCodeController update() Ends, taxCodeId is :" + taxCodeId);
+		logger.info("Inside TaxCodeController update() Ends, taxCodeId is :" + accountId);
 		return obj;
 	}
 
 	/**
 	 * this method is used to get taxcode data based on taxcodeId
-	 * @param taxCodeId
+	 * @param accountId
 	 * @return taxCodeData
 	 */
-	@RequestMapping(value = "/{taxCodeId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getTaxcodeById(@PathVariable("taxCodeId") Long taxCodeId) {
+	@RequestMapping(value = "/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAccountById(@PathVariable("accountId") Long accountId) {
 		
-		logger.info("Inside TaxCodeController getTaxcodeById() Starts, Id:"+ taxCodeId);
+		logger.info("Inside TaxCodeController getTaxcodeById() Starts, Id:"+ accountId);
 		String json = null;
 
 		try {
 
-			TaxCodeModel taxCodeModel = null;//taxCodeService.get(taxCodeId);
+			AccountModel accountModel = accountService.get(accountId);
 
-			if (taxCodeModel != null) {
-				json = mapper.writeValueAsString(taxCodeModel);
+			if (accountModel != null) {
+				json = mapper.writeValueAsString(accountModel);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside TaxCodeController getTaxcodeById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside TaxCodeController getTaxcodeById() Ends, Id:"+ taxCodeId);
+		logger.info("Inside TaxCodeController getTaxcodeById() Ends, Id:"+ accountId);
 		return json;
 	}
 
@@ -184,14 +184,14 @@ public class AccountController {
 	 * send master data
 	 * @return master data for add handling
 	 */
-/*	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
 		logger.info("Inside HandlingController openAdd() Starts ");
 		String json = null;
 
 		try {
-			HandlingModel model = null;//handlingService.getOpenAdd();
+			AccountModel model = accountService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(model);
 		} catch (Exception e) {
@@ -200,29 +200,29 @@ public class AccountController {
 
 		logger.info("Inside HandlingController openAdd() ends ");
 		return json;
-	}*/
+	}
 
 	/**
 	 * this method is used to get taxcode data based on taxcode name
-	 * @param taxCodeName
+	 * @param accountName
 	 * @return List<TaxCode>
 	 */
-	@RequestMapping(value = "/{taxCodeName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchTaxCode(@PathVariable("taxCodeName") String taxCodeName) {
+	@RequestMapping(value = "/{accountName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchTaxCode(@PathVariable("accountName") String accountName) {
 
-		logger.info("Inside TaxCodeController searchTaxCode() Starts, taxCodeName :"+ taxCodeName);
+		logger.info("Inside TaxCodeController searchTaxCode() Starts, taxCodeName :"+ accountName);
 		String json = new String();
 
 		try {
-			List<TaxCodeModel> taxCodeList = null;//taxCodeService.getTaxCodeByTaxCodeName(taxCodeName);
-			if (taxCodeList != null && taxCodeList.size() > 0) {
-				json = mapper.writeValueAsString(taxCodeList);
+			List<AccountModel> accountList = accountService.getAccountByAccountName(accountName);
+			if (accountList != null && accountList.size() > 0) {
+				json = mapper.writeValueAsString(accountList);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside TaxCodeController searchTaxCode() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside TaxCodeController searchTaxCode() Ends, taxCodeName :"+ taxCodeName);
+		logger.info(" Inside TaxCodeController searchTaxCode() Ends, taxCodeName :"+ accountName);
 		return json;
 	}
 

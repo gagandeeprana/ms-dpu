@@ -26,7 +26,7 @@ public class AccountModel {
 	
 	private Long parentAccountId;
 	private String parentAccountName;
-	/*private List<TypeResponse> accountTypeList;*/
+	private List<AccountModel> parentAccountList;
 	
 	private String description;
 
@@ -124,6 +124,14 @@ public class AccountModel {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<AccountModel> getParentAccountList() {
+		return parentAccountList;
+	}
+
+	public void setParentAccountList(List<AccountModel> parentAccountList) {
+		this.parentAccountList = parentAccountList;
 	}
 	
 	

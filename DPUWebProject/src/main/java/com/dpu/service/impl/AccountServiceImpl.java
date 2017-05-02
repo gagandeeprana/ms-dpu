@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.AccountDao;
-import com.dpu.dao.TaxCodeDao;
 import com.dpu.entity.Account;
 import com.dpu.entity.TaxCode;
 import com.dpu.model.AccountModel;
@@ -23,7 +22,7 @@ import com.dpu.model.Success;
 import com.dpu.model.TaxCodeModel;
 import com.dpu.service.AccountService;
 import com.dpu.service.StatusService;
-import com.dpu.service.TaxCodeService;
+import com.dpu.service.TypeService;
 
 @Component
 public class AccountServiceImpl implements AccountService {
@@ -35,6 +34,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	TypeService typeService;
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -65,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
 		
 		logger.info("TaxCodeServiceImpl getAll() starts ");
 		Session session = null;
-		List<AccountModel> taxCodeList = new ArrayList<AccountModel>();
+		List<AccountModel> accountModelList = new ArrayList<AccountModel>();
 
 		try {
 			session = sessionFactory.openSession();
@@ -75,7 +77,20 @@ public class AccountServiceImpl implements AccountService {
 				for (Account account : accounts) {
 					AccountModel accountModel = new AccountModel();
 					BeanUtils.copyProperties(account, accountModel);
-					taxCodeList.add(accountModel);
+					
+					if(account.getAccountType() != null){
+						accountModel.setAccountTypeName(account.getAccountType().getTypeName());
+					}
+					
+					if(account.getCurrency() != null){
+						accountModel.setCurrencyName(account.getCurrency().getTypeName());
+					}
+					
+					if(account.getParentAccount() != null){
+						accountModel.setParentAccountName(account.getParentAccount().getAccountName());
+					}
+					
+					accountModelList.add(accountModel);
 				}
 			}
 		} finally {
@@ -85,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
 		}
 	
 		logger.info("TaxCodeServiceImpl getAll() ends ");
-		return taxCodeList;
+		return accountModelList;
 	}
 
 	private Object createSuccessObject(String msg) {
@@ -103,18 +118,18 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Object addTaxCode(TaxCodeModel taxCodeModel) {
+	public Object addAccount(AccountModel accountModel) {
 
 		logger.info("TaxCodeServiceImpl addTaxCode() starts ");
-		TaxCode taxCode = null;
+		Account account = null;
 		Session session = null;
 		Transaction tx = null;
 		try {
 			
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			taxCode = setTaxCodeValues(taxCodeModel);
-			session.save(taxCode);
+			account = setAccountValues(accountModel);
+			session.save(account);
 
 		} catch (Exception e) {
 			if(tx != null){
@@ -136,15 +151,44 @@ public class AccountServiceImpl implements AccountService {
 		return createSuccessObject(taxcode_added_message);
 	}
 
-	private TaxCode setTaxCodeValues(TaxCodeModel taxCodeModel) {
+	private Account setAccountValues(AccountModel accountModel) {
+
+		Account account = new Account();
+		BeanUtils.copyProperties(accountModel, account);
 		
-		TaxCode taxCode = new TaxCode();
-		BeanUtils.copyProperties(taxCodeModel, taxCode);
-		return taxCode;
+		if(accountModel.getCurrencyId() != null){
+			account.setCurrency(typeService.get(accountModel.getCurrencyId()));
+		}
+		
+		if(accountModel.getAccountTypeId() != null){
+			account.setAccountType(typeService.get(accountModel.getAccountTypeId()));
+		}
+		
+		if(accountModel.getParentAccountId() != null){
+			account.setParentAccount(getParentAccount(accountModel.getParentAccountId()));
+		}
+		
+		return account;
+	}
+
+	private Account getParentAccount(Long parentAccountId) {
+
+		Session session = null;
+		Account account = null;
+		try{
+			session = sessionFactory.openSession();
+			account = (Account) session.get(Account.class, parentAccountId);
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return account;
 	}
 
 	@Override
-	public Object update(Long id, TaxCodeModel taxCodeModel) {
+	public Object update(Long id, AccountModel accountModel) {
 
 		logger.info("TaxCodeServiceImpl update() starts.");
 		Session session = null;
@@ -152,12 +196,23 @@ public class AccountServiceImpl implements AccountService {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			TaxCode taxCode = (TaxCode) session.get(TaxCode.class, id);
+			Account account = (Account) session.get(Account.class, id);
 			
-			if (taxCode != null) {
-				String[] ignorePro ={"taxCodeId"};
-				BeanUtils.copyProperties(taxCodeModel, taxCode, ignorePro);
-				session.update(taxCode);
+			if (account != null) {
+				String[] ignorePro ={"accountId"};
+				BeanUtils.copyProperties(accountModel, account, ignorePro);
+				if(accountModel.getCurrencyId() != null){
+					account.setCurrency(typeService.get(accountModel.getCurrencyId()));
+				}
+				
+				if(accountModel.getAccountTypeId() != null){
+					account.setAccountType(typeService.get(accountModel.getAccountTypeId()));
+				}
+				
+				if(accountModel.getParentAccountId() != null){
+					account.setParentAccount(getParentAccount(accountModel.getParentAccountId()));
+				}
+				session.update(account);
 				tx.commit();
 			} else{
 				return createFailedObject(taxcode_unable_to_update_message);
@@ -189,9 +244,9 @@ public class AccountServiceImpl implements AccountService {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			TaxCode taxCode = (TaxCode) session.get(TaxCode.class, id);
-			if(taxCode != null){
-				session.delete(taxCode);
+			Account account = (Account) session.get(Account.class, id);
+			if(account != null){
+				session.delete(account);
 				tx.commit();
 			} else{
 				return createFailedObject(taxcode_unable_to_delete_message);
@@ -222,19 +277,37 @@ public class AccountServiceImpl implements AccountService {
 
 
 	@Override
-	public TaxCodeModel get(Long id) {
+	public AccountModel get(Long id) {
 		
 		logger.info("TaxCodeServiceImpl get() starts.");
 		Session session = null;
-		TaxCodeModel taxCodeModel = new TaxCodeModel();
+		AccountModel accountModel = new AccountModel();
 
 		try {
 
 			session = sessionFactory.openSession();
-			TaxCode taxCode = null;//taxCodeDao.findById(id, session);
+			Account account = accountDao.findById(id, session);
 
-			if (taxCode != null) {
-				BeanUtils.copyProperties(taxCode, taxCodeModel);
+			if (account != null) {
+				BeanUtils.copyProperties(account, accountModel);
+				if(account.getAccountType() != null){
+					accountModel.setAccountTypeName(account.getAccountType().getTypeName());
+					accountModel.setAccountTypeId(account.getAccountType().getTypeId());
+				}
+				
+				if(account.getCurrency() != null){
+					accountModel.setCurrencyName(account.getCurrency().getTypeName());
+					accountModel.setCurrencyId(account.getCurrency().getTypeId());
+				}
+				
+				if(account.getParentAccount() != null){
+					accountModel.setParentAccountName(account.getParentAccount().getAccountName());
+					accountModel.setParentAccountId(account.getParentAccount().getAccountId());
+				}
+				
+				accountModel.setAccountTypeList(typeService.getAll(22l));
+				accountModel.setCurrencyList(typeService.getAll(21l));
+				//accountModel.set
 			}
 		} finally {
 			if (session != null) {
@@ -243,36 +316,50 @@ public class AccountServiceImpl implements AccountService {
 		}
 		
 		logger.info("TaxCodeServiceImpl get() ends.");
-		return taxCodeModel;
+		return accountModel;
 	}
 
-	/*@Override
-	public HandlingModel getOpenAdd() {
-		logger.info("HandlingServiceImpl getOpenAdd() starts ");
-		HandlingModel handlingModel = new HandlingModel();
-
-		List<Status> statusList = statusService.getAll();
-		handlingModel.setStatusList(statusList);
+	@Override
+	public AccountModel getOpenAdd() {
 		
+		logger.info("HandlingServiceImpl getOpenAdd() starts ");
+		AccountModel accountModel = new AccountModel();
+
+		accountModel.setAccountTypeList(typeService.getAll(22l));
+		accountModel.setCurrencyList(typeService.getAll(21l));
+		
+		accountModel.setParentAccountList(getSpecificData());
 		logger.info("HandlingServiceImpl getOpenAdd() ends ");
-		return handlingModel;
-	}*/
+		
+		return accountModel;
+	}
 
 	@Override
-	public List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName) {
+	public List<AccountModel> getAccountByAccountName(String accountName) {
 		
-		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() starts, taxCodeName :"+taxCodeName);
+		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() starts, taxCodeName :"+accountName);
 		Session session = null;
-		List<TaxCodeModel> taxCodeList = new ArrayList<TaxCodeModel>();
+		List<AccountModel> taxCodeList = new ArrayList<AccountModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<TaxCode> taxCodes = null;//taxCodeDao.getTaxCodesByTaxCodeNames(session, taxCodeName);
-			if (taxCodes != null && !taxCodes.isEmpty()) {
-				for (TaxCode taxCode : taxCodes) {
-					TaxCodeModel taxCodeModel = new TaxCodeModel();
-					BeanUtils.copyProperties(taxCode, taxCodeModel);
-					taxCodeList.add(taxCodeModel);
+			List<Account> accounts = accountDao.getAccountByAccountName(session, accountName);
+			if (accounts != null && !accounts.isEmpty()) {
+				for (Account account : accounts) {
+					AccountModel accountModel = new AccountModel();
+					BeanUtils.copyProperties(account, accountModel);
+					if(account.getAccountType() != null){
+						accountModel.setAccountTypeName(account.getAccountType().getTypeName());
+					}
+					
+					if(account.getCurrency() != null){
+						accountModel.setCurrencyName(account.getCurrency().getTypeName());
+					}
+					
+					if(account.getParentAccount() != null){
+						accountModel.setParentAccountName(account.getParentAccount().getAccountName());
+					}
+					taxCodeList.add(accountModel);
 				}
 			}
 		} finally {
@@ -281,26 +368,26 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 		
-		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() ends, taxCodeName :"+taxCodeName);
+		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() ends, taxCodeName :"+accountName);
 		return taxCodeList;
 	}
 
 	@Override
-	public List<TaxCodeModel> getSpecificData() {
+	public List<AccountModel> getSpecificData() {
 		
-		List<Object[]> handlingData = null;//taxCodeDao.getSpecificData("TaxCode","taxCodeId", "taxCode");
+		List<Object[]> accountData = accountDao.getSpecificData("Account","accountId", "accountName");
 
-		List<TaxCodeModel> handlings = new ArrayList<TaxCodeModel>();
-		if (handlingData != null && !handlingData.isEmpty()) {
-			for (Object[] row : handlingData) {
-				TaxCodeModel taxCodeModel = new TaxCodeModel();
-				taxCodeModel.setTaxCodeId((Long) row[0]);
-				taxCodeModel.setTaxCode(String.valueOf(row[1]));
-				handlings.add(taxCodeModel);
+		List<AccountModel> accounts = new ArrayList<AccountModel>();
+		if (accountData != null && !accountData.isEmpty()) {
+			for (Object[] row : accountData) {
+				AccountModel accountModel = new AccountModel();
+				accountModel.setAccountId((Long) row[0]);
+				accountModel.setAccountName(String.valueOf(row[1]));
+				accounts.add(accountModel);
 			}
 		}
 
-		return handlings;
+		return accounts;
 	}
 
 }

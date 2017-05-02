@@ -7,11 +7,11 @@ import org.hibernate.Session;
 import com.dpu.entity.Account;
 import com.dpu.entity.TaxCode;
 
-public interface AccountDao extends GenericDao<TaxCode> {
+public interface AccountDao extends GenericDao<Account> {
 
 	List<Account> findAll(Session session);
 
-	TaxCode findById(Long id, Session session);
+	Account findById(Long id, Session session);
 
-	List<TaxCode> getTaxCodesByTaxCodeNames(Session session, String taxCodeName);
+	List<Account> getAccountByAccountName(Session session, String accountName);
 }

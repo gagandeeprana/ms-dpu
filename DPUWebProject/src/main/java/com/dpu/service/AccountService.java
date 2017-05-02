@@ -6,20 +6,20 @@ import com.dpu.model.AccountModel;
 import com.dpu.model.TaxCodeModel;
 
 public interface AccountService {
-	Object update(Long id, TaxCodeModel taxCodeModel);
+	Object update(Long id, AccountModel accountModel);
 
 	Object delete(Long id);
 
 	List<AccountModel> getAll();
 
-	//HandlingModel getOpenAdd();
+	AccountModel getOpenAdd();
 
-	TaxCodeModel get(Long id);
+	AccountModel get(Long id);
 	
-	List<TaxCodeModel> getSpecificData();
+	List<AccountModel> getSpecificData();
 
-	Object addTaxCode(TaxCodeModel taxCodeModel);
+	Object addAccount(AccountModel accountModel);
 
-	List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName);
+	List<AccountModel> getAccountByAccountName(String accountName);
 
 }

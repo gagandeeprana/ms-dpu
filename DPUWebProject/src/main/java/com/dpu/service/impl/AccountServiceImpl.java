@@ -15,11 +15,9 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.AccountDao;
 import com.dpu.entity.Account;
-import com.dpu.entity.TaxCode;
 import com.dpu.model.AccountModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.model.TaxCodeModel;
 import com.dpu.service.AccountService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
@@ -41,31 +39,31 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	SessionFactory sessionFactory;
 	
-	@Value("${taxcode_added_message}")
-	private String taxcode_added_message;
+	@Value("${account_added_message}")
+	private String account_added_message;
 	
-	@Value("${taxcode_unable_to_add_message}")
-	private String taxcode_unable_to_add_message;
+	@Value("${account_unable_to_add_message}")
+	private String account_unable_to_add_message;
 	
-	@Value("${taxcode_deleted_message}")
-	private String taxcode_deleted_message;
+	@Value("${account_deleted_message}")
+	private String account_deleted_message;
 	
-	@Value("${taxcode_unable_to_delete_message}")
-	private String taxcode_unable_to_delete_message;
+	@Value("${account_unable_to_delete_message}")
+	private String account_unable_to_delete_message;
 	
-	@Value("${taxcode_updated_message}")
-	private String taxcode_updated_message;
+	@Value("${account_updated_message}")
+	private String account_updated_message;
 	
-	@Value("${taxcode_unable_to_update_message}")
-	private String taxcode_unable_to_update_message;
+	@Value("${account_unable_to_update_message}")
+	private String account_unable_to_update_message;
 	
-	@Value("${taxcode_dependent_message}")
-	private String taxcode_dependent_message;
+	@Value("${account_dependent_message}")
+	private String account_dependent_message;
 	
 	@Override
 	public List<AccountModel> getAll() {
 		
-		logger.info("TaxCodeServiceImpl getAll() starts ");
+		logger.info("AccountServiceImpl getAll() starts ");
 		Session session = null;
 		List<AccountModel> accountModelList = new ArrayList<AccountModel>();
 
@@ -99,7 +97,7 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 	
-		logger.info("TaxCodeServiceImpl getAll() ends ");
+		logger.info("AccountServiceImpl getAll() ends ");
 		return accountModelList;
 	}
 
@@ -120,7 +118,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Object addAccount(AccountModel accountModel) {
 
-		logger.info("TaxCodeServiceImpl addTaxCode() starts ");
+		logger.info("AccountServiceImpl addAccount() starts ");
 		Account account = null;
 		Session session = null;
 		Transaction tx = null;
@@ -135,8 +133,8 @@ public class AccountServiceImpl implements AccountService {
 			if(tx != null){
 				tx.rollback();
 			}
-			logger.info("Exception inside TaxCodeServiceImpl addTaxCode() :"+ e.getMessage());
-			return createFailedObject(taxcode_unable_to_add_message);
+			logger.info("Exception inside AccountServiceImpl addAccount() :"+ e.getMessage());
+			return createFailedObject(account_unable_to_add_message);
 
 		} finally{
 			if(tx != null){
@@ -147,8 +145,8 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 		
-		logger.info("TaxCodeServiceImpl addTaxCode() ends ");
-		return createSuccessObject(taxcode_added_message);
+		logger.info("AccountServiceImpl addAccount() ends ");
+		return createSuccessObject(account_added_message);
 	}
 
 	private Account setAccountValues(AccountModel accountModel) {
@@ -190,7 +188,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Object update(Long id, AccountModel accountModel) {
 
-		logger.info("TaxCodeServiceImpl update() starts.");
+		logger.info("AccountServiceImpl update() starts, accountId :"+id);
 		Session session = null;
 		Transaction tx = null;
 		try {
@@ -215,29 +213,29 @@ public class AccountServiceImpl implements AccountService {
 				session.update(account);
 				tx.commit();
 			} else{
-				return createFailedObject(taxcode_unable_to_update_message);
+				return createFailedObject(account_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
 			if(tx != null){
 				tx.rollback();
 			}
-			logger.info("Exception inside TaxCodeServiceImpl update() :"+ e.getMessage());
-			return createFailedObject(taxcode_unable_to_update_message);
+			logger.info("Exception inside AccountServiceImpl update() :"+ e.getMessage());
+			return createFailedObject(account_unable_to_update_message);
 		} finally{
 			if(session != null){
 				session.close();
 			}
 		}
 		
-		logger.info("TaxCodeServiceImpl update() ends.");
-		return createSuccessObject(taxcode_updated_message);
+		logger.info("AccountServiceImpl update() ends, accountId :"+id);
+		return createSuccessObject(account_updated_message);
 	}
 
 	@Override
 	public Object delete(Long id) {
 		
-		logger.info("TaxCodeServiceImpl delete() starts.");
+		logger.info("AccountServiceImpl delete() starts, accountId :"+id);
 		Session session = null;
 		Transaction tx = null;
 		
@@ -249,18 +247,18 @@ public class AccountServiceImpl implements AccountService {
 				session.delete(account);
 				tx.commit();
 			} else{
-				return createFailedObject(taxcode_unable_to_delete_message);
+				return createFailedObject(account_unable_to_delete_message);
 			}
 			
 		} catch (Exception e) {
-			logger.info("Exception inside TaxCodeServiceImpl delete() : " + e.getMessage());
+			logger.info("Exception inside AccountServiceImpl delete() : " + e.getMessage());
 			if(tx != null){
 				tx.rollback();
 			}
 			if(e instanceof ConstraintViolationException){
-				return createFailedObject(taxcode_dependent_message);
+				return createFailedObject(account_dependent_message);
 			}
-			return createFailedObject(taxcode_unable_to_delete_message);
+			return createFailedObject(account_unable_to_delete_message);
 		} finally{
 			/*if(tx != null){
 				tx.commit();
@@ -270,8 +268,8 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 		
-		logger.info("TaxCodeServiceImpl delete() ends.");
-		return createSuccessObject(taxcode_deleted_message);
+		logger.info("AccountServiceImpl delete() ends, accountId :"+id);
+		return createSuccessObject(account_deleted_message);
 	}
 
 
@@ -279,7 +277,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountModel get(Long id) {
 		
-		logger.info("TaxCodeServiceImpl get() starts.");
+		logger.info("AccountServiceImpl get() starts, accountId :"+id);
 		Session session = null;
 		AccountModel accountModel = new AccountModel();
 
@@ -315,21 +313,21 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 		
-		logger.info("TaxCodeServiceImpl get() ends.");
+		logger.info("AccountServiceImpl get() ends, accountId :"+id);
 		return accountModel;
 	}
 
 	@Override
 	public AccountModel getOpenAdd() {
 		
-		logger.info("HandlingServiceImpl getOpenAdd() starts ");
+		logger.info("AccountServiceImpl getOpenAdd() starts ");
 		AccountModel accountModel = new AccountModel();
 
 		accountModel.setAccountTypeList(typeService.getAll(22l));
 		accountModel.setCurrencyList(typeService.getAll(21l));
 		
 		accountModel.setParentAccountList(getSpecificData());
-		logger.info("HandlingServiceImpl getOpenAdd() ends ");
+		logger.info("AccountServiceImpl getOpenAdd() ends ");
 		
 		return accountModel;
 	}
@@ -337,7 +335,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public List<AccountModel> getAccountByAccountName(String accountName) {
 		
-		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() starts, taxCodeName :"+accountName);
+		logger.info("AccountServiceImpl getAccountByAccountName() starts, accountName :"+accountName);
 		Session session = null;
 		List<AccountModel> taxCodeList = new ArrayList<AccountModel>();
 
@@ -368,7 +366,7 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 		
-		logger.info("TaxCodeServiceImpl getTaxCodeByTaxCodeName() ends, taxCodeName :"+accountName);
+		logger.info("AccountServiceImpl getAccountByAccountName() ends, accountName :"+accountName);
 		return taxCodeList;
 	}
 

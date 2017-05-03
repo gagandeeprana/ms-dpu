@@ -87,35 +87,41 @@ public class CompanyResponse implements Serializable {
 
 	private Long categoryId;
 
+	private List<CategoryReq> categoryList;
+
 	private Long divisionId;
 
+	private List<DivisionReq> divisionList;
+
 	private Long saleId;
+
+	private List<SaleReq> saleList;
+
 	private Long countryId;
+
+	private List<TypeResponse> countryList;
+
 	private String countryName;
 
 	public Long getCountryId() {
+
 		return countryId;
 	}
 
 	public void setCountryId(Long countryId) {
+
 		this.countryId = countryId;
 	}
 
 	public String getCountryName() {
+
 		return countryName;
 	}
 
 	public void setCountryName(String countryName) {
+
 		this.countryName = countryName;
 	}
-
-	private List<CategoryReq> categoryList;
-
-	private List<DivisionReq> divisionList;
-
-	private List<SaleReq> saleList;
-
-	private List<TypeResponse> countryList;
 
 	private List<TypeResponse> functionList;
 
@@ -130,6 +136,7 @@ public class CompanyResponse implements Serializable {
 	}
 
 	public List<TypeResponse> getCountryList() {
+
 		return countryList;
 	}
 
@@ -453,7 +460,8 @@ public class CompanyResponse implements Serializable {
 		return additionalContacts;
 	}
 
-	public void setAdditionalContacts(List<AdditionalContacts> additionalContacts) {
+	public void setAdditionalContacts(
+			List<AdditionalContacts> additionalContacts) {
 
 		this.additionalContacts = additionalContacts;
 	}

@@ -210,9 +210,11 @@ public class CompanyServiceImpl implements CompanyService {
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
 		companyAdditionalContact.setStatus(statusService.get(additionalContact
 				.getStatusId()));
-		companyAdditionalContact.setFunction(typeService.get(additionalContact.getFunctionId()));
-		companyAdditionalContact.setCountry(typeService.get(additionalContact.getCountryId()));
-				 
+		companyAdditionalContact.setFunction(typeService.get(additionalContact
+				.getFunctionId()));
+		companyAdditionalContact.setCountry(typeService.get(additionalContact
+				.getCountryId()));
+
 		return companyAdditionalContact;
 	}
 
@@ -363,25 +365,25 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public List<CompanyResponse> getAll() {
-		
+
 		Session session = sessionFactory.openSession();
 		List<CompanyResponse> returnResponse = new ArrayList<CompanyResponse>();
-		
-		try{
+
+		try {
 			List<Company> companies = companyDao.findAll();
-			 
+
 			if (companies != null && !companies.isEmpty()) {
 				for (Company company : companies) {
 					CompanyResponse response = new CompanyResponse();
-					setCompanyData(session,company, response);
+					setCompanyData(session, company, response);
 					returnResponse.add(response);
 				}
 
-		}
-		}catch(Exception e){
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			if(session != null){
+		} finally {
+			if (session != null) {
 				session.close();
 			}
 		}
@@ -399,7 +401,7 @@ public class CompanyServiceImpl implements CompanyService {
 			Company company = companyDao.findById(id, session);
 
 			if (company != null) {
-				setCompanyData(session,company, response);
+				setCompanyData(session, company, response);
 				// BeanUtils.copyProperties(response, company);
 				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService
 						.getAll(id, session);
@@ -448,6 +450,18 @@ public class CompanyServiceImpl implements CompanyService {
 
 				List<Status> statusList = statusService.getAll();
 				response.setStatusList(statusList);
+
+				List<CategoryReq> categoryList = categoryService.getAll();
+				response.setCategoryList(categoryList);
+
+				List<DivisionReq> divisionList = divisionService.getAll("");
+				response.setDivisionList(divisionList);
+
+				List<SaleReq> saleList = saleService.getAll();
+				response.setSaleList(saleList);
+
+				List<TypeResponse> countryList = typeService.getAll(21l);
+				response.setCountryList(countryList);
 			}
 		} finally {
 			if (session != null) {
@@ -458,7 +472,8 @@ public class CompanyServiceImpl implements CompanyService {
 		return response;
 	}
 
-	private void setCompanyData(Session session,Company companyObj, CompanyResponse response) {
+	private void setCompanyData(Session session, Company companyObj,
+			CompanyResponse response) {
 
 		response.setCompanyId(companyObj.getCompanyId());
 		response.setAddress(companyObj.getAddress());
@@ -480,45 +495,61 @@ public class CompanyServiceImpl implements CompanyService {
 		response.setZip(companyObj.getZip());
 		response.setUnitNo(companyObj.getUnitNo());
 		response.setWebsite(companyObj.getWebsite());
-		if (companyObj.getCategory().getName() != null)
+		if (companyObj.getCategory().getName() != null) {
 			response.setCategoryName(companyObj.getCategory().getName());
-		if (companyObj.getDivision().getDivisionName() != null)
-			response.setDivisionName(companyObj.getDivision().getDivisionName());
-		if (companyObj.getSale().getName() != null)
-			response.setSaleName(companyObj.getSale().getName());
-		if(companyObj.getCountry() != null){
-		if (companyObj.getCountry().getTypeName() != null)
-			response.setCountryName(companyObj.getCountry().getTypeName());
+			response.setCategoryId(companyObj.getCategory().getCategoryId());
 		}
-		
-		List<AdditionalContacts> additionalContactsList =  new ArrayList<AdditionalContacts>();
-		try{
-			Query query = session.createQuery("from CompanyAdditionalContacts where company = "+companyObj.getCompanyId());
-
-			List<CompanyAdditionalContacts> companyAdditionalContactsList = query.list();
-			
-				if(companyAdditionalContactsList != null){
-						for(CompanyAdditionalContacts companyAdditionalContacts : companyAdditionalContactsList){
-							Type type = companyAdditionalContacts.getFunction();
-							
-							if(type.getTypeId() == 83){
-								AdditionalContacts additionalContacts =  setAdditionalContactsValue(companyAdditionalContacts);
-								additionalContactsList.add(additionalContacts);
-							}
-						}
-				}
-			}catch(Exception e){
-			e.printStackTrace();
+		if (companyObj.getDivision().getDivisionName() != null) {
+			response.setDivisionName(companyObj.getDivision().getDivisionName());
+			response.setDivisionId(companyObj.getDivision().getDivisionId());
+		}
+		if (companyObj.getSale().getName() != null) {
+			response.setSaleName(companyObj.getSale().getName());
+			response.setSaleId(companyObj.getSale().getSaleId());
+		}
+		if (companyObj.getCountry() != null) {
+			if (companyObj.getCountry().getTypeName() != null) {
+				response.setCountryName(companyObj.getCountry().getTypeName());
+				response.setCountryId(companyObj.getCountry().getTypeId());
 			}
+		}
+
+		 
+		List<AdditionalContacts> additionalContactsList = new ArrayList<AdditionalContacts>();
+		try {
+			Query query = session
+					.createQuery("from CompanyAdditionalContacts where company = "
+							+ companyObj.getCompanyId());
+
+			List<CompanyAdditionalContacts> companyAdditionalContactsList = query
+					.list();
+
+			if (companyAdditionalContactsList != null) {
+				for (CompanyAdditionalContacts companyAdditionalContacts : companyAdditionalContactsList) {
+					Type type = companyAdditionalContacts.getFunction();
+
+					if (type.getTypeId() == 83) {
+						AdditionalContacts additionalContacts = setAdditionalContactsValue(companyAdditionalContacts);
+						additionalContactsList.add(additionalContacts);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		response.setAdditionalContacts(additionalContactsList);
 
 	}
 
-	private AdditionalContacts setAdditionalContactsValue(CompanyAdditionalContacts companyAdditionalContact) {
+	private AdditionalContacts setAdditionalContactsValue(
+			CompanyAdditionalContacts companyAdditionalContact) {
+
 		AdditionalContacts additionalContact = new AdditionalContacts();
-		additionalContact.setAdditionalContactId(companyAdditionalContact.getAdditionalContactId());
+		additionalContact.setAdditionalContactId(companyAdditionalContact
+				.getAdditionalContactId());
 		additionalContact.setCellular(companyAdditionalContact.getCellular());
-		additionalContact.setCustomerName(companyAdditionalContact.getCustomerName());
+		additionalContact.setCustomerName(companyAdditionalContact
+				.getCustomerName());
 		additionalContact.setEmail(companyAdditionalContact.getEmail());
 		additionalContact.setExt(companyAdditionalContact.getExt());
 		additionalContact.setFax(companyAdditionalContact.getFax());
@@ -527,7 +558,8 @@ public class CompanyServiceImpl implements CompanyService {
 		additionalContact.setPhone(companyAdditionalContact.getPhone());
 		additionalContact.setPosition(companyAdditionalContact.getPosition());
 		additionalContact.setPrefix(companyAdditionalContact.getPrefix());
-		additionalContact.setStatusName(companyAdditionalContact.getStatus().getStatus());
+		additionalContact.setStatusName(companyAdditionalContact.getStatus()
+				.getStatus());
 		Type countryType = companyAdditionalContact.getCountry();
 		additionalContact.setCountryName(countryType.getTypeName());
 		return additionalContact;
@@ -602,7 +634,6 @@ public class CompanyServiceImpl implements CompanyService {
 
 		List<TypeResponse> countryList = typeService.getAll(21l);
 		companyResponse.setCountryList(countryList);
- 
 
 		return companyResponse;
 	}
@@ -617,7 +648,6 @@ public class CompanyServiceImpl implements CompanyService {
 
 		List<TypeResponse> functionList = typeService.getAll(20l);
 		companyResponse.setFunctionList(functionList);
- 
 
 		return companyResponse;
 	}

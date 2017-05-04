@@ -14,10 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.TaxCodeDao;
+import com.dpu.entity.Account;
 import com.dpu.entity.TaxCode;
+import com.dpu.model.AccountModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.model.TaxCodeModel;
+import com.dpu.service.AccountService;
 import com.dpu.service.StatusService;
 import com.dpu.service.TaxCodeService;
 
@@ -31,6 +34,9 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	AccountService accountService;
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -109,7 +115,7 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			taxCode = setTaxCodeValues(taxCodeModel);
+			taxCode = setTaxCodeValues(taxCodeModel, session);
 			session.save(taxCode);
 
 		} catch (Exception e) {
@@ -132,10 +138,18 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		return createSuccessObject(taxcode_added_message);
 	}
 
-	private TaxCode setTaxCodeValues(TaxCodeModel taxCodeModel) {
+	private TaxCode setTaxCodeValues(TaxCodeModel taxCodeModel, Session session) {
 		
 		TaxCode taxCode = new TaxCode();
 		BeanUtils.copyProperties(taxCodeModel, taxCode);
+		
+		if(taxCodeModel.getGlAccountRevenueId() != null){
+			taxCode.setAccountForRevenue((Account) session.get(Account.class, taxCodeModel.getGlAccountRevenueId()));
+		}
+		
+		if(taxCodeModel.getGlAccountSaleId() != null){
+			taxCode.setAccountForSale((Account) session.get(Account.class, taxCodeModel.getGlAccountSaleId()));
+		}
 		return taxCode;
 	}
 
@@ -231,6 +245,8 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 
 			if (taxCode != null) {
 				BeanUtils.copyProperties(taxCode, taxCodeModel);
+				List<AccountModel> accountList = accountService.getSpecificData();
+				taxCodeModel.setGlAccountRevenueList(accountList);
 			}
 		} finally {
 			if (session != null) {
@@ -242,17 +258,18 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		return taxCodeModel;
 	}
 
-	/*@Override
-	public HandlingModel getOpenAdd() {
-		logger.info("HandlingServiceImpl getOpenAdd() starts ");
-		HandlingModel handlingModel = new HandlingModel();
-
-		List<Status> statusList = statusService.getAll();
-		handlingModel.setStatusList(statusList);
+	@Override
+	public TaxCodeModel getOpenAdd() {
 		
-		logger.info("HandlingServiceImpl getOpenAdd() ends ");
-		return handlingModel;
-	}*/
+		logger.info("TaxCodeServiceImpl getOpenAdd() starts ");
+		
+		TaxCodeModel taxcodeModel = new TaxCodeModel();
+		List<AccountModel> accountList = accountService.getSpecificData();
+		taxcodeModel.setGlAccountRevenueList(accountList);
+		
+		logger.info("TaxCodeServiceImpl getOpenAdd() ends ");
+		return taxcodeModel;
+	}
 
 	@Override
 	public List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName) {

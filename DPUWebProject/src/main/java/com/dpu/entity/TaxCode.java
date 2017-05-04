@@ -4,8 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,13 +29,13 @@ public class TaxCode {
 	@Column(name = "percentage")
 	private Double percentage;
 	
-	/*@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gl_account_for_sales")
-	private Division division;
+	private Account accountForSale;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gl_accounts_for_revenue")
-	private Division division;*/
+	private Account accountForRevenue;
 	
 	@Column(name = "taxable")
 	private Boolean taxable;
@@ -119,6 +122,22 @@ public class TaxCode {
 
 	public void setModifiedOn(Date modifiedOn) {
 		this.modifiedOn = modifiedOn;
+	}
+
+	public Account getAccountForSale() {
+		return accountForSale;
+	}
+
+	public void setAccountForSale(Account accountForSale) {
+		this.accountForSale = accountForSale;
+	}
+
+	public Account getAccountForRevenue() {
+		return accountForRevenue;
+	}
+
+	public void setAccountForRevenue(Account accountForRevenue) {
+		this.accountForRevenue = accountForRevenue;
 	}
 
 }

@@ -182,23 +182,23 @@ public class TaxCodeController {
 	 * send master data
 	 * @return master data for add handling
 	 */
-/*	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
-		logger.info("Inside HandlingController openAdd() Starts ");
+		logger.info("Inside TaxCodeController openAdd() Starts ");
 		String json = null;
 
 		try {
-			HandlingModel model = null;//handlingService.getOpenAdd();
+			TaxCodeModel model = taxCodeService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(model);
 		} catch (Exception e) {
-			logger.error(" Exception inside HandlingController openAdd() :"+ e.getMessage());
+			logger.error(" Exception inside TaxCodeController openAdd() :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController openAdd() ends ");
+		logger.info("Inside TaxCodeController openAdd() ends ");
 		return json;
-	}*/
+	}
 
 	/**
 	 * this method is used to get taxcode data based on taxcode name

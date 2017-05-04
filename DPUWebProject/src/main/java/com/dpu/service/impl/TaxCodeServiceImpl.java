@@ -77,6 +77,12 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 				for (TaxCode taxCode : taxCodes) {
 					TaxCodeModel taxCodeModel = new TaxCodeModel();
 					BeanUtils.copyProperties(taxCode, taxCodeModel);
+					if(taxCode.getAccountForRevenue() != null){
+						taxCodeModel.setGlAccountRevenueName(taxCode.getAccountForRevenue().getAccountName());
+					}
+					if(taxCode.getAccountForSale() != null){
+						taxCodeModel.setGlAccountSaleName(taxCode.getAccountForRevenue().getAccountName());
+					}
 					taxCodeList.add(taxCodeModel);
 				}
 			}
@@ -167,6 +173,13 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 			if (taxCode != null) {
 				String[] ignorePro ={"taxCodeId"};
 				BeanUtils.copyProperties(taxCodeModel, taxCode, ignorePro);
+				if(taxCodeModel.getGlAccountRevenueId() != null){
+					taxCode.setAccountForRevenue((Account) session.get(Account.class, taxCodeModel.getGlAccountRevenueId()));
+				}
+				
+				if(taxCodeModel.getGlAccountSaleId() != null){
+					taxCode.setAccountForSale((Account) session.get(Account.class, taxCodeModel.getGlAccountSaleId()));
+				}
 				session.update(taxCode);
 				tx.commit();
 			} else{
@@ -245,6 +258,12 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 
 			if (taxCode != null) {
 				BeanUtils.copyProperties(taxCode, taxCodeModel);
+				if(taxCode.getAccountForRevenue() != null){
+					taxCodeModel.setGlAccountRevenueId(taxCode.getAccountForRevenue().getAccountId());
+				}
+				if(taxCode.getAccountForSale() != null){
+					taxCodeModel.setGlAccountSaleId(taxCode.getAccountForSale().getAccountId());
+				}
 				List<AccountModel> accountList = accountService.getSpecificData();
 				taxCodeModel.setGlAccountRevenueList(accountList);
 			}

@@ -96,6 +96,8 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 		company.setDivision(divisionDao.findById(companyResponse
 				.getDivisionId()));
 		company.setSale(saleDao.findById(companyResponse.getSaleId()));
+		company.setCountry(typeService.get(companyResponse
+				.getCountryId()));
 		session.saveOrUpdate(company);
 
 		List<BillingLocation> billingocationList = companyResponse

@@ -11,7 +11,7 @@ public interface TaxCodeService {
 
 	List<TaxCodeModel> getAll();
 
-	//HandlingModel getOpenAdd();
+	TaxCodeModel getOpenAdd();
 
 	TaxCodeModel get(Long id);
 	

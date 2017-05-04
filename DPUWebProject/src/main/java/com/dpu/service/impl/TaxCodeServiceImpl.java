@@ -304,6 +304,12 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 				for (TaxCode taxCode : taxCodes) {
 					TaxCodeModel taxCodeModel = new TaxCodeModel();
 					BeanUtils.copyProperties(taxCode, taxCodeModel);
+					if(taxCode.getAccountForRevenue() != null){
+						taxCodeModel.setGlAccountRevenueName(taxCode.getAccountForRevenue().getAccountName());
+					}
+					if(taxCode.getAccountForSale() != null){
+						taxCodeModel.setGlAccountSaleName(taxCode.getAccountForRevenue().getAccountName());
+					}
 					taxCodeList.add(taxCodeModel);
 				}
 			}

@@ -28,6 +28,10 @@ public class AccountModel {
 	private String parentAccountName;
 	private List<AccountModel> parentAccountList;
 	
+	private Long taxCodeId;
+	private String taxCodeName;
+	private List<TaxCodeModel> taxCodeList;
+	
 	private String description;
 
 	public Long getAccountId() {
@@ -132,6 +136,30 @@ public class AccountModel {
 
 	public void setParentAccountList(List<AccountModel> parentAccountList) {
 		this.parentAccountList = parentAccountList;
+	}
+
+	public Long getTaxCodeId() {
+		return taxCodeId;
+	}
+
+	public void setTaxCodeId(Long taxCodeId) {
+		this.taxCodeId = taxCodeId;
+	}
+
+	public String getTaxCodeName() {
+		return taxCodeName;
+	}
+
+	public void setTaxCodeName(String taxCodeName) {
+		this.taxCodeName = taxCodeName;
+	}
+
+	public List<TaxCodeModel> getTaxCodeList() {
+		return taxCodeList;
+	}
+
+	public void setTaxCodeList(List<TaxCodeModel> taxCodeList) {
+		this.taxCodeList = taxCodeList;
 	}
 	
 	

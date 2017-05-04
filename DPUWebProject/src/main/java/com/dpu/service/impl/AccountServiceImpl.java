@@ -20,6 +20,7 @@ import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.AccountService;
 import com.dpu.service.StatusService;
+import com.dpu.service.TaxCodeService;
 import com.dpu.service.TypeService;
 
 @Component
@@ -35,6 +36,9 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
 	TypeService typeService;
+	
+	@Autowired
+	TaxCodeService taxCodeService;
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -88,6 +92,9 @@ public class AccountServiceImpl implements AccountService {
 						accountModel.setParentAccountName(account.getParentAccount().getAccountName());
 					}
 					
+					if(account.getTaxCode() != null){
+						accountModel.setTaxCodeName(account.getTaxCode().getTaxCode());
+					}
 					accountModelList.add(accountModel);
 				}
 			}
@@ -126,7 +133,7 @@ public class AccountServiceImpl implements AccountService {
 			
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			account = setAccountValues(accountModel);
+			account = setAccountValues(accountModel, session);
 			session.save(account);
 
 		} catch (Exception e) {
@@ -149,7 +156,7 @@ public class AccountServiceImpl implements AccountService {
 		return createSuccessObject(account_added_message);
 	}
 
-	private Account setAccountValues(AccountModel accountModel) {
+	private Account setAccountValues(AccountModel accountModel, Session session) {
 
 		Account account = new Account();
 		BeanUtils.copyProperties(accountModel, account);
@@ -166,6 +173,9 @@ public class AccountServiceImpl implements AccountService {
 			account.setParentAccount(getParentAccount(accountModel.getParentAccountId()));
 		}
 		
+		if(accountModel.getTaxCodeId() != null){
+			account.setTaxCode(taxCodeService.getById(accountModel.getTaxCodeId(), session));
+		}
 		return account;
 	}
 
@@ -209,6 +219,9 @@ public class AccountServiceImpl implements AccountService {
 				
 				if(accountModel.getParentAccountId() != null){
 					account.setParentAccount(getParentAccount(accountModel.getParentAccountId()));
+				}
+				if(accountModel.getTaxCodeId()!= null){
+					account.setTaxCode(taxCodeService.getById(accountModel.getTaxCodeId(), session));
 				}
 				session.update(account);
 				tx.commit();
@@ -303,6 +316,11 @@ public class AccountServiceImpl implements AccountService {
 					accountModel.setParentAccountId(account.getParentAccount().getAccountId());
 				}
 				
+				if(account.getTaxCode() != null){
+					accountModel.setTaxCodeId(account.getTaxCode().getTaxCodeId());
+				}
+				
+				accountModel.setTaxCodeList(taxCodeService.getSpecificData());
 				accountModel.setAccountTypeList(typeService.getAll(22l));
 				accountModel.setCurrencyList(typeService.getAll(21l));
 				//accountModel.set
@@ -327,6 +345,7 @@ public class AccountServiceImpl implements AccountService {
 		accountModel.setCurrencyList(typeService.getAll(21l));
 		
 		accountModel.setParentAccountList(getSpecificData());
+		accountModel.setTaxCodeList(taxCodeService.getSpecificData());
 		logger.info("AccountServiceImpl getOpenAdd() ends ");
 		
 		return accountModel;
@@ -356,6 +375,10 @@ public class AccountServiceImpl implements AccountService {
 					
 					if(account.getParentAccount() != null){
 						accountModel.setParentAccountName(account.getParentAccount().getAccountName());
+					}
+					
+					if(account.getTaxCode() != null){
+						accountModel.setTaxCodeName(account.getTaxCode().getTaxCode());
 					}
 					taxCodeList.add(accountModel);
 				}

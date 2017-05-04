@@ -38,6 +38,10 @@ public class Account {
 	@JoinColumn(name = "parent_account_id")
 	private Account parentAccount;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tax_code_id")
+	private TaxCode taxCode;
+	
 	@Column(name = "description")
 	private String description;
 	
@@ -139,6 +143,14 @@ public class Account {
 
 	public void setModifiedOn(Date modifiedOn) {
 		this.modifiedOn = modifiedOn;
+	}
+
+	public TaxCode getTaxCode() {
+		return taxCode;
+	}
+
+	public void setTaxCode(TaxCode taxCode) {
+		this.taxCode = taxCode;
 	}
 
 	

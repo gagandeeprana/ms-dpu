@@ -2,6 +2,9 @@ package com.dpu.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
+import com.dpu.entity.TaxCode;
 import com.dpu.model.TaxCodeModel;
 
 public interface TaxCodeService {
@@ -20,5 +23,7 @@ public interface TaxCodeService {
 	Object addTaxCode(TaxCodeModel taxCodeModel);
 
 	List<TaxCodeModel> getTaxCodeByTaxCodeName(String taxCodeName);
+	
+	TaxCode getById(Long id,Session session);
 
 }

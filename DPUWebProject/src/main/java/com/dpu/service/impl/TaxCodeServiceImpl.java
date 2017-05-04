@@ -341,4 +341,9 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 		return handlings;
 	}
 
+	@Override
+	public TaxCode getById(Long id, Session session) {
+		return (TaxCode) session.get(TaxCode.class, id);
+	}
+
 }

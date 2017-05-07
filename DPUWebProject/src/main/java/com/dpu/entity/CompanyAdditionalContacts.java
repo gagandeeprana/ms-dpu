@@ -14,12 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @Table(name = "additionalcontactmaster")
 @JsonSerialize(include = Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CompanyAdditionalContacts {
 
 	@Id

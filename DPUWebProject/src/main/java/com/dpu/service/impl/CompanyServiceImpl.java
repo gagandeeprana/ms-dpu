@@ -405,9 +405,10 @@ public class CompanyServiceImpl implements CompanyService {
 					for (CompanyAdditionalContacts companyAdditionalContacts : comAddContacts) {
 						AdditionalContacts addContact = new AdditionalContacts();
 						try {
-							BeanUtils.copyProperties(addContact, companyAdditionalContacts);
-							addContact.setStatusId(companyAdditionalContacts.getStatus().getId());
-						} catch (IllegalAccessException | InvocationTargetException e) {
+							addContact = setAdditionalContactsValue(companyAdditionalContacts);
+							addContact.setStatusName(companyAdditionalContacts.getStatus().getStatus());
+							addContact.setFunctionName(companyAdditionalContacts.getFunction().getTypeName());
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 
@@ -462,7 +463,7 @@ public class CompanyServiceImpl implements CompanyService {
 		// response.setTollfree(companyObj.getTollfree());
 		// response.setZip(companyObj.getZip());
 		response.setUnitNo(companyObj.getUnitNo());
-		// response.setWebsite(companyObj.getWebsite());
+		response.setWebsite(companyObj.getWebsite());
 		// response.setCategoryId(companyObj.getCategory().getCategoryId());
 		// response.setDivisionId(companyObj.getDivision().getDivisionId());
 		// response.setSaleId(companyObj.getSale().getSaleId());
@@ -519,13 +520,15 @@ public class CompanyServiceImpl implements CompanyService {
 		additionalContact.setExt(companyAdditionalContact.getExt());
 		additionalContact.setFax(companyAdditionalContact.getFax());
 		Type functionType = companyAdditionalContact.getFunction();
-		additionalContact.setFunctionName(functionType.getTypeName());
+		if (functionType != null)
+			additionalContact.setFunctionName(functionType.getTypeName());
 		additionalContact.setPhone(companyAdditionalContact.getPhone());
 		additionalContact.setPosition(companyAdditionalContact.getPosition());
 		additionalContact.setPrefix(companyAdditionalContact.getPrefix());
 		additionalContact.setStatusName(companyAdditionalContact.getStatus().getStatus());
 		Type countryType = companyAdditionalContact.getCountry();
-		additionalContact.setCountryName(countryType.getTypeName());
+		if (countryType != null)
+			additionalContact.setCountryName(countryType.getTypeName());
 		return additionalContact;
 	}
 

@@ -201,7 +201,7 @@ public class CompanyServiceImpl implements CompanyService {
 		companyAdditionalContact.setPrefix(additionalContact.getPrefix());
 		companyAdditionalContact.setStatus(statusService.get(additionalContact.getStatusId()));
 		companyAdditionalContact.setFunction(typeService.get(additionalContact.getFunctionId()));
-		companyAdditionalContact.setCountry(typeService.get(additionalContact.getCountryId()));
+	//	companyAdditionalContact.setCountry(typeService.get(additionalContact.getCountryId()));
 
 		return companyAdditionalContact;
 	}
@@ -526,9 +526,9 @@ public class CompanyServiceImpl implements CompanyService {
 		additionalContact.setPosition(companyAdditionalContact.getPosition());
 		additionalContact.setPrefix(companyAdditionalContact.getPrefix());
 		additionalContact.setStatusName(companyAdditionalContact.getStatus().getStatus());
-		Type countryType = companyAdditionalContact.getCountry();
-		if (countryType != null)
-			additionalContact.setCountryName(countryType.getTypeName());
+	//	Type countryType = companyAdditionalContact.getCountry();
+	//	if (countryType != null)
+	//		additionalContact.setCountryName(countryType.getTypeName());
 		return additionalContact;
 	}
 

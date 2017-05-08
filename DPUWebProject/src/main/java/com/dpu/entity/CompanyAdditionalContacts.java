@@ -65,11 +65,11 @@ public class CompanyAdditionalContacts {
 	@JoinColumn(name = "function_id")
 	private Type function;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	/*@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "country_id")
-	private Type country;
+	private Type country;*/
 
-	public Type getCountry() {
+	/*public Type getCountry() {
 
 		return country;
 	}
@@ -77,7 +77,7 @@ public class CompanyAdditionalContacts {
 	public void setCountry(Type country) {
 
 		this.country = country;
-	}
+	}*/
 
 	public Type getFunction() {
 

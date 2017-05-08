@@ -129,9 +129,10 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 				if (additionalContacts.getFunctionId() != null)
 					comAdditionalContacts.setFunction(typeService
 							.get(additionalContacts.getFunctionId()));
-				sts = isPrimaryFunctionExist(session,company.getCompanyId(),additionalContacts.getFunctionId());
+				//sts = isPrimaryFunctionExist(session,company.getCompanyId(),additionalContacts.getFunctionId());
 				if (sts)
 					session.saveOrUpdate(comAdditionalContacts);
+				sts = isPrimaryFunctionExist(session,company.getCompanyId(),additionalContacts.getFunctionId());
 			}
 		}
 		return sts;
@@ -151,7 +152,7 @@ public class CompanyDaoImpl extends GenericDaoImpl<Company> implements
 			List<CompanyAdditionalContacts> companyAdditionalContacts = query.list();
 			if (companyAdditionalContacts != null
 					&& !companyAdditionalContacts.isEmpty()) {
-				if (companyAdditionalContacts.size() >= 1)
+				if (companyAdditionalContacts.size() > 1)
 					return false;
 
 			}

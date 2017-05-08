@@ -283,67 +283,67 @@ public class TruckServiceImpl implements TruckService {
 		Session session = sessionFactory.openSession();
 		
 		try{
-		List<Status> lstStatus = truckDao.getStatusList(session);
-		truckResponse.setStatusList(lstStatus);
+			List<Status> lstStatus = truckDao.getStatusList(session);
+			truckResponse.setStatusList(lstStatus);
 
-		List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");
-		List<CategoryReq> operationList = new ArrayList<CategoryReq>();
-		Iterator<Object[]> operationIt = categoryListObj.iterator();
+			List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");
+			List<CategoryReq> operationList = new ArrayList<CategoryReq>();
+			Iterator<Object[]> operationIt = categoryListObj.iterator();
 		
-		while(operationIt.hasNext())
-		{
-			Object o[] = (Object[])operationIt.next();
-			CategoryReq type = new CategoryReq();
-			type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
-			type.setName(String.valueOf(o[1]));
-			operationList.add(type);
-		}
+			while(operationIt.hasNext())
+			{
+				Object o[] = (Object[])operationIt.next();
+				CategoryReq type = new CategoryReq();
+				type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
+				type.setName(String.valueOf(o[1]));
+				operationList.add(type);
+			}
 		
 		//List<CategoryReq> categoryList = categoryService.getAll();
-		truckResponse.setCategoryList(operationList);
+			truckResponse.setCategoryList(operationList);
 
 		//List<DivisionReq> divisionList = divisionService.getAll("");
-		List<Object[]> divisionListObj =  divisionDao.getSpecificData(session,"Division", "divisionId", "divisionId");
+			List<Object[]> divisionListObj =  divisionDao.getSpecificData(session,"Division", "divisionId", "divisionId");
 		
-		List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
-		Iterator<Object[]> divisionIt = divisionListObj.iterator();
+			List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
+			Iterator<Object[]> divisionIt = divisionListObj.iterator();
 		
-		while(divisionIt.hasNext())
-		{
-			Object o[] = (Object[])divisionIt.next();
-			DivisionReq type = new DivisionReq();
-			type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
-			type.setDivisionName(String.valueOf(o[1]));
-			divisionList.add(type);
-		}
-		truckResponse.setDivisionList(divisionList);
-
-		//List<TerminalResponse> terminalList = terminalService.getAllTerminals();
-		List<Object[]> terminalListObj = terminalDao.getSpecificData(session,"Terminal", "terminalId", "terminalName");
-		List<TerminalResponse> terminalList = new ArrayList<TerminalResponse>();
-		Iterator<Object[]> terminalIt = terminalListObj.iterator();
-		
-		while(terminalIt.hasNext())
-		{
-			Object o[] = (Object[])terminalIt.next();
-			TerminalResponse type = new TerminalResponse();
-			type.setTerminalId(Long.parseLong(String.valueOf(o[0])));
-			type.setTerminalName(String.valueOf(o[1]));
-			terminalList.add(type);
-		}
-		truckResponse.setTerminalList(terminalList);
-
-		List<TypeResponse> truckTypeList = truckDao.getTypeResponse(session, 8l);
-		truckResponse.setTruckTypeList(truckTypeList);
-		
-		} catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			if(session != null){
-				session.close();
+			while(divisionIt.hasNext())
+			{
+				Object o[] = (Object[])divisionIt.next();
+				DivisionReq type = new DivisionReq();
+				type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
+				type.setDivisionName(String.valueOf(o[1]));
+				divisionList.add(type);
 			}
-		}
-		return truckResponse;
+			truckResponse.setDivisionList(divisionList);
+
+			//List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+			List<Object[]> terminalListObj = terminalDao.getSpecificData(session,"Terminal", "terminalId", "terminalName");
+			List<TerminalResponse> terminalList = new ArrayList<TerminalResponse>();
+			Iterator<Object[]> terminalIt = terminalListObj.iterator();
+		
+			while(terminalIt.hasNext())
+			{
+				Object o[] = (Object[])terminalIt.next();
+				TerminalResponse type = new TerminalResponse();
+				type.setTerminalId(Long.parseLong(String.valueOf(o[0])));
+				type.setTerminalName(String.valueOf(o[1]));
+				terminalList.add(type);
+			}
+			truckResponse.setTerminalList(terminalList);
+
+			List<TypeResponse> truckTypeList = truckDao.getTypeResponse(session, 8l);
+			truckResponse.setTruckTypeList(truckTypeList);
+		
+			} catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(session != null){
+					session.close();
+				}
+			}
+			return truckResponse;
 
 	}
 

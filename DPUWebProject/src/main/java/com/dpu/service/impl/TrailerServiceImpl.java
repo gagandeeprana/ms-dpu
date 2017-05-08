@@ -1,6 +1,7 @@
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -248,25 +249,69 @@ public class TrailerServiceImpl implements TrailerService{
 	@Override
 	public TrailerRequest getOpenAdd() {
 
+		Session session = sessionFactory.openSession();
 		TrailerRequest trailer = new TrailerRequest();
 		
-		List<Status> statusList = statusService.getAll();
-		trailer.setStatusList(statusList);
+		try{
+			List<Status> statusList = trailerdao.getStatusList(session);
+			trailer.setStatusList(statusList);
 		
-		List<TypeResponse> trailerTypeList = typeService.getAll(7l);
-		trailer.setTrailerTypeList(trailerTypeList);
+			List<TypeResponse> trailerTypeList = trailerdao.getTypeResponse(session, 7l);
+			trailer.setTrailerTypeList(trailerTypeList);
 				
-		List<CategoryReq> categoryList = categoryService.getAll();
-		trailer.setCategoryList(categoryList);
+			List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");
+			List<CategoryReq> categoryList = new ArrayList<CategoryReq>();
+			Iterator<Object[]> operationIt = categoryListObj.iterator();
+	
+			while(operationIt.hasNext())
+			{
+				Object o[] = (Object[])operationIt.next();
+				CategoryReq type = new CategoryReq();
+				type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
+				type.setName(String.valueOf(o[1]));
+				categoryList.add(type);
+			}
+			trailer.setCategoryList(categoryList);
 		
-		List<DivisionReq> divisionList = divisionService.getAll("");
-		trailer.setDivisionList(divisionList);
 		
-		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
-		trailer.setTerminalList(terminalList);
+			List<Object[]> divisionListObj =  divisionDao.getSpecificData(session,"Division", "divisionId", "divisionId");
 		
+			List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
+			Iterator<Object[]> divisionIt = divisionListObj.iterator();
+	
+			while(divisionIt.hasNext())
+			{
+				Object o[] = (Object[])divisionIt.next();
+				DivisionReq type = new DivisionReq();
+				type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
+				type.setDivisionName(String.valueOf(o[1]));
+				divisionList.add(type);
+			}
+			trailer.setDivisionList(divisionList);
+			
+			List<Object[]> terminalListObj = terminalDao.getSpecificData(session,"Terminal", "terminalId", "terminalName");
+			List<TerminalResponse> terminalList = new ArrayList<TerminalResponse>();
+			Iterator<Object[]> terminalIt = terminalListObj.iterator();
+	
+			while(terminalIt.hasNext())
+			{
+				Object o[] = (Object[])terminalIt.next();
+				TerminalResponse type = new TerminalResponse();
+				type.setTerminalId(Long.parseLong(String.valueOf(o[0])));
+				type.setTerminalName(String.valueOf(o[1]));
+				terminalList.add(type);
+			}
+			trailer.setTerminalList(terminalList);
 		
-		return trailer;
+			}catch(Exception e){
+			
+			}finally{
+				if(session != null){
+					session.close();
+				}
+			}
+		
+			return trailer;
 	}
 
 	@Override

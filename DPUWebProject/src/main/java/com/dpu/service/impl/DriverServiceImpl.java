@@ -2,6 +2,7 @@ package com.dpu.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -367,24 +368,69 @@ public class DriverServiceImpl implements DriverService {
 	public DriverReq getOpenAdd() {
 
 		DriverReq driver = new DriverReq();
-
-		List<Status> statusList = statusService.getAll();
+		Session session = sessionFactory.openSession();
+		
+		try{
+		List<Status> statusList = driverDao.getStatusList(session);
 		driver.setStatusList(statusList);
 
-		List<TypeResponse> roleList = typeService.getAll(6l);
+		List<TypeResponse> roleList = driverDao.getTypeResponse(session, 6l);
 		driver.setRoleList(roleList);
 
-		List<TypeResponse> driverClassList = typeService.getAll(5l);
+		List<TypeResponse> driverClassList = driverDao.getTypeResponse(session, 5l);
 		driver.setDriverClassList(driverClassList);
 
-		List<CategoryReq> categoryList = categoryService.getAll();
+		List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");
+		List<CategoryReq> categoryList = new ArrayList<CategoryReq>();
+		Iterator<Object[]> operationIt = categoryListObj.iterator();
+
+		while(operationIt.hasNext())
+		{
+			Object o[] = (Object[])operationIt.next();
+			CategoryReq type = new CategoryReq();
+			type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
+			type.setName(String.valueOf(o[1]));
+			categoryList.add(type);
+		}
 		driver.setCategoryList(categoryList);
+	
+	
+		List<Object[]> divisionListObj =  divisionDao.getSpecificData(session,"Division", "divisionId", "divisionId");
+	
+		List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
+		Iterator<Object[]> divisionIt = divisionListObj.iterator();
 
-		List<DivisionReq> divisionList = divisionService.getAll("");
+		while(divisionIt.hasNext())
+		{
+			Object o[] = (Object[])divisionIt.next();
+			DivisionReq type = new DivisionReq();
+			type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
+			type.setDivisionName(String.valueOf(o[1]));
+			divisionList.add(type);
+		}
 		driver.setDivisionList(divisionList);
+		
+		List<Object[]> terminalListObj = terminalDao.getSpecificData(session,"Terminal", "terminalId", "terminalName");
+		List<TerminalResponse> terminalList = new ArrayList<TerminalResponse>();
+		Iterator<Object[]> terminalIt = terminalListObj.iterator();
 
-		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		while(terminalIt.hasNext())
+		{
+			Object o[] = (Object[])terminalIt.next();
+			TerminalResponse type = new TerminalResponse();
+			type.setTerminalId(Long.parseLong(String.valueOf(o[0])));
+			type.setTerminalName(String.valueOf(o[1]));
+			terminalList.add(type);
+		}
 		driver.setTerminalList(terminalList);
+	
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 
 		return driver;
 	}

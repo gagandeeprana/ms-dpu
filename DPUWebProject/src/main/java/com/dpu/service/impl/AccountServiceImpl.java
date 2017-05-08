@@ -396,18 +396,26 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public List<AccountModel> getSpecificData() {
 		
-		List<Object[]> accountData = accountDao.getSpecificData("Account","accountId", "accountName");
-
+		Session session = sessionFactory.openSession();
 		List<AccountModel> accounts = new ArrayList<AccountModel>();
-		if (accountData != null && !accountData.isEmpty()) {
-			for (Object[] row : accountData) {
-				AccountModel accountModel = new AccountModel();
-				accountModel.setAccountId((Long) row[0]);
-				accountModel.setAccountName(String.valueOf(row[1]));
-				accounts.add(accountModel);
+		
+		try{
+			List<Object[]> accountData = accountDao.getSpecificData(session,"Account","accountId", "accountName");
+			if (accountData != null && !accountData.isEmpty()) {
+				for (Object[] row : accountData) {
+					AccountModel accountModel = new AccountModel();
+					accountModel.setAccountId((Long) row[0]);
+					accountModel.setAccountName(String.valueOf(row[1]));
+					accounts.add(accountModel);
 			}
 		}
-
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return accounts;
 	}
 

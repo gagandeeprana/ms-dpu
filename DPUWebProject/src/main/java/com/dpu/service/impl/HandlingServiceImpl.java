@@ -34,31 +34,31 @@ public class HandlingServiceImpl implements HandlingService {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Value("${handling_added_message}")
 	private String handling_added_message;
-	
+
 	@Value("${handling_unable_to_add_message}")
 	private String handling_unable_to_add_message;
-	
+
 	@Value("${handling_deleted_message}")
 	private String handling_deleted_message;
-	
+
 	@Value("${handling_unable_to_delete_message}")
 	private String handling_unable_to_delete_message;
-	
+
 	@Value("${handling_updated_message}")
 	private String handling_updated_message;
-	
+
 	@Value("${handling_unable_to_update_message}")
 	private String handling_unable_to_update_message;
-	
+
 	@Value("${handling_already_used_message}")
 	private String handling_already_used_message;
-	
+
 	@Override
 	public List<HandlingModel> getAll() {
-		
+
 		logger.info("HandlingServiceImpl getAll() starts ");
 		Session session = null;
 		List<HandlingModel> handlingList = new ArrayList<HandlingModel>();
@@ -72,7 +72,9 @@ public class HandlingServiceImpl implements HandlingService {
 					HandlingModel handlingModel = new HandlingModel();
 					handlingModel.setId(handling.getId());
 					handlingModel.setName(handling.getName());
-					handlingModel.setStatusName(handling.getStatus().getStatus());;
+					handlingModel.setStatusName(handling.getStatus()
+							.getStatus());
+					;
 					handlingList.add(handlingModel);
 				}
 			}
@@ -81,12 +83,13 @@ public class HandlingServiceImpl implements HandlingService {
 				session.close();
 			}
 		}
-	
+
 		logger.info("HandlingServiceImpl getAll() ends ");
 		return handlingList;
 	}
 
 	private Object createSuccessObject(String msg) {
+
 		Success success = new Success();
 		success.setMessage(msg);
 		success.setResultList(getAll());
@@ -94,9 +97,10 @@ public class HandlingServiceImpl implements HandlingService {
 	}
 
 	private Object createFailedObject(String msg) {
+
 		Failed failed = new Failed();
 		failed.setMessage(msg);
-		//failed.setResultList(getAll());
+		// failed.setResultList(getAll());
 		return failed;
 	}
 
@@ -110,17 +114,18 @@ public class HandlingServiceImpl implements HandlingService {
 			handlingDao.save(handling);
 
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl addHandling() :"+ e.getMessage());
+			logger.info("Exception inside HandlingServiceImpl addHandling() :"
+					+ e.getMessage());
 			return createFailedObject(handling_unable_to_add_message);
 
 		}
-		
+
 		logger.info("HandlingServiceImpl addHandling() ends ");
 		return createSuccessObject(handling_added_message);
 	}
 
 	private Handling setHandlingValues(HandlingModel handlingModel) {
-		
+
 		Handling handling = new Handling();
 		handling.setName(handlingModel.getName());
 		Status status = statusService.get(handlingModel.getStatusId());
@@ -134,70 +139,70 @@ public class HandlingServiceImpl implements HandlingService {
 		logger.info("HandlingServiceImpl update() starts.");
 		try {
 			Handling handling = handlingDao.findById(id);
-			
+
 			if (handling != null) {
 				handling.setName(handlingModel.getName());
 				Status status = statusService.get(handlingModel.getStatusId());
 				handling.setStatus(status);
 				handlingDao.update(handling);
-			} else{
+			} else {
 				return createFailedObject(handling_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl update() :"+ e.getMessage());
+			logger.info("Exception inside HandlingServiceImpl update() :"
+					+ e.getMessage());
 			return createFailedObject(handling_unable_to_update_message);
 		}
-		
+
 		logger.info("HandlingServiceImpl update() ends.");
 		return createSuccessObject(handling_updated_message);
 	}
 
 	@Override
 	public Object delete(Long id) {
-		
+
 		logger.info("HandlingServiceImpl delete() starts.");
 		Session session = null;
 		Transaction tx = null;
-		
+
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
 			Handling handling = (Handling) session.get(Handling.class, id);
-			if(handling != null){
+			if (handling != null) {
 				session.delete(handling);
 				tx.commit();
-			} else{
+			} else {
 				return createFailedObject(handling_unable_to_delete_message);
 			}
-			
+
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl delete() : " + e.getMessage());
-			if(tx != null){
+			logger.info("Exception inside HandlingServiceImpl delete() : "
+					+ e.getMessage());
+			if (tx != null) {
 				tx.rollback();
 			}
-			if(e instanceof ConstraintViolationException){
+			if (e instanceof ConstraintViolationException) {
 				return createFailedObject(handling_already_used_message);
 			}
 			return createFailedObject(handling_unable_to_delete_message);
-		} finally{
-			/*if(tx != null){
-				tx.commit();
-			}*/
-			if(session != null){
+		} finally {
+			/*
+			 * if(tx != null){ tx.commit(); }
+			 */
+			if (session != null) {
 				session.close();
 			}
 		}
-		
+
 		logger.info("HandlingServiceImpl delete() ends.");
 		return createSuccessObject(handling_deleted_message);
 	}
 
-
-
 	@Override
 	public HandlingModel get(Long id) {
-		
+
 		logger.info("HandlingServiceImpl get() starts.");
 		Session session = null;
 		HandlingModel handlingModel = new HandlingModel();
@@ -221,33 +226,35 @@ public class HandlingServiceImpl implements HandlingService {
 				session.close();
 			}
 		}
-		
+
 		logger.info("HandlingServiceImpl get() ends.");
 		return handlingModel;
 	}
 
 	@Override
 	public HandlingModel getOpenAdd() {
+
 		logger.info("HandlingServiceImpl getOpenAdd() starts ");
 		HandlingModel handlingModel = new HandlingModel();
 
 		List<Status> statusList = statusService.getAll();
 		handlingModel.setStatusList(statusList);
-		
+
 		logger.info("HandlingServiceImpl getOpenAdd() ends ");
 		return handlingModel;
 	}
 
 	@Override
 	public List<HandlingModel> getHandlingByHandlingName(String handlingName) {
-		
+
 		logger.info("HandlingServiceImpl getHandlingByHandlingName() starts ");
 		Session session = null;
 		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Handling> handlingList = handlingDao.getHandlingByHandlingName(session, handlingName);
+			List<Handling> handlingList = handlingDao
+					.getHandlingByHandlingName(session, handlingName);
 			if (handlingList != null && !handlingList.isEmpty()) {
 				for (Handling handling : handlingList) {
 					HandlingModel handlingObj = new HandlingModel();
@@ -262,25 +269,37 @@ public class HandlingServiceImpl implements HandlingService {
 				session.close();
 			}
 		}
-		
+
 		logger.info("HandlingServiceImpl getHandlingByHandlingName() ends ");
 		return handlings;
 	}
 
 	@Override
 	public List<HandlingModel> getSpecificData() {
-		List<Object[]> handlingData = handlingDao.getSpecificData("Handling","id", "name");
 
+		Session session = sessionFactory.openSession();
 		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
-		if (handlingData != null && !handlingData.isEmpty()) {
-			for (Object[] row : handlingData) {
-				HandlingModel handlingObj = new HandlingModel();
-				handlingObj.setId((Long) row[0]);
-				handlingObj.setName(String.valueOf(row[1]));
-				handlings.add(handlingObj);
+		
+		try {
+			List<Object[]> handlingData = handlingDao.getSpecificData(session,
+					"Handling", "id", "name");
+
+			
+			if (handlingData != null && !handlingData.isEmpty()) {
+				for (Object[] row : handlingData) {
+					HandlingModel handlingObj = new HandlingModel();
+					handlingObj.setId((Long) row[0]);
+					handlingObj.setName(String.valueOf(row[1]));
+					handlings.add(handlingObj);
+				}
+			}
+		} catch (Exception e) {
+
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
-
 		return handlings;
 	}
 

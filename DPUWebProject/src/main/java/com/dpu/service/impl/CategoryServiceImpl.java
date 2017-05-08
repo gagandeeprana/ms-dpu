@@ -313,7 +313,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<CategoryReq> getSpecificData() {
-		List<Object[]> categoryData = categoryDao.getSpecificData("Category","categoryId", "name");
+		
+		Session session = sessionFactory.openSession();
+		List<Object[]> categoryData = categoryDao.getSpecificData(session,"Category","categoryId", "name");
 
 		List<CategoryReq> categories = new ArrayList<CategoryReq>();
 		if (categoryData != null && !categoryData.isEmpty()) {

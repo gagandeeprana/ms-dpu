@@ -1,6 +1,7 @@
 package com.dpu.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dpu.common.CommonProperties;
+import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.TerminalDao;
 import com.dpu.dao.TruckDao;
@@ -40,6 +42,8 @@ public class TruckServiceImpl implements TruckService {
 
 	@Autowired
 	TruckDao truckDao;
+	@Autowired
+	CategoryDao categoryDao;
 
 	@Autowired
 	StatusService statusService;
@@ -274,22 +278,71 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public TruckResponse getOpenAdd() {
+		
 		TruckResponse truckResponse = new TruckResponse();
-
-		List<Status> lstStatus = statusService.getAll();
+		Session session = sessionFactory.openSession();
+		
+		try{
+		List<Status> lstStatus = truckDao.getStatusList(session);
 		truckResponse.setStatusList(lstStatus);
 
-		List<CategoryReq> categoryList = categoryService.getAll();
-		truckResponse.setCategoryList(categoryList);
+		List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");
+		List<CategoryReq> operationList = new ArrayList<CategoryReq>();
+		Iterator<Object[]> operationIt = categoryListObj.iterator();
+		
+		while(operationIt.hasNext())
+		{
+			Object o[] = (Object[])operationIt.next();
+			CategoryReq type = new CategoryReq();
+			type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
+			type.setName(String.valueOf(o[1]));
+			operationList.add(type);
+		}
+		
+		//List<CategoryReq> categoryList = categoryService.getAll();
+		truckResponse.setCategoryList(operationList);
 
-		List<DivisionReq> divisionList = divisionService.getAll("");
+		//List<DivisionReq> divisionList = divisionService.getAll("");
+		List<Object[]> divisionListObj =  divisionDao.getSpecificData(session,"Division", "divisionId", "divisionId");
+		
+		List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
+		Iterator<Object[]> divisionIt = divisionListObj.iterator();
+		
+		while(divisionIt.hasNext())
+		{
+			Object o[] = (Object[])divisionIt.next();
+			DivisionReq type = new DivisionReq();
+			type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
+			type.setDivisionName(String.valueOf(o[1]));
+			divisionList.add(type);
+		}
 		truckResponse.setDivisionList(divisionList);
 
-		List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		//List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+		List<Object[]> terminalListObj = terminalDao.getSpecificData(session,"Terminal", "terminalId", "terminalName");
+		List<TerminalResponse> terminalList = new ArrayList<TerminalResponse>();
+		Iterator<Object[]> terminalIt = terminalListObj.iterator();
+		
+		while(terminalIt.hasNext())
+		{
+			Object o[] = (Object[])terminalIt.next();
+			TerminalResponse type = new TerminalResponse();
+			type.setTerminalId(Long.parseLong(String.valueOf(o[0])));
+			type.setTerminalName(String.valueOf(o[1]));
+			terminalList.add(type);
+		}
 		truckResponse.setTerminalList(terminalList);
 
-		List<TypeResponse> truckTypeList = typeService.getAll(8l);
+		List<TypeResponse> truckTypeList = truckDao.getTypeResponse(session, 8l);
 		truckResponse.setTruckTypeList(truckTypeList);
+		
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return truckResponse;
 
 	}
@@ -297,19 +350,27 @@ public class TruckServiceImpl implements TruckService {
 	@Override
 	public List<TruckResponse> getSpecificData() {
 
-		List<Object[]> truckIdAndNameList = truckDao.getSpecificData("Truck", "truckId", "owner");
+		Session session = sessionFactory.openSession();
 		List<TruckResponse> truckData = new ArrayList<TruckResponse>();
 		
-		if(truckIdAndNameList != null && !truckIdAndNameList.isEmpty()){
-			for (Object[] row : truckIdAndNameList) {
-				TruckResponse truckResponse =  new TruckResponse();
-				truckResponse.setTruckId(Long.parseLong(String.valueOf(row[0])));
-				truckResponse.setOwner(String.valueOf(row[1]));
-				truckData.add(truckResponse);
-			}
+		try{
+			List<Object[]> truckIdAndNameList = truckDao.getSpecificData(session,"Truck", "truckId", "owner");
+			if(truckIdAndNameList != null && !truckIdAndNameList.isEmpty()){
+				for (Object[] row : truckIdAndNameList) {
+					TruckResponse truckResponse =  new TruckResponse();
+					truckResponse.setTruckId(Long.parseLong(String.valueOf(row[0])));
+					truckResponse.setOwner(String.valueOf(row[1]));
+					truckData.add(truckResponse);
+				}
 			
+			}
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
 		}
-		
 		return truckData;
 	}
 

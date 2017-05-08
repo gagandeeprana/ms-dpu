@@ -208,6 +208,8 @@ package com.dpu.dao.impl;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -224,6 +226,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dpu.dao.GenericDao;
+import com.dpu.entity.Status;
+import com.dpu.model.TypeResponse;
 
 @Repository
 @Transactional
@@ -417,11 +421,11 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public List<Object[]> getSpecificData(String tableName, String firstColumn,
+	public List<Object[]> getSpecificData(Session session , String tableName, String firstColumn,
 			String secondColumn) {
 
 		List<Object[]> data = null;
-		Session session = sessionFactory.openSession();
+	//	Session session = sessionFactory.openSession();
 		try {
 			Query query = session.createQuery(" select " + firstColumn + " , "
 					+ secondColumn + " from " + tableName);
@@ -435,11 +439,51 @@ public class GenericDaoImpl<T> implements GenericDao<T> {
 		} catch (Exception e) {
 			logger.error("[save]" + e);
 		} finally {
-			if (session != null) {
-				session.close();
-			}
+		//	if (session != null) {
+		//		session.close();
+		//	}
 		}
 
 		return data;
 	}
+	
+public List<TypeResponse> getTypeResponse(Session session ,Long val){
+		
+		logger.info("Inside CustomBrokerServiceImpl getTypeResponse() starts ");
+		Query queryOperation = session
+				.createQuery("select typeId,typeName from Type where value = "+val);
+		List<Object> operationListObj = queryOperation.list();
+		List<TypeResponse> operationList = new ArrayList<TypeResponse>();
+		Iterator<Object> operationIt = operationListObj.iterator();
+		
+		while(operationIt.hasNext())
+		{
+			Object o[] = (Object[])operationIt.next();
+			TypeResponse type = new TypeResponse();
+			type.setTypeId(Long.parseLong(String.valueOf(o[0])));
+			type.setTypeName(String.valueOf(o[1]));
+			operationList.add(type);
+		}
+		logger.info("Inside CustomBrokerServiceImpl getTypeResponse() ends ");
+		return operationList;
+		
+	}
+
+public List<Status> getStatusList(Session session){
+	Query queryStatus = session
+			.createQuery("select id,status from Status");
+	List<Object> statusListObj = queryStatus.list();
+	List<Status> statusList = new ArrayList<Status>();
+	Iterator<Object> it = statusListObj.iterator();
+	 
+	while(it.hasNext())
+	{
+		Object o[] = (Object[])it.next();
+		 Status status = new Status();
+		 status.setId(Long.parseLong(String.valueOf(o[0])));
+		 status.setStatus(String.valueOf(o[1]));
+		 statusList.add(status);
+	}
+	return statusList;
+}
 }

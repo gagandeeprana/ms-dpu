@@ -298,10 +298,14 @@ public class ShipperServiceImpl implements ShipperService {
 
 	@Override
 	public List<ShipperResponse> getSpecificData() {
-		List<Object[]> shipperData = shipperDao.getSpecificData("Shipper",
+		
+		Session session = sessionFactory.openSession();
+		List<ShipperResponse> categories = new ArrayList<ShipperResponse>();
+		try{
+		List<Object[]> shipperData = shipperDao.getSpecificData(session,"Shipper",
 				"shipperId", "locationName");
 
-		List<ShipperResponse> categories = new ArrayList<ShipperResponse>();
+	
 		if (shipperData != null && !shipperData.isEmpty()) {
 			for (Object[] row : shipperData) {
 				ShipperResponse shipper = new ShipperResponse();
@@ -310,7 +314,13 @@ public class ShipperServiceImpl implements ShipperService {
 				categories.add(shipper);
 			}
 		}
-
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return categories;
 	}
 

@@ -326,9 +326,12 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 	@Override
 	public List<TaxCodeModel> getSpecificData() {
 		
-		List<Object[]> handlingData = taxCodeDao.getSpecificData("TaxCode","taxCodeId", "taxCode");
-
+		Session session = sessionFactory.openSession();
 		List<TaxCodeModel> handlings = new ArrayList<TaxCodeModel>();
+		try{
+		List<Object[]> handlingData = taxCodeDao.getSpecificData(session,"TaxCode","taxCodeId", "taxCode");
+
+		
 		if (handlingData != null && !handlingData.isEmpty()) {
 			for (Object[] row : handlingData) {
 				TaxCodeModel taxCodeModel = new TaxCodeModel();
@@ -337,7 +340,13 @@ public class TaxCodeServiceImpl implements TaxCodeService {
 				handlings.add(taxCodeModel);
 			}
 		}
-
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return handlings;
 	}
 

@@ -272,17 +272,26 @@ public class TrailerServiceImpl implements TrailerService{
 	@Override
 	public List<TrailerRequest> getSpecificData() {
 		
-		List<Object[]> trailerIdAndNameList = trailerdao.getSpecificData("Trailer", "trailerId", "owner");
+		Session session = sessionFactory.openSession();
 		List<TrailerRequest> trailerData = new ArrayList<TrailerRequest>();
 		
-		if(trailerIdAndNameList != null && !trailerIdAndNameList.isEmpty()){
-			for (Object[] row : trailerIdAndNameList) {
-				TrailerRequest trailerRequest =  new TrailerRequest();
-				trailerRequest.setTrailerId(Long.parseLong(String.valueOf(row[0])));
-				trailerRequest.setOwner(String.valueOf(row[1]));
-				trailerData.add(trailerRequest);
+		try{
+			List<Object[]> trailerIdAndNameList = trailerdao.getSpecificData(session,"Trailer", "trailerId", "owner");
+		
+			if(trailerIdAndNameList != null && !trailerIdAndNameList.isEmpty()){
+				for (Object[] row : trailerIdAndNameList) {
+					TrailerRequest trailerRequest =  new TrailerRequest();
+					trailerRequest.setTrailerId(Long.parseLong(String.valueOf(row[0])));
+					trailerRequest.setOwner(String.valueOf(row[1]));
+					trailerData.add(trailerRequest);
 			}
 			
+		}}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		
 		return trailerData;

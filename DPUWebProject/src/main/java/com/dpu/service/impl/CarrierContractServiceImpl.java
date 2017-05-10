@@ -384,7 +384,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		List<CarrierModel> carrierList = carrierService.getAll();
 		response.setCarrierList(carrierList);
 
-		List<CategoryReq> categoryList = categoryService.getAll( );
+		List<CategoryReq> categoryList = categoryService.getAll();
 		response.setCategoryList(categoryList);
 
 		List<TypeResponse> commodityList = carrierContractDao.getTypeResponse(session, 17l);
@@ -742,8 +742,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		try {
 			session = sessionFactory.openSession();
 
-			CarrierContract carrierContract = (CarrierContract) session.get(
-					CarrierContract.class, carrierContractId);
+			CarrierContract carrierContract = (CarrierContract) session.get(CarrierContract.class, carrierContractId);
 			CarrierContractModel response = new CarrierContractModel();
 			setCarrierContractDataById(carrierContract, response);
 			obj = createSuccessObjectForParRecord(message, response);

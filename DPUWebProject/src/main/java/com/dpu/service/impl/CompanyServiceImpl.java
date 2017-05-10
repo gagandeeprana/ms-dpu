@@ -381,8 +381,7 @@ public class CompanyServiceImpl implements CompanyService {
 			if (company != null) {
 				setCompanyData(session, company, response);
 				// BeanUtils.copyProperties(response, company);
-				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(id,
-						session);
+				List<CompanyBillingLocation> listCompanyBillingLocations = companyBillingLocationService.getAll(id,session);
 
 				if (listCompanyBillingLocations != null && !listCompanyBillingLocations.isEmpty()) {
 					List<BillingLocation> billingLocations = new ArrayList<BillingLocation>();
@@ -419,19 +418,63 @@ public class CompanyServiceImpl implements CompanyService {
 					response.setAdditionalContacts(addContacts);
 				}
 
-				List<Status> statusList = statusService.getAll();
+				//List<Status> statusList = statusService.getAll();
+				List<Status> statusList = companyDao.getStatusList(session);
 				response.setStatusList(statusList);
 
-				List<CategoryReq> categoryList = categoryService.getAll();
+				//List<CategoryReq> categoryList = categoryService.getAll();
+				List<Object[]> categoryListObj = categoryDao.getSpecificData(session, "Category", "categoryId", "name");
+				List<CategoryReq> categoryList = new ArrayList<CategoryReq>();
+				Iterator<Object[]> categoryItr = categoryListObj.iterator();
+			
+				while(categoryItr.hasNext())
+				{
+					Object o[] = (Object[])categoryItr.next();
+					CategoryReq type = new CategoryReq();
+					type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
+					type.setName(String.valueOf(o[1]));
+					categoryList.add(type);
+				}
 				response.setCategoryList(categoryList);
 
-				List<DivisionReq> divisionList = divisionService.getAll("");
+				//List<DivisionReq> divisionList = divisionService.getAll("");
+				//response.setDivisionList(divisionList);
+
+			//	List<SaleReq> saleList = saleService.getAll();
+			//	response.setSaleList(saleList);
+				
+				List<Object[]> divisionListObj =  categoryDao.getSpecificData(session,"Division", "divisionId", "divisionId");
+				
+				List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
+				Iterator<Object[]> divisionIt = divisionListObj.iterator();
+			
+				while(divisionIt.hasNext())
+				{
+					Object o[] = (Object[])divisionIt.next();
+					DivisionReq type = new DivisionReq();
+					type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
+					type.setDivisionName(String.valueOf(o[1]));
+					divisionList.add(type);
+				}
 				response.setDivisionList(divisionList);
 
-				List<SaleReq> saleList = saleService.getAll();
+				//List<SaleReq> saleList = saleService.getAll();
+				List<Object[]> saleListObj =  categoryDao.getSpecificData(session,"Sale", "saleId", "name");
+				
+				List<SaleReq> saleList = new ArrayList<SaleReq>();
+				Iterator<Object[]> saleItr = saleListObj.iterator();
+			
+				while(saleItr.hasNext())
+				{
+					Object o[] = (Object[])saleItr.next();
+					SaleReq sale = new SaleReq();
+					sale.setSaleId(Long.parseLong(String.valueOf(o[0])));
+					sale.setName (String.valueOf(o[1]));
+					saleList.add(sale);
+				}
 				response.setSaleList(saleList);
 
-				List<TypeResponse> countryList = typeService.getAll(21l);
+				List<TypeResponse> countryList = companyDao.getTypeResponse(session, 21l);
 				response.setCountryList(countryList);
 			}
 		} finally {

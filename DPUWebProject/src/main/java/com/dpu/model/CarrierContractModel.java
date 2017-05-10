@@ -46,7 +46,7 @@ public class CarrierContractModel {
 	
 	private String arrangedWithName;
 	private Long arrangedWithId;
-	private List<CarrierAdditionalContactsModel> arrangedWithList;
+	private List<ArrangedWithModel> arrangedWithList;
 	
 
 	private String driverName;
@@ -309,19 +309,18 @@ public class CarrierContractModel {
 		this.arrangedWithId = arrangedWithId;
 	}
 
-	
-	public List<CarrierAdditionalContactsModel> getArrangedWithList() {
+	 
+	public List<ArrangedWithModel> getArrangedWithList() {
 	
 		return arrangedWithList;
 	}
 
 	
-	public void setArrangedWithList(List<CarrierAdditionalContactsModel> arrangedWithList) {
+	public void setArrangedWithList(List<ArrangedWithModel> arrangedWithList) {
 	
 		this.arrangedWithList = arrangedWithList;
 	}
 
-	
 	public Long getDriverId() {
 	
 		return driverId;

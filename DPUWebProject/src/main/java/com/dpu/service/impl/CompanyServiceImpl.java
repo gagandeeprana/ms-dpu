@@ -2,6 +2,7 @@ package com.dpu.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -588,34 +589,88 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public CompanyResponse getOpenAdd() {
 
+		Session session = sessionFactory.openSession();
 		CompanyResponse companyResponse = new CompanyResponse();
 
-		List<CategoryReq> categoryList = categoryService.getAll();
+		try{
+		List<Object[]> categoryListObj = categoryDao.getSpecificData(session, "Category", "categoryId", "name");
+		List<CategoryReq> categoryList = new ArrayList<CategoryReq>();
+		Iterator<Object[]> categoryItr = categoryListObj.iterator();
+	
+		while(categoryItr.hasNext())
+		{
+			Object o[] = (Object[])categoryItr.next();
+			CategoryReq type = new CategoryReq();
+			type.setCategoryId(Long.parseLong(String.valueOf(o[0])));
+			type.setName(String.valueOf(o[1]));
+			categoryList.add(type);
+		}
 		companyResponse.setCategoryList(categoryList);
 
-		List<DivisionReq> divisionList = divisionService.getAll("");
+		List<Object[]> divisionListObj =  categoryDao.getSpecificData(session,"Division", "divisionId", "divisionId");
+		
+		List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
+		Iterator<Object[]> divisionIt = divisionListObj.iterator();
+	
+		while(divisionIt.hasNext())
+		{
+			Object o[] = (Object[])divisionIt.next();
+			DivisionReq type = new DivisionReq();
+			type.setDivisionId(Long.parseLong(String.valueOf(o[0])));
+			type.setDivisionName(String.valueOf(o[1]));
+			divisionList.add(type);
+		}
 		companyResponse.setDivisionList(divisionList);
 
-		List<SaleReq> saleList = saleService.getAll();
+		//List<SaleReq> saleList = saleService.getAll();
+		List<Object[]> saleListObj =  categoryDao.getSpecificData(session,"Sale", "saleId", "name");
+		
+		List<SaleReq> saleList = new ArrayList<SaleReq>();
+		Iterator<Object[]> saleItr = saleListObj.iterator();
+	
+		while(saleItr.hasNext())
+		{
+			Object o[] = (Object[])saleItr.next();
+			SaleReq sale = new SaleReq();
+			sale.setSaleId(Long.parseLong(String.valueOf(o[0])));
+			sale.setName (String.valueOf(o[1]));
+			saleList.add(sale);
+		}
 		companyResponse.setSaleList(saleList);
 
-		List<TypeResponse> countryList = typeService.getAll(21l);
+		List<TypeResponse> countryList = categoryDao.getTypeResponse(session, 21l);
 		companyResponse.setCountryList(countryList);
-
+		
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return companyResponse;
 	}
 
 	@Override
 	public CompanyResponse getOpenAddAdditionalContact() {
 
+		Session session = sessionFactory.openSession();
 		CompanyResponse companyResponse = new CompanyResponse();
+		
+		try{
 
-		List<Status> statusList = statusService.getAll();
-		companyResponse.setStatusList(statusList);
-
-		List<TypeResponse> functionList = typeService.getAll(20l);
-		companyResponse.setFunctionList(functionList);
-
+			List<Status> statusList = categoryDao.getStatusList(session);
+			companyResponse.setStatusList(statusList);
+			List<TypeResponse> functionList = categoryDao.getTypeResponse(session, 20l);
+			companyResponse.setFunctionList(functionList);
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return companyResponse;
 	}
 

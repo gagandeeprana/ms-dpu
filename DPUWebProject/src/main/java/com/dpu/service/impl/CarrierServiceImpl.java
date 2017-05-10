@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -75,9 +76,11 @@ public class CarrierServiceImpl extends MessageProperties implements
 	private String carrierAdditionalContact_unable_to_delete_message;
 
 	@Override
-	public List<CarrierModel> getAll() {
+	public List<CarrierModel> getAll(Session session) {
 
-		List<Carrier> listOfCarrier = carrierDao.findAll();
+		//List<Carrier> listOfCarrier = carrierDao.findAll();
+		Query query = session.createQuery("from Carrier");
+		List<Carrier> listOfCarrier = query.list();
 		List<CarrierModel> returnResponse = new ArrayList<CarrierModel>();
 
 		if (listOfCarrier != null && !listOfCarrier.isEmpty()) {

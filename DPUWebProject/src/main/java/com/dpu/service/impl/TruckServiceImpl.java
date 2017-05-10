@@ -299,10 +299,8 @@ public class TruckServiceImpl implements TruckService {
 				operationList.add(type);
 			}
 		
-		//List<CategoryReq> categoryList = categoryService.getAll();
 			truckResponse.setCategoryList(operationList);
 
-		//List<DivisionReq> divisionList = divisionService.getAll("");
 			List<Object[]> divisionListObj =  divisionDao.getSpecificData(session,"Division", "divisionId", "divisionId");
 		
 			List<DivisionReq> divisionList = new ArrayList<DivisionReq>();

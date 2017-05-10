@@ -19,7 +19,7 @@ public interface CategoryService {
 
 	Object delete(Long id);
 
-	List<CategoryReq> getAll();
+	List<CategoryReq> getAll( );
 
 	CategoryReq getOpenAdd();
 

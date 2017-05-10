@@ -2,12 +2,14 @@ package com.dpu.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.dpu.model.CarrierAdditionalContactsModel;
 import com.dpu.model.CarrierModel;
 
 public interface CarrierService {
 
-	List<CarrierModel> getAll();
+	List<CarrierModel> getAll(Session session);
 
 	Object delete(Long carrierId);
 

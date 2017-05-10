@@ -183,7 +183,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<CategoryReq> getAll() {
+	public List<CategoryReq> getAll( ) {
 	
 		logger.info("CategoryServiceImpl getAll() starts");
 		Session session = null;

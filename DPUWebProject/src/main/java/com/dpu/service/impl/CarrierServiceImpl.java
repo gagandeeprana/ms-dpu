@@ -76,11 +76,11 @@ public class CarrierServiceImpl extends MessageProperties implements
 	private String carrierAdditionalContact_unable_to_delete_message;
 
 	@Override
-	public List<CarrierModel> getAll(Session session) {
+	public List<CarrierModel> getAll( ) {
 
-		//List<Carrier> listOfCarrier = carrierDao.findAll();
-		Query query = session.createQuery("from Carrier");
-		List<Carrier> listOfCarrier = query.list();
+		List<Carrier> listOfCarrier = carrierDao.findAll();
+		//Query query = session.createQuery("from Carrier");
+		//List<Carrier> listOfCarrier = query.list();
 		List<CarrierModel> returnResponse = new ArrayList<CarrierModel>();
 
 		if (listOfCarrier != null && !listOfCarrier.isEmpty()) {

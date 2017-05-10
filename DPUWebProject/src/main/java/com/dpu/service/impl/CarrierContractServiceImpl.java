@@ -381,7 +381,7 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		response.setDispatcherList(dispatcherList);*/
 		//--------------------------------------------------------------------------------------
 
-		List<CarrierModel> carrierList = carrierService.getAll(session);
+		List<CarrierModel> carrierList = carrierService.getAll();
 		response.setCarrierList(carrierList);
 
 		List<CategoryReq> categoryList = categoryService.getAll( );

@@ -9,7 +9,7 @@ import com.dpu.model.CarrierModel;
 
 public interface CarrierService {
 
-	List<CarrierModel> getAll(Session session);
+	List<CarrierModel> getAll( );
 
 	Object delete(Long carrierId);
 

@@ -1,7 +1,9 @@
 package com.dpu.dao.impl;
 
 import java.util.Date;
+import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -88,5 +90,14 @@ public class TruckDaoImpl extends GenericDaoImpl<Truck> implements TruckDao {
 		logger.info("TruckDaoImpl: setTruckValues(): ENDS");
 
 		return truck;
+	}
+
+	@Override
+	public Truck findById(Session session,Long id) {
+
+		 Query query = session.createQuery("from Truck where truckId = "+id);
+		 List<Truck> truck = query.list();
+		 return truck.get(0);
+		  
 	}
 }

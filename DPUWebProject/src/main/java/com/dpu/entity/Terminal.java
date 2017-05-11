@@ -18,8 +18,6 @@ import javax.persistence.Table;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import com.dpu.model.DPUService;
-
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
 @Table(name = "terminalmaster")

@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.AllList;
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.CustomBrokerDao;
 import com.dpu.dao.CustomBrokerTypeDao;
@@ -435,19 +436,19 @@ public class CustomBrokerServiceImpl implements CustomBrokerService {
 		Session session = sessionFactory.openSession();
 	
 		try {
-			List<Status> statusList = customBrokerTypeDao.getStatusList(session);
+			List<Status> statusList = AllList.getStatusList(session);
 			if(statusList != null && !statusList.isEmpty())
 				customBrokerResponse.setStatusList(statusList);
 
-			List<TypeResponse> operationList = customBrokerTypeDao.getTypeResponse(session,15l);
+			List<TypeResponse> operationList = AllList.getTypeResponse(session,15l);
 			if(operationList != null && !operationList.isEmpty())
 				customBrokerResponse.setOperationList(operationList);
 
-			List<TypeResponse> zoneList = customBrokerTypeDao.getTypeResponse(session,16l);
+			List<TypeResponse> zoneList = AllList.getTypeResponse(session,16l);
 			if(zoneList != null && !zoneList.isEmpty())
 				customBrokerResponse.setTimeZoneList(zoneList);
 			
-			List<TypeResponse> typeList = customBrokerTypeDao.getTypeResponse(session,14l);
+			List<TypeResponse> typeList = AllList.getTypeResponse(session,14l);
 			if(typeList != null && !typeList.isEmpty())
 				customBrokerResponse.setTypeList(typeList);
 

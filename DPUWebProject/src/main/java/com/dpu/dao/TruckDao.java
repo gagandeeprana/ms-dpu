@@ -12,4 +12,6 @@ import com.dpu.model.TruckResponse;
 public interface TruckDao extends GenericDao<Truck> {
 
 	Truck add(Session session, TruckResponse truckResponse);
+	Truck findById(Session session,Long id);
+	
 }

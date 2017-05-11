@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.AllList;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.TerminalDao;
@@ -220,19 +221,19 @@ public class TrailerServiceImpl implements TrailerService{
 				response.setStatusId(trailer.getStatus().getId());
 				response.setTrailerTypeId(trailer.getType().getTypeId());
 				
-				List<Status> statusList = statusService.getAll();
+				List<Status> statusList = AllList.getStatusList(session);
 				response.setStatusList(statusList);
 				
-				List<TypeResponse> trailerTypeList = typeService.getAll(7l);
+				List<TypeResponse> trailerTypeList = AllList.getTypeResponse(session, 7l);
 				response.setTrailerTypeList(trailerTypeList);
 				
-				List<CategoryReq> categoryList = categoryService.getAll();
+				List<CategoryReq> categoryList = AllList.getCategoryList(session, "Category", "categoryId", "name");
 				response.setCategoryList(categoryList);
 				
-				List<DivisionReq> divisionList = divisionService.getAll("");
+				List<DivisionReq> divisionList = AllList.getDivisionList(session, "Division", "divisionId", "divisionName");
 				response.setDivisionList(divisionList);
 				
-				List<TerminalResponse> terminalList = terminalService.getAllTerminals();
+				List<TerminalResponse> terminalList = AllList.getTerminalList(session, "Terminal", "terminalId", "terminalName");
 				response.setTerminalList(terminalList);
 			}
 			
@@ -253,10 +254,10 @@ public class TrailerServiceImpl implements TrailerService{
 		TrailerRequest trailer = new TrailerRequest();
 		
 		try{
-			List<Status> statusList = trailerdao.getStatusList(session);
+			List<Status> statusList = AllList.getStatusList(session);
 			trailer.setStatusList(statusList);
 		
-			List<TypeResponse> trailerTypeList = trailerdao.getTypeResponse(session, 7l);
+			List<TypeResponse> trailerTypeList = AllList.getTypeResponse(session, 7l);
 			trailer.setTrailerTypeList(trailerTypeList);
 				
 			List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");

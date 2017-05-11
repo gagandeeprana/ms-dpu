@@ -8,7 +8,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.dpu.entity.Status;
-import com.dpu.entity.Type;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DriverReq implements Serializable{

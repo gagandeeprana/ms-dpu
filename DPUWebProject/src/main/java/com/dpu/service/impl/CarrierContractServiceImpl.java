@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.AllList;
 import com.dpu.dao.ArrangedWithDao;
 import com.dpu.dao.CarrierAdditionalContactsDao;
 import com.dpu.dao.CarrierContractDao;
@@ -242,184 +243,62 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			CarrierContractModel response) {
 
 		Session session = sessionFactory.openSession();
+		
 		try{
-		response.setContractNoId(carrierContract.getContractNoId());
-		response.setCargo(carrierContract.getCargo());
-		response.setCarrierRat(carrierContract.getCarrierRat());
-		response.setContractNo(carrierContract.getContractNo());
-		response.setContractNoId(carrierContract.getContractNoId());
-		response.setContractRate(carrierContract.getContractRate());
-		response.setCreatedBy(carrierContract.getCreatedBy());
-		response.setDispatched(carrierContract.getDispatched());
-		response.setdOTno(carrierContract.getdOTno());
-		response.setHours(carrierContract.getHours());
-		response.setInsExpires(carrierContract.getInsExpires());
-		response.setLiabity(carrierContract.getLiabity());
-		response.setmCno(carrierContract.getmCno());
-		response.setMiles(carrierContract.getMiles());
-		response.setTransDoc(carrierContract.getTransDoc());
-		
-		
-		//--------------------------------------------------------------------------------------
-		/*List<Object[]> carrierListObj = carrierContractDao.getAllData(session, "Carrier");
-		
-		List<CarrierModel> carrierList = new ArrayList<CarrierModel>();
-		Iterator<Object[]> carrierItr = carrierListObj.iterator();
-	
-		while(carrierItr.hasNext())
-		{
-			Object o[] = (Object[])carrierItr.next();
-			CarrierModel carrierModel  = new CarrierModel();
-			carrierModel.setCarrierId(Long.parseLong(String.valueOf(o[0])));
-			carrierModel.setName(String.valueOf(o[1]));
-			carrierList.add(carrierModel);
-		}
-		response.setCarrierList(carrierList);
-		
-
-		List<Object[]> arrangedWithListObj = carrierContractDao.getAllData(session, "ArrangedWith" );
-		
-		List<ArrangedWithModel> arrangedWithList = new ArrayList<ArrangedWithModel>();
-		Iterator<Object[]> arrangedWithItr = arrangedWithListObj.iterator();
-	
-		while(arrangedWithItr.hasNext())
-		{
-			Object o[] = (Object[])arrangedWithItr.next();
-			ArrangedWithModel arrangedWithModel  = new ArrangedWithModel();
-			arrangedWithModel.setId(Long.parseLong(String.valueOf(o[0])));
-			arrangedWithModel.setArrangedWith(String.valueOf(o[1]));
-			arrangedWithList.add(arrangedWithModel);
-		}
+			response.setContractNoId(carrierContract.getContractNoId());
+			response.setCargo(carrierContract.getCargo());
+			response.setCarrierRat(carrierContract.getCarrierRat());
+			response.setContractNo(carrierContract.getContractNo());
+			response.setContractNoId(carrierContract.getContractNoId());
+			response.setContractRate(carrierContract.getContractRate());
+			response.setCreatedBy(carrierContract.getCreatedBy());
+			response.setDispatched(carrierContract.getDispatched());
+			response.setdOTno(carrierContract.getdOTno());
+			response.setHours(carrierContract.getHours());
+			response.setInsExpires(carrierContract.getInsExpires());
+			response.setLiabity(carrierContract.getLiabity());
+			response.setmCno(carrierContract.getmCno());
+			response.setMiles(carrierContract.getMiles());
+			response.setTransDoc(carrierContract.getTransDoc());
 		 
-		response.setArrangedWithList(arrangedWithList);
 
-		List<Object[]> driverListObj = carrierContractDao.getAllData(session, "Driver" );
+			List<CarrierModel> carrierList = AllList.getCarrierList(session, "Carrier", "carrierId", "name");
+			response.setCarrierList(carrierList);
+
+			List<CategoryReq> categoryList = AllList.getCategoryList(session, "Category", "categoryId", "name");
+			response.setCategoryList(categoryList);
+
+			List<TypeResponse> commodityList = AllList.getTypeResponse(session, 17l);
+			response.setCommodityList(commodityList);
+
+			List<TypeResponse> currencyList = AllList.getTypeResponse(session, 9l);
+			response.setCurrencyList(currencyList);
+
+			List<DispatcherModel> dispatcherList = AllList.getDispatcherList(session, "Dispatcher", "id", "dispatcherName");
+			response.setDispatcherList(dispatcherList);
+
+			List<DivisionReq> divisionList = AllList.getDivisionList(session, "Division", "divisionId", "divisionName");
+			response.setDivisionList(divisionList);
+
+			List<DriverReq> driverList = AllList.getDriverList(session, "Driver", "driverId", "firstName");
+			response.setDriverList(driverList);
+
+			List<EquipmentReq> equipmentList = AllList.getEquipmentList(session, "Equipment", "equipmentId", "equipmentName");
+			response.setEquipmentList(equipmentList);
+
+			List<TypeResponse> roleList = AllList.getTypeResponse(session, 6l);
+			response.setRoleList(roleList);
+
+			List<ArrangedWithModel> arrangedWithList = AllList.getArrangedWithList(session, "ArrangedWith", "id", "arrangedWith");
+			response.setArrangedWithList(arrangedWithList);
 		
-		List<DriverReq> driverList = new ArrayList<DriverReq>();
-		Iterator<Object[]> driverItr = driverListObj.iterator();
-	
-		while(driverItr.hasNext())
-		{
-			Object o[] = (Object[])driverItr.next();
-			DriverReq driverReq  = new DriverReq();
-			driverReq.setDriverId(Long.parseLong(String.valueOf(o[0])));
-			driverReq.setFirstName(String.valueOf(o[1]));
-			driverList.add(driverReq);
-		}
-		response.setDriverList(driverList);
-
-		List<TypeResponse> currencyList = carrierContractDao.getTypeResponse(session, 9l);
-		response.setCurrencyList(currencyList);
-
-		List<Object[]> categoryListObj = carrierContractDao.getAllData(session, "Category" );
-		
-
-		List<CategoryReq> categoryList = new ArrayList<CategoryReq>();
-		Iterator<Object[]> categoryItr = categoryListObj.iterator();
-	
-		while(categoryItr.hasNext())
-		{
-			Object o[] = (Object[])categoryItr.next();
-			CategoryReq categoryReq  = new CategoryReq();
-			categoryReq.setCategoryId(Long.parseLong(String.valueOf(o[0])));
-			categoryReq.setName(String.valueOf(o[1]));
-			categoryList.add(categoryReq);
-		}
-		
-		response.setCategoryList(categoryList);
-
-		List<TypeResponse> roleList = carrierContractDao.getTypeResponse(session, 6l);
-		response.setRoleList(roleList);
-
-		List<Object[]> equipmentListObj = carrierContractDao.getAllData(session, "Equipment" );
-				
-		List<EquipmentReq> equipmentList = new ArrayList<EquipmentReq>();
-		Iterator<Object[]> equipmentItr = equipmentListObj.iterator();
-	
-		while(equipmentItr.hasNext())
-		{
-			Object o[] = (Object[])equipmentItr.next();
-			EquipmentReq equipmentReq  = new EquipmentReq();
-			equipmentReq.setEquipmentId(Long.parseLong(String.valueOf(o[0])));
-			equipmentReq.setEquipmentName(String.valueOf(o[1]));
-			equipmentList.add(equipmentReq);
-		}
-				
-		response.setEquipmentList(equipmentList);
-
-		List<TypeResponse> commodityList = carrierContractDao.getTypeResponse(session, 17l);
-		response.setCommodityList(commodityList);
-
-		List<Object[]> divisionListObj = carrierContractDao.getAllData(session, "Division" );
-		
-		List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
-		Iterator<Object[]> divisionItr = divisionListObj.iterator();
-	
-		while(divisionItr.hasNext())
-		{
-			Object o[] = (Object[])divisionItr.next();
-			DivisionReq divisionReq  = new DivisionReq();
-			divisionReq.setDivisionId(Long.parseLong(String.valueOf(o[0])));
-			divisionReq.setDivisionName(String.valueOf(o[1]));
-			divisionList.add(divisionReq);
-		}
-		response.setDivisionList(divisionList);
-
-		List<Object[]> dispatcherListObj = carrierContractDao.getAllData(session, "Dispatcher" );
-		
-		List<DispatcherModel> dispatcherList = new ArrayList<DispatcherModel>();
-		Iterator<Object[]> dispatcherItr = dispatcherListObj.iterator();
-	
-		while(dispatcherItr.hasNext())
-		{
-			Object o[] = (Object[])dispatcherItr.next();
-			DispatcherModel dispatcherReq  = new DispatcherModel();
-			dispatcherReq.setId(Long.parseLong(String.valueOf(o[0])));
-			dispatcherReq.setArrangedWith(String.valueOf(o[1]));
-			dispatcherList.add(dispatcherReq);
-		}
-		response.setDispatcherList(dispatcherList);*/
-		//--------------------------------------------------------------------------------------
-
-		List<CarrierModel> carrierList = carrierService.getAll();
-		response.setCarrierList(carrierList);
-
-		List<CategoryReq> categoryList = categoryService.getAll();
-		response.setCategoryList(categoryList);
-
-		List<TypeResponse> commodityList = carrierContractDao.getTypeResponse(session, 17l);
-		response.setCommodityList(commodityList);
-
-		List<TypeResponse> currencyList = carrierContractDao.getTypeResponse(session, 9l);
-		response.setCurrencyList(currencyList);
-
-		List<DispatcherModel> dispatcherList = dispatcherService
-				.getAllDispatcher();
-		response.setDispatcherList(dispatcherList);
-
-		List<DivisionReq> divisionList = divisionService.getAll("");
-		response.setDivisionList(divisionList);
-
-		List<DriverReq> driverList = driverService.getAllDriver();
-		response.setDriverList(driverList);
-
-		List<EquipmentReq> equipmentList = equipmentService.getAll("");
-		response.setEquipmentList(equipmentList);
-
-		List<TypeResponse> roleList = carrierContractDao.getTypeResponse(session, 6l);
-		response.setRoleList(roleList);
-
-		List<ArrangedWithModel> arrangedWithList = arrangedWithService.getAllArrangedWith();
-				 
-		response.setArrangedWithList(arrangedWithList);
-		}catch(Exception e){
+			}catch(Exception e){
 			
-		}finally{
-			if(session != null){
-				session.close();
+			}finally{
+				if(session != null){
+					session.close();
+				}
 			}
-		}
-
 	}
 
 	@Override
@@ -492,27 +371,11 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 		CarrierContractModel carrierContractModel = new CarrierContractModel();
    
 		try{
-	   
-		//	List<CarrierModel> carrierList = carrierService.getAll();
-			List<Object[]> carrierListObj = carrierContractDao.getSpecificData(session, "Carrier", "carrierId", "name");
-			
-			List<CarrierModel> carrierList = new ArrayList<CarrierModel>();
-			Iterator<Object[]> carrierItr = carrierListObj.iterator();
-		
-			while(carrierItr.hasNext())
-			{
-				Object o[] = (Object[])carrierItr.next();
-				CarrierModel carrierContract  = new CarrierModel();
-				carrierContract.setCarrierId(Long.parseLong(String.valueOf(o[0])));
-				carrierContract.setName(String.valueOf(o[1]));
-				carrierList.add(carrierContract);
-			}
+	    
+			List<CarrierModel> carrierList = AllList.getCarrierList(session, "Carrier", "carrierId", "name");
 			carrierContractModel.setCarrierList(carrierList);
-			
-
-		//	List<CarrierAdditionalContactsModel> arrangedWithList = carrierAdditionalContactService.getAll();
+			 
 			List<Object[]> arrangedWithListObj = carrierContractDao.getSpecificData(session, "ArrangedWith", "id", "arrangedWith");
-			
 			List<ArrangedWithModel> arrangedWithList = new ArrayList<ArrangedWithModel>();
 			Iterator<Object[]> arrangedWithItr = arrangedWithListObj.iterator();
 		
@@ -526,84 +389,31 @@ public class CarrierContractServiceImpl implements CarrierContractService {
 			}
 			 
 			carrierContractModel.setArrangedWithList(arrangedWithList);
-
-		//	List<DriverReq> driverList = driverService.getAllDriver();	
-			List<Object[]> driverListObj = carrierContractDao.getSpecificData(session, "Driver", "driverId", "firstName");
-			
-			List<DriverReq> driverList = new ArrayList<DriverReq>();
-			Iterator<Object[]> driverItr = driverListObj.iterator();
-		
-			while(driverItr.hasNext())
-			{
-				Object o[] = (Object[])driverItr.next();
-				DriverReq driverReq  = new DriverReq();
-				driverReq.setDriverId(Long.parseLong(String.valueOf(o[0])));
-				driverReq.setFirstName(String.valueOf(o[1]));
-				driverList.add(driverReq);
-			}
+ 
+			List<DriverReq> driverList = AllList.getDriverList(session, "Driver", "driverId", "firstName");
 			carrierContractModel.setDriverList(driverList);
 
-			List<TypeResponse> currencyList = carrierContractDao.getTypeResponse(session, 9l);
+			List<TypeResponse> currencyList = AllList.getTypeResponse(session, 9l);
 			carrierContractModel.setCurrencyList(currencyList);
-
-		//	List<CategoryReq> categoryList = categoryService.getAll();
-			List<Object[]> categoryListObj = carrierContractDao.getSpecificData(session, "Category", "categoryId", "categoryId");
-			
-
-			List<CategoryReq> categoryList = new ArrayList<CategoryReq>();
-			Iterator<Object[]> categoryItr = categoryListObj.iterator();
-		
-			while(categoryItr.hasNext())
-			{
-				Object o[] = (Object[])categoryItr.next();
-				CategoryReq categoryReq  = new CategoryReq();
-				categoryReq.setCategoryId(Long.parseLong(String.valueOf(o[0])));
-				categoryReq.setName(String.valueOf(o[1]));
-				categoryList.add(categoryReq);
-			}
-			
+ 
+			List<CategoryReq> categoryList = AllList.getCategoryList(session, "Category", "categoryId", "categoryId");
 			carrierContractModel.setCategoryList(categoryList);
 
-			List<TypeResponse> roleList = carrierContractDao.getTypeResponse(session, 6l);
+			List<TypeResponse> roleList = AllList.getTypeResponse(session, 6l);
 			carrierContractModel.setRoleList(roleList);
 
-			//List<EquipmentReq> equipmentList = equipmentService.getAll("");
-			List<Object[]> equipmentListObj = carrierContractDao.getSpecificData(session, "Equipment", "equipmentId", "equipmentName");
 					
-			List<EquipmentReq> equipmentList = new ArrayList<EquipmentReq>();
-			Iterator<Object[]> equipmentItr = equipmentListObj.iterator();
-		
-			while(equipmentItr.hasNext())
-			{
-				Object o[] = (Object[])equipmentItr.next();
-				EquipmentReq equipmentReq  = new EquipmentReq();
-				equipmentReq.setEquipmentId(Long.parseLong(String.valueOf(o[0])));
-				equipmentReq.setEquipmentName(String.valueOf(o[1]));
-				equipmentList.add(equipmentReq);
-			}
-					
+			List<EquipmentReq> equipmentList = AllList.getEquipmentList(session, "Equipment", "equipmentId", "equipmentName");
 			carrierContractModel.setEquipmentList(equipmentList);
 
-			List<TypeResponse> commodityList = carrierContractDao.getTypeResponse(session, 17l);
+			List<TypeResponse> commodityList = AllList.getTypeResponse(session, 17l);
 			carrierContractModel.setCommodityList(commodityList);
 
-		//	List<DivisionReq> divisionList = divisionService.getAll("");
-			List<Object[]> divisionListObj = carrierContractDao.getSpecificData(session, "Division", "divisionId", "divisionName");
 			
-			List<DivisionReq> divisionList = new ArrayList<DivisionReq>();
-			Iterator<Object[]> divisionItr = divisionListObj.iterator();
-		
-			while(divisionItr.hasNext())
-			{
-				Object o[] = (Object[])divisionItr.next();
-				DivisionReq divisionReq  = new DivisionReq();
-				divisionReq.setDivisionId(Long.parseLong(String.valueOf(o[0])));
-				divisionReq.setDivisionName(String.valueOf(o[1]));
-				divisionList.add(divisionReq);
-			}
+			List<DivisionReq> divisionList = AllList.getDivisionList(session, "Division", "divisionId", "divisionName");
 			carrierContractModel.setDivisionList(divisionList);
 
-		//	List<DispatcherModel> dispatcherList = dispatcherService.getAllDispatcher();
+		 
 			List<Object[]> dispatcherListObj = carrierContractDao.getSpecificData(session, "Dispatcher", "id", "dispatcherName");
 			
 			List<DispatcherModel> dispatcherList = new ArrayList<DispatcherModel>();

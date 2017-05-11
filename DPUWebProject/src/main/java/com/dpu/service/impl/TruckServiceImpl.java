@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.AllList;
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
@@ -151,43 +152,51 @@ public class TruckServiceImpl implements TruckService {
 	@Override
 	public TruckResponse get(Long id) {
 		logger.info("[TruckServiceImpl] [get] : Enter ");
-		Truck truck = truckDao.findById(id);
+		
+		Session session = sessionFactory.openSession();
 		TruckResponse truckResponse = new TruckResponse();
-		if (truck != null) {
-			BeanUtils.copyProperties(truck, truckResponse);
-			truckResponse.setUnitNo(truck.getUnitNo());
-			truckResponse.setOwner(truck.getOwner());
-			truckResponse.setoOName(truck.getoOName());
-			truckResponse.setStatusName(truck.getStatus().getStatus());
-			truckResponse.setTruchUsage(truck.getUsage());
-			truckResponse.setDivisionId(truck.getDivision().getDivisionId());
-			truckResponse.setCategoryId(truck.getCategory().getCategoryId());
-			truckResponse.setTerminalId(truck.getTerminal().getTerminalId());
-			truckResponse.setStatusId(truck.getStatus().getId());
-			truckResponse.setTruckTypeId(truck.getType().getTypeId());
+		
+		try{
+			//Truck truck = truckDao.findById(id);
+			Truck truck = truckDao.findById(session, id);
+			if (truck != null) {
+				BeanUtils.copyProperties(truck, truckResponse);
+				truckResponse.setUnitNo(truck.getUnitNo());
+				truckResponse.setOwner(truck.getOwner());
+				truckResponse.setoOName(truck.getoOName());
+				truckResponse.setStatusName(truck.getStatus().getStatus());
+				truckResponse.setTruchUsage(truck.getUsage());
+				truckResponse.setDivisionId(truck.getDivision().getDivisionId());
+				truckResponse.setCategoryId(truck.getCategory().getCategoryId());
+				truckResponse.setTerminalId(truck.getTerminal().getTerminalId());
+				truckResponse.setStatusId(truck.getStatus().getId());
+				truckResponse.setTruckTypeId(truck.getType().getTypeId());
+				truckResponse.setTypeName(truck.getType().getTypeName());
+				truckResponse.setTruckType(truck.getType().getTypeName());
+				truckResponse.setFinance(truck.getFinance());
 
-			truckResponse.setTypeName(truck.getType().getTypeName());
+				List<Status> lstStatus = AllList.getStatusList(session);
+				truckResponse.setStatusList(lstStatus);
 
-			truckResponse.setTruckType(truck.getType().getTypeName());
+				List<CategoryReq> lstCategories = AllList.getCategoryList(session, "Category", "categoryId", "name");
+				truckResponse.setCategoryList(lstCategories);
 
-			truckResponse.setFinance(truck.getFinance());
+				List<TerminalResponse> lstTerminalResponses = AllList.getTerminalList(session, "Terminal", "terminalId", "terminalName");
+				truckResponse.setTerminalList(lstTerminalResponses);
 
-			List<Status> lstStatus = statusService.getAll();
-			truckResponse.setStatusList(lstStatus);
+				List<DivisionReq> lstDivision = AllList.getDivisionList(session, "Division", "divisionId", "divisionName");
+				truckResponse.setDivisionList(lstDivision);
 
-			List<CategoryReq> lstCategories = categoryService.getAll();
-			truckResponse.setCategoryList(lstCategories);
+				List<TypeResponse> truckTypeList = AllList.getTypeResponse(session, 8l);
+				truckResponse.setTruckTypeList(truckTypeList);
 
-			List<TerminalResponse> lstTerminalResponses = terminalService
-					.getAllTerminals();
-			truckResponse.setTerminalList(lstTerminalResponses);
-
-			List<DivisionReq> lstDivision = divisionService.getAll("");
-			truckResponse.setDivisionList(lstDivision);
-
-			List<TypeResponse> truckTypeList = typeService.getAll(8l);
-			truckResponse.setTruckTypeList(truckTypeList);
-
+		}
+			}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
 		}
 		logger.info("[TruckServiceImpl] [get] : Exit ");
 		return truckResponse;
@@ -195,6 +204,7 @@ public class TruckServiceImpl implements TruckService {
 
 	@Override
 	public List<TruckResponse> getAllTrucks(String owner) {
+		
 		logger.info("[TruckServiceImpl] [getAllTrucks] : Enter ");
 		List<Truck> lstTruck = null;
 		List<TruckResponse> lstTruckResponse = new ArrayList<TruckResponse>();
@@ -283,7 +293,7 @@ public class TruckServiceImpl implements TruckService {
 		Session session = sessionFactory.openSession();
 		
 		try{
-			List<Status> lstStatus = truckDao.getStatusList(session);
+			List<Status> lstStatus = AllList.getStatusList(session);
 			truckResponse.setStatusList(lstStatus);
 
 			List<Object[]> categoryListObj = categoryDao.getSpecificData(session,"Category", "categoryId", "name");
@@ -331,7 +341,7 @@ public class TruckServiceImpl implements TruckService {
 			}
 			truckResponse.setTerminalList(terminalList);
 
-			List<TypeResponse> truckTypeList = truckDao.getTypeResponse(session, 8l);
+			List<TypeResponse> truckTypeList = AllList.getTypeResponse(session, 8l);
 			truckResponse.setTruckTypeList(truckTypeList);
 		
 			} catch(Exception e){

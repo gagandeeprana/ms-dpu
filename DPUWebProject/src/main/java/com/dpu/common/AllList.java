@@ -11,6 +11,7 @@ import com.dpu.entity.Status;
 import com.dpu.model.ArrangedWithModel;
 import com.dpu.model.CarrierModel;
 import com.dpu.model.CategoryReq;
+import com.dpu.model.CompanyResponse;
 import com.dpu.model.DispatcherModel;
 import com.dpu.model.DivisionReq;
 import com.dpu.model.DriverReq;
@@ -56,6 +57,44 @@ public class AllList {
 		}
 
 		return categoryList;
+	}
+
+	
+	/**
+	 * To get companyList
+	 * 
+	 * @param session
+	 * @param tableName
+	 * @param firstColumn
+	 * @param secondColumn
+	 * @return companyList
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public static List<CompanyResponse> getCompanyList(Session session,
+			String tableName, String firstColumn, String secondColumn) {
+
+		List<CompanyResponse> companyList = new ArrayList<CompanyResponse>();
+
+		try {
+			Query query = session.createQuery(" select " + firstColumn + " , "
+					+ secondColumn + " from " + tableName);
+			List<Object[]> data = query.list();
+			if (data != null && !data.isEmpty()) {
+				Iterator<Object[]> operationIt = data.iterator();
+
+				while (operationIt.hasNext()) {
+					Object o[] = (Object[]) operationIt.next();
+					CompanyResponse type = new CompanyResponse();
+					type.setCompanyId(Long.parseLong(String.valueOf(o[0])));
+					type.setName(String.valueOf(o[1]));
+					companyList.add(type);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return companyList;
 	}
 
 	/**

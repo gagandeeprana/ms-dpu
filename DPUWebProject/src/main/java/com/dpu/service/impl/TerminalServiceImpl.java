@@ -241,11 +241,19 @@ public class TerminalServiceImpl implements TerminalService {
 	public TerminalResponse getOpenAdd() {
 		
 		logger.info("TerminalServiceImpl getOpenAdd() starts");
-		
+		Session session = sessionFactory.openSession();
 		TerminalResponse tresponse = new TerminalResponse();
-		tresponse.setServiceList(serviceService.getServiceData());
-		tresponse.setShipperList(shipperService.getSpecificData());
 		
+		try{
+		tresponse.setServiceList(serviceService.getServiceData());
+		tresponse.setShipperList(shipperService.getSpecificData(session));
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		logger.info("TerminalServiceImpl getOpenAdd() ends");
 		return tresponse;
 	}

@@ -12,10 +12,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dpu.common.CommonProperties;
 import com.dpu.dao.CompanyDao;
 import com.dpu.dao.ShipperDao;
-import com.dpu.entity.Division;
 import com.dpu.entity.Shipper;
 import com.dpu.entity.Status;
 import com.dpu.model.Failed;
@@ -52,11 +50,9 @@ public class ShipperServiceImpl implements ShipperService {
 			BeanUtils.copyProperties(shipperResponse, shipper);
 			shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
 			shipperDao.save(shipper);
-			obj = createSuccessObject("Shipper Added Successfully",
-					Long.parseLong("1030"));
+			obj = createSuccessObject("Shipper Added Successfully", Long.parseLong("1030"));
 		} catch (Exception e) {
-			obj = createFailedObject("Error while adding shipper",
-					Long.parseLong("1031"));
+			obj = createFailedObject("Error while adding shipper", Long.parseLong("1031"));
 		}
 		return obj;
 	}
@@ -95,20 +91,17 @@ public class ShipperServiceImpl implements ShipperService {
 				String[] ignoreProp = new String[1];
 				ignoreProp[0] = "shipperId";
 				BeanUtils.copyProperties(shipperResponse, shipper, ignoreProp);
-				shipper.setStatus(statusService.get(shipperResponse
-						.getStatusId()));
+				shipper.setStatus(statusService.get(shipperResponse.getStatusId()));
 				shipperDao.update(shipper);
-				obj = createSuccessObject("Shipper Updated Successfully",
-						Long.parseLong("1026"));
+				obj = createSuccessObject("Shipper Updated Successfully", Long.parseLong("1026"));
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside ShipperServiceImpl update() :"
-					+ e.getMessage());
-			obj = createFailedObject("Error while updating shipper",
-					Long.parseLong("1027"));
+			logger.error("Exception inside ShipperServiceImpl update() :" + e.getMessage());
+			obj = createFailedObject("Error while updating shipper", Long.parseLong("1027"));
 		}
 		return obj;
 	}
+
 	@Override
 	public Object delete(Long id) {
 
@@ -123,22 +116,17 @@ public class ShipperServiceImpl implements ShipperService {
 				session.delete(shipper);
 				tx.commit();
 			} else {
-				return createFailedObject(
-						"Shipper Unable to Delete",
-						Long.parseLong("2644"));
+				return createFailedObject("Shipper Unable to Delete", Long.parseLong("2644"));
 			}
 		} catch (Exception e) {
-			logger.info("Exception inside ShipperServiceImpl delete() : "
-					+ e.getMessage());
+			logger.info("Exception inside ShipperServiceImpl delete() : " + e.getMessage());
 			if (tx != null) {
 				tx.rollback();
 			}
 			if (e instanceof ConstraintViolationException) {
-				return createAlreadyExistObject("Shipper already in Use",
-						Long.parseLong("9888"));
+				return createAlreadyExistObject("Shipper already in Use", Long.parseLong("9888"));
 			}
-			return createFailedObject("Shipper Unable to Delete",
-					Long.parseLong("2644"));
+			return createFailedObject("Shipper Unable to Delete", Long.parseLong("2644"));
 		} finally {
 
 			if (session != null) {
@@ -147,32 +135,31 @@ public class ShipperServiceImpl implements ShipperService {
 		}
 
 		logger.info("ShipperServiceImpl delete() ends.");
-		return createSuccessObject("Shipper Deleted Successfully",
-				Long.parseLong("1023"));
+		return createSuccessObject("Shipper Deleted Successfully", Long.parseLong("1023"));
 	}
 
-//	@Override
-//	public Object delete(Long shipperId) {
-//		Object obj = null;
-//		try {
-//			Shipper shipper = shipperDao.findById(shipperId);
-//			shipperDao.deleteShipper(shipper);
-//			obj = createSuccessObject("Shipper deleted successfully",
-//					Long.parseLong("1028"));
-//		} catch (ConstraintViolationException em) {
-//			logger.info("Exception inside ShipperServiceImpl delete() : "
-//					+ em.getMessage());
-//			obj = createFailedObject("Shipper already in Use ",
-//					Long.parseLong("1056"));
-//
-//		} catch (Exception e) {
-//			logger.info("Exception inside ShipperServiceImpl delete() : "
-//					+ e.getMessage());
-//			obj = createFailedObject("Unable to Delete Shipper",
-//					Long.parseLong("1029"));
-//		}
-//		return obj;
-//	}
+	// @Override
+	// public Object delete(Long shipperId) {
+	// Object obj = null;
+	// try {
+	// Shipper shipper = shipperDao.findById(shipperId);
+	// shipperDao.deleteShipper(shipper);
+	// obj = createSuccessObject("Shipper deleted successfully",
+	// Long.parseLong("1028"));
+	// } catch (ConstraintViolationException em) {
+	// logger.info("Exception inside ShipperServiceImpl delete() : "
+	// + em.getMessage());
+	// obj = createFailedObject("Shipper already in Use ",
+	// Long.parseLong("1056"));
+	//
+	// } catch (Exception e) {
+	// logger.info("Exception inside ShipperServiceImpl delete() : "
+	// + e.getMessage());
+	// obj = createFailedObject("Unable to Delete Shipper",
+	// Long.parseLong("1029"));
+	// }
+	// return obj;
+	// }
 
 	@Override
 	public List<ShipperResponse> getAll() {
@@ -188,8 +175,8 @@ public class ShipperServiceImpl implements ShipperService {
 					ShipperResponse shipperResponse = new ShipperResponse();
 					BeanUtils.copyProperties(shipper, shipperResponse);
 					/*
-					 * shipperResponse.setCompany(shipper.getCompany().getName())
-					 * ;
+					 * shipperResponse.setCompany(shipper.getCompany().getName()
+					 * ) ;
 					 */
 					shipperResponse.setStatus(shipper.getStatus().getStatus());
 					responses.add(shipperResponse);
@@ -215,7 +202,9 @@ public class ShipperServiceImpl implements ShipperService {
 			Shipper shipper = shipperDao.findById(id, session);
 			if (shipper != null) {
 				BeanUtils.copyProperties(shipper, response);
-				/* response.setCompanyId(shipper.getCompany().getCompanyId()); */
+				/*
+				 * response.setCompanyId(shipper.getCompany().getCompanyId());
+				 */
 				response.setStatusId(shipper.getStatus().getId());
 				/* response.setCompanyList(companyService.getCompanyData()); */
 				List<Status> statusList = statusService.getAll();
@@ -250,7 +239,7 @@ public class ShipperServiceImpl implements ShipperService {
 
 		return response;
 	}
-	
+
 	@Override
 	public ShipperResponse getMasterData() {
 
@@ -270,8 +259,7 @@ public class ShipperServiceImpl implements ShipperService {
 		try {
 			session = sessionFactory.openSession();
 			if (companyName != null && companyName.length() > 0) {
-				shipperList = shipperDao.findByLoactionName(companyName,
-						session);
+				shipperList = shipperDao.findByLoactionName(companyName, session);
 			}
 
 			if (shipperList != null && !shipperList.isEmpty()) {
@@ -279,8 +267,8 @@ public class ShipperServiceImpl implements ShipperService {
 					ShipperResponse shipperResponse = new ShipperResponse();
 					BeanUtils.copyProperties(shipper, shipperResponse);
 					/*
-					 * shipperResponse.setCompany(shipper.getCompany().getName())
-					 * ;
+					 * shipperResponse.setCompany(shipper.getCompany().getName()
+					 * ) ;
 					 */
 					shipperResponse.setStatus(shipper.getStatus().getStatus());
 					responses.add(shipperResponse);
@@ -297,30 +285,25 @@ public class ShipperServiceImpl implements ShipperService {
 	}
 
 	@Override
-	public List<ShipperResponse> getSpecificData() {
-		
-		Session session = sessionFactory.openSession();
-		List<ShipperResponse> categories = new ArrayList<ShipperResponse>();
-		try{
-		List<Object[]> shipperData = shipperDao.getSpecificData(session,"Shipper",
-				"shipperId", "locationName");
+	public List<ShipperResponse> getSpecificData(Session session) {
 
-	
-		if (shipperData != null && !shipperData.isEmpty()) {
-			for (Object[] row : shipperData) {
-				ShipperResponse shipper = new ShipperResponse();
-				shipper.setShipperId((Long) row[0]);
-				shipper.setLocationName(String.valueOf(row[1]));
-				categories.add(shipper);
+		List<ShipperResponse> categories = new ArrayList<ShipperResponse>();
+
+		try {
+			List<Object[]> shipperData = shipperDao.getSpecificData(session, "Shipper", "shipperId", "locationName");
+
+			if (shipperData != null && !shipperData.isEmpty()) {
+				for (Object[] row : shipperData) {
+					ShipperResponse shipper = new ShipperResponse();
+					shipper.setShipperId((Long) row[0]);
+					shipper.setLocationName(String.valueOf(row[1]));
+					categories.add(shipper);
+				}
 			}
+		} catch (Exception e) {
+
 		}
-		}catch(Exception e){
-			
-		}finally{
-			if(session != null){
-				session.close();
-			}
-		}
+
 		return categories;
 	}
 

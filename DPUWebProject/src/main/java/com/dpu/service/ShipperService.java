@@ -2,6 +2,8 @@ package com.dpu.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.dpu.model.ShipperResponse;
 
 public interface ShipperService {
@@ -20,7 +22,7 @@ public interface ShipperService {
 
 	Object update(Long id, ShipperResponse shipperResponse);
 	
-	List<ShipperResponse> getSpecificData();
+	List<ShipperResponse> getSpecificData(Session session);
 
 	ShipperResponse getParticularData(Long id);
 }

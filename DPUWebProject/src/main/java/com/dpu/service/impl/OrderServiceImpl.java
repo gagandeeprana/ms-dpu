@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.dpu.common.AllList;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.OrderDao;
 import com.dpu.entity.Company;
@@ -513,31 +514,40 @@ public class OrderServiceImpl implements OrderService {
 	public OrderModel getOpenAdd() {
 
 		OrderModel order = new OrderModel();
+		Session session = sessionFactory.openSession();
 		
+		try{
 		@SuppressWarnings("unused")
-		List<Status> statusList = statusService.getAll();
+		List<Status> statusList = AllList.getStatusList(session);
 		
-		List<TypeResponse> temperatureList = typeService.getAll(12l);
+		List<TypeResponse> temperatureList = AllList.getTypeResponse(session, 12l);
 		order.setTemperatureList(temperatureList);
 		
-		List<TypeResponse> temperatureTypeList = typeService.getAll(13l);
+		List<TypeResponse> temperatureTypeList = AllList.getTypeResponse(session, 13l);
 		order.setTemperatureTypeList(temperatureTypeList);
 		
-		List<CompanyResponse> companyData = companyService.getCompanyData();
+		//List<CompanyResponse> companyData = companyService.getCompanyData();
+		List<CompanyResponse> companyData = AllList.getCompanyList(session, "Company", "companyId", "name");
 		order.setCompanyList(companyData);
 		
-		List<TypeResponse> currencyList = typeService.getAll(9l);
+		List<TypeResponse> currencyList = AllList.getTypeResponse(session, 9l);
 		order.setCurrencyList(currencyList);
 		
-		List<ShipperResponse> shipperConsineeList = shipperService.getSpecificData();
+		List<ShipperResponse> shipperConsineeList = shipperService.getSpecificData(session);
 		order.setShipperConsineeList(shipperConsineeList);
 		
-		List<TypeResponse> pickUpTypes = typeService.getAll(10l);
+		List<TypeResponse> pickUpTypes = AllList.getTypeResponse(session, 10l);
 		order.setPickupList(pickUpTypes);
 		
-		List<TypeResponse> deliveryTypes = typeService.getAll(11l);
+		List<TypeResponse> deliveryTypes = AllList.getTypeResponse(session, 11l);
 		order.setDeliveryList(deliveryTypes);
-		
+		}catch(Exception e){
+			
+		}finally{
+			if(session != null){
+				session.close();
+			}
+		}
 		return order;
 	}
 
@@ -636,25 +646,26 @@ public class OrderServiceImpl implements OrderService {
 					
 					orderModel.setProbilList(probils);
 					
-					List<TypeResponse> temperatureList = typeService.getAll(12l);
+					List<TypeResponse> temperatureList = AllList.getTypeResponse(session, 12l);
 					orderModel.setTemperatureList(temperatureList);
 					
-					List<TypeResponse> temperatureTypeList = typeService.getAll(13l);
+					List<TypeResponse> temperatureTypeList = AllList.getTypeResponse(session, 13l);
 					orderModel.setTemperatureTypeList(temperatureTypeList);
 					
-					List<CompanyResponse> companyData = companyService.getCompanyData();
+					//List<CompanyResponse> companyData = companyService.getCompanyData();
+					List<CompanyResponse> companyData = AllList.getCompanyList(session, "Company", "companyId", "name");
 					orderModel.setCompanyList(companyData);
 					
-					List<TypeResponse> currencyList = typeService.getAll(9l);
+					List<TypeResponse> currencyList = AllList.getTypeResponse(session, 9l);
 					orderModel.setCurrencyList(currencyList);
 					
-					List<ShipperResponse> shipperConsineeList = shipperService.getSpecificData();
+					List<ShipperResponse> shipperConsineeList = shipperService.getSpecificData(session);
 					orderModel.setShipperConsineeList(shipperConsineeList);
 					
-					List<TypeResponse> pickUpTypes = typeService.getAll(10l);
+					List<TypeResponse> pickUpTypes = AllList.getTypeResponse(session, 10l);;
 					orderModel.setPickupList(pickUpTypes);
 					
-					List<TypeResponse> deliveryTypes = typeService.getAll(11l);
+					List<TypeResponse> deliveryTypes = AllList.getTypeResponse(session, 11l);;
 					orderModel.setDeliveryList(deliveryTypes);
 					
 					CompanyResponse companyResponse = companyService.getCompanyBillingLocationAndContacts(order.getCompany().getCompanyId());

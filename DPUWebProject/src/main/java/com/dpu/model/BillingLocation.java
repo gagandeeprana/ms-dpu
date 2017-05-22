@@ -15,8 +15,9 @@ public class BillingLocation {
 	//@JsonProperty( "address")
 	private String address;
 
+	private String address2;
 	//@JsonProperty( "unit_no")
-	private String unitNo;
+	/*private String unitNo;*/
 
 	//@JsonProperty( "city")
 	private String city;
@@ -25,44 +26,17 @@ public class BillingLocation {
 	private String provinceState;
 
 	//@JsonProperty( "zip")
-	private String zip;
-
-	//@JsonProperty( "ar_cdn")
-	private String arCDN;
-
-	//@JsonProperty( "ar_us")
-	private String arUS;
-
-	//@JsonProperty( "status")
-	private Long statusId;
-	private String statusName;
-
-	//@JsonProperty( "contact")
+	
 	private String contact;
 
-	//@JsonProperty( "position")
-	private String position;
+	private String zip;
 
-	//@JsonProperty( "email")
-	private String email;
-
-	//@JsonProperty( "cellular")
-	private String cellular;
-
-	//@JsonProperty( "phone")
 	private String phone;
-
-	//@JsonProperty( "ext")
-	private String ext;
-
-	//@JsonProperty( "fax")
+	
 	private String fax;
-
-	//@JsonProperty( "billing_prefix")
-	private String prefix;
-
-	//@JsonProperty( "tollfree")
-	private String tollfree;
+	
+	private Long statusId;
+	private String statusName;
 
 	public Long getBillingLocationId() {
 		return billingLocationId;
@@ -86,14 +60,6 @@ public class BillingLocation {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public String getUnitNo() {
-		return unitNo;
-	}
-
-	public void setUnitNo(String unitNo) {
-		this.unitNo = unitNo;
 	}
 
 	public String getCity() {
@@ -120,22 +86,6 @@ public class BillingLocation {
 		this.zip = zip;
 	}
 
-	public String getArCDN() {
-		return arCDN;
-	}
-
-	public void setArCDN(String arCDN) {
-		this.arCDN = arCDN;
-	}
-
-	public String getArUS() {
-		return arUS;
-	}
-
-	public void setArUS(String arUS) {
-		this.arUS = arUS;
-	}
-
 	public Long getStatusId() {
 		return statusId;
 	}
@@ -152,30 +102,6 @@ public class BillingLocation {
 		this.contact = contact;
 	}
 
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getCellular() {
-		return cellular;
-	}
-
-	public void setCellular(String cellular) {
-		this.cellular = cellular;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -184,36 +110,12 @@ public class BillingLocation {
 		this.phone = phone;
 	}
 
-	public String getExt() {
-		return ext;
-	}
-
-	public void setExt(String ext) {
-		this.ext = ext;
-	}
-
 	public String getFax() {
 		return fax;
 	}
 
 	public void setFax(String fax) {
 		this.fax = fax;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getTollfree() {
-		return tollfree;
-	}
-
-	public void setTollfree(String tollfree) {
-		this.tollfree = tollfree;
 	}
 
 	public String getStatusName() {

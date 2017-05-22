@@ -235,23 +235,23 @@ public class CompanyServiceImpl implements CompanyService {
 
 		CompanyBillingLocation comBillingLocation = new CompanyBillingLocation();
 		comBillingLocation.setAddress(billingLocation.getAddress());
-		comBillingLocation.setArCDN(billingLocation.getArCDN());
-		comBillingLocation.setArUS(billingLocation.getArUS());
-		comBillingLocation.setCellular(billingLocation.getCellular());
+		//comBillingLocation.setArCDN(billingLocation.getArCDN());
+		//comBillingLocation.setArUS(billingLocation.getArUS());
+		//comBillingLocation.setCellular(billingLocation.getCellular());
 		comBillingLocation.setCity(billingLocation.getCity());
 		comBillingLocation.setCompany(company);
 		comBillingLocation.setContact(billingLocation.getContact());
-		comBillingLocation.setEmail(billingLocation.getEmail());
-		comBillingLocation.setExt(billingLocation.getExt());
+	//	comBillingLocation.setEmail(billingLocation.getEmail());
+		//comBillingLocation.setExt(billingLocation.getExt());
 		comBillingLocation.setFax(billingLocation.getFax());
 		comBillingLocation.setName(billingLocation.getName());
 		comBillingLocation.setPhone(billingLocation.getPhone());
-		comBillingLocation.setPosition(billingLocation.getPosition());
-		comBillingLocation.setPrefix(billingLocation.getPrefix());
+	//	comBillingLocation.setPosition(billingLocation.getPosition());
+		//comBillingLocation.setPrefix(billingLocation.getPrefix());
 		comBillingLocation.setProvinceState(billingLocation.getProvinceState());
 		comBillingLocation.setStatus(statusService.get(billingLocation.getStatusId()));
-		comBillingLocation.setTollfree(billingLocation.getTollfree());
-		comBillingLocation.setUnitNo(billingLocation.getUnitNo());
+		//comBillingLocation.setTollfree(billingLocation.getTollfree());
+		//comBillingLocation.setUnitNo(billingLocation.getUnitNo());
 		comBillingLocation.setZip(billingLocation.getZip());
 		return comBillingLocation;
 	}

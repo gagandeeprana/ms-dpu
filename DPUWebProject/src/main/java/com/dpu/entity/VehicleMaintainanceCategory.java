@@ -23,7 +23,7 @@ public class VehicleMaintainanceCategory {
 	@Column(name = "vmc_name")
 	private String name;
 
-	@Column(name = "vmc_descrption")
+	@Column(name = "vmc_description")
 	private String description;
 	
 	@Column(name = "created_by")

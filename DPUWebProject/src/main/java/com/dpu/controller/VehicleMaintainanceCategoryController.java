@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
 import com.dpu.model.Success;
 import com.dpu.model.VehicleMaintainanceCategoryModel;
-import com.dpu.service.HandlingService;
 import com.dpu.service.VehicleMaintainanceCategoryService;
-import com.dpu.util.MessageProperties;
 
 @RestController
 @RequestMapping(value = "vmc")
-public class VehicleMaintainanceCategoryController extends MessageProperties {
+public class VehicleMaintainanceCategoryController {
 
 	Logger logger = Logger.getLogger(VehicleMaintainanceCategoryController.class);
 
@@ -49,14 +46,14 @@ public class VehicleMaintainanceCategoryController extends MessageProperties {
 	 * @return List<Handlings>
 	 * @author lakhvir.bansal
 	 */
-/*	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 
-		logger.info("Inside HandlingController getAll() Starts ");
+		logger.info("Inside VehicleMaintainanceCategoryController getAll() Starts ");
 		String json = null;
 
 		try {
-			List<HandlingModel> responses = handlingService.getAll();
+			List<VehicleMaintainanceCategoryModel> responses = vehicleMaintainanceCategoryService.getAll();
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
@@ -67,14 +64,8 @@ public class VehicleMaintainanceCategoryController extends MessageProperties {
 		
 		logger.info("Inside HandlingController getAll() Ends ");
 		return json;
-	}*/
+	}
 
-	/**
-	 * this method is used to add the Handling
-	 * @param handlingModel
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
-	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel) {
 
@@ -91,11 +82,11 @@ public class VehicleMaintainanceCategoryController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController add() :"+ e.getMessage());
+			logger.error("Exception inside VehicleMaintainanceCategoryController add() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
-		logger.info("Inside HandlingController add() ends ");
+		logger.info("Inside VehicleMaintainanceCategoryController add() ends ");
 		return obj;
 	}
 
@@ -127,7 +118,7 @@ public class VehicleMaintainanceCategoryController extends MessageProperties {
 		return obj;
 
 	}
-*/
+
 	/**
 	 * this method is used to update the handling based on handlingID
 	 * @param handlingId
@@ -162,26 +153,26 @@ public class VehicleMaintainanceCategoryController extends MessageProperties {
 	 * @return handlingData
 	 * @author lakhvir.bansal
 	 */
-	/*@RequestMapping(value = "/{handlingId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getHandlingById(@PathVariable("handlingId") Long handlingId) {
+	@RequestMapping(value = "/{vmcId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getvmcById(@PathVariable("vmcId") Long vmcId) {
 		
-		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ handlingId);
+		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ vmcId);
 		String json = null;
 
 		try {
 
-			HandlingModel handlingModel = handlingService.get(handlingId);
+			VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel = vehicleMaintainanceCategoryService.get(vmcId);
 
-			if (handlingModel != null) {
-				json = mapper.writeValueAsString(handlingModel);
+			if (vehicleMaintainanceCategoryModel != null) {
+				json = mapper.writeValueAsString(vehicleMaintainanceCategoryModel);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ handlingId);
+		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ vmcId);
 		return json;
-	}*/
+	}
 
 	/**
 	 * this method is used when we click on add button on handling screen

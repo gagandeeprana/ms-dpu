@@ -6,19 +6,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dpu.dao.HandlingDao;
 import com.dpu.dao.VehicleMaintainanceCategoryDao;
-import com.dpu.entity.Handling;
-import com.dpu.entity.Status;
 import com.dpu.entity.VehicleMaintainanceCategory;
 import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
 import com.dpu.model.Success;
 import com.dpu.model.VehicleMaintainanceCategoryModel;
 import com.dpu.service.StatusService;
@@ -59,26 +53,24 @@ public class VehicleMaintainanceCategoryServiceImpl implements VehicleMaintainan
 	@Value("${handling_already_used_message}")
 	private String handling_already_used_message;
 
-	/*@Override
-	public List<HandlingModel> getAll() {
+	@Override
+	public List<VehicleMaintainanceCategoryModel> getAll() {
 
 		logger.info("HandlingServiceImpl getAll() starts ");
 		Session session = null;
-		List<HandlingModel> handlingList = new ArrayList<HandlingModel>();
+		List<VehicleMaintainanceCategoryModel> vehicleMaintainancecategoryList = new ArrayList<VehicleMaintainanceCategoryModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Handling> handlings = handlingDao.findAll(session);
+			List<VehicleMaintainanceCategory> vmcList = vehicleMaintainanceCategoryDao.findAll(session);
 
-			if (handlings != null && !handlings.isEmpty()) {
-				for (Handling handling : handlings) {
-					HandlingModel handlingModel = new HandlingModel();
-					handlingModel.setId(handling.getId());
-					handlingModel.setName(handling.getName());
-					handlingModel.setStatusName(handling.getStatus()
-							.getStatus());
-					;
-					handlingList.add(handlingModel);
+			if (vmcList != null && !vmcList.isEmpty()) {
+				for (VehicleMaintainanceCategory category : vmcList) {
+					VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel = new VehicleMaintainanceCategoryModel();
+					vehicleMaintainanceCategoryModel.setDescription(category.getDescription());
+					vehicleMaintainanceCategoryModel.setName(category.getName());
+					vehicleMaintainanceCategoryModel.setId(category.getId());
+					vehicleMaintainancecategoryList.add(vehicleMaintainanceCategoryModel);
 				}
 			}
 		} finally {
@@ -87,9 +79,9 @@ public class VehicleMaintainanceCategoryServiceImpl implements VehicleMaintainan
 			}
 		}
 
-		logger.info("HandlingServiceImpl getAll() ends ");
-		return handlingList;
-	}*/
+		logger.info("VehicleMaintainanceCategoryServiceImpl getAll() ends ");
+		return vehicleMaintainancecategoryList;
+	}
 
 	private Object createSuccessObject(String msg) {
 
@@ -202,26 +194,25 @@ public class VehicleMaintainanceCategoryServiceImpl implements VehicleMaintainan
 		return createSuccessObject(handling_deleted_message);
 	}*/
 
-/*	@Override
-	public HandlingModel get(Long id) {
+	@Override
+	public VehicleMaintainanceCategoryModel get(Long id) {
 
-		logger.info("HandlingServiceImpl get() starts.");
+		logger.info("VehicleMaintainanceCategoryServiceImpl get() starts.");
 		Session session = null;
-		HandlingModel handlingModel = new HandlingModel();
+		VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel = new VehicleMaintainanceCategoryModel();
 
 		try {
 
 			session = sessionFactory.openSession();
-			Handling handling = handlingDao.findById(id, session);
+			VehicleMaintainanceCategory vehicleMaintainanceCategory = vehicleMaintainanceCategoryDao.findById(id, session);
 
-			if (handling != null) {
+			if (vehicleMaintainanceCategory != null) {
 
-				handlingModel.setId(handling.getId());
-				handlingModel.setName(handling.getName());
-				handlingModel.setStatusId(handling.getStatus().getId());
+				vehicleMaintainanceCategoryModel.setId(vehicleMaintainanceCategory.getId());
+				vehicleMaintainanceCategoryModel.setName(vehicleMaintainanceCategory.getName());
+				vehicleMaintainanceCategoryModel.setDescription(vehicleMaintainanceCategory.getDescription());
+				//vehicleMaintainanceCategoryModel.setStatusId(vehicleMaintainanceCategory.getStatus().getId());
 
-				List<Status> statusList = statusService.getAll();
-				handlingModel.setStatusList(statusList);
 			}
 		} finally {
 			if (session != null) {
@@ -229,10 +220,10 @@ public class VehicleMaintainanceCategoryServiceImpl implements VehicleMaintainan
 			}
 		}
 
-		logger.info("HandlingServiceImpl get() ends.");
-		return handlingModel;
+		logger.info("VehicleMaintainanceCategoryServiceImpl get() ends.");
+		return vehicleMaintainanceCategoryModel;
 	}
-*/
+
 	/*@Override
 	public HandlingModel getOpenAdd() {
 

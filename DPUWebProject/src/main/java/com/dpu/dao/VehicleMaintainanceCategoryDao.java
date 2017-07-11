@@ -1,21 +1,22 @@
-/**
- * 
- */
 package com.dpu.dao;
 
 import java.util.List;
 
 import org.hibernate.Session;
 
-import com.dpu.entity.Handling;
 import com.dpu.entity.VehicleMaintainanceCategory;
+import com.dpu.model.VehicleMaintainanceCategoryModel;
 
 public interface VehicleMaintainanceCategoryDao extends GenericDao<VehicleMaintainanceCategory> {
 
-	List<Handling> findAll(Session session);
+	List<VehicleMaintainanceCategory> findAll(Session session);
+
+	VehicleMaintainanceCategory findById(Long id, Session session);
+
+	/*List<Handling> findAll(Session session);
 
 	Handling findById(Long id, Session session);
 
-	List<Handling> getHandlingByHandlingName(Session session, String handlingName);
+	List<Handling> getHandlingByHandlingName(Session session, String handlingName);*/
 
 }

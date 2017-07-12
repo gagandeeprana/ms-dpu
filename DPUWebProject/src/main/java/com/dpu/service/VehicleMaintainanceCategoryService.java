@@ -25,4 +25,10 @@ public interface VehicleMaintainanceCategoryService {
 
 	VehicleMaintainanceCategoryModel get(Long vmcId);
 
+	Object update(Long vmcId, VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel);
+
+	List<VehicleMaintainanceCategoryModel> getVmcByVmcName(String vmcName);
+
+	Object delete(Long vmcId);
+
 }

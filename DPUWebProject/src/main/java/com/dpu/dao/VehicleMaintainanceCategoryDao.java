@@ -13,6 +13,8 @@ public interface VehicleMaintainanceCategoryDao extends GenericDao<VehicleMainta
 
 	VehicleMaintainanceCategory findById(Long id, Session session);
 
+	List<VehicleMaintainanceCategory> getVmcByVmcName(Session session, String vmcName);
+
 	/*List<Handling> findAll(Session session);
 
 	Handling findById(Long id, Session session);

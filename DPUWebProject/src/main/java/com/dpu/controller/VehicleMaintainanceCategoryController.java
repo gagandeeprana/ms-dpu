@@ -32,19 +32,18 @@ public class VehicleMaintainanceCategoryController {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Value("${handling_unable_to_add_message}")
-	private String handling_unable_to_add_message;
+	@Value("${vmc_unable_to_add_message}")
+	private String vmc_unable_to_add_message;
 
-	@Value("${handling_unable_to_delete_message}")
-	private String handling_unable_to_delete_message;
+	@Value("${vmc_unable_to_delete_message}")
+	private String vmc_unable_to_delete_message;
 	
-	@Value("${handling_unable_to_update_message}")
-	private String handling_unable_to_update_message;
+	@Value("${vmc_unable_to_update_message}")
+	private String vmc_unable_to_update_message;
 
 	/**
-	 * this method is used to get all handlings
-	 * @return List<Handlings>
-	 * @author lakhvir.bansal
+	 * this method is used to get all vmc's
+	 * @return List<vmc>
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
@@ -66,6 +65,11 @@ public class VehicleMaintainanceCategoryController {
 		return json;
 	}
 
+	/**
+	 * this method is used to add vmc
+	 * @param vehicleMaintainanceCategoryModel
+	 * @return List<Vmcs>
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel) {
 
@@ -83,7 +87,7 @@ public class VehicleMaintainanceCategoryController {
 
 		} catch (Exception e) {
 			logger.error("Exception inside VehicleMaintainanceCategoryController add() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside VehicleMaintainanceCategoryController add() ends ");
@@ -91,19 +95,18 @@ public class VehicleMaintainanceCategoryController {
 	}
 
 	/**
-	 * this method is used to delete the Handling based on handlingId
-	 * @param id
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * this method is used to delete particular vmc
+	 * @param vmcId
+	 * @return List<vmc>
 	 */
-	/*@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long handlingId) {
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("id") Long vmcId) {
 
-		logger.info("Inside HandlingController delete() Starts, handlingId is :" + handlingId);
+		logger.info("Inside VehicleMaintainanceCategoryController delete() Starts, vmcId is :" + vmcId);
 		Object obj = null;
 
 		try {
-			Object result = handlingService.delete(handlingId);
+			Object result = vehicleMaintainanceCategoryService.delete(vmcId);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -111,27 +114,28 @@ public class VehicleMaintainanceCategoryController {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside VehicleMaintainanceCategoryController delete() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + handlingId);
+		logger.info("Inside VehicleMaintainanceCategoryController delete() Ends, vmcId is :" + vmcId);
 		return obj;
 
 	}
 
-	/**
-	 * this method is used to update the handling based on handlingID
-	 * @param handlingId
-	 * @param handlingModel
-	 * @return List<Categories>
-	 */
-/*	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long handlingId, @RequestBody HandlingModel handlingModel) {
 
-		logger.info("Inside HandlingController update() Starts, handlingId is :" + handlingId);
+	/**
+	 * this method is used to update vmc based on vmcId
+	 * @param vmcId
+	 * @param vehicleMaintainanceCategoryModel
+	 * @return List<vmc>
+	 */
+	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object update(@PathVariable("id") Long vmcId, @RequestBody VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel) {
+
+		logger.info("Inside VehicleMaintainanceCategoryController update() Starts, vmcId is :" + vmcId);
 		Object obj = null;
 		try {
-			Object result = handlingService.update(handlingId, handlingModel);
+			Object result = vehicleMaintainanceCategoryService.update(vmcId, vehicleMaintainanceCategoryModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -139,24 +143,23 @@ public class VehicleMaintainanceCategoryController {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			logger.error("Exception inside VehicleMaintainanceCategoryController update() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);
+		logger.info("Inside VehicleMaintainanceCategoryController update() Ends, vmcId is :" + vmcId);
 		return obj;
 	}
-*/
+
 	/**
-	 * this method is used to get Handling data based on handlingId
-	 * @param handlingId
-	 * @return handlingData
-	 * @author lakhvir.bansal
+	 * this method is used to get particular vmc based on vmcId
+	 * @param vmcId
+	 * @return particular vmc
 	 */
 	@RequestMapping(value = "/{vmcId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getvmcById(@PathVariable("vmcId") Long vmcId) {
 		
-		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ vmcId);
+		logger.info("Inside VehicleMaintainanceCategoryController getvmcById() Starts, vmcId:"+ vmcId);
 		String json = null;
 
 		try {
@@ -167,10 +170,10 @@ public class VehicleMaintainanceCategoryController {
 				json = mapper.writeValueAsString(vehicleMaintainanceCategoryModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
+			logger.error("Exception inside VehicleMaintainanceCategoryController getvmcById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ vmcId);
+		logger.info("Inside VehicleMaintainanceCategoryController getvmcById() Ends, vmcId:"+ vmcId);
 		return json;
 	}
 
@@ -199,30 +202,29 @@ public class VehicleMaintainanceCategoryController {
 	}*/
 
 	/**
-	 * this method is used to get handling data based on handling name
-	 * @param handlingName
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * this method is used to search vmc based on vmc name
+	 * @param vmcName
+	 * @return List<vmc>
 	 */
-	/*@RequestMapping(value = "/{handlingName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchHandling(@PathVariable("handlingName") String handlingName) {
+	@RequestMapping(value = "/{vmcName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchVmc(@PathVariable("vmcName") String vmcName) {
 
-		logger.info("Inside HandlingController searchHandling() Starts, handlingName :"+ handlingName);
+		logger.info("Inside VehicleMaintainanceCategoryController searchVmc() Starts, vmcName :"+ vmcName);
 		String json = new String();
 
 		try {
-			List<HandlingModel> handlingList = handlingService.getHandlingByHandlingName(handlingName);
-			if (handlingList != null && handlingList.size() > 0) {
-				json = mapper.writeValueAsString(handlingList);
+			List<VehicleMaintainanceCategoryModel> vmcList = vehicleMaintainanceCategoryService.getVmcByVmcName(vmcName);
+			if (vmcList != null && vmcList.size() > 0) {
+				json = mapper.writeValueAsString(vmcList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController searchHandling() is :"+ e.getMessage());
+			logger.error("Exception inside VehicleMaintainanceCategoryController searchVmc() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside HandlingController searchHandling() Ends, handlingName :"+ handlingName);
+		logger.info(" Inside VehicleMaintainanceCategoryController searchVmc() Ends, vmcName :"+ vmcName);
 		return json;
 	}
-*/
+
 	/**
 	 * this method is used to get specific handling data (id and name)
 	 * @return handlingId and name

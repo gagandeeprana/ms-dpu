@@ -29,13 +29,13 @@ public class VehicleMaintainanceCategoryDaoImpl extends GenericDaoImpl<VehicleMa
 		return (VehicleMaintainanceCategory) query.uniqueResult();
 	}
 
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Handling> getHandlingByHandlingName(Session session, String handlingName) {
-		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status where h.name like :handlingName ");
+	public List<VehicleMaintainanceCategory> getVmcByVmcName(Session session, String vmcName) {
+		StringBuilder sb = new StringBuilder(" select h from VehicleMaintainanceCategory h  where h.name like :vmcName ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("handlingName", "%"+handlingName+"%");
+		query.setParameter("vmcName", "%"+vmcName+"%");
 		return query.list();
-	}*/
+	}
 
 }

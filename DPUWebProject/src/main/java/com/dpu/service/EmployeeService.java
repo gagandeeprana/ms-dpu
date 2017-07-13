@@ -12,4 +12,8 @@ public interface EmployeeService {
 
 	Object getUserById(Long userId);
 
+	Object delete(Long userId);
+
+	List<EmployeeModel> getUserByUserName(String userName);
+
 }

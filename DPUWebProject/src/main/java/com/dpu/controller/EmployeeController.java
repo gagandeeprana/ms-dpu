@@ -43,10 +43,6 @@ public class EmployeeController {
 	@Value("${vmc_unable_to_update_message}")
 	private String vmc_unable_to_update_message;
 
-	/**
-	 * this method is used to get all vmc's
-	 * @return List<vmc>
-	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 
@@ -91,19 +87,14 @@ public class EmployeeController {
 		return obj;
 	}
 
-	/**
-	 * this method is used to delete particular vmc
-	 * @param vmcId
-	 * @return List<vmc>
-	 */
-	/*@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long vmcId) {
+	@RequestMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("userId") Long userId) {
 
-		logger.info("Inside VehicleMaintainanceCategoryController delete() Starts, vmcId is :" + vmcId);
+		logger.info("Inside EmployeeController delete() Starts, userId is :" + userId);
 		Object obj = null;
 
 		try {
-			Object result = vehicleMaintainanceCategoryService.delete(vmcId);
+			Object result = employeeService.delete(userId);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -111,13 +102,13 @@ public class EmployeeController {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside VehicleMaintainanceCategoryController delete() :"+ e.getMessage());
+			logger.error("Exception inside EmployeeController delete() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside VehicleMaintainanceCategoryController delete() Ends, vmcId is :" + vmcId);
+		logger.info("Inside EmployeeController delete() Ends, userId is :" + userId);
 		return obj;
 
-	}*/
+	}
 
 
 	/**
@@ -149,9 +140,9 @@ public class EmployeeController {
 	}*/
 
 	@RequestMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getvmcById(@PathVariable("userId") Long userId) {
+	public Object getUserByUserId(@PathVariable("userId") Long userId) {
 		
-		logger.info("Inside EmployeeController getvmcById() Starts, vmcId:"+ userId);
+		logger.info("Inside EmployeeController getUserByUserId() Starts, userId:"+ userId);
 		String json = null;
 
 		try {
@@ -162,19 +153,13 @@ public class EmployeeController {
 				json = mapper.writeValueAsString(employeeModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside EmployeeController getvmcById() :"+ e.getMessage());
+			logger.error("Exception inside EmployeeController getUserByUserId() :"+ e.getMessage());
 		}
 
-		logger.info("Inside EmployeeController getvmcById() Ends, vmcId:"+ userId);
+		logger.info("Inside EmployeeController getUserByUserId() Ends, userId:"+ userId);
 		return json;
 	}
 
-	/**
-	 * this method is used when we click on add button on handling screen
-	 * send master data
-	 * @return master data for add handling
-	 * @author lakhvir.bansal
-	 */
 /*	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
@@ -193,35 +178,25 @@ public class EmployeeController {
 		return json;
 	}*/
 
-	/**
-	 * this method is used to search vmc based on vmc name
-	 * @param vmcName
-	 * @return List<vmc>
-	 */
-	/*@RequestMapping(value = "/{vmcName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchVmc(@PathVariable("vmcName") String vmcName) {
+	@RequestMapping(value = "/{userName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchUserByUserName(@PathVariable("userName") String userName) {
 
-		logger.info("Inside VehicleMaintainanceCategoryController searchVmc() Starts, vmcName :"+ vmcName);
+		logger.info("Inside VehicleMaintainanceCategoryController searchUserByUserName() Starts, userName :"+ userName);
 		String json = new String();
 
 		try {
-			List<VehicleMaintainanceCategoryModel> vmcList = vehicleMaintainanceCategoryService.getVmcByVmcName(vmcName);
-			if (vmcList != null && vmcList.size() > 0) {
-				json = mapper.writeValueAsString(vmcList);
+			List<EmployeeModel> employeeList = employeeService.getUserByUserName(userName);
+			if (employeeList != null && employeeList.size() > 0) {
+				json = mapper.writeValueAsString(employeeList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside VehicleMaintainanceCategoryController searchVmc() is :"+ e.getMessage());
+			logger.error("Exception inside EmployeeController searchUserByUserName() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside VehicleMaintainanceCategoryController searchVmc() Ends, vmcName :"+ vmcName);
+		logger.info(" Inside EmployeeController searchUserByUserName() Ends, userName :"+ userName);
 		return json;
-	}*/
+	}
 
-	/**
-	 * this method is used to get specific handling data (id and name)
-	 * @return handlingId and name
-	 * @author lakhvir.bansal
-	 */
 	
 	/*@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {

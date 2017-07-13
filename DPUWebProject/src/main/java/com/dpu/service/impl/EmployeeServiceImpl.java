@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,11 @@ import com.dpu.common.CommonProperties;
 import com.dpu.dao.EmployeeDao;
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Employee;
+import com.dpu.entity.VehicleMaintainanceCategory;
 import com.dpu.model.EmployeeModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
+import com.dpu.model.VehicleMaintainanceCategoryModel;
 import com.dpu.service.EmployeeService;
 import com.dpu.service.TypeService;
 
@@ -175,8 +178,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Object getUserById(Long userId) {
 
-		logger.info("Inside EmployeeServiceImpl getUserById() starts, userId :"
-				+ userId);
+		logger.info("Inside EmployeeServiceImpl getUserById() starts, userId :"+ userId);
 		Session session = null;
 		Object obj = null;
 		String message = "User data get Successfully";
@@ -210,6 +212,85 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Failed failed = new Failed();
 		failed.setMessage(errorMessage);
 		return failed;
+	}
+
+	@Override
+	public Object delete(Long userId) {
+		logger.info("VehicleMaintainanceCategoryServiceImpl delete() starts.");
+		Session session = null;
+		Transaction tx = null;
+
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Employee employee = (Employee) session.get(Employee.class, userId);
+			if (employee != null) {
+				session.delete(employee);
+				tx.commit();
+			} else {
+				return createFailedObject("");
+			}
+
+		} catch (Exception e) {
+			logger.info("Exception inside VehicleMaintainanceCategoryServiceImpl delete() : " + e.getMessage());
+			if (tx != null) {
+				tx.rollback();
+			}
+			if (e instanceof ConstraintViolationException) {
+				return createFailedObject("");
+			}
+			return createFailedObject("");
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl delete() ends.");
+		return createSuccessObject("");
+	}
+
+	private Object createSuccessObject(String msg) {
+
+		Success success = new Success();
+		success.setMessage(msg);
+		success.setResultList(getAll());
+		return success;
+	}
+
+	@Override
+	public List<EmployeeModel> getUserByUserName(String userName) {
+		
+		logger.info("VehicleMaintainanceCategoryServiceImpl getVmcByVmcName() starts ");
+		Session session = null;
+		List<EmployeeModel> employeeResponse = new ArrayList<EmployeeModel>();
+
+		try {
+			session = sessionFactory.openSession();
+			List<Employee> employeeList = employeeDao.getUserByUserName(session, userName);
+			if (employeeList != null && !employeeList.isEmpty()) {
+				for (Employee employee : employeeList) {
+					EmployeeModel employeeModel = new EmployeeModel();
+					employeeModel.setEmployeeId(employee.getEmployeeId());
+					employeeModel.setFirstName(employee.getFirstName());
+					employeeModel.setLastName(employee.getLastName());
+					employeeModel.setUsername(employee.getUsername());
+					employeeModel.setJobTitle(employee.getJobTitle());
+					employeeModel.setEmail(employee.getEmail());
+					employeeModel.setPhone(employee.getPhone());
+					employeeModel.setHiringDate(employee.getHiringDate());
+					employeeModel.setTerminationDate(employee.getTerminationDate());
+					employeeResponse.add(employeeModel);
+				}
+			}
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl getVmcByVmcName() ends ");
+		return employeeResponse;
 	}
 
 	/*@Override

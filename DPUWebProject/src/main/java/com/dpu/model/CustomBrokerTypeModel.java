@@ -11,26 +11,19 @@ import com.dpu.entity.Status;
 public class CustomBrokerTypeModel {
 	
 	private Long customBrokerTypeId;
-	
 	private List<Status> statusList;
 	private Long statusId;
-	
 	private String contactName;
-	
 	private List<TypeResponse> operationList;
 	private Long operationId;
-	
 	private String phone;
 	private String extention;
 	private String faxNumber;
 	private String typeName;
-	
 	private List<TypeResponse> timeZoneList;
 	private Long timeZoneId;
-	
 	private String email;
 	private String trackerLink;
-	
 	private List<TypeResponse> typeList;
 	private Long typeId;
 	

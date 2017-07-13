@@ -82,14 +82,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 			}
 
 		} catch (Exception e) {
-			logger.fatal("EmployeeServiceImpl: add(): Exception: "
-					+ e.getMessage());
+			logger.fatal("EmployeeServiceImpl: add(): Exception: " + e.getMessage());
 			if (tx != null) {
 				tx.rollback();
 			}
-			return createFailedObject(
-					CommonProperties.employee_unable_to_add_message,
-					Long.parseLong(CommonProperties.Equipment_unable_to_add_code));
+			return createFailedObject( CommonProperties.employee_unable_to_add_message, Long.parseLong(CommonProperties.Equipment_unable_to_add_code));
 		} finally {
 			logger.info("EmployeeServiceImpl: add():  finally block");
 			if (session != null) {

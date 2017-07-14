@@ -9,8 +9,8 @@ import com.dpu.model.EmployeeModel;
 
 public interface EmployeeDao extends GenericDao<Employee> {
 
-	Employee add(Session session, EmployeeModel employeeModel);
-
 	List<Employee> getUserByUserName(Session session, String userName);
+
+	void add(Session session, Employee employee);
 
 }

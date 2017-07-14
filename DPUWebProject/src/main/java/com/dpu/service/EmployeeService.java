@@ -16,4 +16,6 @@ public interface EmployeeService {
 
 	List<EmployeeModel> getUserByUserName(String userName);
 
+	Object update(Long userId, EmployeeModel employeeModel);
+
 }

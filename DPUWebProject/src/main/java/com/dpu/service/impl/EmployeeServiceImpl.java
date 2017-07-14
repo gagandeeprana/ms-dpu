@@ -3,7 +3,10 @@
  */
 package com.dpu.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -19,13 +22,12 @@ import com.dpu.common.CommonProperties;
 import com.dpu.dao.EmployeeDao;
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Employee;
-import com.dpu.entity.VehicleMaintainanceCategory;
 import com.dpu.model.EmployeeModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.model.VehicleMaintainanceCategoryModel;
 import com.dpu.service.EmployeeService;
 import com.dpu.service.TypeService;
+import com.dpu.util.DateUtil;
 
 /**
  * @author gagan
@@ -64,10 +66,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return failed;
 	}
 
-	//TODO
-	/**
-	 * error code needs to be changed...
-	 */
 	@Override
 	public Object add(EmployeeModel employeeModel) {
 
@@ -79,7 +77,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			employeeDao.add(session, employeeModel);
+			Employee employee = new Employee();
+			setEmployeeValues(employeeModel, employee);
+			employeeDao.add(session, employee);
 			if (tx != null) {
 				tx.commit();
 			}
@@ -103,55 +103,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 				Long.parseLong(CommonProperties.Equipment_added_code));
 	}
 
-	/*@Override
-	public Object update(Long id, EquipmentReq equipmentReq) {
-		logger.info("EquipmentServiceImpl: update():  Enter");
-		Equipment equipmentObj = null;
-		try {
-			equipmentObj = equipmentDao.findById(id);
-			// if (equipmentObj != null) {
-			equipmentObj.setEquipmentName(equipmentReq.getEquipmentName());
-			equipmentObj.setDescription(equipmentReq.getDescription());
-			equipmentObj.setModifiedBy("gagan");
-			equipmentObj.setModifiedOn(new Date());
-			Type type = typeService.get(equipmentReq.getTypeId());
-			equipmentObj.setType(type);
-			equipmentDao.update(equipmentObj);
-			// }
+private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
+		
+		logger.info("EmployeeDaoImpl: setEmployeeValues(): STARTS");
+		employee.setFirstName(employeeModel.getFirstName());
+		employee.setLastName(employeeModel.getLastName());
+		employee.setJobTitle(employeeModel.getJobTitle());
+		employee.setUsername(employeeModel.getUsername());
+		employee.setPassword(employeeModel.getPassword());
+		employee.setEmail(employeeModel.getEmail());
+		employee.setPhone(employeeModel.getPhone());
+		String hiringDate = employeeModel.getHiringdate();
+		String terminationDate = employeeModel.getTerminationdate();
+		employee.setHiringDate(DateUtil.changeStringToDate(hiringDate));
+		employee.setTerminationDate(DateUtil.changeStringToDate(terminationDate));
+		employee.setCreatedBy(employeeModel.getCreatedBy());
+		employee.setModifiedBy(employeeModel.getModifiedBy());
+		logger.info("EmployeeDaoImpl: setEmployeeValues(): ENDS");
 
-		} catch (Exception e) {
-
-			logger.info("Exception inside DivisionServiceImpl update() :"
-					+ e.getMessage());
-			return createFailedObject(
-					CommonProperties.Equipment_unable_to_update_message,
-					Long.parseLong(CommonProperties.Equipment_unable_to_update_code));
-		}
-		logger.info("EquipmentServiceImpl: update():  Exit");
-		return createSuccessObject(CommonProperties.Equipment_updated_message,
-				Long.parseLong(CommonProperties.Equipment_updated_code));
 	}
 
-	@Override
-	public Object delete(Long id) {
-		logger.info("EquipmentServiceImpl: delete():  Enter");
-		Equipment equipment = null;
-		try {
-			equipment = equipmentDao.findById(id);
-			equipmentDao.delete(equipment);
-
-		} catch (Exception e) {
-			logger.error("EquipmentServiceImpl: delete(): Exception  : ", e);
-			return createFailedObject(
-					CommonProperties.Equipment_unable_to_delete_message,
-					Long.parseLong(CommonProperties.Equipment_unable_to_delete_code));
-
-		}
-		logger.info("EquipmentServiceImpl: delete():  Exit");
-		return createSuccessObject(CommonProperties.Equipment_deleted_message,
-				Long.parseLong(CommonProperties.Equipment_deleted_code));
-	}*/
-
+	
 	@Override
 	public List<EmployeeModel> getAll() {
 		List<Employee> employees = null;
@@ -167,8 +139,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeeModel.setJobTitle(employee.getJobTitle());
 				employeeModel.setEmail(employee.getEmail());
 				employeeModel.setPhone(employee.getPhone());
-				employeeModel.setHiringDate(employee.getHiringDate());
-				employeeModel.setTerminationDate(employee.getTerminationDate());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				employeeModel.setHiringdate(sdf.format(employee.getHiringDate()));
+				employeeModel.setTerminationdate(sdf.format(employee.getTerminationDate()));
 				employeeResponse.add(employeeModel);
 			}
 		}
@@ -278,8 +251,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 					employeeModel.setJobTitle(employee.getJobTitle());
 					employeeModel.setEmail(employee.getEmail());
 					employeeModel.setPhone(employee.getPhone());
-					employeeModel.setHiringDate(employee.getHiringDate());
-					employeeModel.setTerminationDate(employee.getTerminationDate());
+					/*employeeModel.setHiringDate(employee.getHiringDate());
+					employeeModel.setTerminationDate(employee.getTerminationDate());*/
 					employeeResponse.add(employeeModel);
 				}
 			}
@@ -293,6 +266,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employeeResponse;
 	}
 
+	@Override
+	public Object update(Long id, EmployeeModel employeeModel) {
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl update() starts.");
+		try {
+			Employee employee = employeeDao.findById(id);
+
+			if (employee != null) {
+				setEmployeeValues(employeeModel, employee);
+			} else {
+				return createFailedObject("");
+			}
+
+		} catch (Exception e) {
+			logger.info("Exception inside VehicleMaintainanceCategoryServiceImpl update() :"+ e.getMessage());
+			return createFailedObject("");
+		}
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl update() ends.");
+		return createSuccessObject("");
+	}
 	/*@Override
 	public EquipmentReq get(Long id) {
 		Equipment equipment = equipmentDao.findById(id);

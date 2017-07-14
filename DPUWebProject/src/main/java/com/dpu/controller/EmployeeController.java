@@ -19,9 +19,7 @@ import com.dpu.constants.Iconstants;
 import com.dpu.model.EmployeeModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
-import com.dpu.model.VehicleMaintainanceCategoryModel;
 import com.dpu.service.EmployeeService;
-import com.dpu.service.VehicleMaintainanceCategoryService;
 
 @RestController
 @RequestMapping(value = "employee")
@@ -110,20 +108,13 @@ public class EmployeeController {
 
 	}
 
+	@RequestMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object update(@PathVariable("userId") Long userId, @RequestBody EmployeeModel employeeModel) {
 
-	/**
-	 * this method is used to update vmc based on vmcId
-	 * @param vmcId
-	 * @param vehicleMaintainanceCategoryModel
-	 * @return List<vmc>
-	 */
-	/*@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long vmcId, @RequestBody VehicleMaintainanceCategoryModel vehicleMaintainanceCategoryModel) {
-
-		logger.info("Inside VehicleMaintainanceCategoryController update() Starts, vmcId is :" + vmcId);
+		logger.info("Inside EmployeeController update() Starts, vmcId is :" + userId);
 		Object obj = null;
 		try {
-			Object result = vehicleMaintainanceCategoryService.update(vmcId, vehicleMaintainanceCategoryModel);
+			Object result = employeeService.update(userId, employeeModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -131,13 +122,13 @@ public class EmployeeController {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside VehicleMaintainanceCategoryController update() :"+ e.getMessage());
+			logger.error("Exception inside EmployeeController update() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside VehicleMaintainanceCategoryController update() Ends, vmcId is :" + vmcId);
+		logger.info("Inside EmployeeController update() Ends, vmcId is :" + userId);
 		return obj;
-	}*/
+	}
 
 	@RequestMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getUserByUserId(@PathVariable("userId") Long userId) {

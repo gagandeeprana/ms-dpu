@@ -287,6 +287,44 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 		logger.info("VehicleMaintainanceCategoryServiceImpl update() ends.");
 		return createSuccessObject("");
 	}
+	@Override
+	public Object getUserByLoginCredentials(EmployeeModel employeeModel) {
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl update() starts.");
+		Session session = null;
+		boolean isvalid = false;
+		Employee employee = null;
+		try {
+			session= sessionFactory.openSession();
+			employee = employeeDao.getUserByUserName(session, employeeModel);
+
+			if (employee != null) {
+				if(employee.getPassword().equals(employeeModel.getPassword())){
+					isvalid = true;
+				}
+			}
+
+		} catch (Exception e) {
+			logger.info("Exception inside VehicleMaintainanceCategoryServiceImpl update() :"+ e.getMessage());
+			return createFailedObject("");
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl update() ends.");
+		return isvalid?createLoginObject(employee):createFailedObject("Username and password combination is not correct");
+	}
+
+	private Object createLoginObject(Employee employee) {
+		Success success = new Success();
+		success.setMessage("Login Successfully");
+		success.setResultList(employee);
+		return success;
+	}
+	
+	
 	/*@Override
 	public EquipmentReq get(Long id) {
 		Equipment equipment = equipmentDao.findById(id);
@@ -309,4 +347,5 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 		return response;
 	}
 */
+
 }

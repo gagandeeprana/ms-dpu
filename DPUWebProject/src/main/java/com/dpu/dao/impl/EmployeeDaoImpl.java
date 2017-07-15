@@ -45,5 +45,13 @@ public class EmployeeDaoImpl extends GenericDaoImpl<Employee> implements Employe
 		query.setParameter("username",employeeModel.getUsername());
 		return (Employee) query.uniqueResult();
 	}
+
+
+
+	@Override
+	public void update(Employee employee, Session session) {
+		session.update(employee);
+		
+	}
 	
 }

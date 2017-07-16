@@ -231,14 +231,14 @@ public class VehicleMaintainanceCategoryController {
 	 * @author lakhvir.bansal
 	 */
 	
-	/*@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
 
 		logger.info("Inside HandlingController getSpecificData() Starts ");
 		String json = new String();
 
 		try {
-			List<HandlingModel> handlingList = handlingService.getSpecificData();
+			List<VehicleMaintainanceCategoryModel> handlingList = vehicleMaintainanceCategoryService.getSpecificData();
 			if (handlingList != null && handlingList.size() > 0) {
 				json = mapper.writeValueAsString(handlingList);
 			}
@@ -249,5 +249,5 @@ public class VehicleMaintainanceCategoryController {
 
 		logger.info("Inside HandlingController getSpecificData() Ends ");
 		return json;
-	}*/
+	}
 }

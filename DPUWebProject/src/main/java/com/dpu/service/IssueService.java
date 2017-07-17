@@ -14,7 +14,7 @@ public interface IssueService {
 
 	IssueModel getOpenAdd();
 
-	HandlingModel get(Long id);
+	IssueModel get(Long id);
 	
 	List<IssueModel> getSpecificData();
 

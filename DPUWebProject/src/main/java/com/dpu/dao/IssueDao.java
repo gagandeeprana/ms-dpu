@@ -11,11 +11,13 @@ public interface IssueDao extends GenericDao<Issue> {
 
 	List<Issue> findAll(Session session);
 
-	Handling findById(Long id, Session session);
+	Issue findById(Long id, Session session);
 
 	/*List<Handling> getHandlingByHandlingName(Session session, String handlingName);*/
 
 	List<Object> getUnitNos(Long categoryId, Session session);
 
 	List<Issue> getIssueByIssueName(Session session, String issueName);
+
+	void saveIssue(Issue issue, Session session);
 }

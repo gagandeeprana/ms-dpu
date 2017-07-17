@@ -66,7 +66,7 @@ public class IssueController extends MessageProperties {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody IssueModel issueModel) {
 
-		logger.info("Inside HandlingController add() starts ");
+		logger.info("Inside IssueController add() starts ");
 		Object obj = null;
 		
 		try {
@@ -79,28 +79,22 @@ public class IssueController extends MessageProperties {
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController add() :"+ e.getMessage());
+			logger.error("Exception inside IssueController add() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
-		logger.info("Inside HandlingController add() ends ");
+		logger.info("Inside IssueController add() ends ");
 		return obj;
 	}
 
-	/**
-	 * this method is used to delete the Handling based on handlingId
-	 * @param id
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
-	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long handlingId) {
+	public Object delete(@PathVariable("id") Long issueId) {
 
-		logger.info("Inside HandlingController delete() Starts, handlingId is :" + handlingId);
+		logger.info("Inside HandlingController delete() Starts, handlingId is :" + issueId);
 		Object obj = null;
 
 		try {
-			Object result = issueService.delete(handlingId);
+			Object result = issueService.delete(issueId);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -111,7 +105,7 @@ public class IssueController extends MessageProperties {
 			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + handlingId);
+		logger.info("Inside CategoryController delete() Ends, id is :" + issueId);
 		return obj;
 
 	}
@@ -144,30 +138,24 @@ public class IssueController extends MessageProperties {
 		return obj;
 	}
 
-	/**
-	 * this method is used to get Handling data based on handlingId
-	 * @param handlingId
-	 * @return handlingData
-	 * @author lakhvir.bansal
-	 */
-	@RequestMapping(value = "/{handlingId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getHandlingById(@PathVariable("handlingId") Long handlingId) {
+	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getIssueByIssueId(@PathVariable("issueId") Long issueId) {
 		
-		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ handlingId);
+		logger.info("Inside IssueController getHandlingById() Starts, Id:"+ issueId);
 		String json = null;
 
 		try {
 
-			HandlingModel handlingModel = issueService.get(handlingId);
+			IssueModel issueModel = issueService.get(issueId);
 
-			if (handlingModel != null) {
-				json = mapper.writeValueAsString(handlingModel);
+			if (issueModel != null) {
+				json = mapper.writeValueAsString(issueModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
+			logger.error("Exception inside IssueController getHandlingById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ handlingId);
+		logger.info("Inside IssueController getHandlingById() Ends, Id:"+ issueId);
 		return json;
 	}
 

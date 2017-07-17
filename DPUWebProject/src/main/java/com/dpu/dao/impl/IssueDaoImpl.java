@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.dao.impl;
 
 import java.util.List;
@@ -9,7 +6,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.dpu.dao.HandlingDao;
 import com.dpu.dao.IssueDao;
 import com.dpu.entity.Handling;
 import com.dpu.entity.Issue;
@@ -21,17 +17,17 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 	@Override
 	public List<Issue> findAll(Session session) {
 		
-		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status ");
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status ");
 		Query query = session.createQuery(sb.toString());
 		return query.list();
 	}
 
 	@Override
-	public Handling findById(Long id, Session session) {
-		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status where h.id =:handlingId ");
+	public Issue findById(Long id, Session session) {
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.id = :issueId ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("handlingId", id);
-		return (Handling) query.uniqueResult();
+		query.setParameter("issueId", id);
+		return (Issue) query.uniqueResult();
 	}
 
 	/*@SuppressWarnings("unchecked")
@@ -60,6 +56,11 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 	public List<Issue> getIssueByIssueName(Session session, String issueName) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void saveIssue(Issue issue, Session session) {
+		session.save(issue);
 	}
 
 }

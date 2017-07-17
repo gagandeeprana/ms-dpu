@@ -147,23 +147,30 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 		employees = employeeDao.findAll();
 		if (employees != null && employees.size() > 0) {
 			for (Employee employee : employees) {
-				EmployeeModel employeeModel = new EmployeeModel();
-				employeeModel.setEmployeeId(employee.getEmployeeId());
-				employeeModel.setFirstName(employee.getFirstName());
-				employeeModel.setLastName(employee.getLastName());
-				employeeModel.setUsername(employee.getUsername());
-				employeeModel.setJobTitle(employee.getJobTitle());
-				employeeModel.setEmail(employee.getEmail());
-				employeeModel.setPhone(employee.getPhone());
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				employeeModel.setHiringdate(sdf.format(employee.getHiringDate()));
-				employeeModel.setTerminationdate(sdf.format(employee.getTerminationDate()));
+				EmployeeModel employeeModel = setEmployeeData(employee);
 				employeeResponse.add(employeeModel);
 			}
 		}
 		return employeeResponse;
 	}
 	
+	private EmployeeModel setEmployeeData(Employee employee) {
+	
+		EmployeeModel employeeModel = new EmployeeModel();
+		employeeModel.setEmployeeId(employee.getEmployeeId());
+		employeeModel.setFirstName(employee.getFirstName());
+		employeeModel.setLastName(employee.getLastName());
+		employeeModel.setUsername(employee.getUsername());
+		employeeModel.setJobTitle(employee.getJobTitle());
+		employeeModel.setEmail(employee.getEmail());
+		employeeModel.setPhone(employee.getPhone());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		employeeModel.setHiringdate(sdf.format(employee.getHiringDate()));
+		employeeModel.setTerminationdate(sdf.format(employee.getTerminationDate()));
+		
+		return employeeModel;
+	}
+
 	@Override
 	public Object getUserById(Long userId) {
 
@@ -172,9 +179,10 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 		Employee employee = employeeDao.findById(userId);
 			
 		if (employee != null) {
-			employeeModel = new EmployeeModel();
-			BeanUtils.copyProperties(employee, employeeModel);
-			employeeModel.setEmployeeId(employee.getEmployeeId());
+			employeeModel = setEmployeeData(employee);
+			
+			/*BeanUtils.copyProperties(employee, employeeModel);
+			employeeModel.setEmployeeId(employee.getEmployeeId());*/
 		}
 		
 		return employeeModel;
@@ -242,16 +250,7 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 			List<Employee> employeeList = employeeDao.getUserByUserName(session, userName);
 			if (employeeList != null && !employeeList.isEmpty()) {
 				for (Employee employee : employeeList) {
-					EmployeeModel employeeModel = new EmployeeModel();
-					employeeModel.setEmployeeId(employee.getEmployeeId());
-					employeeModel.setFirstName(employee.getFirstName());
-					employeeModel.setLastName(employee.getLastName());
-					employeeModel.setUsername(employee.getUsername());
-					employeeModel.setJobTitle(employee.getJobTitle());
-					employeeModel.setEmail(employee.getEmail());
-					employeeModel.setPhone(employee.getPhone());
-					/*employeeModel.setHiringDate(employee.getHiringDate());
-					employeeModel.setTerminationDate(employee.getTerminationDate());*/
+					EmployeeModel employeeModel = setEmployeeData(employee);
 					employeeResponse.add(employeeModel);
 				}
 			}
@@ -270,21 +269,32 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 
 		logger.info("VehicleMaintainanceCategoryServiceImpl update() starts.");
 		Session session =null;
+		Transaction tx = null;
+		
 		try {
 			
 			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
 			Employee employee = employeeDao.findById(id);
 
 			if (employee != null) {
 				setEmployeeValues(employeeModel, employee);
 				employeeDao.update(employee, session);
+				tx.commit();
 			} else {
 				return createFailedObject(user_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
+			if(tx != null){
+				tx.rollback();
+			}
 			logger.info("Exception inside VehicleMaintainanceCategoryServiceImpl update() :"+ e.getMessage());
 			return createFailedObject(user_unable_to_update_message);
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 
 		logger.info("VehicleMaintainanceCategoryServiceImpl update() ends.");
@@ -323,7 +333,8 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 	private Object createLoginObject(Employee employee) {
 		Success success = new Success();
 		success.setMessage(user_login_message);
-		success.setResultList(employee);
+		EmployeeModel employeeModel = setEmployeeData(employee);
+		success.setResultList(employeeModel);
 		return success;
 	}
 	

@@ -34,14 +34,14 @@ public class IssueController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Value("${handling_unable_to_add_message}")
-	private String handling_unable_to_add_message;
+	@Value("${issue_unable_to_add_message}")
+	private String issue_unable_to_add_message;
 
-	@Value("${handling_unable_to_delete_message}")
-	private String handling_unable_to_delete_message;
+	@Value("${issue_unable_to_delete_message}")
+	private String issue_unable_to_delete_message;
 	
-	@Value("${handling_unable_to_update_message}")
-	private String handling_unable_to_update_message;
+	@Value("${issue_unable_to_update_message}")
+	private String issue_unable_to_update_message;
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
@@ -63,21 +63,15 @@ public class IssueController extends MessageProperties {
 		return json;
 	}
 
-	/**
-	 * this method is used to add the Handling
-	 * @param handlingModel
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
-	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody HandlingModel handlingModel) {
+	public Object add(@RequestBody IssueModel issueModel) {
 
 		logger.info("Inside HandlingController add() starts ");
 		Object obj = null;
 		
 		try {
 
-			Object result = issueService.addHandling(handlingModel);
+			Object result = issueService.addIssue(issueModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -86,7 +80,7 @@ public class IssueController extends MessageProperties {
 
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController add() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside HandlingController add() ends ");
@@ -115,7 +109,7 @@ public class IssueController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Inside CategoryController delete() Ends, id is :" + handlingId);
 		return obj;
@@ -143,7 +137,7 @@ public class IssueController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);
@@ -200,55 +194,67 @@ public class IssueController extends MessageProperties {
 		logger.info("Inside IssueController openAdd() ends ");
 		return json;
 	}
-
+	
 	/**
-	 * this method is used to get handling data based on handling name
-	 * @param handlingName
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * this method is used when we click on add button on issue screen
+	 * send master data
+	 * @return master data for add handling
+	 * @author lakhvir
 	 */
-	@RequestMapping(value = "/{handlingName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchHandling(@PathVariable("handlingName") String handlingName) {
+	@RequestMapping(value = "/category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getUnitNo(@PathVariable("categoryId") Long categoryId) {
+		
+		logger.info("Inside IssueController getUnitNo() Starts ");
+		String json = null;
 
-		logger.info("Inside HandlingController searchHandling() Starts, handlingName :"+ handlingName);
+		try {
+			IssueModel model = issueService.getUnitNo(categoryId);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(model);
+		} catch (Exception e) {
+			logger.error(" Exception inside IssueController openAdd() :"+ e.getMessage());
+		}
+
+		logger.info("Inside IssueController openAdd() ends ");
+		return json;
+	}
+
+	@RequestMapping(value = "/{issueName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchIssue(@PathVariable("issueName") String issueName) {
+
+		logger.info("Inside IssueController searchIssue() Starts, issueName :"+ issueName);
 		String json = new String();
 
 		try {
-			List<HandlingModel> handlingList = issueService.getHandlingByHandlingName(handlingName);
+			List<IssueModel> handlingList = issueService.getIssueByIssueName(issueName);
 			if (handlingList != null && handlingList.size() > 0) {
 				json = mapper.writeValueAsString(handlingList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController searchHandling() is :"+ e.getMessage());
+			logger.error("Exception inside IssueController searchIssue() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside HandlingController searchHandling() Ends, handlingName :"+ handlingName);
+		logger.info(" Inside IssueController searchIssue() Ends, issueName :"+ issueName);
 		return json;
 	}
 
-	/**
-	 * this method is used to get specific handling data (id and name)
-	 * @return handlingId and name
-	 * @author lakhvir.bansal
-	 */
 	
 	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
 
-		logger.info("Inside HandlingController getSpecificData() Starts ");
+		logger.info("Inside IssueController getSpecificData() Starts ");
 		String json = new String();
 
 		try {
-			List<HandlingModel> handlingList = issueService.getSpecificData();
-			if (handlingList != null && handlingList.size() > 0) {
-				json = mapper.writeValueAsString(handlingList);
+			List<IssueModel> issueList = issueService.getSpecificData();
+			if (issueList != null && issueList.size() > 0) {
+				json = mapper.writeValueAsString(issueList);
 			}
 		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside HandlingController getSpecificData() is :"+ e.getMessage());
+			logger.error("Exception inside IssueController getSpecificData() is :"+ e.getMessage());
 		}
 
-		logger.info("Inside HandlingController getSpecificData() Ends ");
+		logger.info("Inside IssueController getSpecificData() Ends ");
 		return json;
 	}
 }

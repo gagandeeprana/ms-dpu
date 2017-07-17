@@ -8,15 +8,23 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.dao.HandlingDao;
 import com.dpu.dao.IssueDao;
+import com.dpu.entity.Company;
+import com.dpu.entity.CompanyAdditionalContacts;
+import com.dpu.entity.CompanyBillingLocation;
+import com.dpu.entity.Driver;
 import com.dpu.entity.Handling;
 import com.dpu.entity.Issue;
+import com.dpu.entity.Order;
 import com.dpu.entity.Status;
+import com.dpu.entity.Type;
+import com.dpu.model.CategoryReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
 import com.dpu.model.HandlingModel;
@@ -24,6 +32,7 @@ import com.dpu.model.IssueModel;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
 import com.dpu.model.VehicleMaintainanceCategoryModel;
+import com.dpu.service.CategoryService;
 import com.dpu.service.DriverService;
 import com.dpu.service.IssueService;
 import com.dpu.service.StatusService;
@@ -49,6 +58,9 @@ public class IssueServiceImpl implements IssueService  {
 	
 	@Autowired
 	DriverService driverService;
+	
+	@Autowired
+	CategoryService categoryService;
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -80,7 +92,7 @@ public class IssueServiceImpl implements IssueService  {
 	@Override
 	public List<IssueModel> getAll() {
 
-		logger.info("HandlingServiceImpl getAll() starts ");
+		logger.info("IssueServiceImpl getAll() starts ");
 		Session session = null;
 		List<IssueModel> issueList = new ArrayList<IssueModel>();
 
@@ -103,7 +115,7 @@ public class IssueServiceImpl implements IssueService  {
 			}
 		}
 
-		logger.info("HandlingServiceImpl getAll() ends ");
+		logger.info("IssueServiceImpl getAll() ends ");
 		return issueList;
 	}
 
@@ -123,7 +135,7 @@ public class IssueServiceImpl implements IssueService  {
 		return failed;
 	}
 
-	@Override
+	/*@Override
 	public Object addHandling(HandlingModel handlingModel) {
 
 		logger.info("HandlingServiceImpl addHandling() starts ");
@@ -141,7 +153,7 @@ public class IssueServiceImpl implements IssueService  {
 
 		logger.info("HandlingServiceImpl addHandling() ends ");
 		return createSuccessObject(issue_added_message);
-	}
+	}*/
 
 	private Handling setHandlingValues(HandlingModel handlingModel) {
 
@@ -155,7 +167,7 @@ public class IssueServiceImpl implements IssueService  {
 	@Override
 	public Object update(Long id, HandlingModel handlingModel) {
 
-		logger.info("HandlingServiceImpl update() starts.");
+		logger.info("IssueServiceImpl update() starts.");
 		try {
 			Handling handling = handlingDao.findById(id);
 
@@ -169,19 +181,18 @@ public class IssueServiceImpl implements IssueService  {
 			}
 
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl update() :"
-					+ e.getMessage());
+			logger.info("Exception inside IssueServiceImpl update() :"+ e.getMessage());
 			return createFailedObject(issue_unable_to_update_message);
 		}
 
-		logger.info("HandlingServiceImpl update() ends.");
+		logger.info("IssueServiceImpl update() ends.");
 		return createSuccessObject(issue_updated_message);
 	}
 
 	@Override
 	public Object delete(Long id) {
 
-		logger.info("HandlingServiceImpl delete() starts.");
+		logger.info("IssueServiceImpl delete() starts.");
 		Session session = null;
 		Transaction tx = null;
 
@@ -197,8 +208,7 @@ public class IssueServiceImpl implements IssueService  {
 			}
 
 		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl delete() : "
-					+ e.getMessage());
+			logger.info("Exception inside IssueServiceImpl delete() : " + e.getMessage());
 			if (tx != null) {
 				tx.rollback();
 			}
@@ -207,22 +217,19 @@ public class IssueServiceImpl implements IssueService  {
 			}
 			return createFailedObject(issue_unable_to_delete_message);
 		} finally {
-			/*
-			 * if(tx != null){ tx.commit(); }
-			 */
 			if (session != null) {
 				session.close();
 			}
 		}
 
-		logger.info("HandlingServiceImpl delete() ends.");
+		logger.info("IssueServiceImpl delete() ends.");
 		return createSuccessObject(issue_deleted_message);
 	}
 
 	@Override
 	public HandlingModel get(Long id) {
 
-		logger.info("HandlingServiceImpl get() starts.");
+		logger.info("IssueServiceImpl get() starts.");
 		Session session = null;
 		HandlingModel handlingModel = new HandlingModel();
 
@@ -246,18 +253,16 @@ public class IssueServiceImpl implements IssueService  {
 			}
 		}
 
-		logger.info("HandlingServiceImpl get() ends.");
+		logger.info("IssueServiceImpl get() ends.");
 		return handlingModel;
 	}
 
 	@Override
 	public IssueModel getOpenAdd() {
 
-		logger.info("HandlingServiceImpl getOpenAdd() starts ");
+		logger.info("IssueServiceImpl getOpenAdd() starts ");
 		IssueModel issueModel = new IssueModel();
 
-		/*List<Status> statusList = statusService.getAll();
-		handlingModel.setStatusList(statusList);*/
 		List<VehicleMaintainanceCategoryModel> vmcList = vehicleMaintainanceCategoryService.getSpecificData();
 		issueModel.setVmcList(vmcList);
 		
@@ -267,22 +272,23 @@ public class IssueServiceImpl implements IssueService  {
 		List<TypeResponse> statusList = typeService.getAll(23l);
 		issueModel.setStatusList(statusList);
 		
+		List<CategoryReq> unitTypeList = categoryService.getSpecificData();
+		issueModel.setUnitTypeList(unitTypeList);
 		
-		logger.info("HandlingServiceImpl getOpenAdd() ends ");
+		logger.info("IssueServiceImpl getOpenAdd() ends ");
 		return issueModel;
 	}
 
-	@Override
+	/*@Override
 	public List<HandlingModel> getHandlingByHandlingName(String handlingName) {
 
-		logger.info("HandlingServiceImpl getHandlingByHandlingName() starts ");
+		logger.info("IssueServiceImpl getHandlingByHandlingName() starts ");
 		Session session = null;
 		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Handling> handlingList = handlingDao
-					.getHandlingByHandlingName(session, handlingName);
+			List<Handling> handlingList = handlingDao.getHandlingByHandlingName(session, handlingName);
 			if (handlingList != null && !handlingList.isEmpty()) {
 				for (Handling handling : handlingList) {
 					HandlingModel handlingObj = new HandlingModel();
@@ -298,37 +304,140 @@ public class IssueServiceImpl implements IssueService  {
 			}
 		}
 
-		logger.info("HandlingServiceImpl getHandlingByHandlingName() ends ");
+		logger.info("IssueServiceImpl getHandlingByHandlingName() ends ");
 		return handlings;
-	}
+	}*/
 
 	@Override
-	public List<HandlingModel> getSpecificData() {
+	public List<IssueModel> getIssueByIssueName(String issueName) {
 
-		Session session = sessionFactory.openSession();
-		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
-		
+		logger.info("IssueServiceImpl getIssueByIssueName() starts ");
+		Session session = null;
+		List<IssueModel> issues = new ArrayList<IssueModel>();
+
 		try {
-			List<Object[]> handlingData = handlingDao.getSpecificData(session,
-					"Handling", "id", "name");
-
-			
-			if (handlingData != null && !handlingData.isEmpty()) {
-				for (Object[] row : handlingData) {
-					HandlingModel handlingObj = new HandlingModel();
-					handlingObj.setId((Long) row[0]);
-					handlingObj.setName(String.valueOf(row[1]));
-					handlings.add(handlingObj);
+			session = sessionFactory.openSession();
+			List<Issue> issueList = issueDao.getIssueByIssueName(session, issueName);
+			if (issueList != null && !issueList.isEmpty()) {
+				for (Issue issue : issueList) {
+					IssueModel issueObj = new IssueModel();
+					issueObj.setId(issue.getId());
+					/*issueObj.setName(issue.getName());
+					issueObj.setStatusName(issue.getStatus().getStatus());*/
+					issues.add(issueObj);
 				}
 			}
-		} catch (Exception e) {
-
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return handlings;
+
+		logger.info("IssueServiceImpl getHandlingByHandlingName() ends ");
+		return issues;
 	}
+	
+	@Override
+	public List<IssueModel> getSpecificData() {
+
+		Session session = sessionFactory.openSession();
+		List<IssueModel> issueList = new ArrayList<IssueModel>();
+		
+		try {
+			List<Object[]> issueData = handlingDao.getSpecificData(session, "Issue", "id", "issueName");
+			
+			if (issueData != null && !issueData.isEmpty()) {
+				for (Object[] row : issueData) {
+					IssueModel issueObj = new IssueModel();
+					issueObj.setId((Long) row[0]);
+					issueObj.setTitle(String.valueOf(row[1]));
+					issueList.add(issueObj);
+				}
+			}
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return issueList;
+	}
+
+	@Override
+	public IssueModel getUnitNo(Long categoryId) {
+		
+		Session session = null;
+		IssueModel issueModel = new IssueModel();
+		try {
+			session = sessionFactory.openSession();
+			List<Object> unitNos = issueDao.getUnitNos(categoryId, session);
+			if(unitNos != null){
+				List<String> unitNo = iterateUnitNos(unitNos);
+				issueModel.setUnitNos(unitNo);
+			}
+		} finally {
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return issueModel;
+	}
+
+	private List<String> iterateUnitNos(List<Object> unitNos) {
+		
+		List<String> unitNoList = new ArrayList<String>();
+		for (Object obj : unitNos) {
+			String unitNo = String.valueOf(obj);
+			unitNoList.add(unitNo);
+		}
+		
+		return unitNoList;
+	}
+
+	@Override
+	public Object addIssue(IssueModel issueModel) {
+		
+		logger.info("HandlingServiceImpl addHandling() starts ");
+		Issue issue = null;
+		Session session = null;
+		Transaction tx = null;
+		
+		try {
+			issue = setIssueValues(issueModel, session, issue);
+			issueDao.save(issue);
+
+		} catch (Exception e) {
+			logger.info("Exception inside HandlingServiceImpl addHandling() :"
+					+ e.getMessage());
+			return createFailedObject(issue_unable_to_add_message);
+
+		}
+
+		logger.info("HandlingServiceImpl addHandling() ends ");
+		return createSuccessObject(issue_added_message);
+	}
+
+	private Issue setIssueValues(IssueModel issueModel, Session session, Issue issue) {
+
+		Driver reportedBy = (Driver) session.get(Driver.class, issueModel.getReportedById());
+		/*CompanyBillingLocation billingLocation = (CompanyBillingLocation) session.get(CompanyBillingLocation.class, orderModel.getBillingLocationId());
+		CompanyAdditionalContacts additionalContacts = (CompanyAdditionalContacts) session.get(CompanyAdditionalContacts.class, orderModel.getContactId());
+		Type temp = (Type) session.get(Type.class, orderModel.getTemperatureId());
+		Type tempType = (Type) session.get(Type.class, orderModel.getTemperatureTypeId());
+		Type currency = (Type) session.get(Type.class, orderModel.getCurrencyId());
+		
+		Order order = new Order();
+		BeanUtils.copyProperties(orderModel, order);
+		order.setCompany(company);
+		order.setBillingLocation(billingLocation);
+		order.setContact(additionalContacts);
+		order.setTemperature(temp);
+		order.setTemperatureType(tempType);
+		order.setCurrency(currency);
+		orderDao.saveOrder(session, order);*/
+		return issue;
+	}
+
+	
 
 }

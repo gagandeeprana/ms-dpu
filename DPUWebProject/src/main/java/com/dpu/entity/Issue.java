@@ -1,7 +1,5 @@
 package com.dpu.entity;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -41,9 +38,8 @@ public class Issue implements Serializable {
 	@JoinColumn(name = "unit_type_id")
 	private Category unitType;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "unit_id")
-//	private Shipper consine;
+	@Column(name = "unit_no")
+	private String unitNo;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "reported_by_id")
@@ -99,6 +95,14 @@ public class Issue implements Serializable {
 
 	public void setStatus(Type status) {
 		this.status = status;
+	}
+
+	public String getUnitNo() {
+		return unitNo;
+	}
+
+	public void setUnitNo(String unitNo) {
+		this.unitNo = unitNo;
 	}
 	
 	

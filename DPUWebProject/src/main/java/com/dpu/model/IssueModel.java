@@ -22,10 +22,10 @@ public class IssueModel implements Serializable{
 	
 	private String unitTypeName;
 	private Long unitTypeId;
-	//private List<TypeResponse> deliveryList;
+	private List<CategoryReq> unitTypeList;
 	
-	private String unitName;
-	private Long unitId;
+	private String unitNo;
+	//private Long unitId;
 	//private List<TypeResponse> deliveryList;
 	
 	private String reportedByName;
@@ -35,6 +35,8 @@ public class IssueModel implements Serializable{
 	private String statusName;
 	private Long statusId;
 	private List<TypeResponse> statusList;
+	
+	private List<String> unitNos;
 
 	public Long getId() {
 		return id;
@@ -92,22 +94,6 @@ public class IssueModel implements Serializable{
 		this.unitTypeId = unitTypeId;
 	}
 
-	public String getUnitName() {
-		return unitName;
-	}
-
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
-
-	public Long getUnitId() {
-		return unitId;
-	}
-
-	public void setUnitId(Long unitId) {
-		this.unitId = unitId;
-	}
-
 	public String getReportedByName() {
 		return reportedByName;
 	}
@@ -154,6 +140,30 @@ public class IssueModel implements Serializable{
 
 	public void setStatusList(List<TypeResponse> statusList) {
 		this.statusList = statusList;
+	}
+
+	public List<CategoryReq> getUnitTypeList() {
+		return unitTypeList;
+	}
+
+	public void setUnitTypeList(List<CategoryReq> unitTypeList) {
+		this.unitTypeList = unitTypeList;
+	}
+
+	public List<String> getUnitNos() {
+		return unitNos;
+	}
+
+	public void setUnitNos(List<String> unitNos) {
+		this.unitNos = unitNos;
+	}
+
+	public String getUnitNo() {
+		return unitNo;
+	}
+
+	public void setUnitNo(String unitNo) {
+		this.unitNo = unitNo;
 	}
 	
 }

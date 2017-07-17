@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dpu.dao;
 
 import java.util.List;
@@ -16,5 +13,9 @@ public interface IssueDao extends GenericDao<Issue> {
 
 	Handling findById(Long id, Session session);
 
-	List<Handling> getHandlingByHandlingName(Session session, String handlingName);
+	/*List<Handling> getHandlingByHandlingName(Session session, String handlingName);*/
+
+	List<Object> getUnitNos(Long categoryId, Session session);
+
+	List<Issue> getIssueByIssueName(Session session, String issueName);
 }

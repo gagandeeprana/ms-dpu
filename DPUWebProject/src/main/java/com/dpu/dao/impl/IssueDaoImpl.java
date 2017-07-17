@@ -34,13 +34,32 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 		return (Handling) query.uniqueResult();
 	}
 
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Override
 	public List<Handling> getHandlingByHandlingName(Session session, String handlingName) {
 		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status where h.name like :handlingName ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("handlingName", "%"+handlingName+"%");
 		return query.list();
+	}*/
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getUnitNos(Long categoryId, Session session) {
+		StringBuilder sb = new StringBuilder(" SELECT unit_no FROM `newtruckmaster` truck WHERE category_id = :categoryId ")
+		.append(" UNION ")
+		.append(" SELECT unit_no FROM `trailer` WHERE category_id = :categoryId ");
+		
+		Query query = session.createSQLQuery(sb.toString());
+		query.setParameter("categoryId", categoryId);
+		return query.list();
+		
+	}
+
+	@Override
+	public List<Issue> getIssueByIssueName(Session session, String issueName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

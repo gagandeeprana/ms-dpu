@@ -32,14 +32,14 @@ public class EmployeeController {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Value("${vmc_unable_to_add_message}")
-	private String vmc_unable_to_add_message;
+	@Value("${user_unable_to_add_message}")
+	private String user_unable_to_add_message;
 
-	@Value("${vmc_unable_to_delete_message}")
-	private String vmc_unable_to_delete_message;
+	@Value("${user_unable_to_delete_message}")
+	private String user_unable_to_delete_message;
 	
-	@Value("${vmc_unable_to_update_message}")
-	private String vmc_unable_to_update_message;
+	@Value("${user_unable_to_update_message}")
+	private String user_unable_to_update_message;
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
@@ -78,7 +78,7 @@ public class EmployeeController {
 
 		} catch (Exception e) {
 			logger.error("Exception inside EmployeeController add() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0,user_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Inside EmployeeController add() ends ");
@@ -101,7 +101,7 @@ public class EmployeeController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside EmployeeController delete() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0, user_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Inside EmployeeController delete() Ends, userId is :" + userId);
 		return obj;
@@ -123,7 +123,7 @@ public class EmployeeController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside EmployeeController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,vmc_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+			obj = new ResponseEntity<Object>(new Failed(0, user_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
 		logger.info("Inside EmployeeController update() Ends, vmcId is :" + userId);

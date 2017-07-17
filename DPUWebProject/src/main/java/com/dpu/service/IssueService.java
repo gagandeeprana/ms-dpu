@@ -16,10 +16,16 @@ public interface IssueService {
 
 	HandlingModel get(Long id);
 	
-	List<HandlingModel> getSpecificData();
+	List<IssueModel> getSpecificData();
 
-	Object addHandling(HandlingModel handlingModel);
+	/*Object addHandling(HandlingModel handlingModel);*/
 
-	List<HandlingModel> getHandlingByHandlingName(String handlingName);
+	/*List<HandlingModel> getHandlingByHandlingName(String handlingName);*/
+
+	IssueModel getUnitNo(Long categoryId);
+
+	Object addIssue(IssueModel issueModel);
+
+	List<IssueModel> getIssueByIssueName(String issueName);
 
 }

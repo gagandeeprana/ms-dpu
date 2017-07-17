@@ -130,6 +130,28 @@ public class EmployeeController {
 		return obj;
 	}
 
+	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object login(@RequestBody EmployeeModel employeeModel) {
+		
+		logger.info("Inside EmployeeController login() Starts ");
+		Object obj = null;
+		try {
+
+			Object result = employeeService.getUserByLoginCredentials(employeeModel);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside EmployeeController login() :"+ e.getMessage());
+		}
+
+		logger.info("Inside EmployeeController login() Ends ");
+		return obj;
+	}
+	
 	@RequestMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getUserByUserId(@PathVariable("userId") Long userId) {
 		
@@ -151,6 +173,7 @@ public class EmployeeController {
 		return json;
 	}
 
+	
 /*	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		

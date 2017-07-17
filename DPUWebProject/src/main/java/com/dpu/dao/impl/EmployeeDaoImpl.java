@@ -35,5 +35,23 @@ public class EmployeeDaoImpl extends GenericDaoImpl<Employee> implements Employe
 		query.setParameter("username", "%"+userName+"%");
 		return query.list();
 	}
+
+
+
+	@Override
+	public Employee getUserByUserName(Session session, EmployeeModel employeeModel) {
+		StringBuilder sb = new StringBuilder("  from Employee where username like :username ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("username",employeeModel.getUsername());
+		return (Employee) query.uniqueResult();
+	}
+
+
+
+	@Override
+	public void update(Employee employee, Session session) {
+		session.update(employee);
+		
+	}
 	
 }

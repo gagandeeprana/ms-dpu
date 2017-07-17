@@ -13,4 +13,8 @@ public interface EmployeeDao extends GenericDao<Employee> {
 
 	void add(Session session, Employee employee);
 
+	Employee getUserByUserName(Session session, EmployeeModel employeeModel);
+
+	void update(Employee employee, Session session);
+
 }

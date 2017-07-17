@@ -18,4 +18,6 @@ public interface EmployeeService {
 
 	Object update(Long userId, EmployeeModel employeeModel);
 
+	Object getUserByLoginCredentials(EmployeeModel employeeModel);
+
 }

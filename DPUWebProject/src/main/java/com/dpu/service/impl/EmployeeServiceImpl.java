@@ -1,12 +1,7 @@
-/**
- * 
- */
 package com.dpu.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -16,9 +11,9 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dpu.common.CommonProperties;
 import com.dpu.dao.EmployeeDao;
 import com.dpu.dao.EquipmentDao;
 import com.dpu.entity.Employee;
@@ -29,10 +24,6 @@ import com.dpu.service.EmployeeService;
 import com.dpu.service.TypeService;
 import com.dpu.util.DateUtil;
 
-/**
- * @author gagan
- *
- */
 @Component
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -49,10 +40,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	TypeService typeService;
+	
+	@Value("${user_added_message}")
+	private String user_added_message;
+
+	@Value("${user_unable_to_add_message}")
+	private String user_unable_to_add_message;
+
+	@Value("${user_deleted_message}")
+	private String user_deleted_message;
+
+	@Value("${user_unable_to_delete_message}")
+	private String user_unable_to_delete_message;
+
+	@Value("${user_updated_message}")
+	private String user_updated_message;
+
+	@Value("${user_unable_to_update_message}")
+	private String user_unable_to_update_message;
+
+	@Value("${user_already_used_message}")
+	private String user_already_used_message;
+	
+	@Value("${user_login_message}")
+	private String user_login_message;
+	
+	@Value("${unable_login_message}")
+	private String unable_login_message;
 
 	private Object createSuccessObject(String msg, long code) {
 		Success success = new Success();
-		success.setCode(code);
 		success.setMessage(msg);
 		success.setResultList(getAll());
 		return success;
@@ -89,7 +106,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if (tx != null) {
 				tx.rollback();
 			}
-			return createFailedObject( CommonProperties.employee_unable_to_add_message, Long.parseLong(CommonProperties.Equipment_unable_to_add_code));
+			return createFailedObject(user_unable_to_add_message,0);
 		} finally {
 			logger.info("EmployeeServiceImpl: add():  finally block");
 			if (session != null) {
@@ -99,8 +116,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		logger.info("EmployeeServiceImpl: add():  ENDS");
 
-		return createSuccessObject(CommonProperties.employee_added_message,
-				Long.parseLong(CommonProperties.Equipment_added_code));
+		return createSuccessObject(user_added_message, 0);
 	}
 
 private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
@@ -152,32 +168,15 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 	public Object getUserById(Long userId) {
 
 		logger.info("Inside EmployeeServiceImpl getUserById() starts, userId :"+ userId);
-		Session session = null;
-		Object obj = null;
-		String message = "User data get Successfully";
-
 		EmployeeModel employeeModel = null;
-		try {
-			session = sessionFactory.openSession();
-			Employee employee = employeeDao.findById(userId);
+		Employee employee = employeeDao.findById(userId);
 			
-			if (employee != null) {
-				employeeModel = new EmployeeModel();
-				BeanUtils.copyProperties(employee, employeeModel);
-				employeeModel.setEmployeeId(employee.getEmployeeId());
-				
-			} else {
-				message = "Error while getting record";
-				obj = createFailedObject(message);
-			}
-		} catch (Exception e) {
-			message = "Error while getting record";
-			obj = createFailedObject(message);
-		} finally {
-			if (session != null) {
-				session.close();
-			}
+		if (employee != null) {
+			employeeModel = new EmployeeModel();
+			BeanUtils.copyProperties(employee, employeeModel);
+			employeeModel.setEmployeeId(employee.getEmployeeId());
 		}
+		
 		return employeeModel;
 	}
 	
@@ -201,7 +200,7 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 				session.delete(employee);
 				tx.commit();
 			} else {
-				return createFailedObject("");
+				return createFailedObject(user_unable_to_delete_message);
 			}
 
 		} catch (Exception e) {
@@ -210,9 +209,9 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 				tx.rollback();
 			}
 			if (e instanceof ConstraintViolationException) {
-				return createFailedObject("");
+				return createFailedObject(user_already_used_message);
 			}
-			return createFailedObject("");
+			return createFailedObject(user_unable_to_delete_message);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -220,7 +219,7 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 		}
 
 		logger.info("VehicleMaintainanceCategoryServiceImpl delete() ends.");
-		return createSuccessObject("");
+		return createSuccessObject(user_deleted_message);
 	}
 
 	private Object createSuccessObject(String msg) {
@@ -270,43 +269,63 @@ private void setEmployeeValues(EmployeeModel employeeModel, Employee employee) {
 	public Object update(Long id, EmployeeModel employeeModel) {
 
 		logger.info("VehicleMaintainanceCategoryServiceImpl update() starts.");
+		Session session =null;
 		try {
+			
+			session = sessionFactory.openSession();
 			Employee employee = employeeDao.findById(id);
 
 			if (employee != null) {
 				setEmployeeValues(employeeModel, employee);
+				employeeDao.update(employee, session);
 			} else {
-				return createFailedObject("");
+				return createFailedObject(user_unable_to_update_message);
+			}
+
+		} catch (Exception e) {
+			logger.info("Exception inside VehicleMaintainanceCategoryServiceImpl update() :"+ e.getMessage());
+			return createFailedObject(user_unable_to_update_message);
+		}
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl update() ends.");
+		return createSuccessObject(user_updated_message);
+	}
+	@Override
+	public Object getUserByLoginCredentials(EmployeeModel employeeModel) {
+
+		logger.info("VehicleMaintainanceCategoryServiceImpl update() starts.");
+		Session session = null;
+		boolean isvalid = false;
+		Employee employee = null;
+		try {
+			session= sessionFactory.openSession();
+			employee = employeeDao.getUserByUserName(session, employeeModel);
+
+			if (employee != null) {
+				if(employee.getPassword().equals(employeeModel.getPassword())){
+					isvalid = true;
+				}
 			}
 
 		} catch (Exception e) {
 			logger.info("Exception inside VehicleMaintainanceCategoryServiceImpl update() :"+ e.getMessage());
 			return createFailedObject("");
+		} finally{
+			if(session != null){
+				session.close();
+			}
 		}
 
 		logger.info("VehicleMaintainanceCategoryServiceImpl update() ends.");
-		return createSuccessObject("");
+		return isvalid?createLoginObject(employee):createFailedObject(unable_login_message);
 	}
-	/*@Override
-	public EquipmentReq get(Long id) {
-		Equipment equipment = equipmentDao.findById(id);
-		EquipmentReq response = null;
-		if (equipment != null) {
-			response = new EquipmentReq();
-			response.setEquipmentId(equipment.getEquipmentId());
-			response.setTypeId(equipment.getType().getTypeId());
-			response.setEquipmentName(equipment.getEquipmentName());
-			response.setDescription(equipment.getDescription());
 
-			List<TypeResponse> typeList = typeService.getAll(1l);
-
-			if (typeList != null && !typeList.isEmpty()) {
-				response.setTypeList(typeList);
-			}
-
-		}
-
-		return response;
+	private Object createLoginObject(Employee employee) {
+		Success success = new Success();
+		success.setMessage(user_login_message);
+		success.setResultList(employee);
+		return success;
 	}
-*/
+	
+
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import com.dpu.entity.Handling;
 import com.dpu.entity.Issue;
 
 public interface IssueDao extends GenericDao<Issue> {
@@ -13,11 +12,11 @@ public interface IssueDao extends GenericDao<Issue> {
 
 	Issue findById(Long id, Session session);
 
-	/*List<Handling> getHandlingByHandlingName(Session session, String handlingName);*/
-
 	List<Object> getUnitNos(Long categoryId, Session session);
 
 	List<Issue> getIssueByIssueName(Session session, String issueName);
 
 	void saveIssue(Issue issue, Session session);
+
+	void update(Issue issue, Session session);
 }

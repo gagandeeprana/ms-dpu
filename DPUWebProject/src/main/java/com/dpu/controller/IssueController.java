@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
 import com.dpu.model.IssueModel;
 import com.dpu.model.Success;
 import com.dpu.service.IssueService;
@@ -87,10 +86,10 @@ public class IssueController extends MessageProperties {
 		return obj;
 	}
 
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long issueId) {
+	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("issueId") Long issueId) {
 
-		logger.info("Inside HandlingController delete() Starts, handlingId is :" + issueId);
+		logger.info("Inside IssueController delete() Starts, issueId is :" + issueId);
 		Object obj = null;
 
 		try {
@@ -102,27 +101,21 @@ public class IssueController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
+			logger.error("Exception inside IssueController delete() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + issueId);
+		logger.info("Inside IssueController delete() Ends, issueId is :" + issueId);
 		return obj;
 
 	}
 
-	/**
-	 * this method is used to update the handling based on handlingID
-	 * @param handlingId
-	 * @param handlingModel
-	 * @return List<Categories>
-	 */
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long handlingId, @RequestBody HandlingModel handlingModel) {
+	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object update(@PathVariable("issueId") Long issueId, @RequestBody IssueModel issueModel) {
 
-		logger.info("Inside HandlingController update() Starts, handlingId is :" + handlingId);
+		logger.info("Inside IssueController update() Starts, issueId is :" + issueId);
 		Object obj = null;
 		try {
-			Object result = issueService.update(handlingId, handlingModel);
+			Object result = issueService.update(issueId, issueModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -130,18 +123,18 @@ public class IssueController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
+			logger.error("Exception inside IssueController update() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0,issue_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);
+		logger.info("Inside IssueController update() Ends, issueId is :" + issueId);
 		return obj;
 	}
 
 	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getIssueByIssueId(@PathVariable("issueId") Long issueId) {
 		
-		logger.info("Inside IssueController getHandlingById() Starts, Id:"+ issueId);
+		logger.info("Inside IssueController getIssueByIssueId() Starts, issueId:"+ issueId);
 		String json = null;
 
 		try {
@@ -152,10 +145,10 @@ public class IssueController extends MessageProperties {
 				json = mapper.writeValueAsString(issueModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside IssueController getHandlingById() :"+ e.getMessage());
+			logger.error("Exception inside IssueController getIssueByIssueId() :"+ e.getMessage());
 		}
 
-		logger.info("Inside IssueController getHandlingById() Ends, Id:"+ issueId);
+		logger.info("Inside IssueController getIssueByIssueId() Ends, issueId:"+ issueId);
 		return json;
 	}
 

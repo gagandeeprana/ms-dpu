@@ -16,15 +16,12 @@ import com.dpu.dao.HandlingDao;
 import com.dpu.dao.IssueDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Driver;
-import com.dpu.entity.Handling;
 import com.dpu.entity.Issue;
-import com.dpu.entity.Status;
 import com.dpu.entity.Type;
 import com.dpu.entity.VehicleMaintainanceCategory;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
 import com.dpu.model.IssueModel;
 import com.dpu.model.Success;
 import com.dpu.model.TypeResponse;
@@ -92,24 +89,11 @@ public class IssueServiceImpl implements IssueService  {
 		logger.info("IssueServiceImpl getAll() starts ");
 		Session session = null;
 		List<IssueModel> issueList = new ArrayList<IssueModel>();
-
 		try {
 			session = sessionFactory.openSession();
 			List<Issue> issues = issueDao.findAll(session);
-
-			if (issues != null && !issues.isEmpty()) {
-				for (Issue issue : issues) {
-					IssueModel issueObj = new IssueModel();
-					issueObj.setId(issue.getId());
-					issueObj.setTitle(issue.getIssueName());
-					issueObj.setVmcName(issue.getVmc().getName());
-					issueObj.setReportedByName(issue.getReportedBy().getFirstName());
-					issueObj.setUnitTypeName(issue.getUnitType().getName());
-					issueObj.setUnitNo(issue.getUnitNo());
-					issueObj.setStatusName(issue.getStatus().getTypeName());
-					issueList.add(issueObj);
-				}
-			}
+			issueList = setIssueData(issues, issueList);
+			
 		} finally {
 			if (session != null) {
 				session.close();
@@ -120,11 +104,29 @@ public class IssueServiceImpl implements IssueService  {
 		return issueList;
 	}
 
+	private List<IssueModel> setIssueData(List<Issue> issues, List<IssueModel> issueList) {
+		if (issues != null && !issues.isEmpty()) {
+			for (Issue issue : issues) {
+				IssueModel issueObj = new IssueModel();
+				issueObj.setId(issue.getId());
+				issueObj.setTitle(issue.getIssueName());
+				issueObj.setVmcName(issue.getVmc().getName());
+				issueObj.setReportedByName(issue.getReportedBy().getFirstName());
+				issueObj.setUnitTypeName(issue.getUnitType().getName());
+				issueObj.setUnitNo(issue.getUnitNo());
+				issueObj.setStatusName(issue.getStatus().getTypeName());
+				issueList.add(issueObj);
+			}
+		}
+		
+		return issueList;
+	}
+
 	private Object createSuccessObject(String msg) {
 
 		Success success = new Success();
 		success.setMessage(msg);
-		//success.setResultList(getAll());
+		success.setResultList(getAll());
 		return success;
 	}
 
@@ -136,54 +138,36 @@ public class IssueServiceImpl implements IssueService  {
 		return failed;
 	}
 
-	/*@Override
-	public Object addHandling(HandlingModel handlingModel) {
-
-		logger.info("HandlingServiceImpl addHandling() starts ");
-		Handling handling = null;
-		try {
-			handling = setHandlingValues(handlingModel);
-			handlingDao.save(handling);
-
-		} catch (Exception e) {
-			logger.info("Exception inside HandlingServiceImpl addHandling() :"
-					+ e.getMessage());
-			return createFailedObject(issue_unable_to_add_message);
-
-		}
-
-		logger.info("HandlingServiceImpl addHandling() ends ");
-		return createSuccessObject(issue_added_message);
-	}*/
-
-	private Handling setHandlingValues(HandlingModel handlingModel) {
-
-		Handling handling = new Handling();
-		handling.setName(handlingModel.getName());
-		Status status = statusService.get(handlingModel.getStatusId());
-		handling.setStatus(status);
-		return handling;
-	}
-
 	@Override
-	public Object update(Long id, HandlingModel handlingModel) {
+	public Object update(Long id, IssueModel issueModel) {
 
 		logger.info("IssueServiceImpl update() starts.");
+		Session session = null;
+		Transaction tx = null;
+		
 		try {
-			Handling handling = handlingDao.findById(id);
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Issue issue = issueDao.findById(id);
 
-			if (handling != null) {
-				handling.setName(handlingModel.getName());
-				Status status = statusService.get(handlingModel.getStatusId());
-				handling.setStatus(status);
-				handlingDao.update(handling);
+			if (issue != null) {
+				setIssueValues(issueModel,session,issue);
+				issueDao.update(issue, session);
+				tx.commit();
 			} else {
 				return createFailedObject(issue_unable_to_update_message);
 			}
 
 		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
 			logger.info("Exception inside IssueServiceImpl update() :"+ e.getMessage());
 			return createFailedObject(issue_unable_to_update_message);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
 		}
 
 		logger.info("IssueServiceImpl update() ends.");
@@ -200,9 +184,9 @@ public class IssueServiceImpl implements IssueService  {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Handling handling = (Handling) session.get(Handling.class, id);
-			if (handling != null) {
-				session.delete(handling);
+			Issue issue = (Issue) session.get(Issue.class, id);
+			if (issue != null) {
+				session.delete(issue);
 				tx.commit();
 			} else {
 				return createFailedObject(issue_unable_to_delete_message);
@@ -297,54 +281,17 @@ public class IssueServiceImpl implements IssueService  {
 		return issueModel;
 	}
 
-	/*@Override
-	public List<HandlingModel> getHandlingByHandlingName(String handlingName) {
-
-		logger.info("IssueServiceImpl getHandlingByHandlingName() starts ");
-		Session session = null;
-		List<HandlingModel> handlings = new ArrayList<HandlingModel>();
-
-		try {
-			session = sessionFactory.openSession();
-			List<Handling> handlingList = handlingDao.getHandlingByHandlingName(session, handlingName);
-			if (handlingList != null && !handlingList.isEmpty()) {
-				for (Handling handling : handlingList) {
-					HandlingModel handlingObj = new HandlingModel();
-					handlingObj.setId(handling.getId());
-					handlingObj.setName(handling.getName());
-					handlingObj.setStatusName(handling.getStatus().getStatus());
-					handlings.add(handlingObj);
-				}
-			}
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
-
-		logger.info("IssueServiceImpl getHandlingByHandlingName() ends ");
-		return handlings;
-	}*/
-
 	@Override
 	public List<IssueModel> getIssueByIssueName(String issueName) {
 
 		logger.info("IssueServiceImpl getIssueByIssueName() starts ");
 		Session session = null;
-		List<IssueModel> issues = new ArrayList<IssueModel>();
+		List<IssueModel> issueList = new ArrayList<IssueModel>();
 
 		try {
 			session = sessionFactory.openSession();
-			List<Issue> issueList = issueDao.getIssueByIssueName(session, issueName);
-			if (issueList != null && !issueList.isEmpty()) {
-				for (Issue issue : issueList) {
-					IssueModel issueObj = new IssueModel();
-					issueObj.setId(issue.getId());
-					/*issueObj.setName(issue.getName());
-					issueObj.setStatusName(issue.getStatus().getStatus());*/
-					issues.add(issueObj);
-				}
-			}
+			List<Issue> issues = issueDao.getIssueByIssueName(session, issueName);
+			issueList = setIssueData(issues, issueList);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -352,7 +299,7 @@ public class IssueServiceImpl implements IssueService  {
 		}
 
 		logger.info("IssueServiceImpl getHandlingByHandlingName() ends ");
-		return issues;
+		return issueList;
 	}
 	
 	@Override

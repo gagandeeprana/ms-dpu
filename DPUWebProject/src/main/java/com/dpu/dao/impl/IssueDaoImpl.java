@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.IssueDao;
-import com.dpu.entity.Handling;
 import com.dpu.entity.Issue;
 
 @Repository
@@ -30,15 +29,6 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 		return (Issue) query.uniqueResult();
 	}
 
-	/*@SuppressWarnings("unchecked")
-	@Override
-	public List<Handling> getHandlingByHandlingName(Session session, String handlingName) {
-		StringBuilder sb = new StringBuilder(" select h from Handling h join fetch h.status where h.name like :handlingName ");
-		Query query = session.createQuery(sb.toString());
-		query.setParameter("handlingName", "%"+handlingName+"%");
-		return query.list();
-	}*/
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> getUnitNos(Long categoryId, Session session) {
@@ -52,15 +42,24 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Issue> getIssueByIssueName(Session session, String issueName) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.issueName like :issueName ");
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("issueName", "%"+issueName+"%");
+		return query.list();
 	}
 
 	@Override
 	public void saveIssue(Issue issue, Session session) {
 		session.save(issue);
+	}
+
+	@Override
+	public void update(Issue issue, Session session) {
+		session.update(issue);
+		
 	}
 
 }

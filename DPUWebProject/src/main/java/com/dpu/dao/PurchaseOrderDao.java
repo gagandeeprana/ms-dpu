@@ -5,8 +5,9 @@ import java.util.List;
 import org.hibernate.Session;
 
 import com.dpu.entity.Issue;
+import com.dpu.entity.PurchaseOrder;
 
-public interface PurchaseOrderDao extends GenericDao<Issue> {
+public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 
 	List<Issue> findAll(Session session);
 

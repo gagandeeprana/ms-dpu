@@ -17,8 +17,10 @@ import com.dpu.dao.IssueDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Driver;
 import com.dpu.entity.Issue;
+import com.dpu.entity.PurchaseOrder;
 import com.dpu.entity.Type;
 import com.dpu.entity.VehicleMaintainanceCategory;
+import com.dpu.entity.Vendor;
 import com.dpu.model.CategoryReq;
 import com.dpu.model.DriverReq;
 import com.dpu.model.Failed;
@@ -50,6 +52,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	IssueService issueService;
 
 	@Autowired
 	VehicleMaintainanceCategoryService vehicleMaintainanceCategoryService;
@@ -269,25 +274,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 	@Override
 	public PurchaseOrderModel getOpenAdd() {
 
-		logger.info("IssueServiceImpl getOpenAdd() starts ");
+		logger.info("PurchaseOrderServiceImpl getOpenAdd() starts ");
 		PurchaseOrderModel poModel = new PurchaseOrderModel();
 		
 		List<VendorModel> vendorList = vendorService.getSpecificData();
 		poModel.setVendorList(vendorList);
-/*
-		List<VehicleMaintainanceCategoryModel> vmcList = vehicleMaintainanceCategoryService.getSpecificData();
-		issueModel.setVmcList(vmcList);
 		
-		List<DriverReq> driverList = driverService.getSpecificData();
-		issueModel.setReportedByList(driverList);
+		List<IssueModel> allIssues = issueService.getActiveAndIncompleteIssues();
+		poModel.setIssueList(allIssues);
 		
-		List<TypeResponse> statusList = typeService.getAll(23l);
-		issueModel.setStatusList(statusList);
+		List<TypeResponse> statusList = typeService.getAll(24l);
+		poModel.setStatusList(statusList);
 		
-		List<CategoryReq> unitTypeList = categoryService.getSpecificData();
-		issueModel.setUnitTypeList(unitTypeList);*/
-		
-		logger.info("IssueServiceImpl getOpenAdd() ends ");
+		logger.info("PurchaseOrderServiceImpl getOpenAdd() ends ");
 		return poModel;
 	}
 
@@ -422,6 +421,53 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		issue.setIssueName(issueModel.getTitle());
 		issue.setUnitNo(issueModel.getUnitNo());
 		return issue;
+	}
+
+	@Override
+	public Object addPO(PurchaseOrderModel poModel) {
+
+		logger.info("IssueServiceImpl addIssue() starts ");
+		Session session = null;
+		Transaction tx = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			List<PurchaseOrder> pos = setPoValues(poModel, session);
+		//	issueDao.saveIssue(issue, session);
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null){
+				tx.rollback();
+			}
+			logger.info("Exception inside IssueServiceImpl addIssue() :" + e.getMessage());
+			return createFailedObject(issue_unable_to_add_message);
+
+		} finally {
+			if(session != null){
+				session.close();
+			}
+		}
+
+		logger.info("IssueServiceImpl addIssue() ends ");
+		return createSuccessObject(issue_added_message);
+	}
+
+	private List<PurchaseOrder> setPoValues(PurchaseOrderModel poModel, Session session) {
+		List<PurchaseOrder> pos = null;
+		List<Long> issueIds = poModel.getIssueIds();
+		if(issueIds != null){
+			pos = new ArrayList<PurchaseOrder>(); 
+			Type status = (Type) session.get(Type.class, poModel.getStatusId());
+			Vendor reportedBy = (Vendor) session.get(Vendor.class, poModel.getVendorId());
+			
+			for (Long issueId : issueIds) {
+				PurchaseOrder po = new PurchaseOrder();
+				Issue issue = (Issue) session.get(Issue.class, issueId);
+			}
+		}
+		
+		return null;
 	}
 
 	

@@ -24,4 +24,6 @@ public interface PurchaseOrderService {
 
 	List<IssueModel> getIssueByIssueName(String issueName);
 
+	Object addPO(PurchaseOrderModel poModel);
+
 }

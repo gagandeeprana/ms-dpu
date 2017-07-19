@@ -7,10 +7,12 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.IssueDao;
+import com.dpu.dao.PurchaseOrderDao;
 import com.dpu.entity.Issue;
+import com.dpu.entity.PurchaseOrder;
 
 @Repository
-public class PurchaseOrderDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
+public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implements PurchaseOrderDao{
 
 	@SuppressWarnings("unchecked")
 	@Override

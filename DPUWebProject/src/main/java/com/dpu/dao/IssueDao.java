@@ -19,4 +19,6 @@ public interface IssueDao extends GenericDao<Issue> {
 	void saveIssue(Issue issue, Session session);
 
 	void update(Issue issue, Session session);
+
+	List<Issue> findAllActiveAndIncompleteIssues(Session session);
 }

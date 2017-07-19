@@ -62,4 +62,12 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 		
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Issue> findAllActiveAndIncompleteIssues(Session session) {
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.status.typeId = 103 or i.status.typeId = 105");
+		Query query = session.createQuery(sb.toString());
+		return query.list();
+	}
+
 }

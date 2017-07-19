@@ -414,6 +414,27 @@ public class IssueServiceImpl implements IssueService  {
 		return issue;
 	}
 
+	@Override
+	public List<IssueModel> getActiveAndIncompleteIssues() {
+		
+		logger.info("IssueServiceImpl getAll() starts ");
+		Session session = null;
+		List<IssueModel> issueList = new ArrayList<IssueModel>();
+		try {
+			session = sessionFactory.openSession();
+			List<Issue> issues = issueDao.findAllActiveAndIncompleteIssues(session);
+			issueList = setIssueData(issues, issueList);
+			
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("IssueServiceImpl getAll() ends ");
+		return issueList;
+	}
+
 	
 
 }

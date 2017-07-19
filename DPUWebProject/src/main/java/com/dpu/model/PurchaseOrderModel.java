@@ -32,6 +32,8 @@ public class PurchaseOrderModel implements Serializable{
 	
 	private String message;
 	
+	private List<Long> issueIds;
+	
 	public Long getId() {
 		return id;
 	}
@@ -134,5 +136,13 @@ public class PurchaseOrderModel implements Serializable{
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public List<Long> getIssueIds() {
+		return issueIds;
+	}
+
+	public void setIssueIds(List<Long> issueIds) {
+		this.issueIds = issueIds;
 	}
 }

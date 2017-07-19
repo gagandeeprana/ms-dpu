@@ -68,14 +68,14 @@ public class PurchaseOrderController extends MessageProperties {
 	}
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody IssueModel issueModel) {
+	public Object add(@RequestBody PurchaseOrderModel poModel) {
 
 		logger.info("Inside IssueController add() starts ");
 		Object obj = null;
 		
 		try {
 
-			Object result = issueService.addIssue(issueModel);
+			Object result = poService.addPO(poModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -157,16 +157,10 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 
-	/**
-	 * this method is used when we click on add button on issue screen
-	 * send master data
-	 * @return master data for add handling
-	 * @author lakhvir
-	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
-		logger.info("Inside IssueController openAdd() Starts ");
+		logger.info("Inside PurchaseOrderController openAdd() Starts ");
 		String json = null;
 
 		try {
@@ -174,10 +168,10 @@ public class PurchaseOrderController extends MessageProperties {
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(model);
 		} catch (Exception e) {
-			logger.error(" Exception inside IssueController openAdd() :"+ e.getMessage());
+			logger.error(" Exception inside PurchaseOrderController openAdd() :"+ e.getMessage());
 		}
 
-		logger.info("Inside IssueController openAdd() ends ");
+		logger.info("Inside PurchaseOrderController openAdd() ends ");
 		return json;
 	}
 	

@@ -23,4 +23,6 @@ public interface IssueService {
 
 	List<IssueModel> getIssueByIssueName(String issueName);
 
+	List<IssueModel> getActiveAndIncompleteIssues();
+
 }

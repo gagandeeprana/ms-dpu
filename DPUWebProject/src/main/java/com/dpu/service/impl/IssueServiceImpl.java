@@ -112,7 +112,7 @@ public class IssueServiceImpl implements IssueService  {
 				issueObj.setTitle(issue.getIssueName());
 				issueObj.setVmcName(issue.getVmc().getName());
 				issueObj.setReportedByName(issue.getReportedBy().getFirstName());
-				issueObj.setUnitTypeName(issue.getUnitType().getName());
+				//issueObj.setUnitTypeName(issue.getUnitType().getName());
 				issueObj.setUnitNo(issue.getUnitNo());
 				issueObj.setStatusName(issue.getStatus().getTypeName());
 				issueList.add(issueObj);
@@ -230,7 +230,7 @@ public class IssueServiceImpl implements IssueService  {
 				
 				issueModel.setVmcId(issue.getVmc().getId());
 				issueModel.setReportedById(issue.getReportedBy().getDriverId());
-				issueModel.setUnitTypeId(issue.getUnitType().getCategoryId());
+				//issueModel.setUnitTypeId(issue.getUnitType().getCategoryId());
 				issueModel.setUnitNo(issue.getUnitNo());
 				issueModel.setStatusId(issue.getStatus().getTypeId());
 				
@@ -243,11 +243,14 @@ public class IssueServiceImpl implements IssueService  {
 				List<TypeResponse> statusList = typeService.getAll(23l);
 				issueModel.setStatusList(statusList);
 				
-				List<CategoryReq> unitTypeList = categoryService.getSpecificData();
+				List<CategoryReq> categoryList = categoryService.getSpecificData();
+				issueModel.setCategoryList(categoryList);
+				
+				List<TypeResponse> unitTypeList = typeService.getAll(25l);
 				issueModel.setUnitTypeList(unitTypeList);
 				
-				List<String> unitNos = getUnitNosForCategory(issue.getUnitType().getCategoryId(), session);
-				issueModel.setUnitNos(unitNos);
+				//List<String> unitNos = getUnitNosForCategory(issue.getUnitType().getCategoryId(), session);
+				//issueModel.setUnitNos(unitNos);
 			}
 		} finally {
 			if (session != null) {
@@ -274,9 +277,11 @@ public class IssueServiceImpl implements IssueService  {
 		List<TypeResponse> statusList = typeService.getAll(23l);
 		issueModel.setStatusList(statusList);
 		
-		List<CategoryReq> unitTypeList = categoryService.getSpecificData();
-		issueModel.setUnitTypeList(unitTypeList);
+		List<CategoryReq> categoryList = categoryService.getSpecificData();
+		issueModel.setCategoryList(categoryList);
 		
+		List<TypeResponse> unitTypeList = typeService.getAll(25l);
+		issueModel.setUnitTypeList(unitTypeList);
 		logger.info("IssueServiceImpl getOpenAdd() ends ");
 		return issueModel;
 	}
@@ -328,13 +333,13 @@ public class IssueServiceImpl implements IssueService  {
 	}
 
 	@Override
-	public IssueModel getUnitNo(Long categoryId) {
+	public IssueModel getUnitNo(Long categoryId, Long unitTypeId) {
 		
 		Session session = null;
 		IssueModel issueModel = new IssueModel();
 		try {
 			session = sessionFactory.openSession();
-			List<String> getUnitNos = getUnitNosForCategory(categoryId, session);
+			List<String> getUnitNos = getUnitNosForCategory(categoryId, unitTypeId, session);
 			issueModel.setUnitNos(getUnitNos);
 		} finally {
 			if(session != null){
@@ -345,9 +350,9 @@ public class IssueServiceImpl implements IssueService  {
 		return issueModel;
 	}
 
-	private List<String> getUnitNosForCategory(Long categoryId, Session session) {
+	private List<String> getUnitNosForCategory(Long categoryId, Long unitTypeId, Session session) {
 		List<String> unitNo = new ArrayList<String>();
-		List<Object> unitNos = issueDao.getUnitNos(categoryId, session);
+		List<Object> unitNos = issueDao.getUnitNos(categoryId, unitTypeId, session);
 		if(unitNos != null){
 			unitNo = iterateUnitNos(unitNos);
 		}
@@ -402,11 +407,13 @@ public class IssueServiceImpl implements IssueService  {
 
 		Driver reportedBy = (Driver) session.get(Driver.class, issueModel.getReportedById());
 		VehicleMaintainanceCategory vmc = (VehicleMaintainanceCategory) session.get(VehicleMaintainanceCategory.class, issueModel.getVmcId());
-		Category unitType = (Category) session.get(Category.class, issueModel.getUnitTypeId());
+		Category category = (Category) session.get(Category.class, issueModel.getCategoryId());
 		Type status = (Type) session.get(Type.class, issueModel.getStatusId());
+		Type unitType = (Type) session.get(Type.class, issueModel.getUnitTypeId());
 		
 		issue.setReportedBy(reportedBy);
 		issue.setVmc(vmc);
+		issue.setCategory(category);
 		issue.setUnitType(unitType);
 		issue.setStatus(status);
 		issue.setIssueName(issueModel.getTitle());

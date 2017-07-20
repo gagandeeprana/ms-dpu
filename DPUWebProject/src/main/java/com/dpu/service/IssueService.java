@@ -17,7 +17,7 @@ public interface IssueService {
 	
 	List<IssueModel> getSpecificData();
 
-	IssueModel getUnitNo(Long categoryId);
+	IssueModel getUnitNo(Long categoryId, Long unitTypeId);
 
 	Object addIssue(IssueModel issueModel);
 

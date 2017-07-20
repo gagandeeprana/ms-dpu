@@ -12,7 +12,7 @@ public interface IssueDao extends GenericDao<Issue> {
 
 	Issue findById(Long id, Session session);
 
-	List<Object> getUnitNos(Long categoryId, Session session);
+	List<Object> getUnitNos(Long categoryId, Long unitTypeId, Session session);
 
 	List<Issue> getIssueByIssueName(Session session, String issueName);
 

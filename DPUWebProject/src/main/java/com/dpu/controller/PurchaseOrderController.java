@@ -188,9 +188,9 @@ public class PurchaseOrderController extends MessageProperties {
 		String json = null;
 
 		try {
-			IssueModel model = issueService.getUnitNo(categoryId);
+			//IssueModel model = issueService.getUnitNo(categoryId);
 			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(model);
+			//json = mapper.writeValueAsString(model);
 		} catch (Exception e) {
 			logger.error(" Exception inside IssueController openAdd() :"+ e.getMessage());
 		}

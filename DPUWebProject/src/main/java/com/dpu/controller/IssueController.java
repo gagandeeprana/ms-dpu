@@ -182,14 +182,14 @@ public class IssueController extends MessageProperties {
 	 * @return master data for add handling
 	 * @author lakhvir
 	 */
-	@RequestMapping(value = "/category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getUnitNo(@PathVariable("categoryId") Long categoryId) {
+	@RequestMapping(value = "/category/{categoryId}/unitType/{unitTypeId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getUnitNo(@PathVariable("categoryId") Long categoryId, @PathVariable("unitTypeId") Long unitTypeId ) {
 		
 		logger.info("Inside IssueController getUnitNo() Starts ");
 		String json = null;
 
 		try {
-			IssueModel model = issueService.getUnitNo(categoryId);
+			IssueModel model = issueService.getUnitNo(categoryId, unitTypeId);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(model);
 		} catch (Exception e) {

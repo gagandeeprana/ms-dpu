@@ -124,7 +124,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				issueObj.setTitle(issue.getIssueName());
 				issueObj.setVmcName(issue.getVmc().getName());
 				issueObj.setReportedByName(issue.getReportedBy().getFirstName());
-				issueObj.setUnitTypeName(issue.getUnitType().getName());
+				//issueObj.setUnitTypeName(issue.getUnitType().getName());
 				issueObj.setUnitNo(issue.getUnitNo());
 				issueObj.setStatusName(issue.getStatus().getTypeName());
 				issueList.add(issueObj);
@@ -242,7 +242,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				
 				issueModel.setVmcId(issue.getVmc().getId());
 				issueModel.setReportedById(issue.getReportedBy().getDriverId());
-				issueModel.setUnitTypeId(issue.getUnitType().getCategoryId());
+				//issueModel.setUnitTypeId(issue.getUnitType().getCategoryId());
 				issueModel.setUnitNo(issue.getUnitNo());
 				issueModel.setStatusId(issue.getStatus().getTypeId());
 				
@@ -255,11 +255,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				List<TypeResponse> statusList = typeService.getAll(23l);
 				issueModel.setStatusList(statusList);
 				
-				List<CategoryReq> unitTypeList = categoryService.getSpecificData();
-				issueModel.setUnitTypeList(unitTypeList);
+				/*List<CategoryReq> unitTypeList = categoryService.getSpecificData();
+				issueModel.setUnitTypeList(unitTypeList);*/
 				
-				List<String> unitNos = getUnitNosForCategory(issue.getUnitType().getCategoryId(), session);
-				issueModel.setUnitNos(unitNos);
+				//List<String> unitNos = getUnitNosForCategory(issue.getUnitType().getCategoryId(), session);
+				//issueModel.setUnitNos(unitNos);
 			}
 		} finally {
 			if (session != null) {
@@ -356,10 +356,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 	private List<String> getUnitNosForCategory(Long categoryId, Session session) {
 		List<String> unitNo = new ArrayList<String>();
-		List<Object> unitNos = issueDao.getUnitNos(categoryId, session);
+		/*List<Object> unitNos = issueDao.getUnitNos(categoryId, session);
 		if(unitNos != null){
 			unitNo = iterateUnitNos(unitNos);
-		}
+		}*/
 		
 		return unitNo;
 	}
@@ -416,7 +416,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		
 		issue.setReportedBy(reportedBy);
 		issue.setVmc(vmc);
-		issue.setUnitType(unitType);
+		//issue.setUnitType(unitType);
 		issue.setStatus(status);
 		issue.setIssueName(issueModel.getTitle());
 		issue.setUnitNo(issueModel.getUnitNo());

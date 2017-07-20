@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.IssueDao;
 import com.dpu.entity.Issue;
+import com.dpu.entity.Type;
 
 @Repository
 public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
@@ -31,11 +32,15 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getUnitNos(Long categoryId, Session session) {
-		StringBuilder sb = new StringBuilder(" SELECT unit_no FROM `newtruckmaster` truck WHERE category_id = :categoryId ")
-		.append(" UNION ")
-		.append(" SELECT unit_no FROM `trailer` WHERE category_id = :categoryId ");
+	public List<Object> getUnitNos(Long categoryId, Long unitTypeId, Session session) {
 		
+		Type unitType = (Type) session.get(Type.class, unitTypeId);
+		StringBuilder sb = new StringBuilder(" ");
+		if(unitType.getTypeName().equals("Truck")){
+			sb.append(" SELECT unit_no FROM `newtruckmaster` truck WHERE category_id = :categoryId ");
+		} else{
+			sb.append("  SELECT unit_no FROM `trailer` WHERE category_id = :categoryId ");
+		}
 		Query query = session.createSQLQuery(sb.toString());
 		query.setParameter("categoryId", categoryId);
 		return query.list();

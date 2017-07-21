@@ -112,7 +112,8 @@ public class IssueServiceImpl implements IssueService  {
 				issueObj.setTitle(issue.getIssueName());
 				issueObj.setVmcName(issue.getVmc().getName());
 				issueObj.setReportedByName(issue.getReportedBy().getFirstName());
-				//issueObj.setUnitTypeName(issue.getUnitType().getName());
+				issueObj.setUnitTypeName(issue.getUnitType().getTypeName());
+				issueObj.setCategoryName(issue.getCategory().getName());
 				issueObj.setUnitNo(issue.getUnitNo());
 				issueObj.setStatusName(issue.getStatus().getTypeName());
 				issueList.add(issueObj);
@@ -134,7 +135,6 @@ public class IssueServiceImpl implements IssueService  {
 
 		Failed failed = new Failed();
 		failed.setMessage(msg);
-		// failed.setResultList(getAll());
 		return failed;
 	}
 
@@ -230,7 +230,7 @@ public class IssueServiceImpl implements IssueService  {
 				
 				issueModel.setVmcId(issue.getVmc().getId());
 				issueModel.setReportedById(issue.getReportedBy().getDriverId());
-				//issueModel.setUnitTypeId(issue.getUnitType().getCategoryId());
+				issueModel.setUnitTypeId(issue.getUnitType().getTypeId());
 				issueModel.setUnitNo(issue.getUnitNo());
 				issueModel.setStatusId(issue.getStatus().getTypeId());
 				
@@ -243,14 +243,15 @@ public class IssueServiceImpl implements IssueService  {
 				List<TypeResponse> statusList = typeService.getAll(23l);
 				issueModel.setStatusList(statusList);
 				
+				issueModel.setCategoryId(issue.getCategory().getCategoryId());
 				List<CategoryReq> categoryList = categoryService.getSpecificData();
 				issueModel.setCategoryList(categoryList);
 				
 				List<TypeResponse> unitTypeList = typeService.getAll(25l);
 				issueModel.setUnitTypeList(unitTypeList);
 				
-				//List<String> unitNos = getUnitNosForCategory(issue.getUnitType().getCategoryId(), session);
-				//issueModel.setUnitNos(unitNos);
+				List<String> unitNos = getUnitNosForCategory(issue.getCategory().getCategoryId(), issue.getUnitType().getTypeId(), session);
+				issueModel.setUnitNos(unitNos);
 			}
 		} finally {
 			if (session != null) {

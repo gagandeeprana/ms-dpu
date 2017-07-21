@@ -17,14 +17,14 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 	@Override
 	public List<Issue> findAll(Session session) {
 		
-		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status ");
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status join fetch i.category ");
 		Query query = session.createQuery(sb.toString());
 		return query.list();
 	}
 
 	@Override
 	public Issue findById(Long id, Session session) {
-		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.id = :issueId ");
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status join fetch i.category where i.id = :issueId ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("issueId", id);
 		return (Issue) query.uniqueResult();
@@ -50,7 +50,7 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Issue> getIssueByIssueName(Session session, String issueName) {
-		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.issueName like :issueName ");
+		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status join fetch i.category where i.issueName like :issueName ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("issueName", "%"+issueName+"%");
 		return query.list();

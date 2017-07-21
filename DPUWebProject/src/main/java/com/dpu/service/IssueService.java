@@ -2,6 +2,8 @@ package com.dpu.service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.dpu.model.IssueModel;
 
 public interface IssueService {
@@ -24,5 +26,7 @@ public interface IssueService {
 	List<IssueModel> getIssueByIssueName(String issueName);
 
 	List<IssueModel> getActiveAndIncompleteIssues();
+
+	List<IssueModel> getIssueforCategoryAndUnitType(Long categoryId, Long unitTypeId, Session session);
 
 }

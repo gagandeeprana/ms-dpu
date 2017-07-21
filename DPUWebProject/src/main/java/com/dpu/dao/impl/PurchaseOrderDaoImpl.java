@@ -6,7 +6,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.dpu.dao.IssueDao;
 import com.dpu.dao.PurchaseOrderDao;
 import com.dpu.entity.Issue;
 import com.dpu.entity.PurchaseOrder;
@@ -61,6 +60,17 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 	@Override
 	public void update(Issue issue, Session session) {
 		session.update(issue);
+		
+	}
+
+	@Override
+	public void addPurchaseOrder(List<PurchaseOrder> pos, Session session) {
+
+		if(pos != null && ! pos.isEmpty()) {
+			for (PurchaseOrder purchaseOrder : pos) {
+				session.save(purchaseOrder);
+			}
+		}
 		
 	}
 

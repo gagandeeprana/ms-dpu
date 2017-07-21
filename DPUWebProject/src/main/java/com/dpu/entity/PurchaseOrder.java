@@ -27,12 +27,17 @@ public class PurchaseOrder implements Serializable {
 	@Column(name = "purchase_order_id")
 	private Long id;
 	
-	@Column(name = "issue_name")
-	private String issueName;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "vendor_id")
 	private Vendor vendor;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	private Category category;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "unit_type_id")
+	private Type unitType;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "issue_id")
@@ -54,14 +59,6 @@ public class PurchaseOrder implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getIssueName() {
-		return issueName;
-	}
-
-	public void setIssueName(String issueName) {
-		this.issueName = issueName;
 	}
 
 	public Type getStatus() {
@@ -102,6 +99,22 @@ public class PurchaseOrder implements Serializable {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public Type getUnitType() {
+		return unitType;
+	}
+
+	public void setUnitType(Type unitType) {
+		this.unitType = unitType;
 	}
 
 }

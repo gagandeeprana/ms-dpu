@@ -443,6 +443,19 @@ public class IssueServiceImpl implements IssueService  {
 		return issueList;
 	}
 
+	@Override
+	public List<IssueModel> getIssueforCategoryAndUnitType(Long categoryId, Long unitTypeId, Session session) {
+		
+		logger.info("IssueServiceImpl getIssueforCategoryAndUnitType() starts ");
+		List<IssueModel> issueList = new ArrayList<IssueModel>();
+
+		List<Issue> issues = issueDao.issueforCategoryAndUnitType(categoryId, unitTypeId, session);
+		issueList = setIssueData(issues, issueList);
+
+		logger.info("IssueServiceImpl getIssueforCategoryAndUnitType() ends ");
+		return issueList;
+	}
+
 	
 
 }

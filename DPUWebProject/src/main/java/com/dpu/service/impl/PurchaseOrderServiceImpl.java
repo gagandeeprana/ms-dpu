@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.dpu.dao.HandlingDao;
 import com.dpu.dao.IssueDao;
+import com.dpu.dao.PurchaseOrderDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Driver;
 import com.dpu.entity.Issue;
@@ -73,6 +74,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 	
 	@Autowired
 	TypeService typeService;
+	
+	@Autowired
+	PurchaseOrderDao poDao;
 
 	@Value("${issue_added_message}")
 	private String issue_added_message;
@@ -280,8 +284,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		List<VendorModel> vendorList = vendorService.getSpecificData();
 		poModel.setVendorList(vendorList);
 		
-		List<IssueModel> allIssues = issueService.getActiveAndIncompleteIssues();
-		poModel.setIssueList(allIssues);
+		//List<IssueModel> allIssues = issueService.getActiveAndIncompleteIssues();
+		//poModel.setIssueList(allIssues);
+		
+		List<CategoryReq> categoryList = categoryService.getSpecificData();
+		poModel.setCategoryList(categoryList);
+		
+		List<TypeResponse> unitTypeList = typeService.getAll(25l);
+		poModel.setUnitTypeList(unitTypeList);
 		
 		List<TypeResponse> statusList = typeService.getAll(24l);
 		poModel.setStatusList(statusList);
@@ -434,7 +444,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
 			List<PurchaseOrder> pos = setPoValues(poModel, session);
-		//	issueDao.saveIssue(issue, session);
+			poDao.addPurchaseOrder(pos, session);
 			tx.commit();
 		} catch (Exception e) {
 			if(tx != null){
@@ -454,20 +464,55 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 	}
 
 	private List<PurchaseOrder> setPoValues(PurchaseOrderModel poModel, Session session) {
+	
 		List<PurchaseOrder> pos = null;
 		List<Long> issueIds = poModel.getIssueIds();
+		
 		if(issueIds != null){
+			
 			pos = new ArrayList<PurchaseOrder>(); 
 			Type status = (Type) session.get(Type.class, poModel.getStatusId());
-			Vendor reportedBy = (Vendor) session.get(Vendor.class, poModel.getVendorId());
+			Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
+			Category category = (Category) session.get(Category.class, poModel.getCategoryId());
+			Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
 			
 			for (Long issueId : issueIds) {
 				PurchaseOrder po = new PurchaseOrder();
 				Issue issue = (Issue) session.get(Issue.class, issueId);
+				po.setCategory(category);
+				po.setIssue(issue);
+				po.setMessage(poModel.getMessage());
+				po.setStatus(status);
+				po.setUnitType(unitType);
+				po.setVendor(vendor);
+				
+				if(status.getTypeName().equals("Invoiced")){
+					po.setInvoiceNo(poModel.getInvoiceNo());
+				}
+				
+				pos.add(po);
 			}
 		}
 		
-		return null;
+		return pos;
+	}
+
+	@Override
+	public List<IssueModel> getCategoryAndUnitTypeIssues(Long categoryId, Long unitTypeId) {
+
+		Session session = null;
+		List<IssueModel> issues = new ArrayList<IssueModel>();
+		try {
+			session = sessionFactory.openSession();
+			issues = issueService.getIssueforCategoryAndUnitType(categoryId, unitTypeId, session);
+		} finally {
+			if(session != null){
+				session.close();
+			}
+		}
+		
+		return issues;
+		
 	}
 
 	

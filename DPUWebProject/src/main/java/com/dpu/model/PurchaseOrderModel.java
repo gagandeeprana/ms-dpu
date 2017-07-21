@@ -20,6 +20,14 @@ public class PurchaseOrderModel implements Serializable{
 	private Long vendorId;
 	private List<VendorModel> vendorList;
 	
+	private String categoryName;
+	private Long categoryId;
+	private List<CategoryReq> categoryList;
+	
+	private String unitTypeName;
+	private Long unitTypeId;
+	private List<TypeResponse> unitTypeList;
+	
 	private String issueName;
 	private Long issueId;
 	private List<IssueModel> issueList;
@@ -138,6 +146,54 @@ public class PurchaseOrderModel implements Serializable{
 		this.message = message;
 	}
 
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public List<CategoryReq> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<CategoryReq> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public String getUnitTypeName() {
+		return unitTypeName;
+	}
+
+	public void setUnitTypeName(String unitTypeName) {
+		this.unitTypeName = unitTypeName;
+	}
+
+	public Long getUnitTypeId() {
+		return unitTypeId;
+	}
+
+	public void setUnitTypeId(Long unitTypeId) {
+		this.unitTypeId = unitTypeId;
+	}
+
+	public List<TypeResponse> getUnitTypeList() {
+		return unitTypeList;
+	}
+
+	public void setUnitTypeList(List<TypeResponse> unitTypeList) {
+		this.unitTypeList = unitTypeList;
+	}
+
 	public List<Long> getIssueIds() {
 		return issueIds;
 	}
@@ -145,4 +201,12 @@ public class PurchaseOrderModel implements Serializable{
 	public void setIssueIds(List<Long> issueIds) {
 		this.issueIds = issueIds;
 	}
+
+	/*public List<Long> getIssueIds() {
+		return issueIds;
+	}
+
+	public void setIssueIds(List<Long> issueIds) {
+		this.issueIds = issueIds;
+	}*/
 }

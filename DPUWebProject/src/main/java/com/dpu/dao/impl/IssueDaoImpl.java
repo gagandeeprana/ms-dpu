@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.IssueDao;
+import com.dpu.entity.Category;
 import com.dpu.entity.Issue;
 import com.dpu.entity.Type;
 
@@ -72,6 +73,23 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 	public List<Issue> findAllActiveAndIncompleteIssues(Session session) {
 		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.status.typeId = 103 or i.status.typeId = 105");
 		Query query = session.createQuery(sb.toString());
+		return query.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Issue> issueforCategoryAndUnitType(Long categoryId, Long unitTypeId, Session session) {
+		Type unitType = (Type) session.get(Type.class, unitTypeId);
+		Category category = (Category) session.get(Category.class, categoryId);
+		StringBuilder sb = new StringBuilder(" ");
+		sb.append(" from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status ")
+		.append(" join fetch i.category ")
+		.append("  where i.category =:category and i.unitType =:unitType and i.status.typeId in (103, 105, 107) ");
+		
+		Query query = session.createQuery(sb.toString());
+		query.setParameter("category", category);
+		query.setParameter("unitType", unitType);
+		
 		return query.list();
 	}
 

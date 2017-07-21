@@ -26,4 +26,6 @@ public interface PurchaseOrderService {
 
 	Object addPO(PurchaseOrderModel poModel);
 
+	List<IssueModel> getCategoryAndUnitTypeIssues(Long categoryId, Long unitTypeId);
+
 }

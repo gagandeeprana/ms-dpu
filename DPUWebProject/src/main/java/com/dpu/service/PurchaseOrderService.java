@@ -10,11 +10,11 @@ public interface PurchaseOrderService {
 
 	Object delete(Long id);
 
-	List<IssueModel> getAll();
+	List<PurchaseOrderModel> getAll();
 
 	PurchaseOrderModel getOpenAdd();
 
-	IssueModel get(Long id);
+	PurchaseOrderModel get(Long id);
 	
 	List<IssueModel> getSpecificData();
 

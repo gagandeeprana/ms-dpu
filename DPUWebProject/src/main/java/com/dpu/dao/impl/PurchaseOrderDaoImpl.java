@@ -9,27 +9,35 @@ import org.springframework.stereotype.Repository;
 import com.dpu.dao.PurchaseOrderDao;
 import com.dpu.entity.Issue;
 import com.dpu.entity.PurchaseOrder;
+import com.dpu.entity.PurchaseOrderIssue;
 
 @Repository
 public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implements PurchaseOrderDao{
 
 	@SuppressWarnings("unchecked")
+
 	@Override
-	public List<Issue> findAll(Session session) {
-		
-		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status ");
+	public List<PurchaseOrder> findAll(Session session) {
+		StringBuilder sb = new StringBuilder(" select i from PurchaseOrder i join fetch i.vendor join fetch i.category join fetch i.unitType join fetch i.status ");
 		Query query = session.createQuery(sb.toString());
 		return query.list();
 	}
+	
+//	@Override
+//	public Issue findById(Long id, Session session) {
+//		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.id = :issueId ");
+//		Query query = session.createQuery(sb.toString());
+//		query.setParameter("issueId", id);
+//		return (Issue) query.uniqueResult();
+//	}
 
 	@Override
-	public Issue findById(Long id, Session session) {
+	public PurchaseOrder findById(Long id, Session session) {
 		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.id = :issueId ");
 		Query query = session.createQuery(sb.toString());
 		query.setParameter("issueId", id);
-		return (Issue) query.uniqueResult();
+		return (PurchaseOrder) query.uniqueResult();
 	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> getUnitNos(Long categoryId, Session session) {
@@ -70,6 +78,18 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 			for (PurchaseOrder purchaseOrder : pos) {
 				session.save(purchaseOrder);
 			}
+		}
+		
+	}
+
+	@Override
+	public void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
+	
+		session.save(po);
+		
+		for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
+			purchaseOrderIssue.setPurchaseOrder(po);
+			session.save(purchaseOrderIssue);
 		}
 		
 	}

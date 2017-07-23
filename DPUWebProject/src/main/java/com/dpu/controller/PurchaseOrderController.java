@@ -114,7 +114,7 @@ public class PurchaseOrderController extends MessageProperties {
 		String json = null;
 
 		try {
-			List<IssueModel> responses = issueService.getAll();
+			List<PurchaseOrderModel> responses = poService.getAll();
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
@@ -130,32 +130,32 @@ public class PurchaseOrderController extends MessageProperties {
 	@RequestMapping(value = "/{purchaseOrderId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getPurchaseOrderById(@PathVariable("purchaseOrderId") Long purchaseOrderId) {
 		
-		logger.info("Inside PurchaseOrderController getIssueByIssueId() Starts, issueId:"+ purchaseOrderId);
+		logger.info("Inside PurchaseOrderController getPurchaseOrderById() Starts, issueId:"+ purchaseOrderId);
 		String json = null;
 
 		try {
 
-			IssueModel issueModel = issueService.get(purchaseOrderId);
+			PurchaseOrderModel poModel = poService.get(purchaseOrderId);
 
-			if (issueModel != null) {
-				json = mapper.writeValueAsString(issueModel);
+			if (poModel != null) {
+				json = mapper.writeValueAsString(poModel);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside PurchaseOrderController getIssueByIssueId() :"+ e.getMessage());
+			logger.error("Exception inside PurchaseOrderController getPurchaseOrderById() :"+ e.getMessage());
 		}
 
-		logger.info("Inside PurchaseOrderController getIssueByIssueId() Ends, issueId:"+ purchaseOrderId);
+		logger.info("Inside PurchaseOrderController getPurchaseOrderById() Ends, issueId:"+ purchaseOrderId);
 		return json;
 	}
 
-	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("issueId") Long issueId) {
+	@RequestMapping(value = "/{poId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object delete(@PathVariable("poId") Long poId) {
 
-		logger.info("Inside IssueController delete() Starts, issueId is :" + issueId);
+		logger.info("Inside PurchaseOrderController delete() Starts, poId is :" + poId);
 		Object obj = null;
 
 		try {
-			Object result = issueService.delete(issueId);
+			Object result = poService.delete(poId);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -163,18 +163,18 @@ public class PurchaseOrderController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside IssueController delete() :"+ e.getMessage());
+			logger.error("Exception inside PurchaseOrderController delete() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Inside IssueController delete() Ends, issueId is :" + issueId);
+		logger.info("Inside PurchaseOrderController delete() Ends, poId is :" + poId);
 		return obj;
 
 	}
 
-	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("issueId") Long issueId, @RequestBody IssueModel issueModel) {
+	@RequestMapping(value = "/{poId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object update(@PathVariable("poId") Long issueId, @RequestBody IssueModel issueModel) {
 
-		logger.info("Inside IssueController update() Starts, issueId is :" + issueId);
+		logger.info("Inside PurchaseOrderController update() Starts, issueId is :" + issueId);
 		Object obj = null;
 		try {
 			Object result = issueService.update(issueId, issueModel);
@@ -185,11 +185,11 @@ public class PurchaseOrderController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside IssueController update() :"+ e.getMessage());
+			logger.error("Exception inside PurchaseOrderController update() :"+ e.getMessage());
 			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside IssueController update() Ends, issueId is :" + issueId);
+		logger.info("Inside PurchaseOrderController update() Ends, issueId is :" + issueId);
 		return obj;
 	}
 
@@ -202,7 +202,7 @@ public class PurchaseOrderController extends MessageProperties {
 	@RequestMapping(value = "/category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getUnitNo(@PathVariable("categoryId") Long categoryId) {
 		
-		logger.info("Inside IssueController getUnitNo() Starts ");
+		logger.info("Inside PurchaseOrderController getUnitNo() Starts ");
 		String json = null;
 
 		try {
@@ -213,7 +213,7 @@ public class PurchaseOrderController extends MessageProperties {
 			logger.error(" Exception inside IssueController openAdd() :"+ e.getMessage());
 		}
 
-		logger.info("Inside IssueController openAdd() ends ");
+		logger.info("Inside PurchaseOrderController openAdd() ends ");
 		return json;
 	}
 
@@ -221,7 +221,7 @@ public class PurchaseOrderController extends MessageProperties {
 	@RequestMapping(value = "/{issueName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchIssue(@PathVariable("issueName") String issueName) {
 
-		logger.info("Inside IssueController searchIssue() Starts, issueName :"+ issueName);
+		logger.info("Inside PurchaseOrderController searchIssue() Starts, issueName :"+ issueName);
 		String json = new String();
 
 		try {
@@ -230,10 +230,10 @@ public class PurchaseOrderController extends MessageProperties {
 				json = mapper.writeValueAsString(handlingList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside IssueController searchIssue() is :"+ e.getMessage());
+			logger.error("Exception inside PurchaseOrderController searchIssue() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside IssueController searchIssue() Ends, issueName :"+ issueName);
+		logger.info(" Inside PurchaseOrderController searchIssue() Ends, issueName :"+ issueName);
 		return json;
 	}
 
@@ -241,7 +241,7 @@ public class PurchaseOrderController extends MessageProperties {
 	@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getSpecificData() {
 
-		logger.info("Inside IssueController getSpecificData() Starts ");
+		logger.info("Inside PurchaseOrderController getSpecificData() Starts ");
 		String json = new String();
 
 		try {
@@ -250,10 +250,10 @@ public class PurchaseOrderController extends MessageProperties {
 				json = mapper.writeValueAsString(issueList);
 			}
 		} catch (Exception e) {
-			logger.error("Exception inside IssueController getSpecificData() is :"+ e.getMessage());
+			logger.error("Exception inside PurchaseOrderController getSpecificData() is :"+ e.getMessage());
 		}
 
-		logger.info("Inside IssueController getSpecificData() Ends ");
+		logger.info("Inside PurchaseOrderController getSpecificData() Ends ");
 		return json;
 	}
 }

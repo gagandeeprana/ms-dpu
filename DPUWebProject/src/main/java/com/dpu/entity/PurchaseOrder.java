@@ -1,5 +1,6 @@
 package com.dpu.entity;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -52,6 +54,10 @@ public class PurchaseOrder implements Serializable {
 	
 	@Column(name = "message")
 	private String message;
+	
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = Probil.class)
+	@JoinColumn(name = "po_id", referencedColumnName = "purchase_order_id")
+	private List<PurchaseOrderIssue> poIssues;
 	
 	public Long getId() {
 		return id;
@@ -115,6 +121,14 @@ public class PurchaseOrder implements Serializable {
 
 	public void setUnitType(Type unitType) {
 		this.unitType = unitType;
+	}
+
+	public List<PurchaseOrderIssue> getPoIssues() {
+		return poIssues;
+	}
+
+	public void setPoIssues(List<PurchaseOrderIssue> poIssues) {
+		this.poIssues = poIssues;
 	}
 
 }

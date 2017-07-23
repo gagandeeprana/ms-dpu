@@ -6,12 +6,13 @@ import org.hibernate.Session;
 
 import com.dpu.entity.Issue;
 import com.dpu.entity.PurchaseOrder;
+import com.dpu.entity.PurchaseOrderIssue;
 
 public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 
-	List<Issue> findAll(Session session);
+	List<PurchaseOrder> findAll(Session session);
 
-	Issue findById(Long id, Session session);
+	PurchaseOrder findById(Long id, Session session);
 
 	List<Object> getUnitNos(Long categoryId, Session session);
 
@@ -22,4 +23,7 @@ public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 	void update(Issue issue, Session session);
 
 	void addPurchaseOrder(List<PurchaseOrder> pos, Session session);
+
+	void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues,
+			Session session);
 }

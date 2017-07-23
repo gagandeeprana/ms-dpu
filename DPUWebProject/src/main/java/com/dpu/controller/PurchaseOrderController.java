@@ -47,6 +47,10 @@ public class PurchaseOrderController extends MessageProperties {
 	@Value("${po_unable_to_update_message}")
 	private String po_unable_to_update_message;
 
+	/**
+	 * this method is used when we click on add PO button
+	 * @return openAdd data
+	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object openAdd() {
 		
@@ -65,6 +69,12 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 	
+	/**
+	 * this method is used to get the issues based on category and unitType(Truck, trailer)
+	 * @param categoryId
+	 * @param unitTypeId
+	 * @return issues data
+	 */
 	@RequestMapping(value = "/category/{categoryId}/unitType/{unitTypeId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getCategoryAndUnitTypeIssues(@PathVariable("categoryId") Long categoryId, @PathVariable("unitTypeId") Long unitTypeId) {
 		
@@ -83,6 +93,11 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 	
+	/**
+	 * this method is used to add the PO.
+	 * @param poModel
+	 * @return List<PO>
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public Object add(@RequestBody PurchaseOrderModel poModel) {
 
@@ -107,6 +122,10 @@ public class PurchaseOrderController extends MessageProperties {
 		return obj;
 	}
 	
+	/**
+	 * this method is used to get all PO
+	 * @return all PO data
+	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 
@@ -127,6 +146,11 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 
+	/**
+	 * this method is used to get the particular PO data
+	 * @param purchaseOrderId
+	 * @return get particular PO data
+	 */
 	@RequestMapping(value = "/{purchaseOrderId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getPurchaseOrderById(@PathVariable("purchaseOrderId") Long purchaseOrderId) {
 		
@@ -148,6 +172,11 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 
+	/**
+	 * this method is used to delete the PO
+	 * @param poId
+	 * @return List<PO>
+	 */
 	@RequestMapping(value = "/{poId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("poId") Long poId) {
 

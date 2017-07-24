@@ -22,8 +22,10 @@ public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 
 	void update(Issue issue, Session session);
 
-	void addPurchaseOrder(List<PurchaseOrder> pos, Session session);
+	void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session);
 
-	void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues,
-			Session session);
+	Long getMaxPoNO(Session session);
+
+	void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session);
+
 }

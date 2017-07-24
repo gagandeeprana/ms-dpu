@@ -124,15 +124,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		if(pos != null && !pos.isEmpty()) {
 			for (PurchaseOrder purchaseOrder : pos) {
 				PurchaseOrderModel poModel = new PurchaseOrderModel();
-				poModel.setCategoryName(purchaseOrder.getCategory().getName());
+				poModel.setId(purchaseOrder.getId());
+				poModel.setPoNo(purchaseOrder.getPoNo());
 				poModel.setMessage(purchaseOrder.getMessage());
 				
+				poModel.setCategoryName(purchaseOrder.getCategory().getName());
 				String status = purchaseOrder.getStatus().getTypeName();
 				poModel.setStatusName(status);
+				
 				if(status.equals("Invoiced")){
 					poModel.setInvoiceNo(purchaseOrder.getInvoiceNo());
 				}
 				
+				poModel.setUnitTypeName(purchaseOrder.getUnitType().getTypeName());
 				poModel.setVendorName(purchaseOrder.getVendor().getName());
 				poList.add(poModel);
 			}
@@ -159,7 +163,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 	}
 
 	@Override
-	public Object update(Long id, IssueModel issueModel) {
+	public Object update(Long id, PurchaseOrderModel poModel) {
 
 		logger.info("IssueServiceImpl update() starts.");
 		Session session = null;
@@ -168,11 +172,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			Issue issue = issueDao.findById(id);
-
-			if (issue != null) {
-				setIssueValues(issueModel,session,issue);
-				issueDao.update(issue, session);
+			PurchaseOrder po = (PurchaseOrder) session.get(PurchaseOrder.class, id);
+			List<PurchaseOrderIssue> poIssues = new ArrayList<PurchaseOrderIssue>();
+			if (po != null) {
+				setPoValues(poModel, po, poIssues, session, "update");
+				poDao.update(po, poIssues, session);
 				tx.commit();
 			} else {
 				return createFailedObject(po_unable_to_update_message);
@@ -208,7 +212,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			
 			if (purchaseOrder != null) {
 				
-				List<PurchaseOrderIssue> poIssues = new ArrayList<PurchaseOrderIssue>();
+				List<PurchaseOrderIssue> poIssues = purchaseOrder.getPoIssues();
 				if(poIssues != null && ! poIssues.isEmpty()) {
 					for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
 						session.delete(purchaseOrderIssue);
@@ -287,6 +291,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					poModel.setIssueList(issueModels);
 				}
 				
+				getOpenAddData(poModel);
 			}
 		} finally {
 			if (session != null) {
@@ -304,11 +309,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		logger.info("PurchaseOrderServiceImpl getOpenAdd() starts ");
 		PurchaseOrderModel poModel = new PurchaseOrderModel();
 		
+		getOpenAddData(poModel);
+		logger.info("PurchaseOrderServiceImpl getOpenAdd() ends ");
+		return poModel;
+	}
+
+	private void getOpenAddData(PurchaseOrderModel poModel) {
+		
 		List<VendorModel> vendorList = vendorService.getSpecificData();
 		poModel.setVendorList(vendorList);
-		
-		//List<IssueModel> allIssues = issueService.getActiveAndIncompleteIssues();
-		//poModel.setIssueList(allIssues);
 		
 		List<CategoryReq> categoryList = categoryService.getSpecificData();
 		poModel.setCategoryList(categoryList);
@@ -319,8 +328,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		List<TypeResponse> statusList = typeService.getAll(24l);
 		poModel.setStatusList(statusList);
 		
-		logger.info("PurchaseOrderServiceImpl getOpenAdd() ends ");
-		return poModel;
 	}
 
 	@Override
@@ -468,7 +475,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			tx = session.beginTransaction();
 			PurchaseOrder po = new PurchaseOrder();
 			List<PurchaseOrderIssue> poIssues = new ArrayList<PurchaseOrderIssue>();
-			setPoValues(poModel, po, poIssues, session);
+			setPoValues(poModel, po, poIssues, session, "add");
 			poDao.addPurchaseOrder(po, poIssues, session);
 			tx.commit();
 		} catch (Exception e) {
@@ -488,18 +495,25 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		return createSuccessObject(po_added_message);
 	}
 
-	private void setPoValues(PurchaseOrderModel poModel, PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
-	
+	private void setPoValues(PurchaseOrderModel poModel, PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session, String type) {
+		
 		List<Long> issueIds = poModel.getIssueIds();
 		Type status = (Type) session.get(Type.class, poModel.getStatusId());
 		Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
 		Category category = (Category) session.get(Category.class, poModel.getCategoryId());
 		Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
+		
+		if("add".equals(type)) {
+			Long poNo = poDao.getMaxPoNO(session);
+			po.setPoNo(poNo+1);
+		}
+		
 		po.setCategory(category);
 		po.setMessage(poModel.getMessage());
 		po.setStatus(status);
 		po.setUnitType(unitType);
 		po.setVendor(vendor);
+	
 		if(status.getTypeName().equals("Invoiced")){
 			po.setInvoiceNo(poModel.getInvoiceNo());
 		}

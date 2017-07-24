@@ -17,7 +17,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 @Entity
 @JsonSerialize(include = Inclusion.NON_NULL)
-@Table(name = "purchase_order")
+@Table(name = "purchase_order_issues")
 public class PurchaseOrderIssue implements Serializable {
 
 	private static final long serialVersionUID = 1L;

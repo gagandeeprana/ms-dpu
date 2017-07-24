@@ -33,9 +33,9 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 
 	@Override
 	public PurchaseOrder findById(Long id, Session session) {
-		StringBuilder sb = new StringBuilder(" select i from Issue i join fetch i.vmc join fetch i.unitType join fetch i.reportedBy join fetch i.status where i.id = :issueId ");
+		StringBuilder sb = new StringBuilder(" select i from PurchaseOrder i join fetch i.vendor join fetch i.category join fetch i.unitType join fetch i.status where i.id =:poId ");
 		Query query = session.createQuery(sb.toString());
-		query.setParameter("issueId", id);
+		query.setParameter("poId", id);
 		return (PurchaseOrder) query.uniqueResult();
 	}
 	@SuppressWarnings("unchecked")
@@ -72,21 +72,41 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 	}
 
 	@Override
-	public void addPurchaseOrder(List<PurchaseOrder> pos, Session session) {
-
-		if(pos != null && ! pos.isEmpty()) {
-			for (PurchaseOrder purchaseOrder : pos) {
-				session.save(purchaseOrder);
-			}
+	public void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
+	
+		session.save(po);
+		
+		for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
+			purchaseOrderIssue.setPurchaseOrder(po);
+			session.save(purchaseOrderIssue);
 		}
 		
 	}
 
 	@Override
-	public void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
-	
-		session.save(po);
+	public Long getMaxPoNO(Session session) {
+		Long returnVal = 999l;
+		Long maxVal = (Long) session.createQuery(" select max(poNo) from PurchaseOrder ").uniqueResult();
+		if(maxVal != null){
+			returnVal = maxVal;
+		}
+		return returnVal;
+	}
+
+	@Override
+	public void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
+
+		session.update(po);
 		
+		// existing issues
+		List<PurchaseOrderIssue> existingPoIssues = po.getPoIssues();
+		if(existingPoIssues != null && ! existingPoIssues.isEmpty()) {
+			for (PurchaseOrderIssue purchaseOrderIssue : existingPoIssues) {
+				session.delete(purchaseOrderIssue);
+			}
+		}
+		
+		//insert updated issues
 		for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
 			purchaseOrderIssue.setPurchaseOrder(po);
 			session.save(purchaseOrderIssue);

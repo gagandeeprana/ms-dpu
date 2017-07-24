@@ -172,6 +172,28 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 
+	@RequestMapping(value = "/{poId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object update(@PathVariable("poId") Long poId, @RequestBody PurchaseOrderModel poModel) {
+
+		logger.info("Inside PurchaseOrderController update() Starts, poId is :" + poId);
+		Object obj = null;
+		try {
+			Object result = poService.update(poId, poModel);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside PurchaseOrderController update() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info("Inside PurchaseOrderController update() Ends, issueId is :" + poId);
+		return obj;
+	}
+	
 	/**
 	 * this method is used to delete the PO
 	 * @param poId
@@ -198,28 +220,6 @@ public class PurchaseOrderController extends MessageProperties {
 		logger.info("Inside PurchaseOrderController delete() Ends, poId is :" + poId);
 		return obj;
 
-	}
-
-	@RequestMapping(value = "/{poId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("poId") Long issueId, @RequestBody IssueModel issueModel) {
-
-		logger.info("Inside PurchaseOrderController update() Starts, issueId is :" + issueId);
-		Object obj = null;
-		try {
-			Object result = issueService.update(issueId, issueModel);
-			if (result instanceof Success) {
-				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-			} else {
-				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
-
-			}
-		} catch (Exception e) {
-			logger.error("Exception inside PurchaseOrderController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-		}
-
-		logger.info("Inside PurchaseOrderController update() Ends, issueId is :" + issueId);
-		return obj;
 	}
 
 	/**

@@ -42,6 +42,8 @@ public class PurchaseOrderModel implements Serializable{
 	
 	private List<Long> issueIds;
 	
+	private Long PoNo;
+	
 	public Long getId() {
 		return id;
 	}
@@ -200,6 +202,14 @@ public class PurchaseOrderModel implements Serializable{
 
 	public void setIssueIds(List<Long> issueIds) {
 		this.issueIds = issueIds;
+	}
+
+	public Long getPoNo() {
+		return PoNo;
+	}
+
+	public void setPoNo(Long poNo) {
+		PoNo = poNo;
 	}
 
 	/*public List<Long> getIssueIds() {

@@ -6,7 +6,7 @@ import com.dpu.model.IssueModel;
 import com.dpu.model.PurchaseOrderModel;
 
 public interface PurchaseOrderService {
-	Object update(Long id, IssueModel issueModel);
+	/*Object update(Long id, IssueModel issueModel);*/
 
 	Object delete(Long id);
 
@@ -27,5 +27,7 @@ public interface PurchaseOrderService {
 	Object addPO(PurchaseOrderModel poModel);
 
 	List<IssueModel> getCategoryAndUnitTypeIssues(Long categoryId, Long unitTypeId);
+
+	Object update(Long poId, PurchaseOrderModel poModel);
 
 }

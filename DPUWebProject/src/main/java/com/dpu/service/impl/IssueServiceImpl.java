@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dpu.dao.HandlingDao;
 import com.dpu.dao.IssueDao;
 import com.dpu.entity.Category;
 import com.dpu.entity.Driver;
@@ -29,7 +28,6 @@ import com.dpu.model.VehicleMaintainanceCategoryModel;
 import com.dpu.service.CategoryService;
 import com.dpu.service.DriverService;
 import com.dpu.service.IssueService;
-import com.dpu.service.StatusService;
 import com.dpu.service.TypeService;
 import com.dpu.service.VehicleMaintainanceCategoryService;
 
@@ -37,15 +35,9 @@ import com.dpu.service.VehicleMaintainanceCategoryService;
 public class IssueServiceImpl implements IssueService  {
 
 	Logger logger = Logger.getLogger(IssueServiceImpl.class);
-
-	@Autowired
-	HandlingDao handlingDao;
 	
 	@Autowired
 	IssueDao issueDao;
-
-	@Autowired
-	StatusService statusService;
 
 	@Autowired
 	VehicleMaintainanceCategoryService vehicleMaintainanceCategoryService;
@@ -304,7 +296,7 @@ public class IssueServiceImpl implements IssueService  {
 			}
 		}
 
-		logger.info("IssueServiceImpl getHandlingByHandlingName() ends ");
+		logger.info("IssueServiceImpl getIssueByIssueName() ends ");
 		return issueList;
 	}
 	
@@ -315,7 +307,7 @@ public class IssueServiceImpl implements IssueService  {
 		List<IssueModel> issueList = new ArrayList<IssueModel>();
 		
 		try {
-			List<Object[]> issueData = handlingDao.getSpecificData(session, "Issue", "id", "issueName");
+			List<Object[]> issueData = issueDao.getSpecificData(session, "Issue", "id", "issueName");
 			
 			if (issueData != null && !issueData.isEmpty()) {
 				for (Object[] row : issueData) {
@@ -425,7 +417,7 @@ public class IssueServiceImpl implements IssueService  {
 	@Override
 	public List<IssueModel> getActiveAndIncompleteIssues() {
 		
-		logger.info("IssueServiceImpl getAll() starts ");
+		logger.info("IssueServiceImpl getActiveAndIncompleteIssues() starts ");
 		Session session = null;
 		List<IssueModel> issueList = new ArrayList<IssueModel>();
 		try {
@@ -439,7 +431,7 @@ public class IssueServiceImpl implements IssueService  {
 			}
 		}
 
-		logger.info("IssueServiceImpl getAll() ends ");
+		logger.info("IssueServiceImpl getActiveAndIncompleteIssues() ends ");
 		return issueList;
 	}
 

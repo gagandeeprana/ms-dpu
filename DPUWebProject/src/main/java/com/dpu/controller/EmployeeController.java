@@ -111,7 +111,7 @@ public class EmployeeController {
 	@RequestMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object update(@PathVariable("userId") Long userId, @RequestBody EmployeeModel employeeModel) {
 
-		logger.info("Inside EmployeeController update() Starts, vmcId is :" + userId);
+		logger.info("Inside EmployeeController update() Starts, userId is :" + userId);
 		Object obj = null;
 		try {
 			Object result = employeeService.update(userId, employeeModel);
@@ -126,7 +126,7 @@ public class EmployeeController {
 			obj = new ResponseEntity<Object>(new Failed(0, user_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
 		}
 
-		logger.info("Inside EmployeeController update() Ends, vmcId is :" + userId);
+		logger.info("Inside EmployeeController update() Ends, userId is :" + userId);
 		return obj;
 	}
 
@@ -172,30 +172,11 @@ public class EmployeeController {
 		logger.info("Inside EmployeeController getUserByUserId() Ends, userId:"+ userId);
 		return json;
 	}
-
 	
-/*	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object openAdd() {
-		
-		logger.info("Inside HandlingController openAdd() Starts ");
-		String json = null;
-
-		try {
-			HandlingModel model = handlingService.getOpenAdd();
-			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(model);
-		} catch (Exception e) {
-			logger.error(" Exception inside HandlingController openAdd() :"+ e.getMessage());
-		}
-
-		logger.info("Inside HandlingController openAdd() ends ");
-		return json;
-	}*/
-
 	@RequestMapping(value = "/{userName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchUserByUserName(@PathVariable("userName") String userName) {
 
-		logger.info("Inside VehicleMaintainanceCategoryController searchUserByUserName() Starts, userName :"+ userName);
+		logger.info("Inside EmployeeController searchUserByUserName() Starts, userName :"+ userName);
 		String json = new String();
 
 		try {
@@ -210,25 +191,5 @@ public class EmployeeController {
 		logger.info(" Inside EmployeeController searchUserByUserName() Ends, userName :"+ userName);
 		return json;
 	}
-
 	
-	/*@RequestMapping(value = "/specificData", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getSpecificData() {
-
-		logger.info("Inside HandlingController getSpecificData() Starts ");
-		String json = new String();
-
-		try {
-			List<HandlingModel> handlingList = handlingService.getSpecificData();
-			if (handlingList != null && handlingList.size() > 0) {
-				json = mapper.writeValueAsString(handlingList);
-			}
-		} catch (Exception e) {
-			logger.error(e);
-			logger.error("Exception inside HandlingController getSpecificData() is :"+ e.getMessage());
-		}
-
-		logger.info("Inside HandlingController getSpecificData() Ends ");
-		return json;
-	}*/
 }

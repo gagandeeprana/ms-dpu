@@ -20,7 +20,6 @@ import com.dpu.model.Failed;
 import com.dpu.model.IssueModel;
 import com.dpu.model.PurchaseOrderModel;
 import com.dpu.model.Success;
-import com.dpu.service.IssueService;
 import com.dpu.service.PurchaseOrderService;
 import com.dpu.util.MessageProperties;
 
@@ -30,9 +29,6 @@ public class PurchaseOrderController extends MessageProperties {
 
 	Logger logger = Logger.getLogger(PurchaseOrderController.class);
 
-	@Autowired
-	IssueService issueService;
-	
 	@Autowired
 	PurchaseOrderService poService;
 
@@ -222,47 +218,22 @@ public class PurchaseOrderController extends MessageProperties {
 
 	}
 
-	/**
-	 * this method is used when we click on add button on issue screen
-	 * send master data
-	 * @return master data for add handling
-	 * @author lakhvir
-	 */
-	@RequestMapping(value = "/category/{categoryId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getUnitNo(@PathVariable("categoryId") Long categoryId) {
-		
-		logger.info("Inside PurchaseOrderController getUnitNo() Starts ");
-		String json = null;
+	@RequestMapping(value = "/{poNo}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object searchPOByPoNo(@PathVariable("poNo") Long poNo) {
 
-		try {
-		//	IssueModel model = issueService.getUnitNo(categoryId);
-			//ObjectMapper mapper = new ObjectMapper();
-			//json = mapper.writeValueAsString(model);
-		} catch (Exception e) {
-			logger.error(" Exception inside IssueController openAdd() :"+ e.getMessage());
-		}
-
-		logger.info("Inside PurchaseOrderController openAdd() ends ");
-		return json;
-	}
-
-	
-	@RequestMapping(value = "/{issueName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object searchIssue(@PathVariable("issueName") String issueName) {
-
-		logger.info("Inside PurchaseOrderController searchIssue() Starts, issueName :"+ issueName);
+		logger.info("Inside PurchaseOrderController searchIssue() Starts, issueName :"+ poNo);
 		String json = new String();
 
 		try {
-			List<IssueModel> handlingList = issueService.getIssueByIssueName(issueName);
-			if (handlingList != null && handlingList.size() > 0) {
-				json = mapper.writeValueAsString(handlingList);
+			List<PurchaseOrderModel> poList = poService.getPoByPoNo(poNo);
+			if (poList != null && poList.size() > 0) {
+				json = mapper.writeValueAsString(poList);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside PurchaseOrderController searchIssue() is :"+ e.getMessage());
 		}
 
-		logger.info(" Inside PurchaseOrderController searchIssue() Ends, issueName :"+ issueName);
+		logger.info(" Inside PurchaseOrderController searchIssue() Ends, issueName :"+ poNo);
 		return json;
 	}
 
@@ -274,10 +245,10 @@ public class PurchaseOrderController extends MessageProperties {
 		String json = new String();
 
 		try {
-			List<IssueModel> issueList = issueService.getSpecificData();
+			/*List<IssueModel> issueList = issueService.getSpecificData();
 			if (issueList != null && issueList.size() > 0) {
 				json = mapper.writeValueAsString(issueList);
-			}
+			}*/
 		} catch (Exception e) {
 			logger.error("Exception inside PurchaseOrderController getSpecificData() is :"+ e.getMessage());
 		}

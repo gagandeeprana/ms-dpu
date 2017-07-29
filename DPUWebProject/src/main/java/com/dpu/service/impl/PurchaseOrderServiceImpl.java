@@ -152,8 +152,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			PurchaseOrder po = (PurchaseOrder) session.get(PurchaseOrder.class, id);
 			List<PurchaseOrderIssue> poIssues = new ArrayList<PurchaseOrderIssue>();
 			if (po != null) {
+				Type assignStatus = typeService.get(106l);
+				Type openStatus = typeService.get(103l);
 				setPoValues(poModel, po, poIssues, session, "update");
-				poDao.update(po, poIssues, session);
+				poDao.update(po, poIssues, assignStatus, openStatus, session);
 				tx.commit();
 			} else {
 				return createFailedObject(po_unable_to_update_message);
@@ -341,7 +343,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			PurchaseOrder po = new PurchaseOrder();
 			List<PurchaseOrderIssue> poIssues = new ArrayList<PurchaseOrderIssue>();
 			setPoValues(poModel, po, poIssues, session, "add");
-			poDao.addPurchaseOrder(po, poIssues, session);
+			Type assignStatus = typeService.get(106l);
+			poDao.addPurchaseOrder(po, poIssues, assignStatus, session);
 			tx.commit();
 		} catch (Exception e) {
 			if(tx != null){

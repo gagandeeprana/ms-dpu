@@ -7,8 +7,10 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.dpu.dao.PurchaseOrderDao;
+import com.dpu.entity.Issue;
 import com.dpu.entity.PurchaseOrder;
 import com.dpu.entity.PurchaseOrderIssue;
+import com.dpu.entity.Type;
 
 @Repository
 public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implements PurchaseOrderDao{
@@ -31,11 +33,14 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 	}
 
 	@Override
-	public void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
+	public void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Type assignStatus, Session session) {
 	
 		session.save(po);
 		
 		for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
+			Issue issue = purchaseOrderIssue.getIssue();
+			issue.setStatus(assignStatus);
+			session.update(issue);
 			purchaseOrderIssue.setPurchaseOrder(po);
 			session.save(purchaseOrderIssue);
 		}
@@ -53,7 +58,7 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 	}
 
 	@Override
-	public void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session) {
+	public void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues,  Type assignStatus, Type openStatus, Session session) {
 
 		session.update(po);
 		
@@ -61,12 +66,18 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 		List<PurchaseOrderIssue> existingPoIssues = po.getPoIssues();
 		if(existingPoIssues != null && ! existingPoIssues.isEmpty()) {
 			for (PurchaseOrderIssue purchaseOrderIssue : existingPoIssues) {
+				Issue issue = purchaseOrderIssue.getIssue();
+				issue.setStatus(openStatus);
+				session.update(issue);
 				session.delete(purchaseOrderIssue);
 			}
 		}
 		
 		//insert updated issues
 		for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
+			Issue issue = purchaseOrderIssue.getIssue();
+			issue.setStatus(assignStatus);
+			session.update(issue);
 			purchaseOrderIssue.setPurchaseOrder(po);
 			session.save(purchaseOrderIssue);
 		}

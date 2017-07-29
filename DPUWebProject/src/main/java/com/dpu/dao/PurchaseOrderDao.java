@@ -6,6 +6,7 @@ import org.hibernate.Session;
 
 import com.dpu.entity.PurchaseOrder;
 import com.dpu.entity.PurchaseOrderIssue;
+import com.dpu.entity.Type;
 
 public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 
@@ -13,10 +14,10 @@ public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 
 	PurchaseOrder findById(Long id, Session session);
 
-	void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session);
+	void addPurchaseOrder(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Type assignStatus, Session session);
 
 	Long getMaxPoNO(Session session);
 
-	void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Session session);
+	void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Type assignStatus, Type openStatus, Session session);
 
 }

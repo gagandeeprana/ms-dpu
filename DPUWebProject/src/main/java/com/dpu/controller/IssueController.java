@@ -41,6 +41,9 @@ public class IssueController extends MessageProperties {
 	
 	@Value("${issue_unable_to_update_message}")
 	private String issue_unable_to_update_message;
+	
+	@Value("${issue_status_unable_to_update}")
+	private String issue_status_unable_to_update;
 
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
@@ -131,6 +134,29 @@ public class IssueController extends MessageProperties {
 		return obj;
 	}
 
+
+	@RequestMapping(value = "/{issueId}/status/{statusId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateStatus(@PathVariable("issueId") Long issueId, @PathVariable("statusId") Long statusId) {
+
+		logger.info("Inside IssueController updateStatus() Starts, issueId is :" + issueId +": statusId :"+statusId);
+		Object obj = null;
+		try {
+			Object result = issueService.updateStatus(issueId, statusId);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside IssueController updateStatus() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0,issue_status_unable_to_update, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info("Inside IssueController updateStatus() Ends, issueId is :" + issueId +": statusId :"+statusId);
+		return obj;
+	}
+	
 	@RequestMapping(value = "/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getIssueByIssueId(@PathVariable("issueId") Long issueId) {
 		

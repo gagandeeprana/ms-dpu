@@ -43,6 +43,8 @@ public class PurchaseOrderController extends MessageProperties {
 	@Value("${po_unable_to_update_message}")
 	private String po_unable_to_update_message;
 
+	@Value("${po_status_unable_to_update}")
+	private String po_status_unable_to_update;
 	/**
 	 * this method is used when we click on add PO button
 	 * @return openAdd data
@@ -190,6 +192,27 @@ public class PurchaseOrderController extends MessageProperties {
 		return obj;
 	}
 	
+	@RequestMapping(value = "/{poId}/status/{statusId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateStatus(@PathVariable("poId") Long poId, @PathVariable("statusId") Long statusId) {
+
+		logger.info("Inside PurchaseOrderController updateStatus() Starts, poId is :" + poId +": statusId :"+statusId);
+		Object obj = null;
+		try {
+			Object result = poService.updateStatus(poId, statusId);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside PurchaseOrderController updateStatus() :"+ e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, po_status_unable_to_update, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info("Inside PurchaseOrderController updateStatus() Ends, issueId is :" + poId+": statusId :"+statusId);
+		return obj;
+	}
 	/**
 	 * this method is used to delete the PO
 	 * @param poId

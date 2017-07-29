@@ -75,6 +75,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 	@Value("${po_already_used_message}")
 	private String po_already_used_message;
+	
+	@Value("${po_status_update}")
+	private String po_status_update;
+
+	@Value("${po_status_unable_to_update}")
+	private String po_status_unable_to_update;
 
 	@Override
 	public List<PurchaseOrderModel> getAll() {
@@ -413,6 +419,40 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		}
 		
 		return issues;
+	}
+
+	@Override
+	public Object updateStatus(Long poId, Long statusId) {
+		logger.info("PurchaseOrderServiceImpl updateStatus() starts.");
+		Session session = null;
+		Transaction tx = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			PurchaseOrder po = (PurchaseOrder) session.get(PurchaseOrder.class, poId);
+			if (po != null) {
+				Type status = typeService.get(statusId);
+				poDao.updateStatus(po, status, session);
+				tx.commit();
+			} else {
+				return createFailedObject(po_status_unable_to_update);
+			}
+
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			logger.info("Exception inside PurchaseOrderServiceImpl updateStatus() :"+ e.getMessage());
+			return createFailedObject(po_status_unable_to_update);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("PurchaseOrderServiceImpl updateStatus() ends.");
+		return createSuccessObject(po_status_update);
 	}
 
 	

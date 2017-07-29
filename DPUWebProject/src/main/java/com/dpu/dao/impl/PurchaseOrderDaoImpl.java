@@ -84,4 +84,11 @@ public class PurchaseOrderDaoImpl extends GenericDaoImpl<PurchaseOrder> implemen
 		
 	}
 
+	@Override
+	public void updateStatus(PurchaseOrder po, Type status, Session session) {
+		po.setStatus(status);
+		session.update(po);
+		
+	}
+
 }

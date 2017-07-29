@@ -20,4 +20,6 @@ public interface PurchaseOrderDao extends GenericDao<PurchaseOrder> {
 
 	void update(PurchaseOrder po, List<PurchaseOrderIssue> poIssues, Type assignStatus, Type openStatus, Session session);
 
+	void updateStatus(PurchaseOrder po, Type status, Session session);
+
 }

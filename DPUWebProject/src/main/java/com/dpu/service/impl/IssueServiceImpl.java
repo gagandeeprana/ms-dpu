@@ -74,6 +74,12 @@ public class IssueServiceImpl implements IssueService  {
 
 	@Value("${issue_already_used_message}")
 	private String issue_already_used_message;
+	
+	@Value("${issue_status_update}")
+	private String issue_status_update;
+	
+	@Value("${issue_status_unable_to_update}")
+	private String issue_status_unable_to_update;
 
 	@Override
 	public List<IssueModel> getAll() {
@@ -446,6 +452,42 @@ public class IssueServiceImpl implements IssueService  {
 
 		logger.info("IssueServiceImpl getIssueforCategoryAndUnitType() ends ");
 		return issueList;
+	}
+
+	@Override
+	public Object updateStatus(Long issueId, Long statusId) {
+
+		logger.info("IssueServiceImpl updateStatus() starts.");
+		Session session = null;
+		Transaction tx = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			Issue issue = issueDao.findById(issueId);
+
+			if (issue != null) {
+				Type status = typeService.get(statusId);
+				issueDao.updateStatus(issue, status, session);
+				tx.commit();
+			} else {
+				return createFailedObject(issue_status_unable_to_update);
+			}
+
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			logger.info("Exception inside IssueServiceImpl updateStatus() :"+ e.getMessage());
+			return createFailedObject(issue_status_unable_to_update);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("IssueServiceImpl updateStatus() ends.");
+		return createSuccessObject(issue_status_update);
 	}
 
 	

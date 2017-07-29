@@ -23,4 +23,6 @@ public interface PurchaseOrderService {
 
 	List<PurchaseOrderModel> getPoByPoNo(Long poNo);
 
+	Object updateStatus(Long poId, Long statusId);
+
 }

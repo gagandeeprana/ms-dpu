@@ -9,4 +9,5 @@ public class Iconstants {
 	public static final String UNIQUE_USER_NAME = "UNIQUE_USER_NAME";
 	
 	public static final String UNIQUE_EMAIL = "UNIQUE_EMAIL";
+	public static final String UNIQUE_TRUCK_UNIT_NO ="UNIQUE_TRUCK_UNIT_NO";
 }

@@ -11,12 +11,15 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.common.AllList;
 import com.dpu.common.CommonProperties;
+import com.dpu.constants.Iconstants;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.TerminalDao;
@@ -73,6 +76,9 @@ public class TruckServiceImpl implements TruckService {
 	@Autowired
 	TypeDao typeDao;
 
+	@Value("{Truck_unit_No_already_exist}")
+	private String Truck_unit_No_already_exist;
+	
 	Logger logger = Logger.getLogger(TruckServiceImpl.class);
 
 	private Object createSuccessObject(String msg, long code) {
@@ -268,6 +274,13 @@ public class TruckServiceImpl implements TruckService {
 			logger.error("TruckServiceImpl: add(): Exception: ", e);
 			if (tx != null) {
 				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				ConstraintViolationException c = (ConstraintViolationException) e;
+				String constraintName = c.getConstraintName();
+				if(Iconstants.UNIQUE_TRUCK_UNIT_NO.equals(constraintName)) {
+					return createFailedObject(Truck_unit_No_already_exist,0);
+				}
 			}
 			return createFailedObject(
 					CommonProperties.Truck_unable_to_add_message,

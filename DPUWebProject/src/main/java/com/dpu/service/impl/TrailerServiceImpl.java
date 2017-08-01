@@ -8,12 +8,14 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dpu.common.AllList;
+import com.dpu.constants.Iconstants;
 import com.dpu.dao.CategoryDao;
 import com.dpu.dao.DivisionDao;
 import com.dpu.dao.TerminalDao;
@@ -91,6 +93,9 @@ public class TrailerServiceImpl implements TrailerService{
 	@Value("${trailer_unable_to_update_message}")
 	private String trailer_unable_to_update_message;
 	
+	@Value("${trailer_unit_no_already_exists}")
+	private String trailer_unit_no_already_exists;
+	
 	@Override
 	public Object add(TrailerRequest trailerRequest) {
 		
@@ -125,6 +130,13 @@ public class TrailerServiceImpl implements TrailerService{
 		} catch (Exception e) {
 			if(tx != null){
 				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				ConstraintViolationException c = (ConstraintViolationException) e;
+				String constraintName = c.getConstraintName();
+				if(Iconstants.UNIQUE_TRAILER_UNIT_NO.equals(constraintName)) {
+					return createFailedObject(trailer_unit_no_already_exists);
+				}
 			}
 			logger.error("Exception inside TrailerServiceImpl add() :"+e.getMessage());
 			return createFailedObject(trailer_unable_to_add_message);
@@ -193,6 +205,13 @@ public class TrailerServiceImpl implements TrailerService{
 			logger.error("Exception inside TrailerServiceImpl update() :"+ e.getMessage());
 			if(tx != null){
 				tx.rollback();
+			}
+			if(e instanceof ConstraintViolationException){
+				ConstraintViolationException c = (ConstraintViolationException) e;
+				String constraintName = c.getConstraintName();
+				if(Iconstants.UNIQUE_TRAILER_UNIT_NO.equals(constraintName)) {
+					return createFailedObject(trailer_unit_no_already_exists);
+				}
 			}
 			return createFailedObject(trailer_unable_to_update_message);
 		} finally {

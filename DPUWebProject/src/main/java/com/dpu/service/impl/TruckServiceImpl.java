@@ -215,10 +215,9 @@ public class TruckServiceImpl implements TruckService {
 		TruckResponse truckResponse = new TruckResponse();
 		
 		try{
-			//Truck truck = truckDao.findById(id);
 			Truck truck = truckDao.findById(session, id);
 			if (truck != null) {
-				BeanUtils.copyProperties(truck, truckResponse);
+				truckResponse.setTruckId(truck.getTruckId());
 				truckResponse.setUnitNo(truck.getUnitNo());
 				truckResponse.setOwner(truck.getOwner());
 				truckResponse.setoOName(truck.getoOName());
@@ -232,7 +231,6 @@ public class TruckServiceImpl implements TruckService {
 				//truckResponse.setTypeName(truck.getType().getTypeName());
 				truckResponse.setTruckType(truck.getType().getTypeName());
 				truckResponse.setFinance(truck.getFinance());
-
 				List<Status> lstStatus = AllList.getStatusList(session);
 				truckResponse.setStatusList(lstStatus);
 

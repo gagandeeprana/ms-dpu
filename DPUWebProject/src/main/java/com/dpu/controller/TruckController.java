@@ -61,7 +61,7 @@ public class TruckController extends MessageProperties {
 
 			}
 		} catch (Exception e) {
-			logger.fatal("[TruckController]: add(): Exception: ", e);
+			logger.error("[TruckController]: add(): Exception: ", e);
 
 		}
 
@@ -86,21 +86,6 @@ public class TruckController extends MessageProperties {
 		return json;
 	}
 
-	// private Truck setTruckValues(TruckResponse truckResponse) {
-	// Truck truck = new Truck();
-	// truck.setUnitNo(truckResponse.getUnitNo());
-	// truck.setOwner(truckResponse.getOwner());
-	// truck.setoOName(truckResponse.getoOName());
-	// truck.setCategory(truckResponse.getCategory());
-	// truck.setStatus(truckResponse.getStatus());
-	// truck.setUsage(truckResponse.getUsage());
-	// truck.setDivision(truckResponse.getDivision());
-	// truck.setTerminal(truckResponse.getTerminal());
-	// truck.setTruckType(truckResponse.getTruckType());
-	// truck.setFinance(truckResponse.getFinance());
-	// return truck;
-	// }
-	//
 	// delete Truck
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object deleteTruck(@PathVariable("id") Long id) {
@@ -156,7 +141,7 @@ public class TruckController extends MessageProperties {
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(truckResponse);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(" Exception inside TruckController openAdd() :"+ e.getMessage());
 		}
 		logger.info("[TruckController] [openAdd] : End");
 		return json;

@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.DriverReq;
+import com.dpu.model.DriverModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.DriverService;
 import com.dpu.util.MessageProperties;
-
 
 @RestController
 @RequestMapping(value = "driver")
@@ -54,7 +53,7 @@ public class DriverController extends MessageProperties  {
 		String json = null;
 		try {
 			
-			List<DriverReq> lstdrivers = driverService.getAllDriver();
+			List<DriverModel> lstdrivers = driverService.getAllDriver();
 
 			if (lstdrivers != null && !lstdrivers.isEmpty()) {
 				json = mapper.writeValueAsString(lstdrivers);
@@ -68,18 +67,18 @@ public class DriverController extends MessageProperties  {
 
 	/**
 	 * this method is used to add new driver
-	 * @param driverReq
+	 * @param driverModel
 	 * @return List<drivers>
 	 * @author lakhvir
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public ResponseEntity<Object> addDriver(@RequestBody DriverReq driverReq) {
+	public ResponseEntity<Object> addDriver(@RequestBody DriverModel driverModel) {
 		
 		logger.info("Inside DriverController addDriver Starts. ");
 		ResponseEntity<Object> obj =  null;
 		  
 		try {
-			Object result = driverService.addDriver(driverReq);
+			Object result = driverService.addDriver(driverModel);
 			if(result instanceof Success){ 
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else{
@@ -130,13 +129,13 @@ public class DriverController extends MessageProperties  {
 	 * @author lakhvir
 	 */
 	@RequestMapping(value = "/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object updateDriver(@PathVariable("driverId") Long driverId, @RequestBody DriverReq driverReq) {
+	public Object updateDriver(@PathVariable("driverId") Long driverId, @RequestBody DriverModel driverModel) {
 
 		logger.info("Inside DriverController updateDriver() starts, driverId : "+ driverId);
 		Object obj = null;
 		
 		try {
-			Object result = driverService.updateDriver(driverId, driverReq);
+			Object result = driverService.updateDriver(driverId, driverModel);
 
 			if(result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
@@ -186,7 +185,7 @@ public class DriverController extends MessageProperties  {
 		String json = null;
 		
 		try {
-			DriverReq driverReq = driverService.getOpenAdd();
+			DriverModel driverReq = driverService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(driverReq);
 		} catch (Exception e) {
@@ -210,7 +209,7 @@ public class DriverController extends MessageProperties  {
 		String json = new String();
 		
 		try {
-			List<DriverReq> serviceList = driverService.getDriverByDriverCodeOrName(driverCodeOrName);
+			List<DriverModel> serviceList = driverService.getDriverByDriverCodeOrName(driverCodeOrName);
 			if(serviceList != null && serviceList.size() > 0) {
 				json = mapper.writeValueAsString(serviceList);
 			}
@@ -234,7 +233,7 @@ public class DriverController extends MessageProperties  {
 		String json = new String();
 
 		try {
-			List<DriverReq> driverList = driverService.getSpecificData();
+			List<DriverModel> driverList = driverService.getSpecificData();
 			if (driverList != null && driverList.size() > 0) {
 				json = mapper.writeValueAsString(driverList);
 			}

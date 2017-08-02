@@ -5,23 +5,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dpu.constants.Iconstants;
 import com.dpu.model.CountryStateCityModel;
-import com.dpu.model.Failed;
-import com.dpu.model.HandlingModel;
-import com.dpu.model.Success;
 import com.dpu.service.CountryStateCityService;
-import com.dpu.service.HandlingService;
 import com.dpu.util.MessageProperties;
 
 @RestController
@@ -35,175 +26,73 @@ public class CountryStateCityController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Value("${handling_unable_to_add_message}")
-	private String handling_unable_to_add_message;
-
-	@Value("${handling_unable_to_delete_message}")
-	private String handling_unable_to_delete_message;
-	
-	@Value("${handling_unable_to_update_message}")
-	private String handling_unable_to_update_message;
-
 	/**
-	 * this method is used to get all handlings
-	 * @return List<Handlings>
-	 * @author lakhvir.bansal
+	 * this method is used to get all countries
+	 * @return List<countries>
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getAll() {
+	public Object getAllCountries() {
 
-		logger.info("Inside HandlingController getAll() Starts ");
+		logger.info("Inside CountryStateCityController getAllCountries() Starts ");
 		String json = null;
 
 		try {
-			List<CountryStateCityModel> responses = countryStateCityService.getAll();
+			List<CountryStateCityModel> responses = countryStateCityService.getAllCountries();
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
 
 		} catch (Exception e) {
-			logger.error("Exception inside HandlingController getAll() :"+ e.getMessage());
+			logger.error("Exception inside CountryStateCityController getAllCountries() :"+ e.getMessage());
 		}
 		
-		logger.info("Inside HandlingController getAll() Ends ");
+		logger.info("Inside CountryStateCityController getAllCountries() Ends ");
 		return json;
 	}
 
 	/**
-	 * this method is used to add the Handling
-	 * @param handlingModel
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
+	 * this method is used to get states based on countryId
+	 * @param countryId
+	 * @return List<States>
 	 */
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody HandlingModel handlingModel) {
+	@RequestMapping(value = "/{countryId}/states", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getStatesByCountryId(@PathVariable("countryId") Long countryId) {
 
-		logger.info("Inside HandlingController add() starts ");
-		Object obj = null;
-		
-		try {
-
-			Object result = null;//handlingService.addHandling(handlingModel);
-			if (result instanceof Success) {
-				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-			} else {
-				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
-			}
-
-		} catch (Exception e) {
-			logger.error("Exception inside HandlingController add() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_add_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-		}
-		
-		logger.info("Inside HandlingController add() ends ");
-		return obj;
-	}
-
-	/**
-	 * this method is used to delete the Handling based on handlingId
-	 * @param id
-	 * @return List<Handling>
-	 * @author lakhvir.bansal
-	 */
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-	public Object delete(@PathVariable("id") Long handlingId) {
-
-		logger.info("Inside HandlingController delete() Starts, handlingId is :" + handlingId);
-		Object obj = null;
-
-		try {
-			Object result = null;//handlingService.delete(handlingId);
-			if (result instanceof Success) {
-				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-			} else {
-				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
-
-			}
-		} catch (Exception e) {
-			logger.error("Exception inside HandlingController delete() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_delete_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-		}
-		logger.info("Inside CategoryController delete() Ends, id is :" + handlingId);
-		return obj;
-
-	}
-
-	/**
-	 * this method is used to update the handling based on handlingID
-	 * @param handlingId
-	 * @param handlingModel
-	 * @return List<Categories>
-	 */
-	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long handlingId, @RequestBody HandlingModel handlingModel) {
-
-		logger.info("Inside HandlingController update() Starts, handlingId is :" + handlingId);
-		Object obj = null;
-		try {
-			Object result = null;//handlingService.update(handlingId, handlingModel);
-			if (result instanceof Success) {
-				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
-			} else {
-				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
-
-			}
-		} catch (Exception e) {
-			logger.error("Exception inside HandlingController update() :"+ e.getMessage());
-			obj = new ResponseEntity<Object>(new Failed(0,handling_unable_to_update_message, Iconstants.ERROR), HttpStatus.BAD_REQUEST);
-		}
-
-		logger.info("Inside HandlingController update() Ends, handlingId is :" + handlingId);
-		return obj;
-	}
-
-	/**
-	 * this method is used to get Handling data based on handlingId
-	 * @param handlingId
-	 * @return handlingData
-	 * @author lakhvir.bansal
-	 */
-	@RequestMapping(value = "/{handlingId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getHandlingById(@PathVariable("handlingId") Long handlingId) {
-		
-		logger.info("Inside HandlingController getHandlingById() Starts, Id:"+ handlingId);
+		logger.info("Inside CountryStateCityController getStatesByCountryId() Starts ");
 		String json = null;
 
 		try {
-
-			HandlingModel handlingModel = null;//handlingService.get(handlingId);
-
-			if (handlingModel != null) {
-				json = mapper.writeValueAsString(handlingModel);
+			List<CountryStateCityModel> responses = countryStateCityService.getStatesByCountryId(countryId);
+			if (responses != null && !responses.isEmpty()) {
+				json = mapper.writeValueAsString(responses);
 			}
-		} catch (Exception e) {
-			logger.error("Exception inside HandlingController getHandlingById() :"+ e.getMessage());
-		}
 
-		logger.info("Inside HandlingController getHandlingById() Ends, Id:"+ handlingId);
+		} catch (Exception e) {
+			logger.error("Exception inside CountryStateCityController getStatesByCountryId() :"+ e.getMessage());
+		}
+		
+		logger.info("Inside CountryStateCityController getStatesByCountryId() Ends ");
 		return json;
 	}
+	
+	@RequestMapping(value = "/states/{stateId}/city", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getCitiesByStateId(@PathVariable("stateId") Long stateId) {
 
-	/**
-	 * this method is used when we click on add button on handling screen
-	 * send master data
-	 * @return master data for add handling
-	 * @author lakhvir.bansal
-	 */
-	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object openAdd() {
-		
-		logger.info("Inside HandlingController openAdd() Starts ");
+		logger.info("Inside CountryStateCityController getCitiesByStateId() Starts ");
 		String json = null;
 
 		try {
-			HandlingModel model = null;//handlingService.getOpenAdd();
-			ObjectMapper mapper = new ObjectMapper();
-			json = mapper.writeValueAsString(model);
-		} catch (Exception e) {
-			logger.error(" Exception inside HandlingController openAdd() :"+ e.getMessage());
-		}
+			List<CountryStateCityModel> responses = countryStateCityService.getCitiesByStateId(stateId);
+			if (responses != null && !responses.isEmpty()) {
+				json = mapper.writeValueAsString(responses);
+			}
 
-		logger.info("Inside HandlingController openAdd() ends ");
+		} catch (Exception e) {
+			logger.error("Exception inside CountryStateCityController getCitiesByStateId() :"+ e.getMessage());
+		}
+		
+		logger.info("Inside CountryStateCityController getCitiesByStateId() Ends ");
 		return json;
 	}
+
 }

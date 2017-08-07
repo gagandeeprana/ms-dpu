@@ -396,6 +396,11 @@ public class DriverServiceImpl implements DriverService {
 				
 				List<CountryStateCityModel> countryList = countryStateCityService.getAllCountries();
 				driverModel.setCountryList(countryList);
+				
+				if(driver.getCountry() != null){
+					List<CountryStateCityModel> stateList = countryStateCityService.getStatesByCountryId(driver.getCountry().getCountryId());
+					driverModel.setStateList(stateList);
+				}
 			} 
 		}  finally {
 			if (session != null) {

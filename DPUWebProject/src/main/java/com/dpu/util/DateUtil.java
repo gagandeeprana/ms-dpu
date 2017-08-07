@@ -12,4 +12,16 @@ public class DateUtil {
 		Date date = cal.getTime();
 		return date;
 	}
+	
+	public static String rearrangeDate(String date) {
+		String reArrangedDate = null;
+		if(date != null) {
+			String[] arr = date.split("/");
+			String month = arr[0];
+			String dt = arr[1];
+			String yr = arr[2];
+			reArrangedDate = yr + "-" + month + "-" + dt;
+		}
+		return reArrangedDate;
+	}
 }

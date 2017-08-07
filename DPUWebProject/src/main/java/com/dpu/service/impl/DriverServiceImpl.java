@@ -242,6 +242,9 @@ public class DriverServiceImpl implements DriverService {
 
 			if (driver != null) {
 				session.delete(driver);
+				if(tx != null){
+					tx.commit();
+				}
 			} else {
 				return createFailedObject(Driver_unable_to_delete_message);
 			}
@@ -255,9 +258,7 @@ public class DriverServiceImpl implements DriverService {
 			}
 			return createFailedObject(Driver_unable_to_delete_message);
 		} finally{
-			if(tx != null){
-				tx.commit();
-			} 
+			 
 			if(session != null){
 				session.close();
 			}

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.model.Failed;
-import com.dpu.model.ShipperResponse;
+import com.dpu.model.ShipperModel;
 import com.dpu.model.Success;
 import com.dpu.service.ShipperService;
 import com.dpu.util.MessageProperties;
@@ -33,17 +34,25 @@ public class ShipperController extends MessageProperties {
 
 	ObjectMapper mapper = new ObjectMapper();
 
+	@Value("${shipper_unable_to_add_message}")
+	private String shipper_unable_to_add_message;
+	
+	@Value("${shipper_unable_to_delete_message}")
+	private String shipper_unable_to_delete_message;
+	
+	@Value("${shipper_unable_to_update_message}")
+	private String shipper_unable_to_update_message;
+	
 	/**
 	 * this method is used to getAll shippers
 	 * @return List<shipper>
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getAll() {
 		logger.info("Inside ShipperController getAll() starts");
 		String json = null;
 		try {
-			List<ShipperResponse> lstShippers = shipperService.getAll();
+			List<ShipperModel> lstShippers = shipperService.getAll();
 			if(lstShippers != null && !lstShippers.isEmpty()) {
 				json = mapper.writeValueAsString(lstShippers);
 			}
@@ -58,10 +67,9 @@ public class ShipperController extends MessageProperties {
 	 * this method is used to add shipper
 	 * @param shipperResponse
 	 * @return List<Shipper>
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody ShipperResponse shipperResponse) {
+	public Object add(@RequestBody ShipperModel shipperResponse) {
 		
 		logger.info("Inside ShipperController add() Starts ");
 		Object obj = null;
@@ -69,12 +77,13 @@ public class ShipperController extends MessageProperties {
 		try {
 			Object response = shipperService.add(shipperResponse);
 			if (response instanceof Success) {
-				obj = new ResponseEntity<Object>(response, HttpStatus.OK);
+				obj = new ResponseEntity<Object>(response, HttpStatus.CREATED);
 			} else {
 				obj = new ResponseEntity<Object>(response, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside ShipperController add() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, shipper_unable_to_add_message, Iconstants.ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		logger.info("Inside ShipperController add() Ends ");
@@ -85,7 +94,6 @@ public class ShipperController extends MessageProperties {
 	 * this method is used to delete the shipper based on shipperId
 	 * @param id
 	 * @return List<shipper>
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
 	public Object delete(@PathVariable("id") Long id) {
@@ -104,6 +112,7 @@ public class ShipperController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside ShipperController delete() :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, shipper_unable_to_delete_message, Iconstants.ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		logger.info("Inside ShipperController delete() Ends, shipperId :"+id);
 		return obj;
@@ -114,10 +123,9 @@ public class ShipperController extends MessageProperties {
 	 * @param id
 	 * @param shipperResponse
 	 * @return List<Shipper>
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id, @RequestBody ShipperResponse shipperResponse) {
+	public Object update(@PathVariable("id") Long id, @RequestBody ShipperModel shipperResponse) {
 		logger.info("Inside  ShipperController update() Starts, shipperId :"+id);
 		Object obj = null;
 		try {
@@ -129,6 +137,7 @@ public class ShipperController extends MessageProperties {
 			}
 		} catch (Exception e) {
 			logger.error("Exception inside ShipperController update :"+e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, shipper_unable_to_update_message, Iconstants.ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		logger.info("Inside  ShipperController update() Ends, shipperId :"+id);
 		return obj;
@@ -138,14 +147,13 @@ public class ShipperController extends MessageProperties {
 	 * this method is used to get the particular shipper
 	 * @param id
 	 * @return particular shipper
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{shipperId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object get(@PathVariable("shipperId") Long id) {
 		logger.info("Inside  ShipperController get() Starts, shipperId : "+id);
 		String json = new String();
 		try {
-			ShipperResponse response = shipperService.get(id);
+			ShipperModel response = shipperService.get(id);
 			if(response != null) {
 				json = mapper.writeValueAsString(response);
 			}
@@ -159,14 +167,13 @@ public class ShipperController extends MessageProperties {
 	/**
 	 * this method is used when we click on add button in shipper screen
 	 * @return masterData
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/openAdd", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object getOpenAdd() {
 		logger.info("Inside ShipperController getOpenAdd() Starts. ");
 		String json = new String();
 		try {
-			ShipperResponse response = shipperService.getMasterData();
+			ShipperModel response = shipperService.getMasterData();
 			if (response != null) {
 				json = mapper.writeValueAsString(response);
 			}
@@ -181,14 +188,13 @@ public class ShipperController extends MessageProperties {
 	 * this method is used to search the shipper based on companyName
 	 * @param companyName
 	 * @return List<Shipper>
-	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{companyName}/search", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
 	public Object searchShipper(@PathVariable("companyName") String companyName) {
 		logger.info("Inside ShipperController searchShipper() Starts, companyName :"+companyName);
 		String json = new String();
 		try {
-			List<ShipperResponse> shipperList = shipperService.getShipperByCompanyName(companyName);
+			List<ShipperModel> shipperList = shipperService.getShipperByCompanyName(companyName);
 			if(shipperList != null && shipperList.size() > 0) {
 				json = mapper.writeValueAsString(shipperList);
 			}

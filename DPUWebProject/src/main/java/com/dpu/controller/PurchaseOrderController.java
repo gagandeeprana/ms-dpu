@@ -124,14 +124,14 @@ public class PurchaseOrderController extends MessageProperties {
 	 * this method is used to get all PO
 	 * @return all PO data
 	 */
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-	public Object getAll() {
+	@RequestMapping(value = "/status/{statusValue}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getAll(@PathVariable("statusValue") String statusVal) {
 
 		logger.info("Inside PurchaseOrderController getAll() Starts ");
 		String json = null;
 
 		try {
-			List<PurchaseOrderModel> responses = poService.getAll();
+			List<PurchaseOrderModel> responses = poService.getStatusPOs(statusVal);
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
@@ -193,12 +193,12 @@ public class PurchaseOrderController extends MessageProperties {
 	}
 	
 	@RequestMapping(value = "/{poId}/status/{statusId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object updateStatus(@PathVariable("poId") Long poId, @PathVariable("statusId") Long statusId) {
+	public Object updateStatus(@PathVariable("poId") Long poId, @PathVariable("statusId") Long statusId, @RequestBody PurchaseOrderModel poModel) {
 
 		logger.info("Inside PurchaseOrderController updateStatus() Starts, poId is :" + poId +": statusId :"+statusId);
 		Object obj = null;
 		try {
-			Object result = poService.updateStatus(poId, statusId);
+			Object result = poService.updateStatus(poId, statusId, poModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {

@@ -161,6 +161,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					}
 					
 					poModel.setIsComplete(isSuccess);
+					poModel.setCompleteStatusId(109l);
 				}
 			}
 		}

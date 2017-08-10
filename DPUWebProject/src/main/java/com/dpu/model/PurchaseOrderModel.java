@@ -43,6 +43,7 @@ public class PurchaseOrderModel implements Serializable{
 	private Long PoNo;
 	
 	private Boolean isComplete;
+	private Long completeStatusId;
 	
 	// for invoice status
 	private String invoiceNo;
@@ -239,6 +240,14 @@ public class PurchaseOrderModel implements Serializable{
 
 	public void setInvoiceDate(String invoiceDate) {
 		this.invoiceDate = invoiceDate;
+	}
+
+	public Long getCompleteStatusId() {
+		return completeStatusId;
+	}
+
+	public void setCompleteStatusId(Long completeStatusId) {
+		this.completeStatusId = completeStatusId;
 	}
 
 	/*public List<Long> getIssueIds() {

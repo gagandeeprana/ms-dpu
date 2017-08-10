@@ -50,6 +50,9 @@ public class PurchaseOrderModel implements Serializable{
 	private Double amount;
 	private String invoiceDate;
 	
+	private Long invoiceStatusId;
+	private String currentStatusVal;
+
 	public Long getId() {
 		return id;
 	}
@@ -248,6 +251,22 @@ public class PurchaseOrderModel implements Serializable{
 
 	public void setCompleteStatusId(Long completeStatusId) {
 		this.completeStatusId = completeStatusId;
+	}
+
+	public Long getInvoiceStatusId() {
+		return invoiceStatusId;
+	}
+
+	public void setInvoiceStatusId(Long invoiceStatusId) {
+		this.invoiceStatusId = invoiceStatusId;
+	}
+
+	public String getCurrentStatusVal() {
+		return currentStatusVal;
+	}
+
+	public void setCurrentStatusVal(String currentStatusVal) {
+		this.currentStatusVal = currentStatusVal;
 	}
 
 	/*public List<Long> getIssueIds() {

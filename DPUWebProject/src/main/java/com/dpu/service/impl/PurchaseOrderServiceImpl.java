@@ -21,7 +21,7 @@ import com.dpu.entity.PurchaseOrderInvoice;
 import com.dpu.entity.PurchaseOrderIssue;
 import com.dpu.entity.Type;
 import com.dpu.entity.Vendor;
-import com.dpu.model.CategoryReq;
+import com.dpu.model.CategoryModel;
 import com.dpu.model.Failed;
 import com.dpu.model.IssueModel;
 import com.dpu.model.PurchaseOrderModel;
@@ -353,7 +353,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		List<VendorModel> vendorList = vendorService.getSpecificData();
 		poModel.setVendorList(vendorList);
 		
-		List<CategoryReq> categoryList = categoryService.getSpecificData();
+		List<CategoryModel> categoryList = categoryService.getSpecificData();
 		poModel.setCategoryList(categoryList);
 		
 		List<TypeResponse> unitTypeList = typeService.getAll(25l);

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
-import com.dpu.model.CategoryReq;
+import com.dpu.model.CategoryModel;
 import com.dpu.model.Failed;
 import com.dpu.model.Success;
 import com.dpu.service.CategoryService;
@@ -54,7 +54,7 @@ public class CategoryController extends MessageProperties {
 		String json = null;
 
 		try {
-			List<CategoryReq> responses = categoryService.getAll();
+			List<CategoryModel> responses = categoryService.getAll();
 			if (responses != null && !responses.isEmpty()) {
 				json = mapper.writeValueAsString(responses);
 			}
@@ -73,7 +73,7 @@ public class CategoryController extends MessageProperties {
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody CategoryReq categoryReq) {
+	public Object add(@RequestBody CategoryModel categoryReq) {
 
 		logger.info("Inside CategoryController add() Starts ");
 		Object obj = null;
@@ -132,7 +132,7 @@ public class CategoryController extends MessageProperties {
 	 * @return List<Categories>
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long id, @RequestBody CategoryReq categoryReq) {
+	public Object update(@PathVariable("id") Long id, @RequestBody CategoryModel categoryReq) {
 		
 		logger.info("Inside CategoryController update() Starts, categoryId is :" + id);
 		Object obj = null;
@@ -166,7 +166,7 @@ public class CategoryController extends MessageProperties {
 		String json = null;
 
 		try {
-			CategoryReq categoryReq = categoryService.get(id);
+			CategoryModel categoryReq = categoryService.get(id);
 
 			if (categoryReq != null) {
 				json = mapper.writeValueAsString(categoryReq);
@@ -192,7 +192,7 @@ public class CategoryController extends MessageProperties {
 		String json = null;
 
 		try {
-			CategoryReq CategoryReq = categoryService.getOpenAdd();
+			CategoryModel CategoryReq = categoryService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(CategoryReq);
 		} catch (Exception e) {
@@ -216,7 +216,7 @@ public class CategoryController extends MessageProperties {
 		String json = new String();
 
 		try {
-			List<CategoryReq> categoryList = categoryService.getCategoryByCategoryName(categoryName);
+			List<CategoryModel> categoryList = categoryService.getCategoryByCategoryName(categoryName);
 			if (categoryList != null && categoryList.size() > 0) {
 				json = mapper.writeValueAsString(categoryList);
 			}
@@ -240,7 +240,7 @@ public class CategoryController extends MessageProperties {
 		String json = new String();
 
 		try {
-			List<CategoryReq> categoryList = categoryService.getSpecificData();
+			List<CategoryModel> categoryList = categoryService.getSpecificData();
 			if (categoryList != null && categoryList.size() > 0) {
 				json = mapper.writeValueAsString(categoryList);
 			}

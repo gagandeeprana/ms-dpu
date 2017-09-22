@@ -18,7 +18,7 @@ import com.dpu.entity.Driver;
 import com.dpu.entity.Issue;
 import com.dpu.entity.Type;
 import com.dpu.entity.VehicleMaintainanceCategory;
-import com.dpu.model.CategoryReq;
+import com.dpu.model.CategoryModel;
 import com.dpu.model.DriverModel;
 import com.dpu.model.Failed;
 import com.dpu.model.IssueModel;
@@ -243,7 +243,7 @@ public class IssueServiceImpl implements IssueService  {
 				issueModel.setStatusList(statusList);
 				
 				issueModel.setCategoryId(issue.getCategory().getCategoryId());
-				List<CategoryReq> categoryList = categoryService.getSpecificData();
+				List<CategoryModel> categoryList = categoryService.getSpecificData();
 				issueModel.setCategoryList(categoryList);
 				
 				List<TypeResponse> unitTypeList = typeService.getAll(25l);
@@ -277,13 +277,19 @@ public class IssueServiceImpl implements IssueService  {
 		List<TypeResponse> statusList = typeService.getAll(23l);
 		issueModel.setStatusList(statusList);
 		
-		List<CategoryReq> categoryList = categoryService.getSpecificData();
-		issueModel.setCategoryList(categoryList);
+		/*List<CategoryReq> categoryList = categoryService.getSpecificData();
+		issueModel.setCategoryList(categoryList);*/
 		
 		List<TypeResponse> unitTypeList = typeService.getAll(25l);
 		issueModel.setUnitTypeList(unitTypeList);
 		logger.info("IssueServiceImpl getOpenAdd() ends ");
 		return issueModel;
+	}
+
+	@Override
+	public List<CategoryModel> getUnitCategories(String unitTypeName) {
+		List<CategoryModel> categoryList = categoryService.getCategoriesBasedOnType(unitTypeName);
+		return categoryList;
 	}
 
 	@Override
@@ -491,7 +497,5 @@ public class IssueServiceImpl implements IssueService  {
 		logger.info("IssueServiceImpl updateStatus() ends.");
 		return createSuccessObject(issue_status_update);
 	}
-
-	
 
 }

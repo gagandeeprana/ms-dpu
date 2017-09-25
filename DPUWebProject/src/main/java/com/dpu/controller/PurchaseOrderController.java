@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dpu.constants.Iconstants;
+import com.dpu.model.CategoryModel;
 import com.dpu.model.Failed;
 import com.dpu.model.IssueModel;
 import com.dpu.model.PurchaseOrderModel;
 import com.dpu.model.Success;
+import com.dpu.service.IssueService;
 import com.dpu.service.PurchaseOrderService;
 import com.dpu.util.MessageProperties;
 
@@ -31,6 +33,9 @@ public class PurchaseOrderController extends MessageProperties {
 
 	@Autowired
 	PurchaseOrderService poService;
+
+	@Autowired
+	IssueService issueService;
 
 	ObjectMapper mapper = new ObjectMapper();
 	
@@ -277,6 +282,30 @@ public class PurchaseOrderController extends MessageProperties {
 		}
 
 		logger.info("Inside PurchaseOrderController getSpecificData() Ends ");
+		return json;
+	}
+
+	/**
+	 * this method is used when we click on add button on issue screen send master data
+	 * 
+	 * @return master data for add handling
+	 * @author lakhvir
+	 */
+	@RequestMapping(value = "/unitType/{unitTypeName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getCategorybasedOnUnitType(@PathVariable("unitTypeName") String unitTypeName) {
+
+		logger.info("Inside IssueController getUnitNo() Starts ");
+		String json = null;
+
+		try {
+			List<CategoryModel> model = issueService.getUnitCategories(unitTypeName);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(model);
+		} catch (Exception e) {
+			logger.error(" Exception inside IssueController openAdd() :" + e.getMessage());
+		}
+
+		logger.info("Inside IssueController openAdd() ends ");
 		return json;
 	}
 }

@@ -353,8 +353,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		List<VendorModel> vendorList = vendorService.getSpecificData();
 		poModel.setVendorList(vendorList);
 		
-		List<CategoryModel> categoryList = categoryService.getSpecificData();
-		poModel.setCategoryList(categoryList);
+	/*	List<CategoryModel> categoryList = categoryService.getSpecificData();
+		poModel.setCategoryList(categoryList);*/
 		
 		List<TypeResponse> unitTypeList = typeService.getAll(25l);
 		poModel.setUnitTypeList(unitTypeList);

@@ -38,12 +38,17 @@ public class IssueDaoImpl extends GenericDaoImpl<Issue> implements IssueDao{
 		Type unitType = (Type) session.get(Type.class, unitTypeId);
 		StringBuilder sb = new StringBuilder(" ");
 		if(unitType.getTypeName().equals("Truck")){
-			sb.append(" SELECT unit_no FROM `truck` truck WHERE category_id = :categoryId ");
+			sb.append(" SELECT unit_no FROM `truck` truck ");
 		} else{
-			sb.append("  SELECT unit_no FROM `trailer` WHERE category_id = :categoryId ");
+			sb.append("  SELECT unit_no FROM `trailer` ");
+		}
+		if (categoryId != 0) {
+			sb.append(" WHERE category_id = :categoryId ");
 		}
 		Query query = session.createSQLQuery(sb.toString());
-		query.setParameter("categoryId", categoryId);
+		if (categoryId != 0) {
+			query.setParameter("categoryId", categoryId);
+		}
 		return query.list();
 		
 	}

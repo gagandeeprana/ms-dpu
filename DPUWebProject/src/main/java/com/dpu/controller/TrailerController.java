@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.dpu.model.Success;
-import com.dpu.model.TrailerRequest;
+import com.dpu.model.TrailerModel;
 import com.dpu.service.TrailerService;
 import com.dpu.util.MessageProperties;
 
@@ -42,7 +42,7 @@ public class TrailerController extends MessageProperties {
 		String json = new String();
 		
 		try {
-			List<TrailerRequest> lstTrailers = trailerService.getAll();
+			List<TrailerModel> lstTrailers = trailerService.getAll();
 
 			if(lstTrailers != null && !lstTrailers.isEmpty()) {
 				json = mapper.writeValueAsString(lstTrailers);
@@ -63,7 +63,7 @@ public class TrailerController extends MessageProperties {
 	 * @author lakhvir
 	 */
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object add(@RequestBody TrailerRequest trailerRequest) {
+	public Object add(@RequestBody TrailerModel trailerRequest) {
 		
 		logger.info("Inside TrailerController add() starts");
 		Object obj = null;
@@ -117,7 +117,7 @@ public class TrailerController extends MessageProperties {
 	 * @author lakhvir.bansal
 	 */
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-	public Object update(@PathVariable("id") Long trailerId,@RequestBody TrailerRequest trailerRequest) {
+	public Object update(@PathVariable("id") Long trailerId,@RequestBody TrailerModel trailerRequest) {
 
 		logger.info("Inside TrailerController update() starts, trailerId :"+trailerId);
 		Object obj = null;
@@ -149,7 +149,7 @@ public class TrailerController extends MessageProperties {
 		String json = new String();
 		
 		try {
-			TrailerRequest trailerRequest = trailerService.get(id);
+			TrailerModel trailerRequest = trailerService.get(id);
 			if (trailerRequest != null) {
 				json = mapper.writeValueAsString(trailerRequest);
 			}
@@ -188,7 +188,7 @@ public class TrailerController extends MessageProperties {
 		logger.info(" Inside TrailerController openAdd() Starts ");
 		String json = null;
 		try {
-			TrailerRequest trailerReq = trailerService.getOpenAdd();
+			TrailerModel trailerReq = trailerService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(trailerReq);
 		} catch (Exception e) {
@@ -210,7 +210,7 @@ public class TrailerController extends MessageProperties {
 		String json = new String();
 
 		try {
-			List<TrailerRequest> trailerData = trailerService.getSpecificData();
+			List<TrailerModel> trailerData = trailerService.getSpecificData();
 			if (trailerData != null && trailerData.size() > 0) {
 				json = mapper.writeValueAsString(trailerData);
 			}

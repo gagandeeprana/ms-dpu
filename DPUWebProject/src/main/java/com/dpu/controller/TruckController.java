@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.dpu.model.Success;
-import com.dpu.model.TruckResponse;
+import com.dpu.model.TruckModel;
 import com.dpu.service.TruckService;
 import com.dpu.util.MessageProperties;
 
@@ -34,7 +34,7 @@ public class TruckController extends MessageProperties {
 		logger.info("[getAllTrucks]:Controller:  Enter");
 		String json = null;
 		try {
-			List<TruckResponse> listOfTrucks = truckService.getAllTrucks("");
+			List<TruckModel> listOfTrucks = truckService.getAllTrucks("");
 			if (listOfTrucks != null && listOfTrucks.size() > 0) {
 				json = mapper.writeValueAsString(listOfTrucks);
 			}
@@ -48,12 +48,12 @@ public class TruckController extends MessageProperties {
 
 	// Add new Truck
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public Object addTruck(@RequestBody TruckResponse truckResponse) {
+	public Object addTruck(@RequestBody TruckModel truckModel) {
 		logger.info("[TruckController] [addTruck] : addTruck");
 		ResponseEntity<Object> obj = null;
 		try {
 
-			Object result = truckService.add(truckResponse);
+			Object result = truckService.add(truckModel);
 			if (result instanceof Success) {
 				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
 			} else {
@@ -77,7 +77,7 @@ public class TruckController extends MessageProperties {
 
 		String json = null;
 		try {
-			TruckResponse truckResponse = truckService.get(id);
+			TruckModel truckResponse = truckService.get(id);
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(truckResponse);
 		} catch (Exception e) {
@@ -111,7 +111,7 @@ public class TruckController extends MessageProperties {
 	// Update Truck
 	@RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object updateTruck(@PathVariable("id") Long id,
-			@RequestBody TruckResponse truckResponse) {
+			@RequestBody TruckModel truckResponse) {
 
 		logger.info("[TruckController] [updateTruck] : Enter");
 		Object obj = null;
@@ -137,7 +137,7 @@ public class TruckController extends MessageProperties {
 		logger.info("[TruckController] [openAdd] : Enter");
 		String json = null;
 		try {
-			TruckResponse truckResponse = truckService.getOpenAdd();
+			TruckModel truckResponse = truckService.getOpenAdd();
 			ObjectMapper mapper = new ObjectMapper();
 			json = mapper.writeValueAsString(truckResponse);
 		} catch (Exception e) {
@@ -159,7 +159,7 @@ public class TruckController extends MessageProperties {
 		String json = new String();
 
 		try {
-			List<TruckResponse> truckData = truckService.getSpecificData();
+			List<TruckModel> truckData = truckService.getSpecificData();
 			if (truckData != null && truckData.size() > 0) {
 				json = mapper.writeValueAsString(truckData);
 			}

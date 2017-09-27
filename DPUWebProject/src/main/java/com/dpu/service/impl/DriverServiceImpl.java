@@ -386,8 +386,12 @@ public class DriverServiceImpl implements DriverService {
 				List<TypeResponse> driverClassList = AllList.getTypeResponse(session, 5l);
 				driverModel.setDriverClassList(driverClassList);
 
-				List<CategoryModel> categoryList = AllList.getCategoryList(session, "Category", "categoryId", "name");
+				List<CategoryModel> categoryList = categoryService.getCategoriesBasedOnType("Driver");
 				driverModel.setCategoryList(categoryList);
+				/*
+				 * List<CategoryModel> categoryList = AllList.getCategoryList(session, "Category", "categoryId",
+				 * "name"); driverModel.setCategoryList(categoryList);
+				 */
 
 				List<DivisionReq> divisionList = AllList.getDivisionList(session, "Division", "divisionId", "divisionName");
 				driverModel.setDivisionList(divisionList);

@@ -96,6 +96,24 @@ public class PurchaseOrderController extends MessageProperties {
 		return json;
 	}
 	
+	@RequestMapping(value = "/unitType/{unitTypeId}/unitNo/{unitNo}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getIssuesBasedOnUnitTypeAndNo(@PathVariable("unitTypeId") Long unitTypeId,
+			@PathVariable("unitNo") Long unitNo) {
+
+		logger.info("Inside PurchaseOrderController getIssuesBasedOnUnitTypeAndNo() Starts ");
+		String json = null;
+
+		try {
+			List<IssueModel> issueList = poService.getUnitNoIssues(unitTypeId, unitNo);
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(issueList);
+		} catch (Exception e) {
+			logger.error(" Exception inside PurchaseOrderController getCategoryAndUnitTypeIssues() :" + e.getMessage());
+		}
+
+		logger.info("Inside PurchaseOrderController getCategoryAndUnitTypeIssues() ends ");
+		return json;
+	}
 	/**
 	 * this method is used to add the PO.
 	 * @param poModel
@@ -308,4 +326,6 @@ public class PurchaseOrderController extends MessageProperties {
 		logger.info("Inside IssueController openAdd() ends ");
 		return json;
 	}
+
+
 }

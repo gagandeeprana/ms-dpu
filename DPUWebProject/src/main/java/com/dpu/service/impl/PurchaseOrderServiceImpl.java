@@ -246,9 +246,22 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			
 			if (purchaseOrder != null) {
 				
+				List<PurchaseOrderUnitNos> poUnitNos = purchaseOrder.getPoUnitNos();
+				if (poUnitNos != null && !poUnitNos.isEmpty()) {
+					for (PurchaseOrderUnitNos purchaseOrderUnitNos : poUnitNos) {
+						session.delete(purchaseOrderUnitNos);
+					}
+				}
+
 				List<PurchaseOrderIssue> poIssues = purchaseOrder.getPoIssues();
 				if(poIssues != null && ! poIssues.isEmpty()) {
+					Type status = (Type) session.get(Type.class, 103l);
 					for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
+
+						/*
+						 * Issue issue = purchaseOrderIssue.getIssue(); issue.setStatus(status); session.update(issue);
+						 */
+
 						session.delete(purchaseOrderIssue);
 					}
 				}
@@ -337,6 +350,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				}
 
 				getOpenAddData(poModel);
+
+				Long categoryId = 0l;
+				if (po.getCategory() != null) {
+					categoryId = po.getCategory().getCategoryId();
+				}
+				IssueModel issueModel = issueService.getUnitNo(categoryId, po.getUnitType().getTypeId());
+				if (issueModel != null) {
+					poModel.setAllUnitNos(issueModel.getUnitNos());
+				}
 				List<CategoryModel> categoriesBasedOnUnitType = categoryService.getCategoriesBasedOnType(po
 						.getUnitType().getTypeName());
 

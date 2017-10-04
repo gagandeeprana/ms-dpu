@@ -328,7 +328,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				
 				getOpenAddData(poModel);
 				List<CategoryModel> categoriesBasedOnUnitType = categoryService.getCategoriesBasedOnType(po
-						.getUnitType());
+						.getUnitType().getTypeName());
+
+				poModel.setCategoryList(categoriesBasedOnUnitType);
 			}
 		} finally {
 			if (session != null) {

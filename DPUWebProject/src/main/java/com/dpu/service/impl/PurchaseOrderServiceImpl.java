@@ -326,6 +326,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					poModel.setIssueList(issueModels);
 				}
 				
+				List<PurchaseOrderUnitNos> PurchaseOrderUnitNos = po.getPoUnitNos();
+				if (PurchaseOrderUnitNos != null && !PurchaseOrderUnitNos.isEmpty()) {
+					List<String> poUnitNos = new ArrayList<String>();
+					for (PurchaseOrderUnitNos purchaseOrderUnitNos : PurchaseOrderUnitNos) {
+						poUnitNos.add(purchaseOrderUnitNos.getUnitNo());
+					}
+
+					poModel.setSelectedUnitNos(poUnitNos);
+				}
+
 				getOpenAddData(poModel);
 				List<CategoryModel> categoriesBasedOnUnitType = categoryService.getCategoriesBasedOnType(po
 						.getUnitType().getTypeName());
@@ -432,7 +442,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
 		Category category = (Category) session.get(Category.class, poModel.getCategoryId());
 		Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
-		List<String> unitNos = poModel.getUnitNos();
+		List<String> unitNos = poModel.getSelectedUnitNos();
 		
 		if(Iconstants.ADD_PO.equals(type)) {
 			Long poNo = poDao.getMaxPoNO(session);
@@ -525,7 +535,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		List<IssueModel> issues = new ArrayList<IssueModel>();
 		try {
 			session = sessionFactory.openSession();
-			issues = issueService.getIssuesBasedOnUnitTypeAndUnitNos(unitTypeId, poModel.getUnitNos(), session);
+			issues = issueService.getIssuesBasedOnUnitTypeAndUnitNos(unitTypeId, poModel.getSelectedUnitNos(), session);
 		} finally {
 			if (session != null) {
 				session.close();

@@ -258,9 +258,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					Type status = (Type) session.get(Type.class, 103l);
 					for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
 
-						/*
-						 * Issue issue = purchaseOrderIssue.getIssue(); issue.setStatus(status); session.update(issue);
-						 */
+						Issue issue = purchaseOrderIssue.getIssue();
+						issue.setStatus(status);
+						session.update(issue);
 
 						session.delete(purchaseOrderIssue);
 					}

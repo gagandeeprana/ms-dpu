@@ -207,10 +207,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			tx = session.beginTransaction();
 			PurchaseOrder po = (PurchaseOrder) session.get(PurchaseOrder.class, id);
 			List<PurchaseOrderIssue> poIssues = new ArrayList<PurchaseOrderIssue>();
+			List<PurchaseOrderUnitNos> poUnitNos = new ArrayList<PurchaseOrderUnitNos>();
 			List<Issue> issues = new ArrayList<Issue>();
 			if (po != null) {
-				setPoValues(poModel, po, poIssues, issues, session, Iconstants.UPDATE_PO, null);
-				poDao.update(po, poIssues, issues, session);
+				setPoValues(poModel, po, poIssues, issues, session, Iconstants.UPDATE_PO, poUnitNos);
+				poDao.update(po, poIssues, issues, poUnitNos, session);
 				tx.commit();
 			} else {
 				return createFailedObject(po_unable_to_update_message);
@@ -484,6 +485,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					session.delete(purchaseOrderIssue);
 				}
 			}
+
+			List<PurchaseOrderUnitNos> existingPoUnitNos = po.getPoUnitNos();
+
+			if (existingPoUnitNos != null && !existingPoUnitNos.isEmpty()) {
+				for (PurchaseOrderUnitNos purchaseOrderUnitNos : existingPoUnitNos) {
+					session.delete(purchaseOrderUnitNos);
+				}
+			}
+
 		}
 		
 		po.setCategory(category);

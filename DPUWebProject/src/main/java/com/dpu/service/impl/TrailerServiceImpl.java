@@ -336,11 +336,25 @@ public class TrailerServiceImpl implements TrailerService{
 			Trailer trailer = trailerdao.findById(trailerId, session);
 			if(trailer != null){
 				BeanUtils.copyProperties(trailer, response);
-				response.setCategoryId(trailer.getCategory().getCategoryId());
-				response.setDivisionId(trailer.getDivision().getDivisionId());
-				response.setTerminalId(trailer.getTerminal().getTerminalId());
-				response.setStatusId(trailer.getStatus().getId());
-				response.setTrailerTypeId(trailer.getType().getTypeId());
+
+				if (!ValidationUtil.isNull(trailer.getCategory())) {
+					response.setCategoryId(trailer.getCategory().getCategoryId());
+				}
+
+				if (!ValidationUtil.isNull(trailer.getDivision())) {
+					response.setDivisionId(trailer.getDivision().getDivisionId());
+				}
+
+				if (!ValidationUtil.isNull(trailer.getTerminal())) {
+					response.setTerminalId(trailer.getTerminal().getTerminalId());
+				}
+
+				if (!ValidationUtil.isNull(trailer.getStatus())) {
+					response.setStatusId(trailer.getStatus().getId());
+				}
+				if (!ValidationUtil.isNull(trailer.getType())) {
+					response.setTrailerTypeId(trailer.getType().getTypeId());
+				}
 				
 				List<Status> statusList = AllList.getStatusList(session);
 				response.setStatusList(statusList);

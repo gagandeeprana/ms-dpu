@@ -275,9 +275,14 @@ public class IssueServiceImpl implements IssueService  {
 				List<DriverModel> driverList = driverService.getSpecificData();
 				issueModel.setReportedByList(driverList);
 				
+				List<TypeResponse> statusListResponse = new ArrayList<TypeResponse>();
 				List<TypeResponse> statusList = typeService.getAll(23l);
-				issueModel.setStatusList(statusList);
-				
+				for (TypeResponse typeResponse : statusList) {
+					if (typeResponse.getTypeName().equals("Open") || typeResponse.getTypeName().equals("Deferred")) {
+						statusListResponse.add(typeResponse);
+					}
+				}
+				issueModel.setStatusList(statusListResponse);
 				List<TypeResponse> unitTypeList = typeService.getAll(25l);
 				issueModel.setUnitTypeList(unitTypeList);
 
@@ -315,12 +320,15 @@ public class IssueServiceImpl implements IssueService  {
 		List<DriverModel> driverList = driverService.getSpecificData();
 		issueModel.setReportedByList(driverList);
 		
+		List<TypeResponse> statusListResponse = new ArrayList<TypeResponse>();
 		List<TypeResponse> statusList = typeService.getAll(23l);
-		issueModel.setStatusList(statusList);
-		
-		/*List<CategoryReq> categoryList = categoryService.getSpecificData();
-		issueModel.setCategoryList(categoryList);*/
-		
+		for (TypeResponse typeResponse : statusList) {
+			if (typeResponse.getTypeName().equals("Open") || typeResponse.getTypeName().equals("Deferred")) {
+				statusListResponse.add(typeResponse);
+			}
+		}
+		issueModel.setStatusList(statusListResponse);
+
 		List<TypeResponse> unitTypeList = typeService.getAll(25l);
 		issueModel.setUnitTypeList(unitTypeList);
 		logger.info("IssueServiceImpl getOpenAdd() ends ");

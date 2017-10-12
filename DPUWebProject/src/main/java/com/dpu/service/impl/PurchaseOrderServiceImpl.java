@@ -35,6 +35,7 @@ import com.dpu.service.PurchaseOrderService;
 import com.dpu.service.TypeService;
 import com.dpu.service.VendorService;
 import com.dpu.util.DateUtil;
+import com.dpu.util.ValidationUtil;
 
 @Component
 public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
@@ -138,16 +139,26 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				poModel.setPoNo(purchaseOrder.getPoNo());
 				poModel.setMessage(purchaseOrder.getMessage());
 				
-				poModel.setCategoryName(purchaseOrder.getCategory().getName());
-				String status = purchaseOrder.getStatus().getTypeName();
-				poModel.setStatusName(status);
-				
+				if (!ValidationUtil.isNull(purchaseOrder.getCategory())) {
+					poModel.setCategoryName(purchaseOrder.getCategory().getName());
+				}
+
+				String status = null;
+				if (!ValidationUtil.isNull(purchaseOrder.getStatus())) {
+					status = purchaseOrder.getStatus().getTypeName();
+					poModel.setStatusName(status);
+				}
+
 				if(status.equals("Invoiced")){
 					poModel.setInvoiceNo(purchaseOrder.getInvoiceNo());
 				}
 				
-				poModel.setUnitTypeName(purchaseOrder.getUnitType().getTypeName());
-				poModel.setVendorName(purchaseOrder.getVendor().getName());
+				if (!ValidationUtil.isNull(purchaseOrder.getUnitType())) {
+					poModel.setUnitTypeName(purchaseOrder.getUnitType().getTypeName());
+				}
+				if (!ValidationUtil.isNull(purchaseOrder.getVendor())) {
+					poModel.setVendorName(purchaseOrder.getVendor().getName());
+				}
 				poList.add(poModel);
 				
 				if (statusVal.equals("Active")) {
@@ -307,11 +318,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			if (po != null) {
 
 				poModel.setId(po.getId());
-				poModel.setCategoryId(po.getCategory().getCategoryId());
+
+				if (!ValidationUtil.isNull(po.getCategory())) {
+					poModel.setCategoryId(po.getCategory().getCategoryId());
+				}
 				poModel.setMessage(po.getMessage());
-				poModel.setUnitTypeId(po.getUnitType().getTypeId());
-				poModel.setVendorId(po.getVendor().getVendorId());
-				poModel.setStatusId(po.getStatus().getTypeId());
+
+				if (!ValidationUtil.isNull(po.getUnitType())) {
+					poModel.setUnitTypeId(po.getUnitType().getTypeId());
+				}
+
+				if (!ValidationUtil.isNull(po.getVendor())) {
+					poModel.setVendorId(po.getVendor().getVendorId());
+				}
+
+				if (!ValidationUtil.isNull(po.getStatus())) {
+					poModel.setStatusId(po.getStatus().getTypeId());
+				}
 				
 				/*if(po.getStatus().getTypeName().equals("Invoiced")) {
 					poModel.setInvoiceNo(po.getInvoiceNo());
@@ -326,13 +349,29 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 						IssueModel issueObj = new IssueModel();
 						issueObj.setId(issue.getId());
 						issueObj.setTitle(issue.getIssueName());
-						issueObj.setVmcName(issue.getVmc().getName());
-						issueObj.setReportedByName(issue.getReportedBy().getFirstName());
-						issueObj.setUnitTypeName(issue.getUnitType().getTypeName());
-						issueObj.setCategoryName(issue.getCategory().getName());
 						issueObj.setUnitNo(issue.getUnitNo());
-						issueObj.setStatusName(issue.getStatus().getTypeName());
-						issueObj.setStatusId(issue.getStatus().getTypeId());
+
+						if (!ValidationUtil.isNull(issue.getVmc())) {
+							issueObj.setVmcName(issue.getVmc().getName());
+						}
+
+						if (!ValidationUtil.isNull(issue.getReportedBy())) {
+							issueObj.setReportedByName(issue.getReportedBy().getFirstName());
+						}
+
+						if (!ValidationUtil.isNull(issue.getUnitType())) {
+							issueObj.setUnitTypeName(issue.getUnitType().getTypeName());
+						}
+
+						if (!ValidationUtil.isNull(issue.getCategory())) {
+							issueObj.setCategoryName(issue.getCategory().getName());
+						}
+
+						if (!ValidationUtil.isNull(issue.getStatus())) {
+							issueObj.setStatusName(issue.getStatus().getTypeName());
+							issueObj.setStatusId(issue.getStatus().getTypeId());
+						}
+
 						issueModels.add(issueObj);
 
 					}
@@ -462,9 +501,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			List<Issue> issues, Session session, String type, List<PurchaseOrderUnitNos> poUnitNos) {
 		
 		List<IssueModel> issueData = poModel.getIssue();
-		Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
-		Category category = (Category) session.get(Category.class, poModel.getCategoryId());
-		Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
+
+		if (ValidationUtil.isNull(poModel.getUnitTypeId())) {
+			Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
+			po.setUnitType(unitType);
+		}
+
+		if (ValidationUtil.isNull(poModel.getCategoryId())) {
+			Category category = (Category) session.get(Category.class, poModel.getCategoryId());
+			po.setCategory(category);
+		}
+		if (ValidationUtil.isNull(poModel.getVendorId())) {
+			Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
+			po.setVendor(vendor);
+		}
 		List<String> unitNos = poModel.getSelectedUnitNos();
 		
 		if(Iconstants.ADD_PO.equals(type)) {
@@ -496,13 +546,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 		}
 		
-		po.setCategory(category);
 		po.setMessage(poModel.getMessage());
-		
-		po.setUnitType(unitType);
-		po.setVendor(vendor);
 
-		if (issueData != null) {
+		if (issueData != null && !issueData.isEmpty()) {
 			
 			for (IssueModel issueModel : issueData) {
 				Long issueId = issueModel.getId();
@@ -511,8 +557,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				poIssue.setIssue(issue);
 				poIssues.add(poIssue);
 
-				Type issueStatus = (Type) session.get(Type.class, issueModel.getStatusId());
-				issue.setStatus(issueStatus);
+				if (!ValidationUtil.isNull(issueModel.getStatusId())) {
+					Type issueStatus = (Type) session.get(Type.class, issueModel.getStatusId());
+					issue.setStatus(issueStatus);
+				}
 				issues.add(issue);
 			}
 		}

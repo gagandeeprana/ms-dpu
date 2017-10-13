@@ -1,6 +1,8 @@
 package com.dpu.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -11,6 +13,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.dpu.constants.Iconstants;
 import com.dpu.dao.PurchaseOrderDao;
@@ -87,6 +90,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 	@Value("${po_status_unable_to_update}")
 	private String po_status_unable_to_update;
 
+	@Value("${po_invoice_update_message}")
+	private String po_invoice_update_message;
+
+	@Value("${po_invoice_unable_update_message}")
+	private String po_invoice_unable_update_message;
+
 	@Override
 	public List<PurchaseOrderModel> getAll() {
 
@@ -127,6 +136,34 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 		logger.info("PurchaseOrderServiceImpl getAll() ends ");
 		return poList;
+	}
+
+	@Override
+	public Object getInvoiceData(Long poId) {
+		logger.info("PurchaseOrderServiceImpl getAll() starts ");
+		Session session = null;
+		PurchaseOrderModel poData = new PurchaseOrderModel();
+		try {
+			session = sessionFactory.openSession();
+			PurchaseOrderInvoice poInvoice = poDao.getPOInvoice(session, poId);
+			poData.setId(poId);
+			poData.setInvoiceNo(poInvoice.getInvoiceNo());
+
+			Date invoiceDate = poInvoice.getInvoiceDate();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if (!StringUtils.isEmpty(invoiceDate)) {
+				poData.setInvoiceDate(sdf.format(invoiceDate));
+			}
+			poData.setAmount(poInvoice.getAmount());
+
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("PurchaseOrderServiceImpl getAll() ends ");
+		return poData;
 	}
 
 	private List<PurchaseOrderModel> setPOData(List<PurchaseOrder> pos, List<PurchaseOrderModel> poList,
@@ -247,6 +284,49 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 		logger.info("PurchaseOrderServiceImpl update() ends.");
 		return createSuccessObject(po_updated_message, "Active");
+	}
+
+	@Override
+	public Object updateInvoice(Long poId, PurchaseOrderModel poModel) {
+		logger.info("PurchaseOrderServiceImpl updateInvoice() starts.");
+		Session session = null;
+		Transaction tx = null;
+
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			PurchaseOrder po = (PurchaseOrder) session.get(PurchaseOrder.class, poId);
+
+			if (po != null) {
+				List<PurchaseOrderInvoice> poInvoices = po.getPoInvoices();
+
+				if (poInvoices != null && !poInvoices.isEmpty()) {
+					for (PurchaseOrderInvoice purchaseOrderInvoice : poInvoices) {
+						purchaseOrderInvoice.setAmount(poModel.getAmount());
+						purchaseOrderInvoice.setInvoiceNo(poModel.getInvoiceNo());
+						purchaseOrderInvoice.setInvoiceDate(DateUtil.changeStringToDate(poModel.getInvoiceDate()));
+						session.update(purchaseOrderInvoice);
+					}
+				}
+				tx.commit();
+			} else {
+				return createFailedObject(po_invoice_unable_update_message);
+			}
+
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			logger.info("Exception inside PurchaseOrderServiceImpl updateInvoice() :" + e.getMessage());
+			return createFailedObject(po_invoice_unable_update_message);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("PurchaseOrderServiceImpl updateInvoice() ends.");
+		return createSuccessObject(po_invoice_update_message, "Invoiced");
 	}
 
 	@Override
@@ -508,16 +588,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		
 		List<IssueModel> issueData = poModel.getIssue();
 
-		if (ValidationUtil.isNull(poModel.getUnitTypeId())) {
+		if (!ValidationUtil.isNull(poModel.getUnitTypeId())) {
 			Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
 			po.setUnitType(unitType);
 		}
 
-		if (ValidationUtil.isNull(poModel.getCategoryId())) {
+		if (!ValidationUtil.isNull(poModel.getCategoryId())) {
 			Category category = (Category) session.get(Category.class, poModel.getCategoryId());
 			po.setCategory(category);
 		}
-		if (ValidationUtil.isNull(poModel.getVendorId())) {
+		if (!ValidationUtil.isNull(poModel.getVendorId())) {
 			Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
 			po.setVendor(vendor);
 		}

@@ -64,6 +64,9 @@ public class PurchaseOrder implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseOrder")
 	private List<PurchaseOrderUnitNos> poUnitNos;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseOrder")
+	private List<PurchaseOrderInvoice> poInvoices;
+
 	public Long getId() {
 		return id;
 	}
@@ -150,6 +153,14 @@ public class PurchaseOrder implements Serializable {
 
 	public void setPoUnitNos(List<PurchaseOrderUnitNos> poUnitNos) {
 		this.poUnitNos = poUnitNos;
+	}
+
+	public List<PurchaseOrderInvoice> getPoInvoices() {
+		return poInvoices;
+	}
+
+	public void setPoInvoices(List<PurchaseOrderInvoice> poInvoices) {
+		this.poInvoices = poInvoices;
 	}
 
 }

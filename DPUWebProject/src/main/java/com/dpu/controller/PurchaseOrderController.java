@@ -235,6 +235,52 @@ public class PurchaseOrderController extends MessageProperties {
 		return obj;
 	}
 	
+	@RequestMapping(value = "/{poId}/getInvoice", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+	public Object getInvoice(@PathVariable("poId") Long poId) {
+
+		logger.info("Inside PurchaseOrderController update() Starts, poId is :" + poId);
+		Object obj = null;
+		try {
+			Object result = poService.getInvoiceData(poId);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside PurchaseOrderController update() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_update_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info("Inside PurchaseOrderController update() Ends, issueId is :" + poId);
+		return obj;
+	}
+
+	@RequestMapping(value = "/{poId}/updateinvoice", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
+	public Object updateInvoice(@PathVariable("poId") Long poId, @RequestBody PurchaseOrderModel poModel) {
+
+		logger.info("Inside PurchaseOrderController update() Starts, poId is :" + poId);
+		Object obj = null;
+		try {
+			Object result = poService.updateInvoice(poId, poModel);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside PurchaseOrderController update() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_update_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info("Inside PurchaseOrderController update() Ends, issueId is :" + poId);
+		return obj;
+	}
+
 	@RequestMapping(value = "/{poId}/status/{statusId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object updateStatus(@PathVariable("poId") Long poId, @PathVariable("statusId") Long statusId, @RequestBody PurchaseOrderModel poModel) {
 

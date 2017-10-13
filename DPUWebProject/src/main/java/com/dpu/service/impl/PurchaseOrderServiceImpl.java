@@ -138,6 +138,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				poModel.setId(purchaseOrder.getId());
 				poModel.setPoNo(purchaseOrder.getPoNo());
 				poModel.setMessage(purchaseOrder.getMessage());
+				Boolean isSuccess = true;
 				
 				if (!ValidationUtil.isNull(purchaseOrder.getCategory())) {
 					poModel.setCategoryName(purchaseOrder.getCategory().getName());
@@ -155,9 +156,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				
 				if (!ValidationUtil.isNull(purchaseOrder.getUnitType())) {
 					poModel.setUnitTypeName(purchaseOrder.getUnitType().getTypeName());
+				} else {
+					isSuccess = false;
 				}
 				if (!ValidationUtil.isNull(purchaseOrder.getVendor())) {
 					poModel.setVendorName(purchaseOrder.getVendor().getName());
+				} else {
+					isSuccess = false;
 				}
 				poList.add(poModel);
 				
@@ -165,7 +170,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					List<PurchaseOrderIssue> poIssues = purchaseOrder.getPoIssues();
 
 					if (poIssues != null && !poIssues.isEmpty()) {
-						Boolean isSuccess = true;
+
 						for (PurchaseOrderIssue purchaseOrderIssue : poIssues) {
 							Issue issue = purchaseOrderIssue.getIssue();
 							if (!"Complete".equals(issue.getStatus().getTypeName())
@@ -395,10 +400,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				if (po.getCategory() != null) {
 					categoryId = po.getCategory().getCategoryId();
 				}
-				IssueModel issueModel = issueService.getUnitNo(categoryId, po.getUnitType().getTypeId());
-				if (issueModel != null) {
+				if (!ValidationUtil.isNull(po.getUnitType())) {
+					IssueModel issueModel = issueService.getUnitNo(categoryId, po.getUnitType().getTypeId());
 					poModel.setAllUnitNos(issueModel.getUnitNos());
 				}
+
 				List<CategoryModel> categoriesBasedOnUnitType = categoryService.getCategoriesBasedOnType(po
 						.getUnitType().getTypeName());
 

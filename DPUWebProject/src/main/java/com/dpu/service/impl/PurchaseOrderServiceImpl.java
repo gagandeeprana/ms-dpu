@@ -483,12 +483,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 				if (!ValidationUtil.isNull(po.getUnitType())) {
 					IssueModel issueModel = issueService.getUnitNo(categoryId, po.getUnitType().getTypeId());
 					poModel.setAllUnitNos(issueModel.getUnitNos());
+
+					List<CategoryModel> categoriesBasedOnUnitType = categoryService.getCategoriesBasedOnType(po.getUnitType().getTypeName());
+					poModel.setCategoryList(categoriesBasedOnUnitType);
 				}
 
-				List<CategoryModel> categoriesBasedOnUnitType = categoryService.getCategoriesBasedOnType(po
-						.getUnitType().getTypeName());
-
-				poModel.setCategoryList(categoriesBasedOnUnitType);
 			}
 		} finally {
 			if (session != null) {

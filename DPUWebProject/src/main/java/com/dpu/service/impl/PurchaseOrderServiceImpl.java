@@ -283,7 +283,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		}
 
 		logger.info("PurchaseOrderServiceImpl update() ends.");
-		return createSuccessObject(po_updated_message, "Active");
+		return createSuccessObject(po_updated_message, poModel.getCurrentStatusVal());
 	}
 
 	@Override
@@ -586,10 +586,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			List<Issue> issues, Session session, String type, List<PurchaseOrderUnitNos> poUnitNos) {
 		
 		List<IssueModel> issueData = poModel.getIssue();
-
+		Boolean isSuccess = true;
 		if (!ValidationUtil.isNull(poModel.getUnitTypeId())) {
 			Type unitType = (Type) session.get(Type.class, poModel.getUnitTypeId());
 			po.setUnitType(unitType);
+		} else {
+			isSuccess = false;
 		}
 
 		if (!ValidationUtil.isNull(poModel.getCategoryId())) {
@@ -599,6 +601,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		if (!ValidationUtil.isNull(poModel.getVendorId())) {
 			Vendor vendor = (Vendor) session.get(Vendor.class, poModel.getVendorId());
 			po.setVendor(vendor);
+		} else {
+			isSuccess = false;
 		}
 		List<String> unitNos = poModel.getSelectedUnitNos();
 		
@@ -644,12 +648,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 
 				if (!ValidationUtil.isNull(issueModel.getStatusId())) {
 					Type issueStatus = (Type) session.get(Type.class, issueModel.getStatusId());
+					if (!"Complete".equals(issue.getStatus().getTypeName())
+							&& !"Incomplete".equals(issue.getStatus().getTypeName())) {
+						isSuccess = false;
+						break;
+					}
 					issue.setStatus(issueStatus);
 				}
 				issues.add(issue);
 			}
 		}
 		
+		if (!isSuccess) {
+			Type status = (Type) session.get(Type.class, 108l);
+			po.setStatus(status);
+		}
 		if (unitNos != null) {
 			for (String unitNo : unitNos) {
 				PurchaseOrderUnitNos poUnitNo = new PurchaseOrderUnitNos();

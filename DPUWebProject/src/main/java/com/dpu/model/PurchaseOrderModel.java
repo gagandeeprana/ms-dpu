@@ -58,7 +58,6 @@ public class PurchaseOrderModel implements Serializable{
 	private String currentStatusVal;
 
 	private List<String> selectedUnitNos;
-
 	private List<String> allUnitNos;
 
 	public Long getId() {

@@ -281,6 +281,29 @@ public class PurchaseOrderController extends MessageProperties {
 		return obj;
 	}
 
+	@RequestMapping(value = "/{poId}/deleteinvoice", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+	public Object deleteInvoice(@PathVariable("poId") Long poId) {
+
+		logger.info("Inside PurchaseOrderController deleteInvoice() Starts, poId is :" + poId);
+		Object obj = null;
+		try {
+			Object result = poService.deleteInvoice(poId);
+			if (result instanceof Success) {
+				obj = new ResponseEntity<Object>(result, HttpStatus.OK);
+			} else {
+				obj = new ResponseEntity<Object>(result, HttpStatus.BAD_REQUEST);
+
+			}
+		} catch (Exception e) {
+			logger.error("Exception inside PurchaseOrderController update() :" + e.getMessage());
+			obj = new ResponseEntity<Object>(new Failed(0, po_unable_to_update_message, Iconstants.ERROR),
+					HttpStatus.BAD_REQUEST);
+		}
+
+		logger.info("Inside PurchaseOrderController update() Ends, issueId is :" + poId);
+		return obj;
+	}
+
 	@RequestMapping(value = "/{poId}/status/{statusId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
 	public Object updateStatus(@PathVariable("poId") Long poId, @PathVariable("statusId") Long statusId, @RequestBody PurchaseOrderModel poModel) {
 

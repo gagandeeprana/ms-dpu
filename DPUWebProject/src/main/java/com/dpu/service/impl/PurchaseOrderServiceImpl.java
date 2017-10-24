@@ -96,6 +96,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 	@Value("${po_invoice_unable_update_message}")
 	private String po_invoice_unable_update_message;
 
+	@Value("${po_invoice_delete_message}")
+	private String po_invoice_delete_message;
+
+	@Value("${po_invoice_unable_delete_message}")
+	private String po_invoice_unable_delete_message;
+
 	@Override
 	public List<PurchaseOrderModel> getAll() {
 
@@ -771,6 +777,49 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 		invoice.setInvoiceDate(DateUtil.changeStringToDate(poModel.getInvoiceDate()));
 		invoice.setPurchaseOrder(po);
 		return invoice;
+	}
+
+	@Override
+	public Object deleteInvoice(Long poId) {
+
+		logger.info("PurchaseOrderServiceImpl deleteInvoice() starts.");
+		Session session = null;
+		Transaction tx = null;
+		Type status = null;
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			PurchaseOrder po = (PurchaseOrder) session.get(PurchaseOrder.class, poId);
+			if (po != null) {
+
+				List<PurchaseOrderInvoice> poInvoices = po.getPoInvoices();
+				if (poInvoices != null && !poInvoices.isEmpty()) {
+					for (PurchaseOrderInvoice purchaseOrderInvoice : poInvoices) {
+						poDao.deleteInvoice(purchaseOrderInvoice, session);
+					}
+				}
+				status = (Type) session.get(Type.class, 109l);
+				poDao.updateStatus(po, status, session);
+
+				tx.commit();
+			} else {
+				return createFailedObject(po_invoice_unable_delete_message);
+			}
+
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			logger.info("Exception inside PurchaseOrderServiceImpl deleteInvoice() :" + e.getMessage());
+			return createFailedObject(po_invoice_unable_delete_message);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		logger.info("PurchaseOrderServiceImpl deleteInvoice() ends.");
+		return createSuccessObject(po_invoice_delete_message, "Invoiced");
 	}
 
 }

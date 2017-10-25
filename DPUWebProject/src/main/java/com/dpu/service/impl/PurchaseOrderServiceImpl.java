@@ -657,7 +657,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 					if (!"Complete".equals(issue.getStatus().getTypeName())
 							&& !"Incomplete".equals(issue.getStatus().getTypeName())) {
 						isSuccess = false;
-						break;
 					}
 					issue.setStatus(issueStatus);
 				}
@@ -665,7 +664,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService  {
 			}
 		}
 		
-		if (!isSuccess) {
+		if (!isSuccess
+				&& (poModel.getCurrentStatusVal().equalsIgnoreCase("Complete") || poModel.getCurrentStatusVal()
+						.equalsIgnoreCase("Invoiced"))) {
 			// if all conditions not fullfilled we mark PO as active.
 			Type status = (Type) session.get(Type.class, 108l);
 			po.setStatus(status);

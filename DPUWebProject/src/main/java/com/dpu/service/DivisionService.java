@@ -5,6 +5,7 @@ package com.dpu.service;
 
 import java.util.List;
 
+import com.dpu.entity.Division;
 import com.dpu.model.DivisionReq;
 
 /**
@@ -22,4 +23,6 @@ public interface DivisionService {
 	List<DivisionReq> getAll(String divisionName);
 
 	Object add(DivisionReq divisionReq);
+
+	Division getDivisionByName(String divisionName);
 }

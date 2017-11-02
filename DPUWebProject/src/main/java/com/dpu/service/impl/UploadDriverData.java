@@ -2,6 +2,7 @@ package com.dpu.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -21,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.dpu.dao.DivisionDao;
+import com.dpu.entity.Driver;
 import com.dpu.util.FileReaderUtility;
 
 @Component
@@ -28,6 +31,9 @@ public class UploadDriverData {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	DivisionDao divisionDao;
 
 	/*
 	 * @Autowired private PaymentDao paymentDao;
@@ -40,6 +46,11 @@ public class UploadDriverData {
 
 		ApplicationContext context = new ClassPathXmlApplicationContext("dpu-servlet.xml");
 		UploadDriverData uploadDriverData = context.getBean(UploadDriverData.class);
+		uploadDriverData.readExcelData();
+		
+	}
+
+	private void readExcelData() throws IOException {
 		String excelFilePath = "src/main/resources/Driver_List.xls";
 		FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
 
@@ -51,9 +62,20 @@ public class UploadDriverData {
 			Row nextRow = iterator.next();
 			Iterator<Cell> cellIterator = nextRow.cellIterator();
 
+			Driver driver = new Driver();
+			int ColoumnCount = 0;
 			while (cellIterator.hasNext()) {
+				
 				Cell cell = cellIterator.next();
-
+				if(ColoumnCount == 0){
+					driver.setFirstName(cell.getStringCellValue());
+				}
+				if(ColoumnCount == 1){
+					driver.setLastName(cell.getStringCellValue());
+				}
+				if(ColoumnCount == 2){
+					
+				}
 				switch (cell.getCellType()) {
 				case Cell.CELL_TYPE_STRING:
 					System.out.print(cell.getStringCellValue());
@@ -72,6 +94,7 @@ public class UploadDriverData {
 
 		workbook.close();
 		inputStream.close();
+		
 	}
 
 	public void insertDriverData() throws IOException {

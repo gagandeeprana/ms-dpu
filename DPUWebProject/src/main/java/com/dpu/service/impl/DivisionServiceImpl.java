@@ -198,6 +198,36 @@ public class DivisionServiceImpl implements DivisionService {
 	}
 
 	@Override
+	public Division getDivisionByName(String divisionName) {
+		
+		logger.info("DivisionServiceImpl getAll() starts, divisionName :"+divisionName);
+		List<Division> lstDivision = null;
+		DivisionReq divisionResponse = new DivisionReq();
+		
+		if (divisionName != null && divisionName.length() > 0) {
+			Criterion criterion = Restrictions.like("divisionName",divisionName, MatchMode.ANYWHERE);
+			lstDivision = divisionDao.find(criterion);
+		} else {
+			lstDivision = divisionDao.findAll();
+		}
+		if (lstDivision != null && lstDivision.size() > 0) {
+			for (Division division : lstDivision) {
+				DivisionReq divisionReq = new DivisionReq();
+				divisionReq.setDivisionCode(division.getDivisionCode());
+				divisionReq.setProvincial(division.getProvincial());
+				divisionReq.setFedral(division.getFedral());
+				divisionReq.setDivisionName(division.getDivisionName());
+				divisionReq.setStatus(division.getStatus().getStatus());
+				divisionReq.setDivisionId(division.getDivisionId());
+			}
+		}
+		
+		logger.info("DivisionServiceImpl getAll() ends, divisionName :"+divisionName);
+		return lstDivision.get(0);
+	}
+
+	
+	@Override
 	public Object add(DivisionReq divisionReq) {
 		logger.info("DivisionServiceImpl: add():  STARTS");
 		Session session = null;

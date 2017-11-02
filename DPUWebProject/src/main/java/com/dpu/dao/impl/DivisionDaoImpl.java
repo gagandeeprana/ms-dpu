@@ -1,9 +1,13 @@
 package com.dpu.dao.impl;
 
 import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
 import com.dpu.entity.Status;
@@ -61,6 +65,14 @@ public class DivisionDaoImpl extends GenericDaoImpl<Division> implements Divisio
 		logger.info("DivisionDaoImpl: setDivisionValues(): ENDS");
 
 		return division;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Division> findDivisionsByName(String divisionName, Session session) {
+		Query query = session.createQuery("from Division where divisionCode =:divisionName ");
+		query.setParameter("divisionName", divisionName);
+		return query.list();
 	}
 
 }

@@ -12,4 +12,6 @@ public interface StatusService {
 
 	Status get(Long statusId);
 
+	Status getByName(String name);
+
 }

@@ -3,6 +3,7 @@ package com.dpu.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,6 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.dpu.common.CommonProperties;
 import com.dpu.dao.DivisionDao;
 import com.dpu.entity.Division;
@@ -200,30 +202,24 @@ public class DivisionServiceImpl implements DivisionService {
 	@Override
 	public Division getDivisionByName(String divisionName) {
 		
-		logger.info("DivisionServiceImpl getAll() starts, divisionName :"+divisionName);
-		List<Division> lstDivision = null;
-		DivisionReq divisionResponse = new DivisionReq();
-		
-		if (divisionName != null && divisionName.length() > 0) {
-			Criterion criterion = Restrictions.like("divisionName",divisionName, MatchMode.ANYWHERE);
-			lstDivision = divisionDao.find(criterion);
-		} else {
-			lstDivision = divisionDao.findAll();
-		}
-		if (lstDivision != null && lstDivision.size() > 0) {
-			for (Division division : lstDivision) {
-				DivisionReq divisionReq = new DivisionReq();
-				divisionReq.setDivisionCode(division.getDivisionCode());
-				divisionReq.setProvincial(division.getProvincial());
-				divisionReq.setFedral(division.getFedral());
-				divisionReq.setDivisionName(division.getDivisionName());
-				divisionReq.setStatus(division.getStatus().getStatus());
-				divisionReq.setDivisionId(division.getDivisionId());
+		Session session = null;
+		Division division = null;
+		try {
+			session = sessionFactory.openSession();
+			List<Division> divisions = divisionDao.findDivisionsByName(divisionName, session);
+
+			if (divisions != null && !divisions.isEmpty()) {
+				division = divisions.get(0);
+			}
+		} catch (Exception e) {
+
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 		
-		logger.info("DivisionServiceImpl getAll() ends, divisionName :"+divisionName);
-		return lstDivision.get(0);
+		return division;
 	}
 
 	

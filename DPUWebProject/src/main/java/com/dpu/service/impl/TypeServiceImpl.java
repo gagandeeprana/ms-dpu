@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class TypeServiceImpl implements TypeService {
 
 	@Autowired
 	TypeDao typeDao;
+
+	@Autowired
+	SessionFactory sessionFactory;
 
 	@Override
 	public List<TypeResponse> getAll(Long typeValue) {
@@ -45,4 +50,26 @@ public class TypeServiceImpl implements TypeService {
 		return typeDao.findById(typeId);
 	}
 
+	@Override
+	public Type getByName(Long typeValue, String name) {
+
+		Session session = null;
+		Type type = null;
+		try {
+			session = sessionFactory.openSession();
+			List<Type> getByNames = typeDao.getByNames(typeValue, name, session);
+
+			if (getByNames != null && !getByNames.isEmpty()) {
+				type = getByNames.get(0);
+			}
+		} catch (Exception e) {
+
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return type;
+	}
 }

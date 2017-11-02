@@ -11,5 +11,7 @@ public interface TypeService {
 
 
 	Type get(Long typeId);
+
+	Type getByName(Long typeValue, String name);
 	
 }
